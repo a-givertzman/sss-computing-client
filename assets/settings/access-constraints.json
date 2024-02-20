@@ -1,0 +1,186 @@
+{
+    "Menu.DiagnosticPageButton": {
+        "read": ["admin"]
+    },
+    "Menu.ReservedButton": {
+        "read": ["admin"]
+    },
+    "Menu.SettingPageButton": {
+        "read": ["admin"]
+    },
+    
+    "Settings.Art.TorqueLimit": {
+        "write": ["admin"]
+    },
+    "Settings.AOPS.RotationLimit1": {
+        "write": ["admin"]
+    },
+    "Settings.AOPS.RotationLimit2": {
+        "write": ["admin"]
+    },
+
+    "Settings.HPU.OilType": {
+        "write": ["admin", "engineerOGP"]
+    },
+    "Settings.HPU.AlarmLowOilLevel": {
+        "write": ["admin"]
+    },
+    "Settings.HPU.LowOilLevel": {
+        "write": ["admin"]
+    },
+    "Settings.HPU.HighOilTemp": {
+        "write": ["admin"]
+    },
+    "Settings.HPU.AlarmHighOilTemp": {
+        "write": ["admin"]
+    },
+    "Settings.HPU.LowOilTemp": {
+        "write": ["admin"]
+    },
+    "Settings.HPU.OilCooling": {
+        "write": ["admin"]
+    },
+    "Settings.HPU.OilTempHysteresis": {
+        "write": ["admin"]
+    },
+    "Settings.HPU.WhaterFlowTrackingTimeout": {
+        "write": ["admin"]
+    },
+    
+
+    "Settings.MainWinch.SpeedDown1PumpFactor": {
+        "write": ["admin"]
+    },
+    "Settings.MainWinch.SlowSpeedFactor": {
+        "write": ["admin"]
+    },
+    "Settings.MainWinch.SpeedDown2AxisFactor": {
+        "write": ["admin"]
+    },
+    "Settings.MainWinch.SpeedAccelerationTime": {
+        "write": ["admin"]
+    },
+    "Settings.MainWinch.SpeedDecelerationTime": {
+        "write": ["admin"]
+    },
+    "Settings.MainWinch.FastStoppingTime": {
+        "write": ["admin"]
+    },
+    "Settings.MainWinch.SpeedDownMaxPos": {
+        "write": ["admin"]
+    },
+    "Settings.MainWinch.SpeedDownMaxPosFactor": {
+        "write": ["admin"]
+    },
+    "Settings.MainWinch.SpeedDownMinPos": {
+        "write": ["admin"]
+    },
+    "Settings.MainWinch.SpeedDownMinPosFactor": {
+        "write": ["admin"]
+    },
+
+    
+    "Settings.MainBoom.SpeedDown1PumpFactor": {
+        "write": ["admin"]
+    },
+    "Settings.MainBoom.SlowSpeedFactor": {
+        "write": ["admin"]
+    },
+    "Settings.MainBoom.SpeedDown2AxisFactor": {
+        "write": ["admin"]
+    },
+    "Settings.MainBoom.SpeedAccelerationTime": {
+        "write": ["admin"]
+    },
+    "Settings.MainBoom.SpeedDecelerationTime": {
+        "write": ["admin"]
+    },
+    "Settings.MainBoom.FastStoppingTime": {
+        "write": ["admin"]
+    },
+    "Settings.MainBoom.PositionOffshore": {
+        "write": ["admin"]
+    },
+    "Settings.MainBoom.SpeedDownMaxPos": {
+        "write": ["admin"]
+    },
+    "Settings.MainBoom.SpeedDownMaxPosFactor": {
+        "write": ["admin"]
+    },
+    "Settings.MainBoom.SpeedDownMinPos": {
+        "write": ["admin"]
+    },
+    "Settings.MainBoom.SpeedDownMinPosFactor": {
+        "write": ["admin"]
+    },
+    
+
+    "Settings.RotaryBoom.SpeedDown1PumpFactor": {
+        "write": ["admin"]
+    },
+    "Settings.RotaryBoom.SlowSpeedFactor": {
+        "write": ["admin"]
+    },
+    "Settings.RotaryBoom.SpeedDown2AxisFactor": {
+        "write": ["admin"]
+    },
+    "Settings.RotaryBoom.SpeedAccelerationTime": {
+        "write": ["admin"]
+    },
+    "Settings.RotaryBoom.SpeedDecelerationTime": {
+        "write": ["admin"]
+    },
+    "Settings.RotaryBoom.FastStoppingTime": {
+        "write": ["admin"]
+    },
+    "Settings.RotaryBoom.SpeedDownMaxPos": {
+        "write": ["admin"]
+    },
+    "Settings.RotaryBoom.SpeedDownMaxPosFactor": {
+        "write": ["admin"]
+    },
+    "Settings.RotaryBoom.SpeedDownMinPos": {
+        "write": ["admin"]
+    },
+    "Settings.RotaryBoom.SpeedDownMinPosFactor": {
+        "write": ["admin"]
+    },
+    
+    
+    "Settings.Rotation.SpeedDown1PumpFactor": {
+        "write": ["admin"]
+    },
+    "Settings.Rotation.SlowSpeedFactor": {
+        "write": ["admin"]
+    },
+    "Settings.Rotation.SpeedDown2AxisFactor": {
+        "write": ["admin"]
+    },
+    "Settings.Rotation.SpeedAccelerationTime": {
+        "write": ["admin"]
+    },
+    "Settings.Rotation.SpeedDecelerationTime": {
+        "write": ["admin"]
+    },
+    "Settings.Rotation.FastStoppingTime": {
+        "write": ["admin"]
+    },
+    "Settings.Rotation.PositionDefault": {
+        "write": ["admin"]
+    },
+    "Settings.Rotation.PositionReset": {
+        "write": ["admin"]
+    },
+    "Settings.Rotation.PositionOffshore": {
+        "write": ["admin"]
+    },
+    "Settings.Rotation.PositionMarchingMode": {
+        "write": ["admin"]
+    },
+    "Settings.Rotation.SpeedDownMaxPos": {
+        "write": ["admin"]
+    },
+    "Settings.Rotation.SpeedDownMaxPosFactor": {
+        "write": ["admin"]
+    }
+}
