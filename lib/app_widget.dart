@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
+import 'package:sss_computing_client/presentation/strength/strength_page.dart';
 import 'package:window_manager/window_manager.dart';
 
 class AppWidget extends StatefulWidget {
@@ -21,7 +22,7 @@ class _AppWidgetState extends State<AppWidget> {
     super.dispose();
   }
 
-  //
+  ///
   @override
   void initState() {
     super.initState();
@@ -53,7 +54,9 @@ class _AppWidgetState extends State<AppWidget> {
   ///
   void _themeSwitchListener() {
     if (mounted) {
-      setState(() => true);
+      setState(() {
+        return;
+      });
     }
   }
 
@@ -63,7 +66,7 @@ class _AppWidgetState extends State<AppWidget> {
       debugShowCheckedModeBanner: false,
       theme: widget._themeSwitch.themeData,
       home: const Scaffold(
-        body: Text('Home Page Empty'),
+        body: StrengthPage(),
       ),
     );
   }
