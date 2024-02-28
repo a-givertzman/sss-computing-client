@@ -9,7 +9,9 @@ void main() async {
 
   runZonedGuarded(
     () async {
+      const Log('main').debug('Initializing the application...');
       WidgetsFlutterBinding.ensureInitialized();
+      const Log('main').debug('Initializing settings of application...');
       await AppSettings.initialize(
         jsonMap: JsonMap.fromTextFile(
           const TextFile.asset(
@@ -17,6 +19,7 @@ void main() async {
           ),
         ),
       );
+      const Log('main').debug('Creating App Theme switcher...');
       final appThemeSwitch = AppThemeSwitch();
       runApp(AppWidget(themeSwitch: appThemeSwitch));
     },

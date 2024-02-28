@@ -65,9 +65,7 @@ class _AppWidgetState extends State<AppWidget> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: widget._themeSwitch.themeData,
-      home: const Scaffold(
-        body: StrengthPage(),
-      ),
+      home: const StrengthPage(),
     );
   }
 }
