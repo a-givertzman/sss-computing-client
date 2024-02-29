@@ -35,6 +35,9 @@ class ChartLines extends StatelessWidget {
           maxX: _maxX,
           minY: _minY,
           maxY: _maxY,
+          lineTouchData: const LineTouchData(
+            enabled: false,
+          ),
           gridData: const FlGridData(
             show: false,
           ),
