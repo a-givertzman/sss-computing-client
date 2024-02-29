@@ -1,13 +1,14 @@
 import 'dart:math';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/chart_axis.dart';
 
 class ChartBars extends StatelessWidget {
   final double _minX;
   final double _maxX;
   final double _minY;
   final double _maxY;
+  final ChartAxis _xAxis;
   final List<double?> _values;
   final List<double?> _lowLimits;
   final List<double?> _highLimits;
@@ -19,6 +20,7 @@ class ChartBars extends StatelessWidget {
     required double maxX,
     required double minY,
     required double maxY,
+    required ChartAxis xAxis,
     required List<double?> values,
     required List<double?> lowLimits,
     required List<double?> highLimits,
@@ -28,6 +30,7 @@ class ChartBars extends StatelessWidget {
         _maxX = maxX,
         _minY = minY,
         _maxY = maxY,
+        _xAxis = xAxis,
         _values = values,
         _lowLimits = lowLimits,
         _highLimits = highLimits,
@@ -47,8 +50,21 @@ class ChartBars extends StatelessWidget {
           gridData: const FlGridData(
             show: false,
           ),
-          titlesData: const FlTitlesData(
-            show: false,
+          titlesData: FlTitlesData(
+            show: true,
+            topTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize:
+                    _xAxis.labelsSpaceReserved + _xAxis.captionSpaceReserved,
+                getTitlesWidget: (value, _) => _AxisLabel(
+                  value: value,
+                ),
+              ),
+            ),
+            leftTitles: const AxisTitles(),
+            rightTitles: const AxisTitles(),
+            bottomTitles: const AxisTitles(),
           ),
           borderData: FlBorderData(
             show: false,
@@ -111,5 +127,29 @@ class ChartBars extends StatelessWidget {
         ),
       );
     });
+  }
+}
+
+class _AxisLabel extends StatelessWidget {
+  final double _value;
+  const _AxisLabel({
+    required double value,
+  }) : _value = value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Text(
+        'Frames\n[${_value.toInt()} - ${_value.toInt() + 1}]',
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.bodySmall,
+        // style: TextStyle(
+        //   fontSize: 12.0,
+        //   height: 1.0,
+        //   color: Theme.of(context).colorScheme.onSurface,
+        // ),
+      ),
+    );
   }
 }

@@ -73,9 +73,11 @@ class BarChart extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: horizontalPad,
-            vertical: verticalPad,
+          padding: EdgeInsets.fromLTRB(
+            horizontalPad,
+            0.0,
+            horizontalPad,
+            verticalPad,
           ),
           child: ChartBars(
             values: _values,
@@ -86,6 +88,7 @@ class BarChart extends StatelessWidget {
             maxX: _maxX,
             minY: _minY,
             maxY: _maxY,
+            xAxis: _xAxis,
             color: _color ?? theme.colorScheme.primary,
           ),
         ),

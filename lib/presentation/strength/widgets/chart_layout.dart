@@ -107,11 +107,12 @@ class _AxisLabel extends StatelessWidget {
       child: Text(
         _value.toStringAsFixed(0),
         textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 12.0,
-          height: 1.0,
-          color: Theme.of(context).colorScheme.primary,
-        ),
+        style: Theme.of(context).textTheme.bodySmall,
+        // style: TextStyle(
+        //   fontSize: 12.0,
+        //   height: 1.0,
+        //   color: Theme.of(context).colorScheme.onSurface,
+        // ),
       ),
     );
   }
@@ -127,11 +128,12 @@ class _AxisCaption extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       _caption,
-      style: TextStyle(
-        fontSize: 12.0,
-        height: 1.0,
-        color: Theme.of(context).colorScheme.primary,
-      ),
+      style: Theme.of(context).textTheme.bodySmall,
+      // style: TextStyle(
+      //   fontSize: 12.0,
+      //   height: 1.0,
+      //   color: Theme.of(context).colorScheme.onSurface,
+      // ),
     );
   }
 }
