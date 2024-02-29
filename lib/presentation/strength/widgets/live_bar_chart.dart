@@ -19,6 +19,10 @@ class _LiveBarChartState extends State<LiveBarChart> {
   void initState() {
     // initialize stream listener
     //
+    _values = [10.0, 24.0, 10.0, 100.0];
+    _widths = [50.0, 50.0, 50.0, 50.0];
+    _lowLimits = [-20.0, -25.0, -30.0, -20.0];
+    _highLimits = [20.0, 25.0, 30.0, 20.0];
     super.initState();
   }
 
@@ -32,16 +36,16 @@ class _LiveBarChartState extends State<LiveBarChart> {
   @override
   Widget build(BuildContext context) {
     return BarChart(
-      values: const [10.0, 20.0, 10.0, 100.0],
-      widths: const [50.0, 50.0, 50.0, 50.0],
-      lowLimits: const [-20.0, -25.0, -30.0, -20.0],
-      highLimits: const [20.0, 25.0, 30.0, 20.0],
+      values: _values,
+      widths: _widths,
+      lowLimits: _lowLimits,
+      highLimits: _highLimits,
       minX: -100.0,
       maxX: 100.0,
       minY: -200.0,
       maxY: 200.0,
       xAxis: ChartAxis(
-        valueInterval: 50,
+        valueInterval: 25,
         labelsSpaceReserved: 30.0,
         captionSpaceReserved: 0.0,
         isLabelsVisible: false,
@@ -50,7 +54,7 @@ class _LiveBarChartState extends State<LiveBarChart> {
         valueInterval: 50,
         labelsSpaceReserved: 60.0,
         captionSpaceReserved: 15.0,
-        caption: '[10^3 t]',
+        caption: '[10^3 tonn]',
       ),
     );
   }

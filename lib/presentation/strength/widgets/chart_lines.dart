@@ -8,6 +8,7 @@ class ChartLines extends StatelessWidget {
   final double _maxY;
   final List<double?> _values;
   final List<double?> _widths;
+  final Color _color;
   const ChartLines({
     super.key,
     required double minX,
@@ -16,12 +17,14 @@ class ChartLines extends StatelessWidget {
     required double maxY,
     required List<double?> values,
     required List<double?> widths,
+    required Color color,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
         _maxY = maxY,
         _values = values,
-        _widths = widths;
+        _widths = widths,
+        _color = color;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,7 @@ class ChartLines extends StatelessWidget {
                   dotData: const FlDotData(
                     show: false,
                   ),
-                  color: Colors.red,
+                  color: _color,
                   spots: [
                     FlSpot(
                       _minX + width * index,

@@ -15,6 +15,7 @@ class BarChart extends StatelessWidget {
   final List<double?> _highLimits;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
+  final Color? _color;
   const BarChart({
     super.key,
     required double minX,
@@ -27,6 +28,7 @@ class BarChart extends StatelessWidget {
     required List<double?> highLimits,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
+    Color? color,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
@@ -36,10 +38,12 @@ class BarChart extends StatelessWidget {
         _lowLimits = lowLimits,
         _highLimits = highLimits,
         _xAxis = xAxis,
-        _yAxis = yAxis;
+        _yAxis = yAxis,
+        _color = color;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final verticalPad =
         _xAxis.labelsSpaceReserved + _xAxis.captionSpaceReserved;
     final horizontalPad =
@@ -50,51 +54,8 @@ class BarChart extends StatelessWidget {
     final layoutLetfPad = horizontalPad -
         (_yAxis.isLabelsVisible ? _yAxis.labelsSpaceReserved : 0.0) -
         (_yAxis.caption != null ? _yAxis.captionSpaceReserved : 0.0);
-
     return Stack(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: horizontalPad,
-            vertical: verticalPad,
-          ),
-          child: ChartBars(
-            values: _values,
-            widths: _widths,
-            minX: _minX,
-            maxX: _maxX,
-            minY: _minY,
-            maxY: _maxY,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: horizontalPad,
-            vertical: verticalPad,
-          ),
-          child: ChartLines(
-            minX: _minX,
-            maxX: _maxX,
-            minY: _minY,
-            maxY: _maxY,
-            values: _lowLimits,
-            widths: _widths,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: horizontalPad,
-            vertical: verticalPad,
-          ),
-          child: ChartLines(
-            minX: _minX,
-            maxX: _maxX,
-            minY: _minY,
-            maxY: _maxY,
-            values: _highLimits,
-            widths: _widths,
-          ),
-        ),
         Padding(
           padding: EdgeInsets.fromLTRB(
             layoutLetfPad,
@@ -109,6 +70,53 @@ class BarChart extends StatelessWidget {
             maxY: _maxY,
             xAxis: _xAxis,
             yAxis: _yAxis,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: horizontalPad,
+            vertical: verticalPad,
+          ),
+          child: ChartBars(
+            values: _values,
+            lowLimits: _lowLimits,
+            highLimits: _highLimits,
+            widths: _widths,
+            minX: _minX,
+            maxX: _maxX,
+            minY: _minY,
+            maxY: _maxY,
+            color: _color ?? theme.colorScheme.primary,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: horizontalPad,
+            vertical: verticalPad,
+          ),
+          child: ChartLines(
+            minX: _minX,
+            maxX: _maxX,
+            minY: _minY,
+            maxY: _maxY,
+            values: _lowLimits,
+            widths: _widths,
+            color: theme.colorScheme.error,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: horizontalPad,
+            vertical: verticalPad,
+          ),
+          child: ChartLines(
+            minX: _minX,
+            maxX: _maxX,
+            minY: _minY,
+            maxY: _maxY,
+            values: _highLimits,
+            widths: _widths,
+            color: theme.colorScheme.error,
           ),
         ),
       ],

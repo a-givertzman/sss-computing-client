@@ -64,10 +64,18 @@ class ChartLayout extends StatelessWidget {
           ),
           rightTitles: const AxisTitles(),
         ),
+        borderData: FlBorderData(
+          show: true,
+          border: Border.fromBorderSide(
+            BorderSide(color: Theme.of(context).colorScheme.primary),
+          ),
+        ),
         gridData: FlGridData(
           drawHorizontalLine: _yAxis.isGridVisible,
+          getDrawingHorizontalLine: (_) => _line(context),
           horizontalInterval: _yAxis.valueInterval,
           drawVerticalLine: _xAxis.isGridVisible,
+          getDrawingVerticalLine: (_) => _line(context),
           verticalInterval: _xAxis.valueInterval,
         ),
         lineBarsData: [
@@ -75,6 +83,13 @@ class ChartLayout extends StatelessWidget {
           LineChartBarData(),
         ],
       ),
+    );
+  }
+
+  FlLine _line(BuildContext context) {
+    return FlLine(
+      color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+      strokeWidth: 0.5,
     );
   }
 }
@@ -92,9 +107,10 @@ class _AxisLabel extends StatelessWidget {
       child: Text(
         _value.toStringAsFixed(0),
         textAlign: TextAlign.center,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 12.0,
           height: 1.0,
+          color: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
@@ -111,9 +127,10 @@ class _AxisCaption extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       _caption,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 12.0,
         height: 1.0,
+        color: Theme.of(context).colorScheme.primary,
       ),
     );
   }

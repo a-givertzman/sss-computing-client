@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +9,10 @@ class ChartBars extends StatelessWidget {
   final double _minY;
   final double _maxY;
   final List<double?> _values;
+  final List<double?> _lowLimits;
+  final List<double?> _highLimits;
   final List<double?> _widths;
+  final Color? _color;
   const ChartBars({
     super.key,
     required double minX,
@@ -15,13 +20,19 @@ class ChartBars extends StatelessWidget {
     required double minY,
     required double maxY,
     required List<double?> values,
+    required List<double?> lowLimits,
+    required List<double?> highLimits,
     required List<double?> widths,
+    required Color? color,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
         _maxY = maxY,
         _values = values,
-        _widths = widths;
+        _lowLimits = lowLimits,
+        _highLimits = highLimits,
+        _widths = widths,
+        _color = color;
 
   @override
   Widget build(BuildContext context) {
@@ -48,21 +59,49 @@ class ChartBars extends StatelessWidget {
                 final index = indexedValue.$1;
                 final value = indexedValue.$2 ?? 0.0;
                 final width = _widths[index] ?? 0.0;
+                final lowLimit = _lowLimits[index] ?? 0.0;
+                final highLimit = _highLimits[index] ?? 0.0;
                 return BarChartGroupData(
                   x: index,
+                  groupVertically: true,
                   barRods: [
                     BarChartRodData(
+                      fromY: _minY,
                       toY: _maxY,
                       width: width * xAxisScale,
                       color: Colors.transparent,
+                      gradient: (value > lowLimit && value < highLimit)
+                          ? null
+                          : LinearGradient(
+                              begin: const Alignment(0, 0),
+                              end: const Alignment(0, -0.1),
+                              transform: const GradientRotation(pi / 4),
+                              stops: const [0.0, 0.5, 0.5, 1],
+                              colors: [
+                                Colors.transparent,
+                                Colors.transparent,
+                                Theme.of(context)
+                                    .colorScheme
+                                    .error
+                                    .withOpacity(0.5),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .error
+                                    .withOpacity(0.5),
+                              ],
+                              tileMode: TileMode.repeated,
+                            ),
                       borderRadius: const BorderRadius.all(Radius.zero),
-                      rodStackItems: [
-                        BarChartRodStackItem(
-                          0.0,
-                          value,
-                          Colors.blue,
-                        ),
-                      ],
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    BarChartRodData(
+                      fromY: 0.0,
+                      toY: value,
+                      width: width * xAxisScale,
+                      color: _color ?? Theme.of(context).primaryColor,
+                      borderRadius: const BorderRadius.all(Radius.zero),
                     ),
                   ],
                 );
