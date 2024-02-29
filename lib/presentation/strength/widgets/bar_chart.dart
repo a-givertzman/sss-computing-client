@@ -5,6 +5,10 @@ import 'package:sss_computing_client/presentation/strength/widgets/chart_layout.
 import 'package:sss_computing_client/presentation/strength/widgets/chart_lines.dart';
 
 class BarChart extends StatelessWidget {
+  final double _minX;
+  final double _maxX;
+  final double _minY;
+  final double _maxY;
   final List<double?> _values;
   final List<double?> _widths;
   final List<double?> _lowLimits;
@@ -13,13 +17,21 @@ class BarChart extends StatelessWidget {
   final ChartAxis _yAxis;
   const BarChart({
     super.key,
+    required double minX,
+    required double maxX,
+    required double minY,
+    required double maxY,
     required List<double?> values,
     required List<double?> widths,
     required List<double?> lowLimits,
     required List<double?> highLimits,
-    ChartAxis xAxis = const ChartAxis(isLabelsVisible: false),
-    ChartAxis yAxis = const ChartAxis(isLabelsVisible: false),
-  })  : _values = values,
+    required ChartAxis xAxis,
+    required ChartAxis yAxis,
+  })  : _minX = minX,
+        _maxX = maxX,
+        _minY = minY,
+        _maxY = maxY,
+        _values = values,
         _widths = widths,
         _lowLimits = lowLimits,
         _highLimits = highLimits,
@@ -49,8 +61,10 @@ class BarChart extends StatelessWidget {
           child: ChartBars(
             values: _values,
             widths: _widths,
-            xAxis: _xAxis,
-            yAxis: _yAxis,
+            minX: _minX,
+            maxX: _maxX,
+            minY: _minY,
+            maxY: _maxY,
           ),
         ),
         Padding(
@@ -59,10 +73,12 @@ class BarChart extends StatelessWidget {
             vertical: verticalPad,
           ),
           child: ChartLines(
+            minX: _minX,
+            maxX: _maxX,
+            minY: _minY,
+            maxY: _maxY,
             values: _lowLimits,
             widths: _widths,
-            xAxis: _xAxis,
-            yAxis: _yAxis,
           ),
         ),
         Padding(
@@ -71,10 +87,12 @@ class BarChart extends StatelessWidget {
             vertical: verticalPad,
           ),
           child: ChartLines(
+            minX: _minX,
+            maxX: _maxX,
+            minY: _minY,
+            maxY: _maxY,
             values: _highLimits,
             widths: _widths,
-            xAxis: _xAxis,
-            yAxis: _yAxis,
           ),
         ),
         Padding(
@@ -85,6 +103,10 @@ class BarChart extends StatelessWidget {
             layoutBottomPad,
           ),
           child: ChartLayout(
+            minX: _minX,
+            maxX: _maxX,
+            minY: _minY,
+            maxY: _maxY,
             xAxis: _xAxis,
             yAxis: _yAxis,
           ),

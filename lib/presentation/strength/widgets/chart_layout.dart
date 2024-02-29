@@ -3,23 +3,35 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/chart_axis.dart';
 
 class ChartLayout extends StatelessWidget {
+  final double _minX;
+  final double _maxX;
+  final double _minY;
+  final double _maxY;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
   const ChartLayout({
     super.key,
+    required double minX,
+    required double maxX,
+    required double minY,
+    required double maxY,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
-  })  : _yAxis = yAxis,
+  })  : _minX = minX,
+        _maxX = maxX,
+        _minY = minY,
+        _maxY = maxY,
+        _yAxis = yAxis,
         _xAxis = xAxis;
 
   @override
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
-        minX: _xAxis.minValue,
-        minY: _yAxis.minValue,
-        maxY: _yAxis.maxValue,
-        maxX: _xAxis.maxValue,
+        minX: _minX,
+        minY: _minY,
+        maxX: _maxX,
+        maxY: _maxY,
         titlesData: FlTitlesData(
           show: true,
           leftTitles: AxisTitles(
@@ -70,7 +82,6 @@ class ChartLayout extends StatelessWidget {
 class _AxisLabel extends StatelessWidget {
   final double _value;
   const _AxisLabel({
-    super.key,
     required double value,
   }) : _value = value;
 
@@ -93,7 +104,6 @@ class _AxisLabel extends StatelessWidget {
 class _AxisCaption extends StatelessWidget {
   final String _caption;
   const _AxisCaption({
-    super.key,
     required String caption,
   }) : _caption = caption;
 

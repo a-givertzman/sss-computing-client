@@ -1,20 +1,25 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/chart_axis.dart';
 
 class ChartLines extends StatelessWidget {
-  final ChartAxis _xAxis;
-  final ChartAxis _yAxis;
+  final double _minX;
+  final double _maxX;
+  final double _minY;
+  final double _maxY;
   final List<double?> _values;
   final List<double?> _widths;
   const ChartLines({
     super.key,
-    required ChartAxis xAxis,
-    required ChartAxis yAxis,
+    required double minX,
+    required double maxX,
+    required double minY,
+    required double maxY,
     required List<double?> values,
     required List<double?> widths,
-  })  : _yAxis = yAxis,
-        _xAxis = xAxis,
+  })  : _minX = minX,
+        _maxX = maxX,
+        _minY = minY,
+        _maxY = maxY,
         _values = values,
         _widths = widths;
 
@@ -23,10 +28,10 @@ class ChartLines extends StatelessWidget {
     return LayoutBuilder(builder: (context, contstraints) {
       return LineChart(
         LineChartData(
-          minX: _xAxis.minValue,
-          maxX: _xAxis.maxValue,
-          minY: _yAxis.minValue,
-          maxY: _yAxis.maxValue,
+          minX: _minX,
+          maxX: _maxX,
+          minY: _minY,
+          maxY: _maxY,
           gridData: const FlGridData(
             show: false,
           ),
@@ -49,11 +54,11 @@ class ChartLines extends StatelessWidget {
                   color: Colors.red,
                   spots: [
                     FlSpot(
-                      (_xAxis.minValue ?? 0) + width * index,
+                      _minX + width * index,
                       value,
                     ),
                     FlSpot(
-                      (_xAxis.minValue ?? 0) + width * (index + 1),
+                      _minX + width * (index + 1),
                       value,
                     ),
                   ],

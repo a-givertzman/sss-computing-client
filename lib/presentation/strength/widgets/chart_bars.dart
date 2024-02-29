@@ -1,32 +1,36 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/chart_axis.dart';
 
 class ChartBars extends StatelessWidget {
-  final ChartAxis _xAxis;
-  final ChartAxis _yAxis;
+  final double _minX;
+  final double _maxX;
+  final double _minY;
+  final double _maxY;
   final List<double?> _values;
   final List<double?> _widths;
   const ChartBars({
     super.key,
-    required ChartAxis xAxis,
-    required ChartAxis yAxis,
+    required double minX,
+    required double maxX,
+    required double minY,
+    required double maxY,
     required List<double?> values,
     required List<double?> widths,
-  })  : _yAxis = yAxis,
-        _xAxis = xAxis,
+  })  : _minX = minX,
+        _maxX = maxX,
+        _minY = minY,
+        _maxY = maxY,
         _values = values,
         _widths = widths;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, contstraints) {
-      final xAxisScale =
-          contstraints.maxWidth / (_xAxis.maxValue! - _xAxis.minValue!);
+      final xAxisScale = contstraints.maxWidth / (_maxX - _minX);
       return BarChart(
         BarChartData(
-          minY: _yAxis.minValue,
-          maxY: _yAxis.maxValue,
+          minY: _minY,
+          maxY: _maxY,
           alignment: BarChartAlignment.start,
           groupsSpace: 0.0,
           gridData: const FlGridData(
@@ -48,7 +52,7 @@ class ChartBars extends StatelessWidget {
                   x: index,
                   barRods: [
                     BarChartRodData(
-                      toY: _yAxis.maxValue ?? 0.0,
+                      toY: _maxY,
                       width: width * xAxisScale,
                       color: Colors.transparent,
                       borderRadius: const BorderRadius.all(Radius.zero),

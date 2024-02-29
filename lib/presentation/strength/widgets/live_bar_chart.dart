@@ -31,22 +31,22 @@ class _LiveBarChartState extends State<LiveBarChart> {
 
   @override
   Widget build(BuildContext context) {
-    return const BarChart(
-      values: [10.0, 20.0, 10.0, 100.0],
-      widths: [50.0, 50.0, 50.0, 50.0],
-      lowLimits: [-20.0, -25.0, -30.0, -20.0],
-      highLimits: [20.0, 25.0, 30.0, 20.0],
+    return BarChart(
+      values: const [10.0, 20.0, 10.0, 100.0],
+      widths: const [50.0, 50.0, 50.0, 50.0],
+      lowLimits: const [-20.0, -25.0, -30.0, -20.0],
+      highLimits: const [20.0, 25.0, 30.0, 20.0],
+      minX: -100.0,
+      maxX: 100.0,
+      minY: -200.0,
+      maxY: 200.0,
       xAxis: ChartAxis(
-        minValue: -100.0,
-        maxValue: 100.0,
         valueInterval: 50,
         labelsSpaceReserved: 30.0,
         captionSpaceReserved: 0.0,
         isLabelsVisible: false,
       ),
       yAxis: ChartAxis(
-        minValue: -200.0,
-        maxValue: 200.0,
         valueInterval: 50,
         labelsSpaceReserved: 60.0,
         captionSpaceReserved: 15.0,

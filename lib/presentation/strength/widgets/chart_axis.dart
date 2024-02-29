@@ -1,15 +1,11 @@
 class ChartAxis {
-  final double? minValue;
-  final double? maxValue;
   final double? valueInterval;
   final String? caption;
   final double captionSpaceReserved;
   final bool isLabelsVisible;
   final double labelsSpaceReserved;
   final bool isGridVisible;
-  const ChartAxis({
-    this.minValue,
-    this.maxValue,
+  ChartAxis({
     this.valueInterval,
     this.caption,
     this.captionSpaceReserved = 40.0,
