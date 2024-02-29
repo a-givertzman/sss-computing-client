@@ -29,16 +29,12 @@ class ChartLegend extends StatelessWidget {
       width: _width,
       child: ListView.separated(
         shrinkWrap: true,
-        padding: EdgeInsets.symmetric(
-          vertical: padding,
-          horizontal: margin,
-        ),
         itemBuilder: (_, i) => Container(
           padding: EdgeInsets.symmetric(
             vertical: padding * 0.5,
             horizontal: padding,
           ),
-          color: _colors.elementAt(i).withOpacity(0.3),
+          color: _colors.elementAt(i).withOpacity(0.5),
           child: Text(
             _names.elementAt(i),
             softWrap: false,

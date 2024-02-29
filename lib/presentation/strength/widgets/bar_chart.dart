@@ -64,7 +64,7 @@ class BarChart extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(
             layoutLetfPad,
             verticalPad,
-            horizontalPad,
+            0.0,
             layoutBottomPad,
           ),
           child: ChartLayout(
@@ -80,7 +80,7 @@ class BarChart extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(
             horizontalPad,
             0.0,
-            horizontalPad,
+            0.0,
             verticalPad,
           ),
           child: ChartBars(
@@ -97,9 +97,11 @@ class BarChart extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: horizontalPad,
-            vertical: verticalPad,
+          padding: EdgeInsets.fromLTRB(
+            horizontalPad,
+            verticalPad,
+            0.0,
+            verticalPad,
           ),
           child: ChartLines(
             minX: _minX,
@@ -112,9 +114,11 @@ class BarChart extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: horizontalPad,
-            vertical: verticalPad,
+          padding: EdgeInsets.fromLTRB(
+            horizontalPad,
+            verticalPad,
+            0.0,
+            verticalPad,
           ),
           child: ChartLines(
             minX: _minX,

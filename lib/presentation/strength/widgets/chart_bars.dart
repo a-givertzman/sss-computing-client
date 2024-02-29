@@ -42,6 +42,7 @@ class ChartBars extends StatelessWidget {
     return LayoutBuilder(builder: (context, contstraints) {
       final xAxisScale = contstraints.maxWidth / (_maxX - _minX);
       return BarChart(
+        swapAnimationDuration: const Duration(milliseconds: 400),
         BarChartData(
           minY: _minY,
           maxY: _maxY,
@@ -90,7 +91,7 @@ class ChartBars extends StatelessWidget {
                           ? null
                           : LinearGradient(
                               begin: const Alignment(0, 0),
-                              end: const Alignment(0, -0.1),
+                              end: const Alignment(0.0, -0.1),
                               transform: const GradientRotation(pi / 4),
                               stops: const [0.0, 0.5, 0.5, 1],
                               colors: [
