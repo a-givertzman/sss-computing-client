@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/chart_axis.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/chart_bars.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/chart_layout.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/chart_legend.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/chart_lines.dart';
 
 class BarChart extends StatelessWidget {
@@ -16,6 +17,7 @@ class BarChart extends StatelessWidget {
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
   final Color? _color;
+  final String _caption;
   const BarChart({
     super.key,
     required double minX,
@@ -28,6 +30,7 @@ class BarChart extends StatelessWidget {
     required List<double?> highLimits,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
+    required String caption,
     Color? color,
   })  : _minX = minX,
         _maxX = maxX,
@@ -39,7 +42,8 @@ class BarChart extends StatelessWidget {
         _highLimits = highLimits,
         _xAxis = xAxis,
         _yAxis = yAxis,
-        _color = color;
+        _color = color,
+        _caption = caption;
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +124,21 @@ class BarChart extends StatelessWidget {
             values: _highLimits,
             widths: _widths,
             color: theme.colorScheme.error,
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: ChartLegend(
+            names: [
+              _caption,
+              'Limits',
+            ],
+            colors: [
+              _color ?? theme.colorScheme.primary,
+              theme.colorScheme.error,
+            ],
+            width: 150.0,
           ),
         ),
       ],
