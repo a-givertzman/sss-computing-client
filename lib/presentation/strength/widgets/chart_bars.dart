@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/chart_axis.dart';
 
 class ChartBars extends StatelessWidget {
@@ -98,12 +99,12 @@ class ChartBars extends StatelessWidget {
                                 Colors.transparent,
                                 Colors.transparent,
                                 Theme.of(context)
-                                    .colorScheme
-                                    .error
+                                    .stateColors
+                                    .alarm
                                     .withOpacity(0.5),
                                 Theme.of(context)
-                                    .colorScheme
-                                    .error
+                                    .stateColors
+                                    .alarm
                                     .withOpacity(0.5),
                               ],
                               tileMode: TileMode.repeated,

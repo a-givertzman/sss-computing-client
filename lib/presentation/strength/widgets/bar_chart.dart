@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/chart_axis.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/chart_bars.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/chart_layout.dart';
@@ -110,7 +111,7 @@ class BarChart extends StatelessWidget {
             maxY: _maxY,
             values: _lowLimits,
             widths: _widths,
-            color: theme.colorScheme.error,
+            color: theme.stateColors.alarm,
           ),
         ),
         Padding(
@@ -127,7 +128,7 @@ class BarChart extends StatelessWidget {
             maxY: _maxY,
             values: _highLimits,
             widths: _widths,
-            color: theme.colorScheme.error,
+            color: theme.stateColors.alarm,
           ),
         ),
         Positioned(
@@ -139,8 +140,8 @@ class BarChart extends StatelessWidget {
               'Limits',
             ],
             colors: [
-              _color ?? theme.colorScheme.primary,
-              theme.colorScheme.error,
+              _color ?? theme.stateColors.alarm,
+              theme.stateColors.alarm,
             ],
             width: 150.0,
           ),
