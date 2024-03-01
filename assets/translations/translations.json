@@ -6,5 +6,6 @@
     "Data saving": ["Data saving", "Сохранение данных"],
     "Data saved": ["Data saved", "Данные сохранены"],
     "Data will be persisted on the server. Do you want to proceed?": ["Data will be persisted on the server. Do you want to proceed?", "Данные будут сохранены на сервере. Хотите продолжить?"],
-    "Something went wrong": ["Something went wrong", "Что-то пошло не так"]
+    "Something went wrong": ["Something went wrong", "Что-то пошло не так"],
+    "Ship parameters": ["Ship parameters", "Параметры корабля"]
 }
