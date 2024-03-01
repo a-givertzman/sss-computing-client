@@ -1,0 +1,10 @@
+{
+    "Save": ["Save", "Сохранить"],
+    "Please, fix all errors before saving!": ["Please, fix all errors before saving!", "Пожалуйста, исправьте все ошибки перед сохранением!"],
+    "Too few characters": ["Too few characters", "Cлишком мало символов"],
+    "Too many characters": ["Too many characters", "Слишком много символов"],
+    "Data saving": ["Data saving", "Сохранение данных"],
+    "Data saved": ["Data saved", "Данные сохранены"],
+    "Data will be persisted on the server. Do you want to proceed?": ["Data will be persisted on the server. Do you want to proceed?", "Данные будут сохранены на сервере. Хотите продолжить?"],
+    "Something went wrong": ["Something went wrong", "Что-то пошло не так"]
+}
