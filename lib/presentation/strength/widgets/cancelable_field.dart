@@ -12,6 +12,7 @@ class CancelableField extends StatefulWidget {
   final String _initialValue;
   final TextEditingController? _controller;
   final String? _label;
+  final String? _suffixText;
   final String? _sendError;
   final void Function(String)? _onChanged;
   final void Function(String)? _onCanceled;
@@ -22,6 +23,7 @@ class CancelableField extends StatefulWidget {
   const CancelableField({
     super.key,
     String? label,
+    String? suffixText,
     String? sendError,
     String initialValue = '',
     TextEditingController? controller,
@@ -32,6 +34,7 @@ class CancelableField extends StatefulWidget {
     Validator? validator,
   })  : _controller = controller,
         _label = label,
+        _suffixText = suffixText,
         _sendError = sendError,
         _initialValue = initialValue,
         _onChanged = onChanged,
@@ -43,6 +46,7 @@ class CancelableField extends StatefulWidget {
   @override
   State<CancelableField> createState() => _CancelableFieldState(
         label: _label,
+        suffixText: _suffixText,
         sendError: _sendError,
         initialValue: _initialValue,
         onChanged: _onChanged,
@@ -58,6 +62,7 @@ class _CancelableFieldState extends State<CancelableField> {
   late final TextEditingController _controller;
   final FieldType _fieldType;
   final String? _label;
+  final String? _suffixText;
   final void Function(String)? _onChanged;
   final void Function(String)? _onCanceled;
   final Future<Result<String>> Function(String?)? _onSaved;
@@ -71,12 +76,14 @@ class _CancelableFieldState extends State<CancelableField> {
     required Validator? validator,
     required FieldType fieldType,
     required String? label,
+    required String? suffixText,
     required String? sendError,
     required void Function(String)? onChanged,
     required void Function(String)? onCanceled,
     required Future<Result<String>> Function(String?)? onSaved,
   })  : _initialValue = initialValue,
         _label = label,
+        _suffixText = suffixText,
         _sendError = sendError,
         _onChanged = onChanged,
         _onCanceled = onCanceled,
@@ -169,6 +176,7 @@ class _CancelableFieldState extends State<CancelableField> {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Text(_suffixText ?? ''),
             _SuffixIcon(
               isVisible: _initialValue != _controller.text,
               size: suffixIconSize,
@@ -190,22 +198,22 @@ class _CancelableFieldState extends State<CancelableField> {
                 ),
               ),
             ),
-            _SuffixIcon(
-              size: suffixIconSize,
-              isVisible: _sendError != null,
-              visibleChild: Tooltip(
-                message: _sendError ?? '',
-                child: Icon(
-                  Icons.info_outline,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-              ),
-              invisibleChild: _SuffixIcon(
-                size: suffixIconSize,
-                isVisible: _isInProcess,
-                visibleChild: const CupertinoActivityIndicator(),
-              ),
-            ),
+            // _SuffixIcon(
+            //   size: suffixIconSize,
+            //   isVisible: _sendError != null,
+            //   visibleChild: Tooltip(
+            //     message: _sendError ?? '',
+            //     child: Icon(
+            //       Icons.info_outline,
+            //       color: Theme.of(context).colorScheme.error,
+            //     ),
+            //   ),
+            //   invisibleChild: _SuffixIcon(
+            //     size: suffixIconSize,
+            //     isVisible: _isInProcess,
+            //     visibleChild: const CupertinoActivityIndicator(),
+            //   ),
+            // ),
           ],
         ),
       ),

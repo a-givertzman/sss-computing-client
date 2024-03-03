@@ -260,6 +260,7 @@ class _GeneralInfoColumns extends StatelessWidget {
 
   CancelableField _mapDataToField(FieldData data) => CancelableField(
         label: data.label,
+        suffixText: data.unit,
         initialValue: data.initialValue,
         fieldType: data.type,
         controller: data.controller,

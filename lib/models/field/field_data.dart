@@ -9,6 +9,7 @@ class FieldData {
   final String id;
   final FieldType type;
   final String label;
+  final String unit;
   String _initialValue;
   final FieldStored _record;
   final TextEditingController _controller;
@@ -22,6 +23,7 @@ class FieldData {
   FieldData({
     required this.id,
     required this.label,
+    required this.unit,
     required this.type,
     required String initialValue,
     required FieldStored record,
@@ -82,6 +84,7 @@ class FieldData {
   FieldData copyWith({
     String? id,
     String? label,
+    String? unit,
     FieldType? type,
     String? initialValue,
     FieldStored? record,
@@ -90,6 +93,7 @@ class FieldData {
       id: id ?? this.id,
       type: type ?? this.type,
       label: label ?? this.label,
+      unit: unit ?? this.unit,
       initialValue: initialValue ?? _initialValue,
       record: record ?? _record,
     );
