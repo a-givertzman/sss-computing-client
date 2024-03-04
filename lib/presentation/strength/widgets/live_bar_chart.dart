@@ -14,8 +14,8 @@ class LiveBarChart extends StatefulWidget {
 }
 
 class _LiveBarChartState extends State<LiveBarChart> {
-  late List<double?> _values;
-  late List<double?> _widths;
+  late List<double?> _yValues;
+  late List<(double, double)?> _xOffsets;
   late List<double?> _lowLimits;
   late List<double?> _highLimits;
   late final Stream<List<dynamic>> _subscription;
@@ -24,17 +24,17 @@ class _LiveBarChartState extends State<LiveBarChart> {
   void initState() {
     // initialize stream listener
     //
-    _values = [10.0, -150.0, 10.0, 100.0];
-    _widths = [50.0, 50.0, 50.0, 50.0];
+    _yValues = [10.0, -150.0, 10.0, 100.0];
+    _xOffsets = [(-100.0, -50.0), (-50.0, 0.0), (0.0, 50.0), (50.0, 100.0)];
     _lowLimits = [-50.0, -75.0, -100.0, -100.0];
     _highLimits = [100.0, 75.0, 100.0, 50.0];
 
     _updateTimer = Timer.periodic(
-      const Duration(seconds: 5),
+      const Duration(seconds: 100),
       (_) => setState(() {
         final (min, max) = (-100, 100);
-        _values = List.generate(
-          _values.length,
+        _yValues = List.generate(
+          _yValues.length,
           (_) => min + Random().nextInt(max - min).toDouble(),
         );
       }),
@@ -60,8 +60,8 @@ class _LiveBarChartState extends State<LiveBarChart> {
         child: BarChart(
           color: Colors.lightGreenAccent,
           caption: 'ShearForce',
-          values: _values,
-          widths: _widths,
+          yValues: _yValues,
+          xOffsets: _xOffsets,
           lowLimits: _lowLimits,
           highLimits: _highLimits,
           minX: -100.0,

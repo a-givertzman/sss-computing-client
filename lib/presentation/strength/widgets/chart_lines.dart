@@ -1,13 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
 
 class ChartLines extends StatelessWidget {
   final double _minX;
   final double _maxX;
   final double _minY;
   final double _maxY;
-  final List<double?> _values;
-  final List<double?> _widths;
+  final List<double?> _yValues;
+  final List<(double, double)?> _xOffsets;
   final Color _color;
   const ChartLines({
     super.key,
@@ -15,15 +16,15 @@ class ChartLines extends StatelessWidget {
     required double maxX,
     required double minY,
     required double maxY,
-    required List<double?> values,
-    required List<double?> widths,
+    required List<double?> yValues,
+    required List<(double, double)?> xOffsets,
     required Color color,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
         _maxY = maxY,
-        _values = values,
-        _widths = widths,
+        _yValues = yValues,
+        _xOffsets = xOffsets,
         _color = color;
 
   @override
@@ -48,11 +49,14 @@ class ChartLines extends StatelessWidget {
             show: false,
           ),
           lineBarsData: [
-            ..._values.indexed.map(
+            ..._yValues.indexed.map(
               (indexedValue) {
                 final index = indexedValue.$1;
                 final value = indexedValue.$2 ?? 0.0;
-                final width = _widths[index] ?? 0.0;
+                final (offsetL, offsetR) = _xOffsets[index] ?? (0.0, 0.0);
+                const Log('ChartLines | build').debug(
+                  'idx: $index\noffsetL: $offsetL\noffsetR: $offsetR\n',
+                );
                 return LineChartBarData(
                   dotData: const FlDotData(
                     show: false,
@@ -60,11 +64,11 @@ class ChartLines extends StatelessWidget {
                   color: _color,
                   spots: [
                     FlSpot(
-                      _minX + width * index,
+                      offsetL,
                       value,
                     ),
                     FlSpot(
-                      _minX + width * (index + 1),
+                      offsetR,
                       value,
                     ),
                   ],

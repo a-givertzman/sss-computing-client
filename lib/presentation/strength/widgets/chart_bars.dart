@@ -10,10 +10,10 @@ class ChartBars extends StatelessWidget {
   final double _minY;
   final double _maxY;
   final ChartAxis _xAxis;
-  final List<double?> _values;
+  final List<double?> _yValues;
   final List<double?> _lowLimits;
   final List<double?> _highLimits;
-  final List<double?> _widths;
+  final List<(double, double)?> _xOffsets;
   final Color? _color;
   const ChartBars({
     super.key,
@@ -22,20 +22,20 @@ class ChartBars extends StatelessWidget {
     required double minY,
     required double maxY,
     required ChartAxis xAxis,
-    required List<double?> values,
+    required List<double?> yValues,
     required List<double?> lowLimits,
     required List<double?> highLimits,
-    required List<double?> widths,
+    required List<(double, double)?> xOffsets,
     required Color? color,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
         _maxY = maxY,
         _xAxis = xAxis,
-        _values = values,
+        _yValues = yValues,
         _lowLimits = lowLimits,
         _highLimits = highLimits,
-        _widths = widths,
+        _xOffsets = xOffsets,
         _color = color;
 
   @override
@@ -72,11 +72,11 @@ class ChartBars extends StatelessWidget {
             show: false,
           ),
           barGroups: [
-            ..._values.indexed.map(
+            ..._yValues.indexed.map(
               (indexedValue) {
                 final index = indexedValue.$1;
                 final value = indexedValue.$2 ?? 0.0;
-                final width = _widths[index] ?? 0.0;
+                final (offsetL, offsetR) = _xOffsets[index] ?? (0.0, 0.0);
                 final lowLimit = _lowLimits[index] ?? 0.0;
                 final highLimit = _highLimits[index] ?? 0.0;
                 return BarChartGroupData(
@@ -86,7 +86,7 @@ class ChartBars extends StatelessWidget {
                     BarChartRodData(
                       fromY: _minY,
                       toY: _maxY,
-                      width: width * xAxisScale,
+                      width: (offsetR - offsetL) * xAxisScale,
                       color: Colors.transparent,
                       gradient: (value > lowLimit && value < highLimit)
                           ? null
@@ -117,7 +117,7 @@ class ChartBars extends StatelessWidget {
                     BarChartRodData(
                       fromY: 0.0,
                       toY: value,
-                      width: width * xAxisScale,
+                      width: (offsetR - offsetL) * xAxisScale,
                       color: _color ?? Theme.of(context).primaryColor,
                       borderRadius: const BorderRadius.all(Radius.zero),
                     ),

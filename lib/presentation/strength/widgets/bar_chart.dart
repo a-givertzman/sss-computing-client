@@ -11,8 +11,8 @@ class BarChart extends StatelessWidget {
   final double _maxX;
   final double _minY;
   final double _maxY;
-  final List<double?> _values;
-  final List<double?> _widths;
+  final List<double?> _yValues;
+  final List<(double, double)?> _xOffsets;
   final List<double?> _lowLimits;
   final List<double?> _highLimits;
   final ChartAxis _xAxis;
@@ -25,8 +25,8 @@ class BarChart extends StatelessWidget {
     required double maxX,
     required double minY,
     required double maxY,
-    required List<double?> values,
-    required List<double?> widths,
+    required List<double?> yValues,
+    required List<(double, double)?> xOffsets,
     required List<double?> lowLimits,
     required List<double?> highLimits,
     required ChartAxis xAxis,
@@ -37,8 +37,8 @@ class BarChart extends StatelessWidget {
         _maxX = maxX,
         _minY = minY,
         _maxY = maxY,
-        _values = values,
-        _widths = widths,
+        _yValues = yValues,
+        _xOffsets = xOffsets,
         _lowLimits = lowLimits,
         _highLimits = highLimits,
         _xAxis = xAxis,
@@ -86,10 +86,10 @@ class BarChart extends StatelessWidget {
           ),
           child: ClipRect(
             child: ChartBars(
-              values: _values,
+              yValues: _yValues,
               lowLimits: _lowLimits,
               highLimits: _highLimits,
-              widths: _widths,
+              xOffsets: _xOffsets,
               minX: _minX,
               maxX: _maxX,
               minY: _minY,
@@ -112,8 +112,8 @@ class BarChart extends StatelessWidget {
               maxX: _maxX,
               minY: _minY,
               maxY: _maxY,
-              values: _lowLimits,
-              widths: _widths,
+              yValues: _lowLimits,
+              xOffsets: _xOffsets,
               color: theme.stateColors.alarm,
             ),
           ),
@@ -131,8 +131,8 @@ class BarChart extends StatelessWidget {
               maxX: _maxX,
               minY: _minY,
               maxY: _maxY,
-              values: _highLimits,
-              widths: _widths,
+              yValues: _highLimits,
+              xOffsets: _xOffsets,
               color: theme.stateColors.alarm,
             ),
           ),
