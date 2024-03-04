@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/models/field/field_data.dart';
 import 'package:sss_computing_client/models/field/field_stored.dart';
 import 'package:sss_computing_client/models/field/field_type.dart';
@@ -9,14 +10,25 @@ import 'package:sss_computing_client/presentation/strength/widgets/general_info_
 class StrengthPage extends StatelessWidget {
   const StrengthPage({super.key});
 
-  Future<Result<List<FieldData>>> _pesistAll(List<FieldData> fieldDatas) async {
-    final fieldsPersisted = await Future.wait(fieldDatas.map(
-      (field) async {
-        final fieldPersisted = await field.save();
-        return field.copyWith(initialValue: fieldPersisted.data);
-      },
-    ));
-    return Result(data: fieldsPersisted);
+  Future<ResultF<List<FieldData>>> _pesistAll(
+    List<FieldData> fieldDatas,
+  ) async {
+    try {
+      final fieldsPersisted = await Future.wait(fieldDatas.map(
+        (field) async {
+          switch (await field.save()) {
+            case Ok(:final value):
+              return field.copyWith(initialValue: value);
+            case Err(:final error):
+              Log('$runtimeType | _persistAll').error(error);
+              throw error;
+          }
+        },
+      ));
+      return Ok(fieldsPersisted);
+    } on Err<List<FieldData>, Failure<List<FieldData>>> catch (err) {
+      return err;
+    }
   }
 
   @override

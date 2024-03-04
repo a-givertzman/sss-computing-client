@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/models/field/field_data.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/async_action_button.dart';
@@ -11,12 +12,12 @@ import 'package:sss_computing_client/presentation/strength/widgets/field_group.d
 
 class GeneralInfoForm extends StatefulWidget {
   final List<FieldData> _fieldsData;
-  final Future<Result<List<FieldData>>> Function()? _onSave;
+  final Future<ResultF<List<FieldData>>> Function()? _onSave;
 
   const GeneralInfoForm({
     super.key,
     required List<FieldData> fieldData,
-    Future<Result<List<FieldData>>> Function()? onSave,
+    Future<ResultF<List<FieldData>>> Function()? onSave,
   })  : _onSave = onSave,
         _fieldsData = fieldData;
 
@@ -194,17 +195,14 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
       if (isSaveSubmitted ?? false) {
         final onSave = widget._onSave;
         if (onSave != null) {
-          final result = await onSave();
-          result.fold(
-            onData: (newFields) {
+          switch (await onSave()) {
+            case Ok(value: final newFields):
               _updateFieldsWithNewData(newFields);
               _formKey.currentState?.save();
               _showInfoMessage(context, const Localized('Data saved').v);
-            },
-            onError: (error) {
+            case Err(:final error):
               _showErrorMessage(context, error.message);
-            },
-          );
+          }
         }
       }
     } else {
@@ -279,7 +277,7 @@ class _GeneralInfoColumns extends StatelessWidget {
         },
         onSaved: (_) {
           _onSaved?.call();
-          return Future.value(const Result(data: ""));
+          return Future.value(const Ok(""));
         },
       );
 }

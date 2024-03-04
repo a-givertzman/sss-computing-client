@@ -1,15 +1,15 @@
-import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 
 class FieldStored {
   String _data;
   FieldStored({required String data}) : _data = data;
 
-  Future<Result<String>> persist(String value) {
+  Future<ResultF<String>> persist(String value) {
     _data = value;
     return fetch();
   }
 
-  Future<Result<String>> fetch() {
-    return Future.value(Result(data: _data));
+  Future<ResultF<String>> fetch() {
+    return Future.value(Ok(_data));
   }
 }

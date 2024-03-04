@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/models/field/field_type.dart';
 import 'package:sss_computing_client/validation/int_validation_case.dart';
@@ -16,7 +16,7 @@ class CancelableField extends StatefulWidget {
   final String? _sendError;
   final void Function(String)? _onChanged;
   final void Function(String)? _onCanceled;
-  final Future<Result<String>> Function(String?)? _onSaved;
+  final Future<ResultF<String>> Function(String?)? _onSaved;
   final Validator? _validator;
 
   ///
@@ -30,7 +30,7 @@ class CancelableField extends StatefulWidget {
     FieldType fieldType = FieldType.string,
     void Function(String)? onChanged,
     void Function(String)? onCanceled,
-    Future<Result<String>> Function(String?)? onSaved,
+    Future<ResultF<String>> Function(String?)? onSaved,
     Validator? validator,
   })  : _controller = controller,
         _label = label,
@@ -65,7 +65,7 @@ class _CancelableFieldState extends State<CancelableField> {
   final String? _suffixText;
   final void Function(String)? _onChanged;
   final void Function(String)? _onCanceled;
-  final Future<Result<String>> Function(String?)? _onSaved;
+  final Future<ResultF<String>> Function(String?)? _onSaved;
   final Validator? _validator;
   String _initialValue;
   String? _sendError;
@@ -80,7 +80,7 @@ class _CancelableFieldState extends State<CancelableField> {
     required String? sendError,
     required void Function(String)? onChanged,
     required void Function(String)? onCanceled,
-    required Future<Result<String>> Function(String?)? onSaved,
+    required Future<ResultF<String>> Function(String?)? onSaved,
   })  : _initialValue = initialValue,
         _label = label,
         _suffixText = suffixText,
@@ -157,16 +157,18 @@ class _CancelableFieldState extends State<CancelableField> {
             _isInProcess = true;
             _sendError = null;
           });
-          _onSaved?.call(value).then((result) => result.fold(
-                onError: (failure) => setState(() {
-                  _sendError = failure.message;
-                  _isInProcess = false;
-                }),
-                onData: (_) => setState(() {
-                  _initialValue = _controller.text;
-                  _isInProcess = false;
-                }),
-              ));
+          _onSaved?.call(value).then((result) => switch (result) {
+                Ok() => () {
+                    setState(() {
+                      _initialValue = _controller.text;
+                      _isInProcess = false;
+                    });
+                  }(),
+                Err(:final error) => () {
+                    _sendError = error.message;
+                    _isInProcess = false;
+                  }(),
+              });
         }
       },
       decoration: InputDecoration(

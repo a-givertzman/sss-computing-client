@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core_result.dart';
+import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/models/field/field_stored.dart';
 import 'package:sss_computing_client/models/field/field_type.dart';
 
@@ -45,20 +46,25 @@ class FieldData {
 
   ///
   /// Pull data from the database through provided [record].
-  Future<Result<String>> fetch() => _record.fetch().then((result) {
-        if (!result.hasError) {
-          _initialValue = result.data;
-          _controller.text = result.data;
+  Future<ResultF<String>> fetch() => _record.fetch().then((result) {
+        switch (result) {
+          case Ok(:final value):
+            _controller.text = value;
+          case Err(:final error):
+            Log('$runtimeType | fetch').error(error);
         }
         return result;
       });
 
   ///
   /// Persist data to the database through provided [record].
-  Future<Result<String>> save() =>
+  Future<ResultF<String>> save() =>
       _record.persist(_controller.text).then((result) {
-        if (!result.hasError) {
-          refreshWith(_controller.text);
+        switch (result) {
+          case Ok():
+            refreshWith(_controller.text);
+          case Err(:final error):
+            Log('$runtimeType | fetch').error(error);
         }
         return result;
       });
