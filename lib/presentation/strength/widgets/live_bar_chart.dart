@@ -14,6 +14,10 @@ class LiveBarChart extends StatefulWidget {
 }
 
 class _LiveBarChartState extends State<LiveBarChart> {
+  late double _minX;
+  late double _maxX;
+  late double _minY;
+  late double _maxY;
   late List<double?> _yValues;
   late List<(double, double)?> _xOffsets;
   late List<double?> _lowLimits;
@@ -28,9 +32,13 @@ class _LiveBarChartState extends State<LiveBarChart> {
     _xOffsets = [(-100.0, -50.0), (-50.0, 0.0), (0.0, 50.0), (50.0, 100.0)];
     _lowLimits = [-50.0, -75.0, -100.0, -100.0];
     _highLimits = [100.0, 75.0, 100.0, 50.0];
+    // _minX = _getMinX();
+    // _maxX = _getMaxX();
+    // _minY = _getMinY();
+    // _maxY = _getMaxY();
 
     _updateTimer = Timer.periodic(
-      const Duration(seconds: 100),
+      const Duration(seconds: 5),
       (_) => setState(() {
         final (min, max) = (-100, 100);
         _yValues = List.generate(
@@ -50,6 +58,32 @@ class _LiveBarChartState extends State<LiveBarChart> {
     _updateTimer.cancel();
     super.dispose();
   }
+
+  double _getMinX() => _xOffsets.fold(_xOffsets[0]?.$1 ?? 0.0, (prev, offset) {
+        if (offset != null) {
+          final (left, right) = offset;
+          return min(min(left, right), prev);
+        }
+        return prev;
+      });
+
+  double _getMaxX() => _xOffsets.fold(_xOffsets[0]?.$1 ?? 0.0, (prev, offset) {
+        if (offset != null) {
+          final (left, right) = offset;
+          return max(max(left, right), prev);
+        }
+        return prev;
+      });
+
+  double _getMinY() => _yValues.fold(_yValues[0] ?? 0.0, (prev, value) {
+        if (value != null) return min(prev, value);
+        return prev;
+      });
+
+  double _getMaxY() => _yValues.fold(_yValues[0] ?? 0.0, (prev, value) {
+        if (value != null) return max(prev, value);
+        return prev;
+      });
 
   @override
   Widget build(BuildContext context) {
