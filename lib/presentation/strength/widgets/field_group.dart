@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/presentation/core/scrollable_builder.dart';
 
 ///
 class FieldGroup extends StatefulWidget {
@@ -39,19 +40,24 @@ class _FieldGroupState extends State<FieldGroup> {
             child: ScrollConfiguration(
               behavior:
                   ScrollConfiguration.of(context).copyWith(scrollbars: false),
-              child: SingleChildScrollView(
+              child: ScrollableBuilder(
                 controller: _scrollController,
-                child: Column(
-                  children: [
-                    for (int i = 0; i < widget._fields.length; i++) ...[
-                      Padding(
-                        padding: EdgeInsets.only(right: padding * 2),
-                        child: widget._fields[i],
-                      ),
-                      if (i == widget._fields.length - 1)
-                        SizedBox(height: padding),
+                builder: (context, isScrollable) => SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                    children: [
+                      for (int i = 0; i < widget._fields.length; i++) ...[
+                        Padding(
+                          padding: EdgeInsets.only(
+                            right: isScrollable ? padding * 2 : 0.0,
+                          ),
+                          child: widget._fields[i],
+                        ),
+                        if (i == widget._fields.length - 1)
+                          SizedBox(height: padding),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),
