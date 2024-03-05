@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
@@ -178,69 +179,54 @@ class _CancelableFieldState extends State<CancelableField> {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(_suffixText ?? ''),
-            _SuffixIcon(
-              isVisible: _initialValue != _controller.text,
-              size: suffixIconSize,
-              visibleChild: InkWell(
-                customBorder: const CircleBorder(),
-                onTap: () {
-                  setState(() {
-                    _controller.text = _initialValue;
-                    _controller.selection = TextSelection.fromPosition(
-                      TextPosition(offset: _initialValue.length),
-                    );
-                    _sendError = null;
-                  });
-                  _onCanceled?.call(_initialValue);
-                },
-                child: Icon(
-                  Icons.replay,
-                  color: Theme.of(context).colorScheme.primary,
+            SizedBox(
+              width: 0,
+              height: suffixIconSize,
+            ),
+            if (_suffixText != null) Text(_suffixText),
+            if (_initialValue != _controller.text)
+              SizedBox(
+                width: suffixIconSize,
+                height: suffixIconSize,
+                child: InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: () {
+                    setState(() {
+                      _controller.text = _initialValue;
+                      _controller.selection = TextSelection.fromPosition(
+                        TextPosition(offset: _initialValue.length),
+                      );
+                      _sendError = null;
+                    });
+                    _onCanceled?.call(_initialValue);
+                  },
+                  child: Icon(
+                    Icons.replay,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
               ),
-            ),
-            // _SuffixIcon(
-            //   size: suffixIconSize,
-            //   isVisible: _sendError != null,
-            //   visibleChild: Tooltip(
-            //     message: _sendError ?? '',
-            //     child: Icon(
-            //       Icons.info_outline,
-            //       color: Theme.of(context).colorScheme.error,
-            //     ),
-            //   ),
-            //   invisibleChild: _SuffixIcon(
-            //     size: suffixIconSize,
-            //     isVisible: _isInProcess,
-            //     visibleChild: const CupertinoActivityIndicator(),
-            //   ),
-            // ),
+            if (_isInProcess)
+              SizedBox(
+                width: suffixIconSize,
+                height: suffixIconSize,
+                child: const CupertinoActivityIndicator(),
+              ),
+            if (_sendError != null)
+              SizedBox(
+                width: suffixIconSize,
+                height: suffixIconSize,
+                child: Tooltip(
+                  message: _sendError ?? '',
+                  child: Icon(
+                    Icons.info_outline,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _SuffixIcon extends StatelessWidget {
-  final double? size;
-  final bool isVisible;
-  final Widget? visibleChild;
-  final Widget? invisibleChild;
-  const _SuffixIcon({
-    required this.isVisible,
-    this.visibleChild,
-    this.invisibleChild,
-    this.size,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: size,
-      width: size,
-      child: isVisible ? visibleChild : invisibleChild,
     );
   }
 }
