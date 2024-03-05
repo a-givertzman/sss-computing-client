@@ -10,10 +10,8 @@ class IntValidationCase implements ValidationCase {
   @override
   ResultF<void> isSatisfiedBy(String? value) {
     if (value != null && value.isNotEmpty) {
-      final regex = RegExp(r'^[+-]?[\d]*$');
-      final match = regex.matchAsPrefix(value);
-      if (match?.end == value.length) {
-        return const Ok(true);
+      if (int.tryParse(value) != null) {
+        return const Ok(null);
       }
     }
     return Err(
