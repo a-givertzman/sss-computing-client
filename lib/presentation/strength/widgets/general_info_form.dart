@@ -199,9 +199,13 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
             case Ok(value: final newFields):
               _updateFieldsWithNewData(newFields);
               _formKey.currentState?.save();
-              _showInfoMessage(context, const Localized('Data saved').v);
+              if (context.mounted) {
+                _showInfoMessage(context, const Localized('Data saved').v);
+              }
             case Err(:final error):
-              _showErrorMessage(context, error.message);
+              if (context.mounted) {
+                _showErrorMessage(context, error.message);
+              }
           }
         }
       }
