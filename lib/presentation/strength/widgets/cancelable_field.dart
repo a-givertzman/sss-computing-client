@@ -201,7 +201,7 @@ class _CancelableFieldState extends State<CancelableField> {
                     _onCanceled?.call(_initialValue);
                   },
                   child: Icon(
-                    Icons.replay,
+                    Icons.clear,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
