@@ -28,7 +28,7 @@ class ScrollableBuilder extends StatefulWidget {
 
 class _ScrollableBuilderState extends State<ScrollableBuilder> {
   bool _isScrollEnabled = false;
-  BoxConstraints? _constraints;
+  BoxConstraints? _layoutConstraints;
 
   void _checkIsScrollEnabled() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -54,9 +54,9 @@ class _ScrollableBuilderState extends State<ScrollableBuilder> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (_, constraints) {
-      if (_constraints != constraints) {
+      if (_layoutConstraints != constraints) {
         _checkIsScrollEnabled();
-        _constraints = constraints;
+        _layoutConstraints = constraints;
       }
       return Builder(
         builder: (context) => widget.builder(context, _isScrollEnabled),

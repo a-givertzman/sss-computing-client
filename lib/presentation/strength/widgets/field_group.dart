@@ -91,14 +91,14 @@ class _FieldGroupState extends State<FieldGroup> {
                   ScrollConfiguration.of(context).copyWith(scrollbars: false),
               child: ScrollableBuilder(
                 controller: _scrollController,
-                builder: (_, isScrollable) => SingleChildScrollView(
+                builder: (_, isScrollEnabled) => SingleChildScrollView(
                   controller: _scrollController,
                   child: Column(
                     children: [
                       for (int i = 0; i < widget._fieldsData.length; i++) ...[
                         Padding(
                           padding: EdgeInsets.only(
-                            right: isScrollable ? padding * 2 : 0.0,
+                            right: isScrollEnabled ? padding * 2 : 0.0,
                           ),
                           child: _mapDataToField(widget._fieldsData[i]),
                         ),
