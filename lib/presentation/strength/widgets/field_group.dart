@@ -31,8 +31,20 @@ class FieldGroup extends StatefulWidget {
 }
 
 class _FieldGroupState extends State<FieldGroup> {
-  final _scrollController = ScrollController();
+  late final ScrollController _scrollController;
   //
+
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   CancelableField _mapDataToField(FieldData data) => CancelableField(
         label: data.label,
