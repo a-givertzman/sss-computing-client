@@ -75,28 +75,25 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
               ],
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CancellationButton(
-                  height: buttonHeight,
-                  onPressed: isAnyFieldChanged && !_isSaving
-                      ? _cancelEditedFields
-                      : null,
-                ),
-                SizedBox(width: blockPadding),
-                AsyncActionButton(
-                  height: buttonHeight,
-                  width: buttonWidth,
-                  label: const Localized('Save').v,
-                  onPressed: isAnyFieldChanged
-                      ? () async => _trySaveData(context)
-                      : null,
-                ),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CancellationButton(
+                height: buttonHeight,
+                onPressed: isAnyFieldChanged && !_isSaving
+                    ? _cancelEditedFields
+                    : null,
+              ),
+              SizedBox(width: blockPadding),
+              AsyncActionButton(
+                height: buttonHeight,
+                width: buttonWidth,
+                label: const Localized('Save').v,
+                onPressed: isAnyFieldChanged
+                    ? () async => _trySaveData(context)
+                    : null,
+              ),
+            ],
           ),
         ],
       ),
