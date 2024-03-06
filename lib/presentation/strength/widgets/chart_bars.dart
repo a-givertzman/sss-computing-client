@@ -44,7 +44,8 @@ class ChartBars extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, contstraints) {
-      final xAxisScale = contstraints.maxWidth / (_maxX - _minX);
+      final xWidth = _maxX - _minX;
+      final xAxisScale = contstraints.maxWidth / (xWidth == 0.0 ? 1.0 : xWidth);
       return BarChart(
         swapAnimationDuration: const Duration(milliseconds: 400),
         BarChartData(
