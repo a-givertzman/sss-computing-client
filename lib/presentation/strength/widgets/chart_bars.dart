@@ -14,6 +14,7 @@ class ChartBars extends StatelessWidget {
   final List<double?> _lowLimits;
   final List<double?> _highLimits;
   final List<(double, double)?> _xOffsets;
+  final List<String?> _barCaptions;
   final Color? _color;
   const ChartBars({
     super.key,
@@ -26,6 +27,7 @@ class ChartBars extends StatelessWidget {
     required List<double?> lowLimits,
     required List<double?> highLimits,
     required List<(double, double)?> xOffsets,
+    required List<String?> barCaptions,
     required Color? color,
   })  : _minX = minX,
         _maxX = maxX,
@@ -36,6 +38,7 @@ class ChartBars extends StatelessWidget {
         _lowLimits = lowLimits,
         _highLimits = highLimits,
         _xOffsets = xOffsets,
+        _barCaptions = barCaptions,
         _color = color;
 
   @override
@@ -59,8 +62,13 @@ class ChartBars extends StatelessWidget {
                 showTitles: true,
                 reservedSize:
                     _xAxis.labelsSpaceReserved + _xAxis.captionSpaceReserved,
-                getTitlesWidget: (value, _) => _AxisLabel(
-                  value: value,
+                getTitlesWidget: (value, _) => Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Text(
+                    _barCaptions[value.toInt()] ?? '',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
               ),
             ),
@@ -129,29 +137,5 @@ class ChartBars extends StatelessWidget {
         ),
       );
     });
-  }
-}
-
-class _AxisLabel extends StatelessWidget {
-  final double _value;
-  const _AxisLabel({
-    required double value,
-  }) : _value = value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: Text(
-        'Frames\n[${_value.toInt()} - ${_value.toInt() + 1}]',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodySmall,
-        // style: TextStyle(
-        //   fontSize: 12.0,
-        //   height: 1.0,
-        //   color: Theme.of(context).colorScheme.onSurface,
-        // ),
-      ),
-    );
   }
 }

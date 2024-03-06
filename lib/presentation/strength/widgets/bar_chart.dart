@@ -19,6 +19,7 @@ class BarChart extends StatelessWidget {
   final ChartAxis _yAxis;
   final Color? _color;
   final String _caption;
+  final List<String?>? _barCaptions;
   const BarChart({
     super.key,
     required double minX,
@@ -32,6 +33,7 @@ class BarChart extends StatelessWidget {
     required ChartAxis xAxis,
     required ChartAxis yAxis,
     required String caption,
+    List<String?>? barCaptions,
     Color? color,
   })  : _minX = minX,
         _maxX = maxX,
@@ -44,7 +46,8 @@ class BarChart extends StatelessWidget {
         _xAxis = xAxis,
         _yAxis = yAxis,
         _color = color,
-        _caption = caption;
+        _caption = caption,
+        _barCaptions = barCaptions;
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +99,11 @@ class BarChart extends StatelessWidget {
               maxY: _maxY,
               xAxis: _xAxis,
               color: _color ?? theme.colorScheme.primary,
+              barCaptions: _barCaptions ??
+                  List.generate(
+                    _yValues.length,
+                    (_) => '',
+                  ),
             ),
           ),
         ),
