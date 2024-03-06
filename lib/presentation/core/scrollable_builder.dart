@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 
+/// Builds a widget tree that can be depend on the scrollable
+/// widget (e.g., [ListView], [GridView] or [SingleChildScrollView]) state.
+///
+/// Provide information about ability to scroll content.
 class ScrollableBuilder extends StatefulWidget {
-  final Widget Function(BuildContext context, bool isScrollable) builder;
+  final Widget Function(BuildContext context, bool isScrollEnabled) builder;
   final ScrollController controller;
+
+  /// Creates a widget that provides information about ability to scroll
+  /// content of widget with passed [ScrollController].
+  ///
+  /// * [builder] - called to construct widget tree;
+  /// * [controller] - [ScrollController] of tracked scrollable widget;
+  ///
+  /// To correct work, scrollable widget must be a direct child of
+  /// [ScrollableBuilder]
   const ScrollableBuilder({
     super.key,
     required this.builder,
