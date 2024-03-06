@@ -5,7 +5,6 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/models/field/field_data.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/async_action_button.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/cancelable_field.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/cancellation_button.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/confirmation_dialog.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/field_group.dart';
@@ -53,7 +52,8 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
             flex: 7,
             child: Stack(
               children: [
-                _GeneralInfoColumns(
+                FieldGroup(
+                  groupName: const Localized('Ship Parameteres').v,
                   fieldsData: _fieldsData,
                   onCancelled: () => setState(() {
                     return;
@@ -219,66 +219,4 @@ class _GeneralInfoFormState extends State<GeneralInfoForm> {
 
   ///
   bool _isFormValid() => _formKey.currentState?.validate() ?? false;
-}
-
-///
-class _GeneralInfoColumns extends StatelessWidget {
-  final void Function()? _onChanged;
-  final void Function()? _onCancelled;
-  final void Function()? _onSaved;
-  final List<FieldData> _fieldsData;
-  const _GeneralInfoColumns({
-    required List<FieldData> fieldsData,
-    void Function()? onChanged,
-    void Function()? onCancelled,
-    void Function()? onSaved,
-  })  : _onCancelled = onCancelled,
-        _onChanged = onChanged,
-        _onSaved = onSaved,
-        _fieldsData = fieldsData;
-
-  @override
-  Widget build(BuildContext context) {
-    const columnFlex = 3;
-    const spacingFlex = 1;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        const Spacer(flex: spacingFlex),
-        Expanded(
-          flex: columnFlex,
-          child: FieldGroup(
-            groupName: const Localized('Ship parameters').v,
-            fields: _fieldsData.map(_mapDataToField).toList(),
-          ),
-        ),
-        const Spacer(flex: spacingFlex),
-      ],
-    );
-  }
-
-  CancelableField _mapDataToField(FieldData data) => CancelableField(
-        label: data.label,
-        suffixText: data.unit,
-        initialValue: data.initialValue,
-        fieldType: data.type,
-        controller: data.controller,
-        onChanged: (value) {
-          data.controller.value = TextEditingValue(
-            text: value,
-            selection: TextSelection.fromPosition(
-              TextPosition(offset: data.controller.selection.base.offset),
-            ),
-          );
-          _onChanged?.call();
-        },
-        onCanceled: (_) {
-          data.cancel();
-          _onCancelled?.call();
-        },
-        onSaved: (_) {
-          _onSaved?.call();
-          return Future.value(const Ok(""));
-        },
-      );
 }

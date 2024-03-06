@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:sss_computing_client/models/field/field_data.dart';
 import 'package:sss_computing_client/presentation/core/scrollable_builder.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/cancelable_field.dart';
 
-///
 class FieldGroup extends StatefulWidget {
   final String _groupName;
-  final List<Widget> _fields;
+  final void Function()? _onChanged;
+  final void Function()? _onCancelled;
+  final void Function()? _onSaved;
+  final List<FieldData> _fieldsData;
 
   ///
   const FieldGroup({
     super.key,
     required String groupName,
-    List<Widget> fields = const [],
+    required List<FieldData> fieldsData,
+    void Function()? onChanged,
+    void Function()? onCancelled,
+    void Function()? onSaved,
   })  : _groupName = groupName,
-        _fields = fields;
+        _onCancelled = onCancelled,
+        _onChanged = onChanged,
+        _onSaved = onSaved,
+        _fieldsData = fieldsData;
 
   @override
   State<FieldGroup> createState() => _FieldGroupState();
@@ -22,6 +33,32 @@ class FieldGroup extends StatefulWidget {
 class _FieldGroupState extends State<FieldGroup> {
   final _scrollController = ScrollController();
   //
+
+  CancelableField _mapDataToField(FieldData data) => CancelableField(
+        label: data.label,
+        suffixText: data.unit,
+        initialValue: data.initialValue,
+        fieldType: data.type,
+        controller: data.controller,
+        onChanged: (value) {
+          data.controller.value = TextEditingValue(
+            text: value,
+            selection: TextSelection.fromPosition(
+              TextPosition(offset: data.controller.selection.base.offset),
+            ),
+          );
+          widget._onChanged?.call();
+        },
+        onCanceled: (_) {
+          data.cancel();
+          widget._onCancelled?.call();
+        },
+        onSaved: (_) {
+          widget._onSaved?.call();
+          return Future.value(const Ok(""));
+        },
+      );
+
   @override
   Widget build(BuildContext context) {
     final padding = const Setting('padding').toDouble;
@@ -46,14 +83,14 @@ class _FieldGroupState extends State<FieldGroup> {
                   controller: _scrollController,
                   child: Column(
                     children: [
-                      for (int i = 0; i < widget._fields.length; i++) ...[
+                      for (int i = 0; i < widget._fieldsData.length; i++) ...[
                         Padding(
                           padding: EdgeInsets.only(
                             right: isScrollable ? padding * 2 : 0.0,
                           ),
-                          child: widget._fields[i],
+                          child: _mapDataToField(widget._fieldsData[i]),
                         ),
-                        if (i == widget._fields.length - 1)
+                        if (i == widget._fieldsData.length - 1)
                           SizedBox(height: padding),
                       ],
                     ],
