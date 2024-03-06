@@ -42,7 +42,7 @@ class _FieldGroupState extends State<FieldGroup> {
                   ScrollConfiguration.of(context).copyWith(scrollbars: false),
               child: ScrollableBuilder(
                 controller: _scrollController,
-                builder: (context, isScrollable) => SingleChildScrollView(
+                builder: (_, isScrollable) => SingleChildScrollView(
                   controller: _scrollController,
                   child: Column(
                     children: [
