@@ -54,8 +54,8 @@ class ChartLines extends StatelessWidget {
                 final index = indexedValue.$1;
                 final value = indexedValue.$2 ?? 0.0;
                 final (offsetL, offsetR) = _xOffsets[index] ?? (0.0, 0.0);
-                const Log('ChartLines | build').debug(
-                  'idx: $index\noffsetL: $offsetL\noffsetR: $offsetR\n',
+                const Log('ChartLines | offset').debug(
+                  '{idx: $index, offsetL: $offsetL, offsetR: $offsetR}',
                 );
                 return LineChartBarData(
                   dotData: const FlDotData(
