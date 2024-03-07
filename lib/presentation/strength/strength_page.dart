@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/bar_chart.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/chart_axis.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/live_bar_chart.dart';
 
 class StrengthPage extends StatelessWidget {
   const StrengthPage({super.key});
@@ -13,7 +13,7 @@ class StrengthPage extends StatelessWidget {
         child: SizedBox(
           width: 600,
           height: 400,
-          child: LiveBarChart(
+          child: BarChart(
             caption: 'ShearForce',
             barColor: Colors.lightGreenAccent,
             minX: -100.0,
@@ -32,7 +32,7 @@ class StrengthPage extends StatelessWidget {
               captionSpaceReserved: 15.0,
               caption: '[10^3 tonn]',
             ),
-            dataStream: Stream<Map<String, dynamic>>.periodic(
+            stream: Stream<Map<String, dynamic>>.periodic(
               const Duration(seconds: 5),
               (_) {
                 final (min, max) = (-100, 100);
