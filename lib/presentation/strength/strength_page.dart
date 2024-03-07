@@ -39,7 +39,7 @@ class StrengthPage extends StatelessWidget {
                         maxY: 200.0,
                         xAxis: ChartAxis(
                           valueInterval: 25,
-                          labelsSpaceReserved: 55.0,
+                          labelsSpaceReserved: 25.0,
                           captionSpaceReserved: 0.0,
                           isLabelsVisible: false,
                         ),
@@ -100,7 +100,7 @@ class StrengthPage extends StatelessWidget {
                         maxY: 500.0,
                         xAxis: ChartAxis(
                           valueInterval: 25,
-                          labelsSpaceReserved: 55.0,
+                          labelsSpaceReserved: 25.0,
                           captionSpaceReserved: 0.0,
                           isLabelsVisible: false,
                         ),
