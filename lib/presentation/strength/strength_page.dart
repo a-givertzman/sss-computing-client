@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/bar_chart.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_axis.dart';
@@ -30,7 +31,7 @@ class StrengthPage extends StatelessWidget {
                         const Setting('padding').toDouble,
                       ),
                       child: BarChart(
-                        caption: 'Shear Force',
+                        caption: const Localized('Shear force').v,
                         barColor: Colors.lightGreenAccent,
                         minX: -100.0,
                         maxX: 100.0,
@@ -46,7 +47,7 @@ class StrengthPage extends StatelessWidget {
                           valueInterval: 50,
                           labelsSpaceReserved: 60.0,
                           captionSpaceReserved: 15.0,
-                          caption: '[kN]',
+                          caption: '[${const Localized('kN')}]',
                         ),
                         stream: Stream<Map<String, dynamic>>.periodic(
                           const Duration(seconds: 5),
@@ -69,7 +70,8 @@ class StrengthPage extends StatelessWidget {
                               'highLimits': [50.0, 75.0, 100.0, 75.0],
                               'barCaptions': List.generate(
                                 4,
-                                (idx) => 'Frames [${idx * 2}-${(idx + 1) * 2}]',
+                                (idx) =>
+                                    '${const Localized('Frames').v} [${idx * 2}-${(idx + 1) * 2}]',
                               ),
                             };
                           },
@@ -90,7 +92,7 @@ class StrengthPage extends StatelessWidget {
                         const Setting('padding').toDouble,
                       ),
                       child: BarChart(
-                        caption: 'Bending Moment',
+                        caption: const Localized('Bending moment').v,
                         barColor: Colors.lightGreenAccent,
                         minX: -100.0,
                         maxX: 100.0,
@@ -106,7 +108,7 @@ class StrengthPage extends StatelessWidget {
                           valueInterval: 100,
                           labelsSpaceReserved: 60.0,
                           captionSpaceReserved: 15.0,
-                          caption: '[kNm]',
+                          caption: '[${const Localized('kNm')}]',
                         ),
                         stream: Stream<Map<String, dynamic>>.periodic(
                           const Duration(seconds: 5),
@@ -129,7 +131,8 @@ class StrengthPage extends StatelessWidget {
                               'highLimits': [200.0, 250.0, 250.0, 200.0],
                               'barCaptions': List.generate(
                                 4,
-                                (idx) => 'Frames [${idx * 2}-${(idx + 1) * 2}]',
+                                (idx) =>
+                                    '${const Localized('Frames').v} [${idx * 2}-${(idx + 1) * 2}]',
                               ),
                             };
                           },

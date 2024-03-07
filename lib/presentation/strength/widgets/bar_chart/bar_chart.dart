@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_axis.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_bars.dart';
@@ -207,7 +208,7 @@ class BarChart extends StatelessWidget {
               child: ChartLegend(
                 names: [
                   _caption,
-                  'Limits',
+                  const Localized('Limit').v,
                 ],
                 colors: [
                   _barColor ?? theme.colorScheme.primary,

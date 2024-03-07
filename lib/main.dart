@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Localizations;
 import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
 import 'package:sss_computing_client/app_widget.dart';
@@ -9,9 +9,13 @@ void main() async {
 
   runZonedGuarded(
     () async {
-      const Log('main').debug('Initializing the application...');
       WidgetsFlutterBinding.ensureInitialized();
-      const Log('main').debug('Initializing settings of application...');
+      await Localizations.initialize(
+        AppLang.en,
+        jsonMap: JsonMap.fromTextFile(
+          const TextFile.asset('assets/translations/translations.json'),
+        ),
+      );
       await AppSettings.initialize(
         jsonMap: JsonMap.fromTextFile(
           const TextFile.asset(
@@ -19,7 +23,6 @@ void main() async {
           ),
         ),
       );
-      const Log('main').debug('Creating App Theme switcher...');
       final appThemeSwitch = AppThemeSwitch();
       runApp(AppWidget(themeSwitch: appThemeSwitch));
     },
