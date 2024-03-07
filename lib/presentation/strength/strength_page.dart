@@ -65,23 +65,23 @@ class StrengthPage extends StatelessWidget {
                   fieldData: [
                     FieldData(
                       id: "ship_length",
-                      label: "Ship length",
-                      unit: "m",
+                      label: const Localized('Ship length').v,
+                      unit: const Localized('m').v,
                       type: FieldType.real,
                       initialValue: "200.0",
                       record: FieldStored(data: "200.0"),
                     ),
                     FieldData(
                       id: "water_density",
-                      label: "Water density",
-                      unit: "g/ml",
+                      label: const Localized('Water density').v,
+                      unit: const Localized('g/ml').v,
                       type: FieldType.real,
                       initialValue: "1.025",
                       record: FieldStored(data: "1.025"),
                     ),
                     FieldData(
                       id: "n_parts",
-                      label: "Number of parts",
+                      label: const Localized('Number of parts').v,
                       unit: "",
                       type: FieldType.int,
                       initialValue: "20",
