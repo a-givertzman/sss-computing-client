@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/chart_axis.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/chart_bars.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/chart_layout.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/chart_legend.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/chart_lines.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_axis.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_bars.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_layout.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_legend.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_lines.dart';
 
 class BarChart extends StatelessWidget {
   final double? _minX;
