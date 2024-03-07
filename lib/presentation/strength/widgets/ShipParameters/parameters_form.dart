@@ -4,16 +4,16 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/models/field/field_data.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/async_action_button.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/cancellation_button.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/confirmation_dialog.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/field_group.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/ShipParameters/async_action_button.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/ShipParameters/cancellation_button.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/ShipParameters/confirmation_dialog.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/ShipParameters/field_group.dart';
 
-class GeneralInfoForm extends StatefulWidget {
+class ParametersForm extends StatefulWidget {
   final List<FieldData> _fieldsData;
   final Future<ResultF<List<FieldData>>> Function()? _onSave;
 
-  const GeneralInfoForm({
+  const ParametersForm({
     super.key,
     required List<FieldData> fieldData,
     Future<ResultF<List<FieldData>>> Function()? onSave,
@@ -21,10 +21,10 @@ class GeneralInfoForm extends StatefulWidget {
         _fieldsData = fieldData;
 
   @override
-  State<GeneralInfoForm> createState() => _GeneralInfoFormState();
+  State<ParametersForm> createState() => _ParametersFormState();
 }
 
-class _GeneralInfoFormState extends State<GeneralInfoForm> {
+class _ParametersFormState extends State<ParametersForm> {
   final _formKey = GlobalKey<FormState>();
   late List<FieldData> _fieldsData;
   late bool _isSaving;
