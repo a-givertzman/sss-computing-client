@@ -11,12 +11,12 @@ import 'package:sss_computing_client/presentation/strength/widgets/ShipParameter
 
 class ShipParameters extends StatefulWidget {
   final List<FieldData> _fieldsData;
-  final Future<ResultF<List<FieldData>>> Function()? _onSave;
+  final Future<ResultF<List<FieldData>>> Function(List<FieldData>)? _onSave;
 
   const ShipParameters({
     super.key,
     required List<FieldData> fieldData,
-    Future<ResultF<List<FieldData>>> Function()? onSave,
+    Future<ResultF<List<FieldData>>> Function(List<FieldData>)? onSave,
   })  : _onSave = onSave,
         _fieldsData = fieldData;
 
@@ -192,7 +192,7 @@ class _ShipParametersState extends State<ShipParameters> {
       if (isSaveSubmitted ?? false) {
         final onSave = widget._onSave;
         if (onSave != null) {
-          switch (await onSave()) {
+          switch (await onSave(_fieldsData)) {
             case Ok(value: final newFields):
               _updateFieldsWithNewData(newFields);
               _formKey.currentState?.save();

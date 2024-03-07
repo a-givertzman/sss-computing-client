@@ -12,33 +12,6 @@ class StrengthPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fieldDatas = [
-      FieldData(
-        id: "ship_length",
-        label: "Ship length",
-        unit: "m",
-        type: FieldType.real,
-        initialValue: "200.0",
-        record: FieldStored(data: "200.0"),
-      ),
-      FieldData(
-        id: "water_density",
-        label: "Water density",
-        unit: "g/ml",
-        type: FieldType.real,
-        initialValue: "1.025",
-        record: FieldStored(data: "1.025"),
-      ),
-      FieldData(
-        id: "n_parts",
-        label: "Number of parts",
-        unit: "",
-        type: FieldType.int,
-        initialValue: "20",
-        record: FieldStored(data: "20"),
-      ),
-    ];
-
     return Padding(
       padding: EdgeInsets.all(const Setting('blockPadding').toDouble),
       child: Row(
@@ -89,8 +62,33 @@ class StrengthPage extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(const Setting('padding').toDouble),
                 child: ShipParameters(
-                  fieldData: fieldDatas,
-                  onSave: () async {
+                  fieldData: [
+                    FieldData(
+                      id: "ship_length",
+                      label: "Ship length",
+                      unit: "m",
+                      type: FieldType.real,
+                      initialValue: "200.0",
+                      record: FieldStored(data: "200.0"),
+                    ),
+                    FieldData(
+                      id: "water_density",
+                      label: "Water density",
+                      unit: "g/ml",
+                      type: FieldType.real,
+                      initialValue: "1.025",
+                      record: FieldStored(data: "1.025"),
+                    ),
+                    FieldData(
+                      id: "n_parts",
+                      label: "Number of parts",
+                      unit: "",
+                      type: FieldType.int,
+                      initialValue: "20",
+                      record: FieldStored(data: "20"),
+                    ),
+                  ],
+                  onSave: (fieldDatas) async {
                     try {
                       final fieldsPersisted = await Future.wait(fieldDatas.map(
                         (field) async {
