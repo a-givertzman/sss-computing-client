@@ -15,7 +15,8 @@ class ChartBars extends StatelessWidget {
   final List<double?> _highLimits;
   final List<(double, double)?> _xOffsets;
   final List<String?> _barCaptions;
-  final Color? _color;
+  final Color _color;
+  final Color _limitColor;
   const ChartBars({
     super.key,
     required double minX,
@@ -28,7 +29,8 @@ class ChartBars extends StatelessWidget {
     required List<double?> highLimits,
     required List<(double, double)?> xOffsets,
     required List<String?> barCaptions,
-    required Color? color,
+    required Color color,
+    required Color limitColor,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
@@ -39,7 +41,8 @@ class ChartBars extends StatelessWidget {
         _highLimits = highLimits,
         _xOffsets = xOffsets,
         _barCaptions = barCaptions,
-        _color = color;
+        _color = color,
+        _limitColor = limitColor;
 
   @override
   Widget build(BuildContext context) {
@@ -107,14 +110,8 @@ class ChartBars extends StatelessWidget {
                               colors: [
                                 Colors.transparent,
                                 Colors.transparent,
-                                Theme.of(context)
-                                    .stateColors
-                                    .alarm
-                                    .withOpacity(0.5),
-                                Theme.of(context)
-                                    .stateColors
-                                    .alarm
-                                    .withOpacity(0.5),
+                                _limitColor.withOpacity(0.5),
+                                _limitColor.withOpacity(0.5),
                               ],
                               tileMode: TileMode.repeated,
                             ),
@@ -127,7 +124,7 @@ class ChartBars extends StatelessWidget {
                       fromY: 0.0,
                       toY: value,
                       width: (offsetR - offsetL) * xAxisScale,
-                      color: _color ?? Theme.of(context).primaryColor,
+                      color: _color,
                       borderRadius: const BorderRadius.all(Radius.zero),
                     ),
                   ],

@@ -17,7 +17,8 @@ class BarChart extends StatelessWidget {
   final List<double?> _highLimits;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
-  final Color? _color;
+  final Color? _barColor;
+  final Color? _limitColor;
   final String _caption;
   final List<String?>? _barCaptions;
   const BarChart({
@@ -34,7 +35,8 @@ class BarChart extends StatelessWidget {
     required ChartAxis yAxis,
     required String caption,
     List<String?>? barCaptions,
-    Color? color,
+    Color? barColor,
+    Color? limitColor,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
@@ -45,7 +47,8 @@ class BarChart extends StatelessWidget {
         _highLimits = highLimits,
         _xAxis = xAxis,
         _yAxis = yAxis,
-        _color = color,
+        _barColor = barColor,
+        _limitColor = limitColor,
         _caption = caption,
         _barCaptions = barCaptions;
 
@@ -98,7 +101,8 @@ class BarChart extends StatelessWidget {
               minY: _minY,
               maxY: _maxY,
               xAxis: _xAxis,
-              color: _color ?? theme.colorScheme.primary,
+              color: _barColor ?? theme.colorScheme.primary,
+              limitColor: _limitColor ?? theme.stateColors.alarm,
               barCaptions: _barCaptions ??
                   List.generate(
                     _yValues.length,
@@ -122,7 +126,7 @@ class BarChart extends StatelessWidget {
               maxY: _maxY,
               yValues: _lowLimits,
               xOffsets: _xOffsets,
-              color: theme.stateColors.alarm,
+              color: _limitColor ?? theme.stateColors.alarm,
             ),
           ),
         ),
@@ -141,7 +145,7 @@ class BarChart extends StatelessWidget {
               maxY: _maxY,
               yValues: _highLimits,
               xOffsets: _xOffsets,
-              color: theme.stateColors.alarm,
+              color: _limitColor ?? theme.stateColors.alarm,
             ),
           ),
         ),
@@ -154,8 +158,8 @@ class BarChart extends StatelessWidget {
               'Limits',
             ],
             colors: [
-              _color ?? theme.stateColors.alarm,
-              theme.stateColors.alarm,
+              _barColor ?? theme.colorScheme.primary,
+              _limitColor ?? theme.stateColors.alarm,
             ],
             width: 150.0,
           ),

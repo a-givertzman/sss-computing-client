@@ -24,7 +24,6 @@ class ChartLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final padding = const Setting('padding', factor: 0.5).toDouble;
-    final margin = const Setting('padding', factor: 0.5).toDouble;
     return SizedBox(
       width: _width,
       child: ListView.separated(
