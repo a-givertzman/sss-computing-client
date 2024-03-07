@@ -95,15 +95,22 @@ class ChartBars extends StatelessWidget {
                   groupVertically: true,
                   barRods: [
                     BarChartRodData(
-                      fromY: _minY,
+                      fromY: 0.0,
+                      toY: value,
+                      width: (offsetR - offsetL) * xAxisScale,
+                      color: _color,
+                      borderRadius: const BorderRadius.all(Radius.zero),
+                    ),
+                    BarChartRodData(
+                      fromY: highLimit,
                       toY: _maxY,
                       width: (offsetR - offsetL) * xAxisScale,
                       color: Colors.transparent,
-                      gradient: (value > lowLimit && value < highLimit)
+                      gradient: (value < highLimit)
                           ? null
                           : LinearGradient(
                               begin: const Alignment(0, 0),
-                              end: const Alignment(0.0, -0.1),
+                              end: const Alignment(0.0, -0.25),
                               transform: const GradientRotation(pi / 4),
                               stops: const [0.0, 0.5, 0.5, 1],
                               colors: [
@@ -115,16 +122,48 @@ class ChartBars extends StatelessWidget {
                               tileMode: TileMode.repeated,
                             ),
                       borderRadius: const BorderRadius.all(Radius.zero),
+                    ),
+                    BarChartRodData(
+                      fromY: lowLimit,
+                      toY: _minY,
+                      width: (offsetR - offsetL) * xAxisScale,
+                      color: Colors.transparent,
+                      gradient: (value > lowLimit)
+                          ? null
+                          : LinearGradient(
+                              begin: const Alignment(0, 0),
+                              end: const Alignment(0.0, -0.25),
+                              transform: const GradientRotation(pi / 4),
+                              stops: const [0.0, 0.5, 0.5, 1],
+                              colors: [
+                                Colors.transparent,
+                                Colors.transparent,
+                                _limitColor.withOpacity(0.5),
+                                _limitColor.withOpacity(0.5),
+                              ],
+                              tileMode: TileMode.repeated,
+                            ),
+                      borderRadius: const BorderRadius.all(Radius.zero),
+                    ),
+                    BarChartRodData(
+                      fromY: 0,
+                      toY: _maxY,
+                      width: (offsetR - offsetL) * xAxisScale,
+                      color: Colors.transparent,
+                      borderRadius: const BorderRadius.all(Radius.zero),
                       borderSide: BorderSide(
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     BarChartRodData(
-                      fromY: 0.0,
-                      toY: value,
+                      fromY: _minY,
+                      toY: 0,
                       width: (offsetR - offsetL) * xAxisScale,
-                      color: _color,
+                      color: Colors.transparent,
                       borderRadius: const BorderRadius.all(Radius.zero),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                   ],
                 );
