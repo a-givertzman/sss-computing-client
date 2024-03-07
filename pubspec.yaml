@@ -12,11 +12,11 @@ dependencies:
   hmi_core:
     git:
       url: https://github.com/a-givertzman/hmi_core.git
-      ref: master
+      ref: 1.0.0
   hmi_widgets:
     git:
-      url: https://github.com/nyaneet/hmi_widgets.git
-      ref: fix-dependency-list
+      url: https://github.com/a-givertzman/hmi_widgets.git
+      ref: 1.0.0
   cupertino_icons: ^1.0.2
   window_manager: ^0.3.0
 
