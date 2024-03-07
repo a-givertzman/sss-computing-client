@@ -9,11 +9,11 @@ import 'package:sss_computing_client/presentation/strength/widgets/ShipParameter
 import 'package:sss_computing_client/presentation/strength/widgets/ShipParameters/confirmation_dialog.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/ShipParameters/field_group.dart';
 
-class ParametersForm extends StatefulWidget {
+class ShipParameters extends StatefulWidget {
   final List<FieldData> _fieldsData;
   final Future<ResultF<List<FieldData>>> Function()? _onSave;
 
-  const ParametersForm({
+  const ShipParameters({
     super.key,
     required List<FieldData> fieldData,
     Future<ResultF<List<FieldData>>> Function()? onSave,
@@ -21,10 +21,10 @@ class ParametersForm extends StatefulWidget {
         _fieldsData = fieldData;
 
   @override
-  State<ParametersForm> createState() => _ParametersFormState();
+  State<ShipParameters> createState() => _ShipParametersState();
 }
 
-class _ParametersFormState extends State<ParametersForm> {
+class _ShipParametersState extends State<ShipParameters> {
   final _formKey = GlobalKey<FormState>();
   late List<FieldData> _fieldsData;
   late bool _isSaving;
