@@ -43,10 +43,10 @@ class StrengthPage extends StatelessWidget {
                         minY: -200.0,
                         maxY: 200.0,
                         xAxis: ChartAxis(
-                          valueInterval: 25,
                           labelsSpaceReserved: 25.0,
                           captionSpaceReserved: 0.0,
                           isLabelsVisible: false,
+                          isGridVisible: false,
                         ),
                         yAxis: ChartAxis(
                           valueInterval: 50,
@@ -57,26 +57,42 @@ class StrengthPage extends StatelessWidget {
                         stream: Stream<Map<String, dynamic>>.periodic(
                           const Duration(seconds: 5),
                           (_) {
-                            final (min, max) = (-100, 100);
+                            const range = 50;
+                            final (minY, maxY) = (-200 + range, 200 - range);
+                            final (minX, maxX) = (-100, 100);
+                            final firstY =
+                                minY + Random().nextInt(maxY - minY).toDouble();
+                            const firstLimit = 50;
                             return {
                               'yValues': List.generate(
-                                4,
+                                20,
                                 (_) =>
-                                    min +
-                                    Random().nextInt(max - min).toDouble(),
+                                    firstY -
+                                    range / 2 +
+                                    Random().nextInt(range).toDouble(),
                               ),
-                              'xOffsets': [
-                                (-100.0, -50.0),
-                                (-50.0, 0.0),
-                                (0.0, 50.0),
-                                (50.0, 100.0),
-                              ],
-                              'lowLimits': [-50.0, -75.0, -100.0, -75.0],
-                              'highLimits': [50.0, 75.0, 100.0, 75.0],
-                              'barCaptions': List.generate(
-                                4,
+                              'xOffsets': List.generate(
+                                20,
+                                (idx) => (
+                                  (minX + 10 * idx).toDouble(),
+                                  (minX + 10 * (idx + 1)).toDouble(),
+                                ),
+                              ),
+                              'lowLimits': List.generate(
+                                20,
+                                (idx) => -(firstLimit.toDouble() +
+                                    (idx < 10 ? idx : 20 - idx) * 10),
+                              ),
+                              'highLimits': List.generate(
+                                20,
                                 (idx) =>
-                                    '${const Localized('Frames').v} [${idx + 1}]',
+                                    firstLimit.toDouble() +
+                                    (idx < 10 ? idx : 20 - idx) * 10,
+                              ),
+                              'barCaptions': List.generate(
+                                20,
+                                (idx) => '[${idx + 1}]',
+                                // (idx) => '',
                               ),
                             };
                           },
@@ -104,10 +120,10 @@ class StrengthPage extends StatelessWidget {
                         minY: -500.0,
                         maxY: 500.0,
                         xAxis: ChartAxis(
-                          valueInterval: 25,
                           labelsSpaceReserved: 25.0,
                           captionSpaceReserved: 0.0,
                           isLabelsVisible: false,
+                          isGridVisible: false,
                         ),
                         yAxis: ChartAxis(
                           valueInterval: 100,
@@ -118,26 +134,42 @@ class StrengthPage extends StatelessWidget {
                         stream: Stream<Map<String, dynamic>>.periodic(
                           const Duration(seconds: 5),
                           (_) {
-                            final (min, max) = (-250, 250);
+                            const range = 100;
+                            final (minY, maxY) = (-500 + range, 500 - range);
+                            final (minX, maxX) = (-100, 100);
+                            final firstY =
+                                minY + Random().nextInt(maxY - minY).toDouble();
+                            const firstLimit = 150;
                             return {
                               'yValues': List.generate(
-                                4,
+                                20,
                                 (_) =>
-                                    min +
-                                    Random().nextInt(max - min).toDouble(),
+                                    firstY -
+                                    range / 2 +
+                                    Random().nextInt(range).toDouble(),
                               ),
-                              'xOffsets': [
-                                (-100.0, -50.0),
-                                (-50.0, 0.0),
-                                (0.0, 50.0),
-                                (50.0, 100.0),
-                              ],
-                              'lowLimits': [-250.0, -250.0, -250.0, -250.0],
-                              'highLimits': [200.0, 250.0, 250.0, 200.0],
-                              'barCaptions': List.generate(
-                                4,
+                              'xOffsets': List.generate(
+                                20,
+                                (idx) => (
+                                  (minX + 10 * idx).toDouble(),
+                                  (minX + 10 * (idx + 1)).toDouble(),
+                                ),
+                              ),
+                              'lowLimits': List.generate(
+                                20,
+                                (idx) => -(firstLimit.toDouble() +
+                                    (idx < 10 ? idx : 20 - idx) * 10),
+                              ),
+                              'highLimits': List.generate(
+                                20,
                                 (idx) =>
-                                    '${const Localized('Frames').v} [${idx * 2}-${(idx + 1) * 2}]',
+                                    firstLimit.toDouble() +
+                                    (idx < 10 ? idx : 20 - idx) * 10,
+                              ),
+                              'barCaptions': List.generate(
+                                20,
+                                (idx) => '[${idx + 1}]',
+                                // (idx) => '',
                               ),
                             };
                           },
