@@ -53,7 +53,7 @@ class _ShipParametersState extends State<ShipParameters> {
             child: Stack(
               children: [
                 FieldGroup(
-                  groupName: const Localized('Ship Parameteres').v,
+                  groupName: const Localized('Ship parameteres').v,
                   fieldsData: _fieldsData,
                   onCancelled: () => setState(() {
                     return;
