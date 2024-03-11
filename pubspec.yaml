@@ -17,6 +17,10 @@ dependencies:
     git:
       url: https://github.com/a-givertzman/hmi_widgets.git
       ref: 1.0.0
+  fl_chart:
+    git:
+      url: https://github.com/a-givertzman/fl_chart.git
+      ref: 0.63.0+2
   cupertino_icons: ^1.0.2
   window_manager: ^0.3.0
 

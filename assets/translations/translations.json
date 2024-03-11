@@ -11,5 +11,11 @@
     "Ship length": ["Ship length", "Длина корабля"],
     "Water density": ["Water density", "Плотность воды"],
     "g/ml": ["g/ml", "г/мл"],
-    "Number of parts": ["Number of parts", "Число частей"]
+    "Number of parts": ["Number of parts", "Число частей"],
+    "Shear force": ["Shear force", "Перерезывающая сила"],
+    "Bending moment": ["Bending moment", "Изгибающий момент"],
+    "Frames": ["Frames", "Шпангоуты"],
+    "kN": ["kN", "кН"],
+    "kNm": ["kNm", "кНм"],
+    "Limit": ["Limit", "лимит"]
 }
