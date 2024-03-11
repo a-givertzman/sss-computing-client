@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_axis.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_bars.dart';
@@ -214,7 +215,11 @@ class BarChart extends StatelessWidget {
                   _barColor ?? theme.colorScheme.primary,
                   _limitColor ?? theme.stateColors.alarm,
                 ],
-                width: 150.0,
+                height: max(
+                      _xAxis.labelsSpaceReserved,
+                      _xAxis.captionSpaceReserved,
+                    ) -
+                    const Setting('padding', factor: 0.25).toDouble,
               ),
             ),
           ],

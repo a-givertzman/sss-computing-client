@@ -6,7 +6,7 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 class ChartLegend extends StatelessWidget {
   final List<String> _names;
   final List<Color> _colors;
-  final double _width;
+  final double _height;
   final TextAlign? _textAlign;
 
   ///
@@ -14,19 +14,20 @@ class ChartLegend extends StatelessWidget {
     super.key,
     required List<String> names,
     required List<Color> colors,
-    required double width,
+    required double height,
     TextAlign? textAlign,
   })  : _names = names,
         _colors = colors,
-        _width = width,
+        _height = height,
         _textAlign = textAlign;
   //
   @override
   Widget build(BuildContext context) {
     final padding = const Setting('padding', factor: 0.5).toDouble;
     return SizedBox(
-      width: _width,
+      height: _height,
       child: ListView.separated(
+        scrollDirection: Axis.horizontal,
         shrinkWrap: true,
         itemBuilder: (_, i) => Container(
           padding: EdgeInsets.symmetric(
@@ -41,7 +42,7 @@ class ChartLegend extends StatelessWidget {
             textAlign: _textAlign,
           ),
         ),
-        separatorBuilder: (_, __) => SizedBox(height: padding),
+        separatorBuilder: (_, __) => SizedBox(width: padding),
         itemCount: _names.length,
       ),
     );
