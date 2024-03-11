@@ -4,10 +4,10 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/models/field/field_data.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/ShipParameters/async_action_button.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/ShipParameters/cancellation_button.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/ShipParameters/confirmation_dialog.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/ShipParameters/field_group.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/ship_parameters/async_action_button.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/ship_parameters/cancellation_button.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/ship_parameters/confirmation_dialog.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/ship_parameters/field_group.dart';
 
 class ShipParameters extends StatefulWidget {
   final List<FieldData> _fieldsData;

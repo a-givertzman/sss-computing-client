@@ -6,7 +6,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/models/field/field_data.dart';
 import 'package:sss_computing_client/models/field/field_stored.dart';
 import 'package:sss_computing_client/models/field/field_type.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/ShipParameters/ship_parameters.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/ship_parameters/ship_parameters.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/bar_chart.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_axis.dart';
 
@@ -76,7 +76,7 @@ class StrengthPage extends StatelessWidget {
                               'barCaptions': List.generate(
                                 4,
                                 (idx) =>
-                                    '${const Localized('Frames').v} [${idx * 2}-${(idx + 1) * 2}]',
+                                    '${const Localized('Frames').v} [${idx + 1}]',
                               ),
                             };
                           },

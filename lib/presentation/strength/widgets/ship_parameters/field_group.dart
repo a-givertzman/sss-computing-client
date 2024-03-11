@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/models/field/field_data.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/ShipParameters/cancelable_field.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/ship_parameters/cancelable_field.dart';
 import 'package:sss_computing_client/widgets/core/scrollable_builder.dart';
 
 class FieldGroup extends StatefulWidget {
