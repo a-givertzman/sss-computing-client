@@ -65,13 +65,8 @@ class ChartBars extends StatelessWidget {
                 showTitles: true,
                 reservedSize:
                     _xAxis.labelsSpaceReserved + _xAxis.captionSpaceReserved,
-                getTitlesWidget: (value, _) => Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Text(
-                    _barCaptions[value.toInt()] ?? '',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+                getTitlesWidget: (value, _) => _AxisLabel(
+                  value: _barCaptions[value.toInt()] ?? '',
                 ),
               ),
             ),
@@ -108,18 +103,10 @@ class ChartBars extends StatelessWidget {
                       color: Colors.transparent,
                       gradient: (value < highLimit)
                           ? null
-                          : LinearGradient(
-                              begin: const Alignment(0, 0),
-                              end: const Alignment(0.0, -0.25),
-                              transform: const GradientRotation(pi / 4),
-                              stops: const [0.0, 0.5, 0.5, 1],
-                              colors: [
-                                Colors.transparent,
-                                Colors.transparent,
-                                _limitColor.withOpacity(0.5),
-                                _limitColor.withOpacity(0.5),
-                              ],
-                              tileMode: TileMode.repeated,
+                          : _getLimitStripsGradient(
+                              rawWidgetHeight: contstraints.maxHeight -
+                                  contstraints.minHeight,
+                              stripedBarHeight: (_maxY - highLimit),
                             ),
                       borderRadius: const BorderRadius.all(Radius.zero),
                     ),
@@ -130,18 +117,10 @@ class ChartBars extends StatelessWidget {
                       color: Colors.transparent,
                       gradient: (value > lowLimit)
                           ? null
-                          : LinearGradient(
-                              begin: const Alignment(0, 0),
-                              end: const Alignment(0.0, -0.25),
-                              transform: const GradientRotation(pi / 4),
-                              stops: const [0.0, 0.5, 0.5, 1],
-                              colors: [
-                                Colors.transparent,
-                                Colors.transparent,
-                                _limitColor.withOpacity(0.5),
-                                _limitColor.withOpacity(0.5),
-                              ],
-                              tileMode: TileMode.repeated,
+                          : _getLimitStripsGradient(
+                              rawWidgetHeight: contstraints.maxHeight -
+                                  contstraints.minHeight,
+                              stripedBarHeight: (lowLimit - _minY),
                             ),
                       borderRadius: const BorderRadius.all(Radius.zero),
                     ),
@@ -173,5 +152,50 @@ class ChartBars extends StatelessWidget {
         ),
       );
     });
+  }
+
+  LinearGradient _getLimitStripsGradient({
+    required double rawWidgetHeight,
+    required double stripedBarHeight,
+  }) {
+    const rawStripHeight = 5.0;
+    final yAxisScale = (rawWidgetHeight -
+            _xAxis.labelsSpaceReserved -
+            _xAxis.captionSpaceReserved) /
+        (_maxY - _minY);
+    final stripFraction = rawStripHeight / (stripedBarHeight * yAxisScale);
+    return LinearGradient(
+      begin: const FractionalOffset(0, 0),
+      end: FractionalOffset(
+        0.0,
+        2 * stripFraction,
+      ),
+      transform: const GradientRotation(pi / 4),
+      stops: const [0.0, 0.5, 0.5, 1],
+      colors: [
+        Colors.transparent,
+        Colors.transparent,
+        _limitColor.withOpacity(0.5),
+        _limitColor.withOpacity(0.5),
+      ],
+      tileMode: TileMode.repeated,
+    );
+  }
+}
+
+class _AxisLabel extends StatelessWidget {
+  final String value;
+  const _AxisLabel({required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Text(
+        value,
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.bodySmall,
+      ),
+    );
   }
 }
