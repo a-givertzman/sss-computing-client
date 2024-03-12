@@ -1,11 +1,12 @@
 import 'dart:math';
+import 'package:ext_rw/ext_rw.dart' hide FieldType;
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/models/field/field_data.dart';
-import 'package:sss_computing_client/models/field/field_stored.dart';
 import 'package:sss_computing_client/models/field/field_type.dart';
+import 'package:sss_computing_client/models/field/value_record.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/ship_parameters/ship_parameters.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/bar_chart.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_axis.dart';
@@ -197,24 +198,42 @@ class StrengthPage extends StatelessWidget {
                       label: const Localized('Ship length').v,
                       unit: const Localized('m').v,
                       type: FieldType.real,
-                      initialValue: "200.0",
-                      record: FieldStored(data: "200.0"),
+                      initialValue: "0.0",
+                      record: ValueRecord(
+                        key: 'ship_length',
+                        tableName: 'ship',
+                        dbName: 'sss-computing',
+                        apiAddress: ApiAddress.localhost(port: 8080),
+                      ),
                     ),
                     FieldData(
                       id: "water_density",
                       label: const Localized('Water density').v,
                       unit: const Localized('g/ml').v,
                       type: FieldType.real,
-                      initialValue: "1.025",
-                      record: FieldStored(data: "1.025"),
+                      initialValue: "0.0",
+                      isPersisted: false,
+                      record: ValueRecord(
+                        key: 'water_density',
+                        tableName: 'ship',
+                        dbName: 'sss-computing',
+                        apiAddress: ApiAddress.localhost(port: 8080),
+                      ),
                     ),
                     FieldData(
                       id: "n_parts",
                       label: const Localized('Number of parts').v,
                       unit: "",
                       type: FieldType.int,
-                      initialValue: "20",
-                      record: FieldStored(data: "20"),
+                      initialValue: "0",
+                      typeCaster: (str) =>
+                          double.tryParse(str)!.toInt().toString(),
+                      record: ValueRecord(
+                        key: 'n_parts',
+                        tableName: 'ship',
+                        dbName: 'sss-computing',
+                        apiAddress: ApiAddress.localhost(port: 8080),
+                      ),
                     ),
                   ],
                   onSave: (fieldDatas) async {
