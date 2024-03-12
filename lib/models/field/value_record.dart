@@ -9,6 +9,7 @@ class ValueRecord implements Persistable<String> {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
+  final String Function(String text)? _onFetch;
 
   const ValueRecord({
     required String key,
@@ -16,11 +17,13 @@ class ValueRecord implements Persistable<String> {
     required String dbName,
     required ApiAddress apiAddress,
     String? authToken,
+    String Function(String text)? onFetch,
   })  : _key = key,
         _tableName = tableName,
         _dbName = dbName,
         _apiAddress = apiAddress,
-        _authToken = authToken;
+        _authToken = authToken,
+        _onFetch = onFetch;
 
   @override
   Future<ResultF<void>> persist(String value) async {
@@ -58,7 +61,9 @@ class ValueRecord implements Persistable<String> {
 
   ResultF<String> _mapReplyToValue(List<Map<String, dynamic>> rows) {
     try {
-      return Ok(rows.first['value'].toString());
+      final reply = rows.first['value'].toString();
+      final value = _onFetch?.call(reply) ?? reply;
+      return Ok(value);
     } catch (err) {
       return Err(Failure(message: err, stackTrace: StackTrace.current));
     }

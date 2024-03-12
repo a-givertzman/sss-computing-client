@@ -226,13 +226,13 @@ class StrengthPage extends StatelessWidget {
                       unit: "",
                       type: FieldType.int,
                       initialValue: "0",
-                      typeCaster: (str) =>
-                          double.tryParse(str)!.toInt().toString(),
                       record: ValueRecord(
                         key: 'n_parts',
                         tableName: 'ship',
                         dbName: 'sss-computing',
                         apiAddress: ApiAddress.localhost(port: 8080),
+                        onFetch: (str) =>
+                            double.tryParse(str)!.toInt().toString(),
                       ),
                     ),
                   ],

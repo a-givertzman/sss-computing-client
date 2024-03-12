@@ -13,7 +13,6 @@ class FieldData {
   final String unit;
   final Persistable<String> _record;
   final TextEditingController _controller;
-  final String Function(String text)? _typeCaster;
   bool _isPersisted;
   String _initialValue;
 
@@ -30,12 +29,10 @@ class FieldData {
     required this.type,
     required String initialValue,
     required Persistable<String> record,
-    String Function(String)? typeCaster,
     bool isPersisted = false,
   })  : _record = record,
         _initialValue = initialValue,
         _controller = TextEditingController(text: initialValue),
-        _typeCaster = typeCaster,
         _isPersisted = isPersisted;
 
   FieldData._({
@@ -46,12 +43,10 @@ class FieldData {
     required String initialValue,
     required Persistable<String> record,
     required TextEditingController controller,
-    String Function(String)? typeCaster,
     required bool isPersisted,
   })  : _record = record,
         _initialValue = initialValue,
         _controller = controller,
-        _typeCaster = typeCaster,
         _isPersisted = isPersisted;
 
   ///
@@ -102,7 +97,6 @@ class FieldData {
   ///
   /// Sets initialaValue and controller value to provided one.
   void refreshWith(String text) {
-    text = _typeCaster?.call(text) ?? text;
     controller.text = text;
     _initialValue = text;
   }
@@ -126,7 +120,6 @@ class FieldData {
     FieldType? type,
     String? initialValue,
     Persistable<String>? record,
-    String Function(String)? typeCaster,
   }) {
     return FieldData._(
       id: id ?? this.id,
@@ -135,7 +128,6 @@ class FieldData {
       unit: unit ?? this.unit,
       initialValue: initialValue ?? _initialValue,
       record: record ?? _record,
-      typeCaster: typeCaster ?? _typeCaster,
       controller: _controller,
       isPersisted: _isPersisted,
     );
