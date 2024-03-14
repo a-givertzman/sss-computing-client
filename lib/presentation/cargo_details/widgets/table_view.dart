@@ -15,52 +15,53 @@ class TableView<T> extends StatefulWidget {
   final Color? _controlElementColor;
   final Color? _thumbColor;
   final ColumnWidthBehavior _columnWidthBehavior;
+
   ///
   const TableView({
-    super.key, 
-    required DaviModel<T> model, 
+    super.key,
+    required DaviModel<T> model,
     void Function(T)? onRowTap,
-    void Function(T)? onRowDoubleTap, 
-    Color? Function(DaviRow<T>)? rowColor, 
-    MouseCursor? Function(DaviRow<T>)? rowCursor, 
-    Border? outerBorder, 
-    double tableBorderThickness = 2.0, 
-    Color? tableBorderColor, 
-    Color? scrollbarBackgroundColor, 
-    Color? controlElementColor, 
-    Color? thumbColor, 
-    ColumnWidthBehavior columnWidthBehavior = ColumnWidthBehavior.scrollable, 
-    Color? selectedRowColor, 
-  }) : 
-    _rowColor = rowColor, 
-    _columnWidthBehavior = columnWidthBehavior, 
-    _thumbColor = thumbColor, 
-    _controlElementColor = controlElementColor, 
-    _scrollbarBackgroundColor = scrollbarBackgroundColor, 
-    _tableBorderColor = tableBorderColor, 
-    _tableBorderThickness = tableBorderThickness, 
-    _onRowTap = onRowTap,
-    _onRowDoubleTap = onRowDoubleTap,
-    _rowCursor = rowCursor, 
-    _outerBorder = outerBorder, 
-    _model = model;
+    void Function(T)? onRowDoubleTap,
+    Color? Function(DaviRow<T>)? rowColor,
+    MouseCursor? Function(DaviRow<T>)? rowCursor,
+    Border? outerBorder,
+    double tableBorderThickness = 2.0,
+    Color? tableBorderColor,
+    Color? scrollbarBackgroundColor,
+    Color? controlElementColor,
+    Color? thumbColor,
+    ColumnWidthBehavior columnWidthBehavior = ColumnWidthBehavior.scrollable,
+    Color? selectedRowColor,
+  })  : _rowColor = rowColor,
+        _columnWidthBehavior = columnWidthBehavior,
+        _thumbColor = thumbColor,
+        _controlElementColor = controlElementColor,
+        _scrollbarBackgroundColor = scrollbarBackgroundColor,
+        _tableBorderColor = tableBorderColor,
+        _tableBorderThickness = tableBorderThickness,
+        _onRowTap = onRowTap,
+        _onRowDoubleTap = onRowDoubleTap,
+        _rowCursor = rowCursor,
+        _outerBorder = outerBorder,
+        _model = model;
   //
   @override
   State<TableView<T>> createState() => _TableViewState<T>(
-    model: _model,
-    onRowTap: _onRowTap,
-    onRowDoubleTap: _onRowDoubleTap,
-    rowColor: _rowColor,
-    rowCursor: _rowCursor,
-    outerBorder: _outerBorder,
-    tableBorderThickness: _tableBorderThickness,
-    tableBorderColor: _tableBorderColor,
-    scrollbarBackgroundColor: _scrollbarBackgroundColor,
-    controlElementColor: _controlElementColor,
-    thumbColor: _thumbColor,
-    columnWidthBehavior: _columnWidthBehavior,
-  );
+        model: _model,
+        onRowTap: _onRowTap,
+        onRowDoubleTap: _onRowDoubleTap,
+        rowColor: _rowColor,
+        rowCursor: _rowCursor,
+        outerBorder: _outerBorder,
+        tableBorderThickness: _tableBorderThickness,
+        tableBorderColor: _tableBorderColor,
+        scrollbarBackgroundColor: _scrollbarBackgroundColor,
+        controlElementColor: _controlElementColor,
+        thumbColor: _thumbColor,
+        columnWidthBehavior: _columnWidthBehavior,
+      );
 }
+
 ///
 class _TableViewState<T> extends State<TableView<T>> {
   final DaviModel<T> _model;
@@ -75,11 +76,12 @@ class _TableViewState<T> extends State<TableView<T>> {
   final Color? _controlElementColor;
   final Color? _thumbColor;
   final ColumnWidthBehavior _columnWidthBehavior;
+
   ///
   _TableViewState({
     required DaviModel<T> model,
     required void Function(T)? onRowTap,
-    required void Function(T)? onRowDoubleTap, 
+    required void Function(T)? onRowDoubleTap,
     required Color? Function(DaviRow<T>)? rowColor,
     required MouseCursor? Function(DaviRow<T>)? rowCursor,
     required Border? outerBorder,
@@ -89,35 +91,34 @@ class _TableViewState<T> extends State<TableView<T>> {
     required Color? controlElementColor,
     required Color? thumbColor,
     required ColumnWidthBehavior columnWidthBehavior,
-
-  }) : 
-    _model = model,
-    _rowColor = rowColor,
-    _rowCursor = rowCursor, 
-    _onRowTap = onRowTap,
-    _onRowDoubleTap = onRowDoubleTap,
-    _outerBorder = outerBorder,
-    _tableBorderThickness = tableBorderThickness,
-    _tableBorderColor = tableBorderColor,
-    _scrollbarBackgroundColor = scrollbarBackgroundColor,
-    _controlElementColor = controlElementColor,
-    _thumbColor = thumbColor,
-    _columnWidthBehavior = columnWidthBehavior;
+  })  : _model = model,
+        _rowColor = rowColor,
+        _rowCursor = rowCursor,
+        _onRowTap = onRowTap,
+        _onRowDoubleTap = onRowDoubleTap,
+        _outerBorder = outerBorder,
+        _tableBorderThickness = tableBorderThickness,
+        _tableBorderColor = tableBorderColor,
+        _scrollbarBackgroundColor = scrollbarBackgroundColor,
+        _controlElementColor = controlElementColor,
+        _thumbColor = thumbColor,
+        _columnWidthBehavior = columnWidthBehavior;
   //
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final controlElementColor = _controlElementColor 
-      ?? theme.colorScheme.primary;
-    final tableBorderColor = _tableBorderColor 
-      ?? theme.disabledColor.withOpacity(0.3);
-    final scrollbarBackgroundColor = _scrollbarBackgroundColor
-      ?? theme.disabledColor.withOpacity(0.07);
+    final controlElementColor =
+        _controlElementColor ?? theme.colorScheme.primary;
+    final tableBorderColor =
+        _tableBorderColor ?? theme.disabledColor.withOpacity(0.3);
+    final scrollbarBackgroundColor =
+        _scrollbarBackgroundColor ?? theme.disabledColor.withOpacity(0.07);
     final thumbColor = _thumbColor ?? theme.disabledColor.withOpacity(0.3);
-    final outerBorder = _outerBorder ?? Border.all(
-      color:  tableBorderColor,
-      width: 1,
-    );
+    final outerBorder = _outerBorder ??
+        Border.all(
+          color: tableBorderColor,
+          width: 1,
+        );
     return DaviTheme(
       data: DaviThemeData(
         decoration: BoxDecoration(
@@ -127,7 +128,7 @@ class _TableViewState<T> extends State<TableView<T>> {
         columnDividerThickness: _tableBorderThickness,
         headerCell: HeaderCellThemeData(
           sortIconColors: SortIconColors(
-            ascending: controlElementColor, 
+            ascending: controlElementColor,
             descending: controlElementColor,
           ),
         ),
@@ -144,10 +145,11 @@ class _TableViewState<T> extends State<TableView<T>> {
           alignment: Alignment.center,
         ),
         scrollbar: TableScrollbarThemeData(
-          margin: theme.scrollbarTheme.mainAxisMargin
-            ?? TableScrollbarThemeDataDefaults.margin,
-          thickness: theme.scrollbarTheme.thickness?.resolve({MaterialState.hovered}) 
-            ?? TableScrollbarThemeDataDefaults.thickness,
+          margin: theme.scrollbarTheme.mainAxisMargin ??
+              TableScrollbarThemeDataDefaults.margin,
+          thickness: theme.scrollbarTheme.thickness
+                  ?.resolve({MaterialState.hovered}) ??
+              TableScrollbarThemeDataDefaults.thickness,
           verticalColor: scrollbarBackgroundColor,
           verticalBorderColor: Colors.transparent,
           pinnedHorizontalColor: scrollbarBackgroundColor,
@@ -164,7 +166,7 @@ class _TableViewState<T> extends State<TableView<T>> {
       ),
       child: Davi<T>(
         _model,
-        onRowTap:_onRowTap,
+        onRowTap: _onRowTap,
         onRowDoubleTap: _onRowDoubleTap,
         rowColor: _rowColor,
         rowCursor: _rowCursor,

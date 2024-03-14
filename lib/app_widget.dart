@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/models/cargos/cargos.dart';
 import 'package:sss_computing_client/presentation/cargo_details/cargo_details_page.dart';
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
 import 'package:sss_computing_client/presentation/strength/strength_page.dart';
@@ -66,8 +67,10 @@ class _AppWidgetState extends State<AppWidget> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: widget._themeSwitch.themeData,
-      home: const Scaffold(
-        body: CargoDetailsPage(),
+      home: Scaffold(
+        body: CargoDetailsPage(
+          cargos: FakeCargos(),
+        ),
       ),
     );
   }

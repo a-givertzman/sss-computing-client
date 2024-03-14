@@ -1,61 +1,98 @@
-import 'package:davi/davi.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/models/cargo/cargo.dart';
-import 'package:sss_computing_client/presentation/cargo_details/widgets/table_view/table_view.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/models/cargos/cargos.dart';
+import 'package:sss_computing_client/presentation/cargo_details/widgets/cargo_table.dart';
 
 class CargoDetailsPage extends StatefulWidget {
-  const CargoDetailsPage({super.key});
+  final Cargos cargos;
+  const CargoDetailsPage({super.key, required this.cargos});
 
   @override
   State<CargoDetailsPage> createState() => _CargoDetailsPageState();
 }
 
 class _CargoDetailsPageState extends State<CargoDetailsPage> {
-  late final List<Cargo> _cargos;
-  late final DaviModel<Cargo> _model;
-
-  @override
-  void initState() {
-    _cargos = List.generate(
-      100,
-      (index) => {
-        'id': index,
-        'name': '123asd-$index',
-        'weight': (index * 10).toDouble(),
-      },
-    ).map((json) => JsonCargo(json: json)).toList();
-    _model = DaviModel(
-      columns: [
-        DaviColumn(
-          name: 'id',
-          intValue: (cargo) => cargo.id,
-        ),
-        DaviColumn(
-          name: 'name',
-          stringValue: (cargo) => cargo.name,
-        ),
-        DaviColumn(
-          name: 'weight',
-          doubleValue: (cargo) => cargo.weight,
-        ),
-      ],
-      rows: _cargos,
-    );
-    super.initState();
+  void _handleReload() {
+    Log('$runtimeType').debug('Reloaded');
+    setState(() {
+      return;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SizedBox.expand(
       child: Card(
         child: Padding(
           padding: EdgeInsets.all(const Setting('padding').toDouble),
-          child: TableView<Cargo>(
-            model: _model,
-            columnWidthBehavior: ColumnWidthBehavior.fit,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                const Localized('Cargo list').v,
+                textAlign: TextAlign.start,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              SizedBox(
+                height: const Setting('padding', factor: 1.0).toDouble,
+              ),
+              Expanded(
+                flex: 1,
+                child: FutureBuilder(
+                  future: widget.cargos.fetchAll(),
+                  builder: (context, snapshot) {
+                    return switch (snapshot.connectionState) {
+                      ConnectionState.done => switch (snapshot.data!) {
+                          Ok(value: final cargos) => CargoTable(cargos: cargos),
+                          Err(:final error) => _AlertWidget(
+                              message: error.message,
+                              onConfirm: () => _handleReload(),
+                            ),
+                        },
+                      _ => const CupertinoActivityIndicator(),
+                    };
+                  },
+                ),
+              ),
+            ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _AlertWidget extends StatelessWidget {
+  final String message;
+  final void Function()? onConfirm;
+  const _AlertWidget({required this.message, this.onConfirm});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            color: Theme.of(context).stateColors.error,
+          ),
+          Text(
+            message,
+            style: TextStyle(
+              color: Theme.of(context).stateColors.error,
+            ),
+          ),
+          TextButton(
+            onPressed: () => onConfirm?.call(),
+            child: Text(const Localized('Retry').v),
+          ),
+        ],
       ),
     );
   }
