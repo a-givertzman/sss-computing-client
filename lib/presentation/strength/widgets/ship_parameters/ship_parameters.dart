@@ -49,7 +49,7 @@ class _ShipParametersState extends State<ShipParameters> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 7,
+            flex: 1,
             child: Stack(
               children: [
                 FieldGroup(

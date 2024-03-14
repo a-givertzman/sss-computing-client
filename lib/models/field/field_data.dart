@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:sss_computing_client/models/field/field_stored.dart';
 import 'package:sss_computing_client/models/field/field_type.dart';
+import 'package:sss_computing_client/models/persistable/persistable.dart';
 
 ///
 /// Model that holds data for [TextFormField] or [TextField].
@@ -11,9 +11,10 @@ class FieldData {
   final FieldType type;
   final String label;
   final String unit;
-  String _initialValue;
-  final FieldStored _record;
+  final Persistable<String> _record;
   final TextEditingController _controller;
+  bool _isPersisted;
+  String _initialValue;
 
   ///
   /// Model that holds data for [TextFormField] or [TextField].
@@ -27,10 +28,26 @@ class FieldData {
     required this.unit,
     required this.type,
     required String initialValue,
-    required FieldStored record,
-  })  : _initialValue = initialValue,
-        _record = record,
-        _controller = TextEditingController(text: initialValue);
+    required Persistable<String> record,
+    bool isPersisted = false,
+  })  : _record = record,
+        _initialValue = initialValue,
+        _controller = TextEditingController(text: initialValue),
+        _isPersisted = isPersisted;
+
+  FieldData._({
+    required this.id,
+    required this.label,
+    required this.unit,
+    required this.type,
+    required String initialValue,
+    required Persistable<String> record,
+    required TextEditingController controller,
+    required bool isPersisted,
+  })  : _record = record,
+        _initialValue = initialValue,
+        _controller = controller,
+        _isPersisted = isPersisted;
 
   ///
   /// Initial content of the target field.
@@ -45,33 +62,42 @@ class FieldData {
   bool get isChanged => _initialValue != _controller.text;
 
   ///
+  /// Whether content of the target synced with source or not
+  bool get isSynced => _isPersisted;
+
+  ///
   /// Pull data from the database through provided [record].
-  Future<ResultF<String>> fetch() => _record.fetch().then((result) {
-        switch (result) {
-          case Ok(:final value):
-            _controller.text = value;
-          case Err(:final error):
-            Log('$runtimeType | fetch').error(error);
-        }
-        return result;
-      });
+  Future<ResultF<String>> fetch() async {
+    switch (await _record.fetch()) {
+      case Ok(:final value):
+        refreshWith(value);
+        _isPersisted = true;
+        return Ok(value);
+      case final Err<String, Failure> err:
+        Log('$runtimeType | fetch').error(err.error);
+        return err;
+    }
+  }
 
   ///
   /// Persist data to the database through provided [record].
-  Future<ResultF<String>> save() =>
-      _record.persist(_controller.text).then((result) {
-        switch (result) {
-          case Ok():
-            refreshWith(_controller.text);
-          case Err(:final error):
-            Log('$runtimeType | fetch').error(error);
-        }
-        return result;
-      });
+  Future<ResultF<String>> save() async {
+    final value = controller.text;
+    switch (await _record.persist(value)) {
+      case Ok():
+        refreshWith(value);
+        _isPersisted = true;
+        return Ok(value);
+      case final Err<void, Failure> err:
+        Log('$runtimeType | fetch').error(err.error);
+        return Err<String, Failure>(err.error);
+    }
+  }
 
   ///
-  /// Sets initialValue to provided value.
+  /// Sets initialaValue and controller value to provided one.
   void refreshWith(String text) {
+    controller.text = text;
     _initialValue = text;
   }
 
@@ -93,15 +119,17 @@ class FieldData {
     String? unit,
     FieldType? type,
     String? initialValue,
-    FieldStored? record,
+    Persistable<String>? record,
   }) {
-    return FieldData(
+    return FieldData._(
       id: id ?? this.id,
       type: type ?? this.type,
       label: label ?? this.label,
       unit: unit ?? this.unit,
       initialValue: initialValue ?? _initialValue,
       record: record ?? _record,
+      controller: _controller,
+      isPersisted: _isPersisted,
     );
   }
 }

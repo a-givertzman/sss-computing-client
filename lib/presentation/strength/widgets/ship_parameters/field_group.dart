@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/models/field/field_data.dart';
@@ -46,12 +48,14 @@ class _FieldGroupState extends State<FieldGroup> {
     super.dispose();
   }
 
-  CancelableField _mapDataToField(FieldData data) => CancelableField(
+  CancelableField _mapDataToField(FieldData data, {Failure? err}) =>
+      CancelableField(
         label: data.label,
         suffixText: data.unit,
         initialValue: data.initialValue,
         fieldType: data.type,
         controller: data.controller,
+        sendError: err?.message,
         onChanged: (value) {
           data.controller.value = TextEditingValue(
             text: value,
@@ -93,19 +97,37 @@ class _FieldGroupState extends State<FieldGroup> {
                 controller: _scrollController,
                 builder: (_, isScrollEnabled) => SingleChildScrollView(
                   controller: _scrollController,
-                  child: Column(
-                    children: [
-                      for (int i = 0; i < widget._fieldsData.length; i++) ...[
-                        Padding(
-                          padding: EdgeInsets.only(
-                            right: isScrollEnabled ? padding * 2 : 0.0,
-                          ),
-                          child: _mapDataToField(widget._fieldsData[i]),
-                        ),
-                        if (i == widget._fieldsData.length - 1)
-                          SizedBox(height: padding),
-                      ],
-                    ],
+                  child: FutureBuilder(
+                    future: Future.wait(widget._fieldsData.map(
+                      (field) => field.isSynced
+                          ? Future<ResultF>.value(const Ok(null))
+                          : field.fetch(),
+                    )),
+                    builder: (_, result) => result.hasData
+                        ? Column(
+                            children: [
+                              for (int i = 0;
+                                  i < widget._fieldsData.length;
+                                  i++) ...[
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    right: isScrollEnabled ? padding * 2 : 0.0,
+                                  ),
+                                  child: switch (result.data![i]) {
+                                    Ok() =>
+                                      _mapDataToField(widget._fieldsData[i]),
+                                    Err(:final error) => _mapDataToField(
+                                        widget._fieldsData[i],
+                                        err: error,
+                                      ),
+                                  },
+                                ),
+                                if (i == widget._fieldsData.length - 1)
+                                  SizedBox(height: padding),
+                              ],
+                            ],
+                          )
+                        : const CupertinoActivityIndicator(),
                   ),
                 ),
               ),
