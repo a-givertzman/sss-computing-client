@@ -80,28 +80,18 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
       _isInProcess = true;
       _error = null;
     });
-    await Future.delayed(const Duration(seconds: 2)); // for debugging
-    if (value == _initialValue) {
-      widget.onSave?.call(value);
-      setState(() {
-        Log('$runtimeType | ._handleSave').debug('$value not changed');
-        _initialValue = value;
-        _isInProcess = false;
-      });
-      return const Ok(null);
-    }
-    switch (await widget.record.persist(value)) {
+    final ResultF<String> newValue =
+        value == _initialValue ? Ok(value) : await widget.record.persist(value);
+    switch (newValue) {
       case Ok(:final value):
         widget.onSave?.call(value);
         setState(() {
-          Log('$runtimeType | ._handleSave').debug('$value saved in db');
-          _initialValue = value;
           _isInProcess = false;
+          _initialValue = value;
         });
         return const Ok(null);
       case Err(:final error):
         setState(() {
-          Log('$runtimeType | ._handleSave').debug(error);
           _isInProcess = false;
           _error = error;
         });

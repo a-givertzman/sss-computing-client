@@ -6,11 +6,34 @@ import 'package:sss_computing_client/models/cargo/cargo.dart';
 import 'package:sss_computing_client/models/persistable/value_record.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/edit_on_tap_field.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/table_view.dart';
+import 'package:sss_computing_client/validation/int_validation_case.dart';
 import 'package:sss_computing_client/validation/real_validation_case.dart';
+
+class CargoColumn {
+  final String type;
+  final String key;
+  final String name;
+  final bool isEditable;
+  final double? grow;
+
+  const CargoColumn({
+    required this.type,
+    required this.key,
+    required this.name,
+    required this.isEditable,
+    this.grow,
+  });
+}
 
 class CargoTable extends StatefulWidget {
   final List<Cargo> _cargos;
-  const CargoTable({super.key, required List<Cargo> cargos}) : _cargos = cargos;
+  final List<CargoColumn> _columns;
+  const CargoTable({
+    super.key,
+    required List<Cargo> cargos,
+    required List<CargoColumn> columns,
+  })  : _cargos = cargos,
+        _columns = columns;
 
   @override
   State<CargoTable> createState() => _CargoTableState();
@@ -21,7 +44,6 @@ class _CargoTableState extends State<CargoTable> {
   late final DaviModel<Cargo> model;
 
   @override
-  // ignore: long-method
   void initState() {
     cargos = widget._cargos;
     model = DaviModel(
@@ -31,207 +53,22 @@ class _CargoTableState extends State<CargoTable> {
           pinStatus: PinStatus.left,
           intValue: (cargo) => cargo.id,
         ),
-        DaviColumn(
-          grow: 2,
-          name: 'Name',
-          stringValue: (cargo) => cargo.name,
-          cellBuilder: (_, row) => EditOnTapField(
-            initialValue: row.data.name,
-            record: ValueRecord(
-              filter: {'cargo_id': row.data.id},
-              key: 'name',
-              tableName: 'cargo_parameters',
-              dbName: 'sss-computing',
-              apiAddress: ApiAddress.localhost(port: 8080),
-            ),
-            textColor: Theme.of(context).colorScheme.onSurface,
-            iconColor: Theme.of(context).colorScheme.primary,
-            errorColor: Theme.of(context).stateColors.error,
-            onSave: (name) => setState(() {
-              final idx = cargos.indexOf(row.data);
-              cargos[idx] = row.data.copyWith(
-                name: name,
-              );
-              model.replaceRows(cargos);
-            }),
-            validator: const Validator(cases: [
-              MinLengthValidationCase(1),
-              MaxLengthValidationCase(250),
-            ]),
-          ),
-        ),
-        DaviColumn(
-          grow: 1,
-          name: 'Weight [t]',
-          doubleValue: (cargo) => cargo.weight,
-          cellBuilder: (_, row) => EditOnTapField(
-            initialValue: row.data.weight.toString(),
-            record: ValueRecord(
-              filter: {'cargo_id': row.data.id},
-              key: 'weight',
-              tableName: 'cargo_parameters',
-              dbName: 'sss-computing',
-              apiAddress: ApiAddress.localhost(port: 8080),
-            ),
-            textColor: Theme.of(context).colorScheme.onSurface,
-            iconColor: Theme.of(context).colorScheme.primary,
-            errorColor: Theme.of(context).stateColors.error,
-            onSave: (weight) => setState(() {
-              final idx = cargos.indexOf(row.data);
-              cargos[idx] = row.data.copyWith(
-                weight: double.tryParse(weight),
-              );
-              model.replaceRows(cargos);
-            }),
-            validator: const Validator(cases: [
-              MinLengthValidationCase(1),
-              RealValidationCase(),
-            ]),
-          ),
-        ),
-        DaviColumn(
-          grow: 1,
-          name: 'VCG [m]',
-          doubleValue: (cargo) => cargo.vcg,
-          cellBuilder: (_, row) => EditOnTapField(
-            initialValue: row.data.vcg.toString(),
-            record: ValueRecord(
-              filter: {'cargo_id': row.data.id},
-              key: 'vcg',
-              tableName: 'cargo_parameters',
-              dbName: 'sss-computing',
-              apiAddress: ApiAddress.localhost(port: 8080),
-            ),
-            textColor: Theme.of(context).colorScheme.onSurface,
-            iconColor: Theme.of(context).colorScheme.primary,
-            errorColor: Theme.of(context).stateColors.error,
-            onSave: (vcg) => setState(() {
-              final idx = cargos.indexOf(row.data);
-              cargos[idx] = row.data.copyWith(
-                vcg: double.tryParse(vcg),
-              );
-              model.replaceRows(cargos);
-            }),
-            validator: const Validator(cases: [
-              MinLengthValidationCase(1),
-              RealValidationCase(),
-            ]),
-          ),
-        ),
-        DaviColumn(
-          grow: 1,
-          name: 'LCG [m]',
-          doubleValue: (cargo) => cargo.lcg,
-          cellBuilder: (_, row) => EditOnTapField(
-            initialValue: row.data.lcg.toString(),
-            record: ValueRecord(
-              filter: {'cargo_id': row.data.id},
-              key: 'lcg',
-              tableName: 'cargo_parameters',
-              dbName: 'sss-computing',
-              apiAddress: ApiAddress.localhost(port: 8080),
-            ),
-            textColor: Theme.of(context).colorScheme.onSurface,
-            iconColor: Theme.of(context).colorScheme.primary,
-            errorColor: Theme.of(context).stateColors.error,
-            onSave: (lcg) => setState(() {
-              final idx = cargos.indexOf(row.data);
-              cargos[idx] = row.data.copyWith(
-                lcg: double.tryParse(lcg),
-              );
-              model.replaceRows(cargos);
-            }),
-            validator: const Validator(cases: [
-              MinLengthValidationCase(1),
-              RealValidationCase(),
-            ]),
-          ),
-        ),
-        DaviColumn(
-          grow: 1,
-          name: 'TCG [m]',
-          doubleValue: (cargo) => cargo.tcg,
-          cellBuilder: (_, row) => EditOnTapField(
-            initialValue: row.data.tcg.toString(),
-            record: ValueRecord(
-              filter: {'cargo_id': row.data.id},
-              key: 'tcg',
-              tableName: 'cargo_parameters',
-              dbName: 'sss-computing',
-              apiAddress: ApiAddress.localhost(port: 8080),
-            ),
-            textColor: Theme.of(context).colorScheme.onSurface,
-            iconColor: Theme.of(context).colorScheme.primary,
-            errorColor: Theme.of(context).stateColors.error,
-            onSave: (tcg) => setState(() {
-              final idx = cargos.indexOf(row.data);
-              cargos[idx] = row.data.copyWith(
-                tcg: double.tryParse(tcg),
-              );
-              model.replaceRows(cargos);
-            }),
-            validator: const Validator(cases: [
-              MinLengthValidationCase(1),
-              RealValidationCase(),
-            ]),
-          ),
-        ),
-        DaviColumn(
-          grow: 1,
-          name: 'X1 [m]',
-          doubleValue: (cargo) => cargo.x_1,
-          cellBuilder: (_, row) => EditOnTapField(
-            initialValue: row.data.x_1.toString(),
-            record: ValueRecord(
-              filter: {'cargo_id': row.data.id},
-              key: 'x_1',
-              tableName: 'cargo_parameters',
-              dbName: 'sss-computing',
-              apiAddress: ApiAddress.localhost(port: 8080),
-            ),
-            textColor: Theme.of(context).colorScheme.onSurface,
-            iconColor: Theme.of(context).colorScheme.primary,
-            errorColor: Theme.of(context).stateColors.error,
-            onSave: (leftSideX) => setState(() {
-              final idx = cargos.indexOf(row.data);
-              cargos[idx] = row.data.copyWith(
-                x_1: double.tryParse(leftSideX),
-              );
-              model.replaceRows(cargos);
-            }),
-            validator: const Validator(cases: [
-              MinLengthValidationCase(1),
-              RealValidationCase(),
-            ]),
-          ),
-        ),
-        DaviColumn(
-          grow: 1,
-          name: 'X2 [m]',
-          doubleValue: (cargo) => cargo.x_2,
-          cellBuilder: (_, row) => EditOnTapField(
-            initialValue: row.data.x_2.toString(),
-            record: ValueRecord(
-              filter: {'cargo_id': row.data.id},
-              key: 'x_2',
-              tableName: 'cargo_parameters',
-              dbName: 'sss-computing',
-              apiAddress: ApiAddress.localhost(port: 8080),
-            ),
-            textColor: Theme.of(context).colorScheme.onSurface,
-            iconColor: Theme.of(context).colorScheme.primary,
-            errorColor: Theme.of(context).stateColors.error,
-            onSave: (rightSideX) => setState(() {
-              final idx = cargos.indexOf(row.data);
-              cargos[idx] = row.data.copyWith(
-                x_2: double.tryParse(rightSideX),
-              );
-              model.replaceRows(cargos);
-            }),
-            validator: const Validator(cases: [
-              MinLengthValidationCase(1),
-              RealValidationCase(),
-            ]),
+        ...widget._columns.map(
+          (column) => DaviColumn(
+            grow: column.grow,
+            name: column.name,
+            stringValue: column.type == 'string'
+                ? (data) => data.asMap()[column.key]
+                : null,
+            doubleValue: column.type == 'real'
+                ? (data) => data.asMap()[column.key]
+                : null,
+            intValue: column.type == 'int'
+                ? (data) => data.asMap()[column.key]
+                : null,
+            cellBuilder: (_, row) => column.isEditable
+                ? _buildEditableCellWidget(context, row, column)
+                : Text('${row.data.asMap()[column.key]}'),
           ),
         ),
         DaviColumn(
@@ -248,6 +85,51 @@ class _CargoTableState extends State<CargoTable> {
       rows: cargos,
     );
     super.initState();
+  }
+
+  Widget _buildEditableCellWidget(
+    BuildContext context,
+    DaviRow row,
+    CargoColumn column,
+  ) {
+    return EditOnTapField(
+      initialValue: '${row.data.asMap()[column.key]}',
+      record: ValueRecord(
+        filter: {'cargo_id': row.data.id},
+        key: column.key,
+        tableName: 'cargo_parameters',
+        dbName: 'sss-computing',
+        apiAddress: ApiAddress.localhost(port: 8080),
+      ),
+      textColor: Theme.of(context).colorScheme.onSurface,
+      iconColor: Theme.of(context).colorScheme.primary,
+      errorColor: Theme.of(context).stateColors.error,
+      onSave: (value) => setState(() {
+        final idx = cargos.indexOf(row.data);
+        final newValue = switch (column.type) {
+          'real' => double.tryParse(value),
+          'int' => int.tryParse(value),
+          'string' || _ => value,
+        };
+        final newData = row.data.asMap()..[column.key] = newValue;
+        cargos[idx] = JsonCargo(json: newData);
+        model.replaceRows(cargos);
+      }),
+      validator: switch (column.type) {
+        'real' => const Validator(cases: [
+            MinLengthValidationCase(1),
+            RealValidationCase(),
+          ]),
+        'int' => const Validator(cases: [
+            MinLengthValidationCase(1),
+            IntValidationCase(),
+          ]),
+        'string' || _ => const Validator(cases: [
+            MinLengthValidationCase(1),
+            MaxLengthValidationCase(250),
+          ]),
+      },
+    );
   }
 
   @override

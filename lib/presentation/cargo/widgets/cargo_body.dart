@@ -47,7 +47,60 @@ class _CargoBodyState extends State<CargoBody> {
                   builder: (context, snapshot) {
                     return switch (snapshot.connectionState) {
                       ConnectionState.done => switch (snapshot.data!) {
-                          Ok(value: final cargos) => CargoTable(cargos: cargos),
+                          Ok(value: final cargos) => CargoTable(
+                              cargos: cargos,
+                              columns: const [
+                                CargoColumn(
+                                  grow: 2,
+                                  key: 'name',
+                                  type: 'string',
+                                  name: 'Name',
+                                  isEditable: true,
+                                ),
+                                CargoColumn(
+                                  grow: 1,
+                                  key: 'weight',
+                                  type: 'real',
+                                  name: 'Weight [t]',
+                                  isEditable: true,
+                                ),
+                                CargoColumn(
+                                  grow: 1,
+                                  key: 'vcg',
+                                  type: 'real',
+                                  name: 'VCG [m]',
+                                  isEditable: true,
+                                ),
+                                CargoColumn(
+                                  grow: 1,
+                                  key: 'lcg',
+                                  type: 'real',
+                                  name: 'LCG [m]',
+                                  isEditable: true,
+                                ),
+                                CargoColumn(
+                                  grow: 1,
+                                  key: 'tcg',
+                                  type: 'real',
+                                  name: 'TCG [m]',
+                                  isEditable: true,
+                                ),
+                                CargoColumn(
+                                  grow: 1,
+                                  key: 'x_1',
+                                  type: 'real',
+                                  name: 'X1 [m]',
+                                  isEditable: true,
+                                ),
+                                CargoColumn(
+                                  grow: 1,
+                                  key: 'x_2',
+                                  type: 'real',
+                                  name: 'X2 [m]',
+                                  isEditable: true,
+                                ),
+                              ],
+                            ),
                           Err(:final error) => _AlertWidget(
                               message: error.message,
                               onConfirm: () => _handleReload(),
