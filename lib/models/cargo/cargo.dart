@@ -13,9 +13,9 @@ abstract interface class Cargo {
   //
   double get tcg;
   //
-  double get leftSideX;
+  double get x_1;
   //
-  double get rightSideX;
+  double get x_2;
   //
   Cargo copyWith({
     int? id,
@@ -24,8 +24,8 @@ abstract interface class Cargo {
     double? vcg,
     double? lcg,
     double? tcg,
-    double? leftSideX,
-    double? rightSideX,
+    double? x_1,
+    double? x_2,
   });
 }
 
@@ -59,10 +59,10 @@ class JsonCargo implements Cargo {
   double get tcg => _json['tcg'];
   //
   @override
-  double get leftSideX => _json['leftSideX'];
+  double get x_1 => _json['x_1'];
   //
   @override
-  double get rightSideX => _json['rightSideX'];
+  double get x_2 => _json['x_2'];
   @override
   // ignore: long-parameter-list
   Cargo copyWith({
@@ -72,8 +72,8 @@ class JsonCargo implements Cargo {
     double? vcg,
     double? lcg,
     double? tcg,
-    double? leftSideX,
-    double? rightSideX,
+    double? x_1,
+    double? x_2,
   }) {
     final json = {
       'id': id ?? _json['id'],
@@ -82,23 +82,12 @@ class JsonCargo implements Cargo {
       'vcg': vcg ?? _json['vcg'],
       'lcg': lcg ?? _json['lcg'],
       'tcg': tcg ?? _json['tcg'],
-      'leftSideX': leftSideX ?? _json['leftSideX'],
-      'rightSideX': rightSideX ?? _json['rightSideX'],
+      'x_1': x_1 ?? _json['x_1'],
+      'x_2': x_2 ?? _json['x_2'],
     };
     return JsonCargo(json: json);
   }
 
   @override
-  String toString() {
-    return {
-      'id': _json['id'],
-      'name': _json['name'],
-      'weight': _json['weight'],
-      'vcg': _json['vcg'],
-      'lcg': _json['lcg'],
-      'tcg': _json['tcg'],
-      'leftSideX': _json['leftSideX'],
-      'rightSideX': _json['rightSideX'],
-    }.toString();
-  }
+  String toString() => _json.toString();
 }

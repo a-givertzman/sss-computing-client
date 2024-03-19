@@ -1,3 +1,4 @@
+import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/models/cargos/cargos.dart';
@@ -69,7 +70,10 @@ class _AppWidgetState extends State<AppWidget> {
       theme: widget._themeSwitch.themeData,
       home: Scaffold(
         body: CargoDetailsPage(
-          cargos: FakeCargos(),
+          cargos: DbCargos(
+            dbName: 'sss-computing',
+            apiAddress: ApiAddress.localhost(port: 8080),
+          ),
         ),
       ),
     );
