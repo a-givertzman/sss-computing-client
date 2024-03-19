@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/presentation/cargo/cargo_page.dart';
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -64,9 +65,7 @@ class _AppWidgetState extends State<AppWidget> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: widget._themeSwitch.themeData,
-      home: const Scaffold(
-        body: Text('Empty scaffold body'),
-      ),
+      home: const CargoPage(),
     );
   }
 }
