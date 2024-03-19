@@ -8,11 +8,13 @@ class ActivateOnTapBuilderWidget extends StatefulWidget {
   ) builder;
   final bool? Function()? onActivate;
   final bool? Function()? onDeactivate;
+  final MouseCursor cursor;
   const ActivateOnTapBuilderWidget({
     super.key,
     required this.builder,
     this.onActivate,
     this.onDeactivate,
+    this.cursor = SystemMouseCursors.click,
   });
 
   @override
@@ -52,7 +54,7 @@ class _ActivateOnTapBuilderWidgetState
             ),
           )
         : MouseRegion(
-            cursor: SystemMouseCursors.click,
+            cursor: widget.cursor,
             child: GestureDetector(
               onTap: () => _handleActivate(),
               child: Builder(
