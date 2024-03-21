@@ -1,7 +1,11 @@
 ///
-/// Common data for corresponding cargo.
+/// Common data for corresponding [Cargo].
 abstract interface class Cargo {
-  int get id;
+  ///
+  int? get id;
+
+  ///
+  int get idx;
 
   /// Name identificator of the [Cargo]
   String get name;
@@ -38,7 +42,9 @@ class JsonCargo implements Cargo {
     required Map<String, dynamic> json,
   }) : _json = json;
   @override
-  int get id => _json['id'];
+  int? get id => _json['id'];
+  @override
+  int get idx => _json['idx'];
   @override
   String get name => _json['name'];
   @override

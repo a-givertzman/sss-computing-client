@@ -8,25 +8,32 @@ import 'package:sss_computing_client/models/persistable/value_record.dart';
 import 'package:sss_computing_client/widgets/core/activate_on_tap_builder_widget.dart';
 
 class EditOnTapField extends StatefulWidget {
-  final String initialValue;
-  final ValueRecord record;
-  final Color textColor;
-  final Color iconColor;
-  final Color errorColor;
-  final Function(String)? onSave;
-  final Function(String)? onCancel;
-  final Validator? validator;
+  final String _initialValue;
+  final ValueRecord _record;
+  final Color _textColor;
+  final Color _iconColor;
+  final Color _errorColor;
+  final Function(String)? _onSave;
+  final Function(String)? _onCancel;
+  final Validator? _validator;
   const EditOnTapField({
     super.key,
-    required this.initialValue,
-    required this.record,
-    required this.textColor,
-    required this.iconColor,
-    required this.errorColor,
-    this.onSave,
-    this.onCancel,
-    this.validator,
-  });
+    required String initialValue,
+    required ValueRecord record,
+    required Color textColor,
+    required Color iconColor,
+    required Color errorColor,
+    dynamic Function(String)? onSave,
+    dynamic Function(String)? onCancel,
+    Validator? validator,
+  })  : _validator = validator,
+        _onCancel = onCancel,
+        _onSave = onSave,
+        _errorColor = errorColor,
+        _iconColor = iconColor,
+        _textColor = textColor,
+        _record = record,
+        _initialValue = initialValue;
 
   @override
   State<EditOnTapField> createState() => _EditOnTapFieldState();
@@ -59,7 +66,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
 
   @override
   void initState() {
-    _initialValue = widget.initialValue;
+    _initialValue = widget._initialValue;
     _isInProcess = false;
     super.initState();
   }
@@ -81,11 +88,12 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
       _isInProcess = true;
       _error = null;
     });
-    final ResultF<String> newValue =
-        value == _initialValue ? Ok(value) : await widget.record.persist(value);
+    final ResultF<String> newValue = value == _initialValue
+        ? Ok(value)
+        : await widget._record.persist(value);
     switch (newValue) {
       case Ok(:final value):
-        widget.onSave?.call(value);
+        widget._onSave?.call(value);
         setState(() {
           _isInProcess = false;
           _initialValue = value;
@@ -106,7 +114,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
         _error = null;
       });
     }
-    final validationError = widget.validator?.editFieldValidator(value);
+    final validationError = widget._validator?.editFieldValidator(value);
     if (validationError != _validationError) {
       setState(() {
         _validationError = validationError;
@@ -148,13 +156,13 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
                       },
                     ),
                     style: TextStyle(
-                      color: widget.textColor,
+                      color: widget._textColor,
                     ),
                   ),
                 ),
                 if (_isInProcess)
                   CupertinoActivityIndicator(
-                    color: widget.iconColor,
+                    color: widget._iconColor,
                     radius: iconSize / 2,
                   ),
                 if (!_isInProcess) ...[
@@ -171,7 +179,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
                           ),
                           child: Icon(
                             Icons.done,
-                            color: widget.iconColor,
+                            color: widget._iconColor,
                           ),
                         ),
                       ),
@@ -182,7 +190,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
                           message: _validationError,
                           child: Icon(
                             Icons.warning_rounded,
-                            color: widget.errorColor,
+                            color: widget._errorColor,
                           ),
                         ),
                       ),
@@ -193,12 +201,12 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
                     child: InkWell(
                       customBorder: const CircleBorder(),
                       onTap: () {
-                        widget.onCancel?.call(_controller!.text);
+                        widget._onCancel?.call(_controller!.text);
                         deactivate();
                       },
                       child: Icon(
                         Icons.close,
-                        color: widget.iconColor,
+                        color: widget._iconColor,
                       ),
                     ),
                   ),
@@ -211,7 +219,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
                       message: _error?.message ?? '',
                       child: Icon(
                         Icons.error_outline,
-                        color: widget.errorColor,
+                        color: widget._errorColor,
                       ),
                     ),
                   ),

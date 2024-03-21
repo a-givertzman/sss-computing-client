@@ -31,6 +31,7 @@ class _CargoBodyState extends State<CargoBody> {
                   type: 'string',
                   name: 'Name',
                   isEditable: true,
+                  defaultValue: '',
                 ),
                 CargoColumn(
                   grow: 1,
@@ -38,6 +39,7 @@ class _CargoBodyState extends State<CargoBody> {
                   type: 'real',
                   name: 'Weight [t]',
                   isEditable: true,
+                  defaultValue: '0.0',
                 ),
                 CargoColumn(
                   grow: 1,
@@ -45,6 +47,7 @@ class _CargoBodyState extends State<CargoBody> {
                   type: 'real',
                   name: 'VCG [m]',
                   isEditable: true,
+                  defaultValue: '0.0',
                 ),
                 CargoColumn(
                   grow: 1,
@@ -52,6 +55,7 @@ class _CargoBodyState extends State<CargoBody> {
                   type: 'real',
                   name: 'LCG [m]',
                   isEditable: true,
+                  defaultValue: '0.0',
                 ),
                 CargoColumn(
                   grow: 1,
@@ -59,6 +63,7 @@ class _CargoBodyState extends State<CargoBody> {
                   type: 'real',
                   name: 'TCG [m]',
                   isEditable: true,
+                  defaultValue: '0.0',
                 ),
                 CargoColumn(
                   grow: 1,
@@ -66,6 +71,7 @@ class _CargoBodyState extends State<CargoBody> {
                   type: 'real',
                   name: 'X1 [m]',
                   isEditable: true,
+                  defaultValue: '0.0',
                 ),
                 CargoColumn(
                   grow: 1,
@@ -73,6 +79,7 @@ class _CargoBodyState extends State<CargoBody> {
                   type: 'real',
                   name: 'X2 [m]',
                   isEditable: true,
+                  defaultValue: '0.0',
                 ),
               ],
             ),
