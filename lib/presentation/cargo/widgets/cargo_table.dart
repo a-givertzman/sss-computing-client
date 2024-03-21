@@ -31,15 +31,18 @@ class CargoColumn {
 }
 
 class CargoTable extends StatefulWidget {
-  final List<Cargo> _cargos;
+  final Cargos _cargos;
+  final List<Cargo> _rows;
   final List<CargoColumn> _columns;
   final void Function(Cargo?)? _onCargoSelect;
   const CargoTable({
     super.key,
-    required List<Cargo> cargos,
+    required Cargos cargos,
+    required List<Cargo> rows,
     required List<CargoColumn> columns,
     void Function(Cargo? cargo)? onCargoSelect,
   })  : _cargos = cargos,
+        _rows = rows,
         _columns = columns,
         _onCargoSelect = onCargoSelect;
 
@@ -54,7 +57,7 @@ class _CargoTableState extends State<CargoTable> {
 
   @override
   void initState() {
-    cargos = widget._cargos;
+    cargos = widget._rows;
     model = DaviModel(
       columns: [
         DaviColumn(
@@ -122,10 +125,7 @@ class _CargoTableState extends State<CargoTable> {
       'Delete button callback; CargoID: $selectedId',
     );
     final selectedCargo = cargos.singleWhere((cargo) => cargo.id == id);
-    switch (await DbCargos(
-      dbName: 'sss-computing',
-      apiAddress: ApiAddress.localhost(port: 8080),
-    ).remove(selectedCargo)) {
+    switch (await widget._cargos.remove(selectedCargo)) {
       case Ok():
         setState(() {
           cargos.removeWhere((cargo) => cargo.id == selectedId);

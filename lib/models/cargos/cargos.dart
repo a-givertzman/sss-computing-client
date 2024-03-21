@@ -44,6 +44,9 @@ class DbCargos implements Cargos {
       ),
       entryBuilder: (row) => row,
     );
+    await Future.delayed(
+      const Duration(seconds: 3),
+    ); // TODO: remove after debugging
     return switch (await sqlAccess.fetch()) {
       Ok(value: final rows) => _mapReplyToValue(rows),
       Err(:final error) => Err(error),
