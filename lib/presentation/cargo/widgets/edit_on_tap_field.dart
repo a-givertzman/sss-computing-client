@@ -33,16 +33,17 @@ class EditOnTapField extends StatefulWidget {
 }
 
 class _EditOnTapFieldState extends State<EditOnTapField> {
-  late String _initialValue;
-  late bool _isInProcess;
   TextEditingController? _controller;
   FocusNode? _focusNode;
   Failure? _error;
   String? _validationError;
+  bool _isInProcess = false;
+  late String _initialValue;
 
   void _handleEditingStart() {
+    Log('$runtimeType').debug('${widget.key}');
     Log('$runtimeType').debug('editing start');
-    _controller = TextEditingController(text: widget.initialValue);
+    _controller = TextEditingController(text: _initialValue);
     _focusNode = FocusNode();
     _focusNode?.requestFocus();
   }

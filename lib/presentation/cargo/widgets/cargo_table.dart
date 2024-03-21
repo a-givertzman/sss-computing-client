@@ -3,8 +3,10 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/models/cargo/cargo.dart';
+import 'package:sss_computing_client/models/cargos/cargos.dart';
 import 'package:sss_computing_client/models/persistable/value_record.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/action_button.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/edit_on_tap_field.dart';
@@ -56,7 +58,6 @@ class _CargoTableState extends State<CargoTable> {
     model = DaviModel(
       columns: [
         DaviColumn(
-          sortable: false,
           name: 'No.',
           pinStatus: PinStatus.left,
           intValue: (cargo) => cargo.id,
@@ -64,24 +65,35 @@ class _CargoTableState extends State<CargoTable> {
         ),
         ...widget._columns.map(
           (column) => DaviColumn(
-            sortable: false,
             grow: column.grow,
             name: column.name,
+            stringValue: column.type == 'string'
+                ? (cargo) => cargo.asMap()[column.key]
+                : null,
+            intValue: column.type == 'int'
+                ? (cargo) => cargo.asMap()[column.key]
+                : null,
+            doubleValue: column.type == 'real'
+                ? (cargo) => cargo.asMap()[column.key]
+                : null,
             cellBuilder: (_, row) => column.isEditable
-                ? _buildEditableCellWidget(context, row, column)
+                ? _buildEditableCellWidget(
+                    context,
+                    row,
+                    column,
+                    key: ValueKey('${column.key}-${row.data.id}'),
+                  )
                 : Text('${row.data.asMap()[column.key]}'),
             cellStyleBuilder: _buildCellStyle,
           ),
         ),
         DaviColumn(
-          sortable: false,
           grow: 1,
           name: 'Mf.sx [t∙m]',
           stringValue: (_) => '—',
           cellStyleBuilder: _buildCellStyle,
         ),
         DaviColumn(
-          sortable: false,
           grow: 1,
           name: 'Mf.sy [t∙m]',
           stringValue: (_) => '—',
@@ -105,12 +117,34 @@ class _CargoTableState extends State<CargoTable> {
     });
   }
 
+  void _handleRowDelete(int id) async {
+    Log('$runtimeType').debug(
+      'Delete button callback; CargoID: $selectedId',
+    );
+    final selectedCargo = cargos.singleWhere((cargo) => cargo.id == id);
+    switch (await DbCargos(
+      dbName: 'sss-computing',
+      apiAddress: ApiAddress.localhost(port: 8080),
+    ).remove(selectedCargo)) {
+      case Ok():
+        setState(() {
+          cargos.removeWhere((cargo) => cargo.id == selectedId);
+          selectedId = null;
+          model.replaceRows(cargos);
+        });
+      case Err(:final error):
+        Log('$runtimeType').error(error);
+    }
+  }
+
   Widget _buildEditableCellWidget(
     BuildContext context,
     DaviRow row,
-    CargoColumn column,
-  ) {
+    CargoColumn column, {
+    Key? key,
+  }) {
     return EditOnTapField(
+      key: key,
       initialValue: '${row.data.asMap()[column.key]}',
       record: ValueRecord(
         filter: {'cargo_id': row.data.id},
@@ -180,9 +214,7 @@ class _CargoTableState extends State<CargoTable> {
               label: const Localized('Delete').v,
               icon: Icons.delete,
               onPressed: selectedId != null
-                  ? () => Log('$runtimeType').debug(
-                        'Delete button callback; CargoID: $selectedId',
-                      )
+                  ? () => _handleRowDelete(selectedId!)
                   : null,
             ),
           ],

@@ -2,7 +2,7 @@ import 'package:davi/davi.dart';
 import 'package:flutter/material.dart';
 
 ///
-class TableView<T> extends StatefulWidget {
+class TableView<T> extends StatelessWidget {
   final DaviModel<T> _model;
   final void Function(T)? _onRowTap;
   final void Function(T)? _onRowDoubleTap;
@@ -45,64 +45,6 @@ class TableView<T> extends StatefulWidget {
         _outerBorder = outerBorder,
         _model = model;
   //
-  @override
-  State<TableView<T>> createState() => _TableViewState<T>(
-        model: _model,
-        onRowTap: _onRowTap,
-        onRowDoubleTap: _onRowDoubleTap,
-        rowColor: _rowColor,
-        rowCursor: _rowCursor,
-        outerBorder: _outerBorder,
-        tableBorderThickness: _tableBorderThickness,
-        tableBorderColor: _tableBorderColor,
-        scrollbarBackgroundColor: _scrollbarBackgroundColor,
-        controlElementColor: _controlElementColor,
-        thumbColor: _thumbColor,
-        columnWidthBehavior: _columnWidthBehavior,
-      );
-}
-
-///
-class _TableViewState<T> extends State<TableView<T>> {
-  final DaviModel<T> _model;
-  final void Function(T)? _onRowTap;
-  final void Function(T)? _onRowDoubleTap;
-  final MouseCursor? Function(DaviRow<T>)? _rowCursor;
-  final Color? Function(DaviRow<T>)? _rowColor;
-  final Border? _outerBorder;
-  final double _tableBorderThickness;
-  final Color? _tableBorderColor;
-  final Color? _scrollbarBackgroundColor;
-  final Color? _controlElementColor;
-  final Color? _thumbColor;
-  final ColumnWidthBehavior _columnWidthBehavior;
-
-  ///
-  _TableViewState({
-    required DaviModel<T> model,
-    required void Function(T)? onRowTap,
-    required void Function(T)? onRowDoubleTap,
-    required Color? Function(DaviRow<T>)? rowColor,
-    required MouseCursor? Function(DaviRow<T>)? rowCursor,
-    required Border? outerBorder,
-    required double tableBorderThickness,
-    required Color? tableBorderColor,
-    required Color? scrollbarBackgroundColor,
-    required Color? controlElementColor,
-    required Color? thumbColor,
-    required ColumnWidthBehavior columnWidthBehavior,
-  })  : _model = model,
-        _rowColor = rowColor,
-        _rowCursor = rowCursor,
-        _onRowTap = onRowTap,
-        _onRowDoubleTap = onRowDoubleTap,
-        _outerBorder = outerBorder,
-        _tableBorderThickness = tableBorderThickness,
-        _tableBorderColor = tableBorderColor,
-        _scrollbarBackgroundColor = scrollbarBackgroundColor,
-        _controlElementColor = controlElementColor,
-        _thumbColor = thumbColor,
-        _columnWidthBehavior = columnWidthBehavior;
   //
   @override
   Widget build(BuildContext context) {

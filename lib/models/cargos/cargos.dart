@@ -7,6 +7,8 @@ import 'package:sss_computing_client/models/cargo/cargo.dart';
 
 abstract interface class Cargos {
   Future<ResultF<List<Cargo>>> fetchAll();
+  Future<ResultF<void>> remove(Cargo cargo);
+  Future<ResultF<void>> add(Cargo cargo);
 }
 
 class DbCargos implements Cargos {
@@ -67,5 +69,30 @@ class DbCargos implements Cargos {
     } catch (err) {
       return Err(Failure(message: err, stackTrace: StackTrace.current));
     }
+  }
+
+  @override
+  Future<ResultF<void>> remove(Cargo cargo) async {
+    final sqlAccess = SqlAccess(
+      address: _apiAddress,
+      authToken: _authToken ?? '',
+      database: _dbName,
+      sqlBuilder: (_, __) => Sql(
+        sql: """
+            DELETE FROM cargo_parameters
+            WHERE cargo_id=${cargo.id};
+            """,
+      ),
+    );
+    return switch (await sqlAccess.fetch()) {
+      Ok() => const Ok(null),
+      Err(:final error) => Err(error),
+    };
+  }
+
+  @override
+  Future<ResultF<void>> add(Cargo cargo) {
+    // TODO: implement add
+    throw UnimplementedError();
   }
 }
