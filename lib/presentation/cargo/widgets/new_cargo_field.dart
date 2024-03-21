@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 
 class NewCargoField extends StatefulWidget {
   final Color _textColor;
   final Color _errorColor;
   final TextEditingController _controller;
-  final Function(bool) _onValidityChange;
+  final Function(bool)? _onValidityChange;
+  final Function(String)? _onValueChange;
   final Validator? _validator;
   final String? _validationError;
   const NewCargoField({
@@ -14,13 +14,15 @@ class NewCargoField extends StatefulWidget {
     required Color textColor,
     required Color errorColor,
     required TextEditingController controller,
-    required Function(bool) onValidityChange,
+    Function(bool isValid)? onValidityChange,
+    Function(String value)? onValueChange,
     Validator? validator,
     String? validationError,
   })  : _textColor = textColor,
         _errorColor = errorColor,
         _controller = controller,
         _onValidityChange = onValidityChange,
+        _onValueChange = onValueChange,
         _validator = validator,
         _validationError = validationError;
 
@@ -34,22 +36,16 @@ class _NewCargoFieldState extends State<NewCargoField> {
 
   @override
   void initState() {
-    Log('$runtimeType').warning('init');
     _controller = widget._controller;
     _validationError = widget._validationError;
     super.initState();
   }
 
-  @override
-  void dispose() {
-    Log('$runtimeType').warning('dispose');
-    super.dispose();
-  }
-
   void _handleValueChange(String value) {
+    widget._onValueChange?.call(value);
     final validationError = widget._validator?.editFieldValidator(value);
     if (validationError != _validationError) {
-      widget._onValidityChange(validationError == null);
+      widget._onValidityChange?.call(validationError == null);
       setState(() {
         _validationError = validationError;
       });

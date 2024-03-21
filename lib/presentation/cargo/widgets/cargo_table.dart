@@ -60,6 +60,7 @@ class _CargoTableState extends State<CargoTable> {
   int? _newRowIdx;
   Map<String, TextEditingController>? _newRowControllers;
   Map<String, bool>? _newRowValidity;
+  Failure? _newRowError;
   Cargo? _newCargo;
 
   @override
@@ -176,6 +177,7 @@ class _CargoTableState extends State<CargoTable> {
         _newRowValidity = null;
         _newRowIdx = null;
         _newCargo = null;
+        _newRowError = null;
       });
     }
   }
@@ -195,12 +197,67 @@ class _CargoTableState extends State<CargoTable> {
               : value,
         ));
     final cargo = JsonCargo(json: newValues);
-    if (await widget._cargos.add(cargo) is Err) return;
-    setState(() {
-      _cargos[idx] = cargo;
-      _model.replaceRows(_cargos);
-    });
-    _handleRowAddingEnd();
+    switch (await widget._cargos.add(cargo)) {
+      case Ok():
+        setState(() {
+          _cargos[idx] = cargo;
+          _model.replaceRows(_cargos);
+        });
+        _handleRowAddingEnd();
+      case Err(:final error):
+        setState(() {
+          _newRowError = error;
+        });
+    }
+  }
+
+  Widget _buildNewRowButtons() {
+    final size = IconTheme.of(context).size;
+    final theme = Theme.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _newRowValidity!.containsValue(false)
+            ? SizedBox(
+                width: size,
+                height: size,
+                child: Tooltip(
+                  message: const Localized('All values must be valid').v,
+                  child: Icon(
+                    Icons.warning_rounded,
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+              )
+            : SizedBox(
+                width: size,
+                height: size,
+                child: InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: _handleRowAddingSave,
+                  child: Icon(Icons.done, color: theme.colorScheme.primary),
+                ),
+              ),
+        SizedBox(
+          width: size,
+          height: size,
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: () => _handleRowAddingEnd(remove: true),
+            child: Icon(Icons.close, color: theme.colorScheme.primary),
+          ),
+        ),
+        if (_newRowError != null)
+          SizedBox(
+            width: size,
+            height: size,
+            child: Tooltip(
+              message: Localized(_newRowError?.message).v,
+              child: Icon(Icons.error_outline, color: theme.colorScheme.error),
+            ),
+          ),
+      ],
+    );
   }
 
   Widget _buildNewRowCell(
@@ -242,55 +299,15 @@ class _CargoTableState extends State<CargoTable> {
         Log('$runtimeType').warning(isValid);
         _newRowValidity![column.key] = isValid;
       }),
+      onValueChange: (_) {
+        if (_newRowError != null) {
+          setState(() {
+            _newRowError = null;
+          });
+        }
+      },
       validator: validator,
       validationError: validationError,
-    );
-  }
-
-  Widget _buildNewRowButtons() {
-    final size = IconTheme.of(context).size;
-    final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _newRowValidity!.containsValue(false)
-            ? SizedBox(
-                width: size,
-                height: size,
-                child: Tooltip(
-                  message: const Localized('All values must be valid').v,
-                  child: Icon(
-                    Icons.warning_rounded,
-                    color: theme.colorScheme.error,
-                  ),
-                ),
-              )
-            : SizedBox(
-                width: size,
-                height: size,
-                child: InkWell(
-                  customBorder: const CircleBorder(),
-                  onTap: _handleRowAddingSave,
-                  child: Icon(
-                    Icons.done,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-              ),
-        SizedBox(width: const Setting('padding').toDouble),
-        SizedBox(
-          width: size,
-          height: size,
-          child: InkWell(
-            customBorder: const CircleBorder(),
-            onTap: () => _handleRowAddingEnd(remove: true),
-            child: Icon(
-              Icons.close,
-              color: theme.colorScheme.primary,
-            ),
-          ),
-        ),
-      ],
     );
   }
 
