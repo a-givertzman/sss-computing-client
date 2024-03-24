@@ -61,7 +61,7 @@ class _CargoTableState extends State<CargoTable> {
   final defaultValidator = const Validator(
     cases: [MinLengthValidationCase(1)],
   );
-  int? _selectedId;
+  Cargo? _selectedCargo;
   Map<String, TextEditingController>? _newRowControllers;
   Map<String, String?>? _newRowValidity;
   Failure? _newRowError;
@@ -101,25 +101,25 @@ class _CargoTableState extends State<CargoTable> {
     super.dispose();
   }
 
-  void _toggleSelectedRow(Cargo cargo) {
+  void _toggleSelectedRow(Cargo? cargo) {
+    if (cargo?.asMap()['id'] == null) return;
     setState(() {
-      if (_selectedId != cargo.id) {
-        _selectedId = cargo.id;
+      if (_selectedCargo != cargo) {
+        _selectedCargo = cargo;
         widget._onCargoSelect?.call(cargo);
-      } else {
-        _selectedId = null;
-        widget._onCargoSelect?.call(null);
+        return;
       }
+      _selectedCargo = null;
+      widget._onCargoSelect?.call(null);
     });
   }
 
-  void _handleRowDelete(int id) async {
-    final cargoDel = _cargos.singleWhere((cargo) => cargo.id == id);
-    switch (await widget._cargos.remove(cargoDel)) {
+  void _handleRowDelete(Cargo cargo) async {
+    switch (await widget._cargos.remove(cargo)) {
       case Ok():
         setState(() {
-          _cargos.removeWhere((cargo) => cargo.id == cargoDel.id);
-          _model.removeRow(cargoDel);
+          _cargos.removeWhere((element) => element.id == cargo.id);
+          _model.removeRow(cargo);
         });
       case Err(:final error):
         Log('$runtimeType').error(error);
@@ -154,8 +154,15 @@ class _CargoTableState extends State<CargoTable> {
                     : defaultValidator.editFieldValidator(col.defaultValue),
               ));
       _newCargo = JsonCargo(json: newValues);
-      _cargos.add(_newCargo!);
-      _model.addRow(_newCargo!);
+      if (_selectedCargo == null) {
+        _cargos.add(_newCargo!);
+        _model.addRow(_newCargo!);
+      } else {
+        final index = _cargos.indexOf(_selectedCargo!);
+        _toggleSelectedRow(_selectedCargo!);
+        _cargos.insert(index, _newCargo!);
+        _model.replaceRows(_cargos);
+      }
     });
   }
 
@@ -330,8 +337,7 @@ class _CargoTableState extends State<CargoTable> {
   }
 
   CellStyle? _buildCellStyle(DaviRow<Cargo> row) {
-    return row.data.asMap()['id'] == _selectedId &&
-            row.data.asMap()['id'] != null
+    return row.data == _selectedCargo
         ? CellStyle(
             background: Theme.of(context).colorScheme.primary.withOpacity(0.25),
           )
@@ -363,11 +369,10 @@ class _CargoTableState extends State<CargoTable> {
             ActionButton(
               label: const Localized('Delete').v,
               icon: Icons.delete,
-              onPressed: _selectedId != null
+              onPressed: _selectedCargo != null
                   ? () {
-                      _handleRowDelete(_selectedId!);
-                      _selectedId = null;
-                      widget._onCargoSelect?.call(null);
+                      _handleRowDelete(_selectedCargo!);
+                      _toggleSelectedRow(_selectedCargo!);
                     }
                   : null,
             ),

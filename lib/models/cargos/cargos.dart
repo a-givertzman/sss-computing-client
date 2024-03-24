@@ -14,7 +14,7 @@ abstract interface class Cargos {
   Future<ResultF<void>> remove(Cargo cargo);
 
   ///
-  Future<ResultF<int>> add(Cargo cargo, {Cargo? next});
+  Future<ResultF<int>> add(Cargo cargo);
 }
 
 ///
@@ -99,9 +99,8 @@ class DbCargos implements Cargos {
     };
   }
 
-  // TODO: implements add before [next]
   @override
-  Future<ResultF<int>> add(Cargo cargo, {Cargo? next}) async {
+  Future<ResultF<int>> add(Cargo cargo) async {
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
