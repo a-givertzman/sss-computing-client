@@ -12,8 +12,6 @@ import 'package:sss_computing_client/presentation/cargo/widgets/action_button.da
 import 'package:sss_computing_client/presentation/cargo/widgets/edit_on_tap_field.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/new_cargo_field.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/table_view.dart';
-import 'package:sss_computing_client/validation/int_validation_case.dart';
-import 'package:sss_computing_client/validation/real_validation_case.dart';
 
 class CargoColumn {
   final String type;
@@ -21,6 +19,7 @@ class CargoColumn {
   final String name;
   final String defaultValue;
   final bool isEditable;
+  final Validator? validator;
   final double? grow;
 
   const CargoColumn({
@@ -29,6 +28,7 @@ class CargoColumn {
     required this.name,
     required this.defaultValue,
     required this.isEditable,
+    this.validator,
     this.grow,
   });
 }
@@ -56,10 +56,13 @@ class CargoTable extends StatefulWidget {
 class _CargoTableState extends State<CargoTable> {
   late final List<Cargo> _cargos;
   late final DaviModel<Cargo> _model;
+  final defaultValidator = const Validator(
+    cases: [MinLengthValidationCase(1)],
+  );
   int? _selectedId;
   int? _newRowIdx;
   Map<String, TextEditingController>? _newRowControllers;
-  Map<String, bool>? _newRowValidity;
+  Map<String, String?>? _newRowValidity;
   Failure? _newRowError;
   Cargo? _newCargo;
 
@@ -156,7 +159,9 @@ class _CargoTableState extends State<CargoTable> {
           .asMap()
           .map((_, col) => MapEntry(
                 col.key,
-                true,
+                col.validator != null
+                    ? col.validator?.editFieldValidator(col.defaultValue)
+                    : defaultValidator.editFieldValidator(col.defaultValue),
               ));
       _newCargo = JsonCargo(json: newValues);
       _cargos.add(_newCargo!);
@@ -217,7 +222,11 @@ class _CargoTableState extends State<CargoTable> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _newRowValidity!.containsValue(false)
+        _newRowValidity?.entries.fold<String?>(
+                  null,
+                  (prev, entry) => prev ?? entry.value,
+                ) !=
+                null
             ? SizedBox(
                 width: size,
                 height: size,
@@ -267,37 +276,14 @@ class _CargoTableState extends State<CargoTable> {
   }) {
     final theme = Theme.of(context);
     final controller = _newRowControllers![column.key]!;
-    final validator = switch (column.type) {
-      'real' => const Validator(cases: [
-          MinLengthValidationCase(1),
-          RealValidationCase(),
-        ]),
-      'int' => const Validator(cases: [
-          MinLengthValidationCase(1),
-          IntValidationCase(),
-        ]),
-      'string' || _ => const Validator(cases: [
-          MinLengthValidationCase(1),
-          MaxLengthValidationCase(250),
-        ]),
-    };
-    final validationError = validator.editFieldValidator(controller.text);
-    if (validationError != null) {
-      Future.delayed(
-        Duration.zero,
-        () => setState(() {
-          _newRowValidity![column.key] = false;
-        }),
-      );
-    }
+    final validator = column.validator ?? defaultValidator;
     return NewCargoField(
       key: key,
       controller: controller,
       textColor: theme.colorScheme.onSurface,
       errorColor: theme.stateColors.error,
-      onValidityChange: (isValid) => setState(() {
-        Log('$runtimeType').warning(isValid);
-        _newRowValidity![column.key] = isValid;
+      onValidityChange: (validity) => setState(() {
+        _newRowValidity?[column.key] = validity;
       }),
       onValueChange: (_) {
         if (_newRowError != null) {
@@ -307,7 +293,7 @@ class _CargoTableState extends State<CargoTable> {
         }
       },
       validator: validator,
-      validationError: validationError,
+      validationError: _newRowValidity?[column.key],
     );
   }
 
@@ -340,20 +326,7 @@ class _CargoTableState extends State<CargoTable> {
         _cargos[idx] = JsonCargo(json: newData);
         _model.replaceRows(_cargos);
       }),
-      validator: switch (column.type) {
-        'real' => const Validator(cases: [
-            MinLengthValidationCase(1),
-            RealValidationCase(),
-          ]),
-        'int' => const Validator(cases: [
-            MinLengthValidationCase(1),
-            IntValidationCase(),
-          ]),
-        'string' || _ => const Validator(cases: [
-            MinLengthValidationCase(1),
-            MaxLengthValidationCase(250),
-          ]),
-      },
+      validator: column.validator ?? defaultValidator,
     );
   }
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/models/cargos/cargos.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/cargo_table.dart';
+import 'package:sss_computing_client/validation/real_validation_case.dart';
 import 'package:sss_computing_client/widgets/core/future_builder_widget.dart';
 
 class CargoBody extends StatefulWidget {
@@ -32,6 +34,9 @@ class _CargoBodyState extends State<CargoBody> {
                   name: 'Name',
                   isEditable: true,
                   defaultValue: '',
+                  validator: Validator(cases: [
+                    MinLengthValidationCase(1),
+                  ]),
                 ),
                 CargoColumn(
                   grow: 1,
@@ -40,6 +45,10 @@ class _CargoBodyState extends State<CargoBody> {
                   name: 'Weight [t]',
                   isEditable: true,
                   defaultValue: '0.0',
+                  validator: Validator(cases: [
+                    MinLengthValidationCase(1),
+                    RealValidationCase(),
+                  ]),
                 ),
                 CargoColumn(
                   grow: 1,
@@ -48,6 +57,10 @@ class _CargoBodyState extends State<CargoBody> {
                   name: 'VCG [m]',
                   isEditable: true,
                   defaultValue: '0.0',
+                  validator: Validator(cases: [
+                    MinLengthValidationCase(1),
+                    RealValidationCase(),
+                  ]),
                 ),
                 CargoColumn(
                   grow: 1,
@@ -56,6 +69,10 @@ class _CargoBodyState extends State<CargoBody> {
                   name: 'LCG [m]',
                   isEditable: true,
                   defaultValue: '0.0',
+                  validator: Validator(cases: [
+                    MinLengthValidationCase(1),
+                    RealValidationCase(),
+                  ]),
                 ),
                 CargoColumn(
                   grow: 1,
@@ -64,6 +81,10 @@ class _CargoBodyState extends State<CargoBody> {
                   name: 'TCG [m]',
                   isEditable: true,
                   defaultValue: '0.0',
+                  validator: Validator(cases: [
+                    MinLengthValidationCase(1),
+                    RealValidationCase(),
+                  ]),
                 ),
                 CargoColumn(
                   grow: 1,
@@ -72,6 +93,10 @@ class _CargoBodyState extends State<CargoBody> {
                   name: 'X1 [m]',
                   isEditable: true,
                   defaultValue: '0.0',
+                  validator: Validator(cases: [
+                    MinLengthValidationCase(1),
+                    RealValidationCase(),
+                  ]),
                 ),
                 CargoColumn(
                   grow: 1,
@@ -80,6 +105,10 @@ class _CargoBodyState extends State<CargoBody> {
                   name: 'X2 [m]',
                   isEditable: true,
                   defaultValue: '0.0',
+                  validator: Validator(cases: [
+                    MinLengthValidationCase(1),
+                    RealValidationCase(),
+                  ]),
                 ),
               ],
             ),

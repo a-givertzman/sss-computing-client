@@ -5,8 +5,8 @@ class NewCargoField extends StatefulWidget {
   final Color _textColor;
   final Color _errorColor;
   final TextEditingController _controller;
-  final Function(bool)? _onValidityChange;
-  final Function(String)? _onValueChange;
+  final void Function(String?)? _onValidityChange;
+  final void Function(String)? _onValueChange;
   final Validator? _validator;
   final String? _validationError;
   const NewCargoField({
@@ -14,7 +14,7 @@ class NewCargoField extends StatefulWidget {
     required Color textColor,
     required Color errorColor,
     required TextEditingController controller,
-    Function(bool isValid)? onValidityChange,
+    Function(String? validationError)? onValidityChange,
     Function(String value)? onValueChange,
     Validator? validator,
     String? validationError,
@@ -45,7 +45,7 @@ class _NewCargoFieldState extends State<NewCargoField> {
     widget._onValueChange?.call(value);
     final validationError = widget._validator?.editFieldValidator(value);
     if (validationError != _validationError) {
-      widget._onValidityChange?.call(validationError == null);
+      widget._onValidityChange?.call(validationError);
       setState(() {
         _validationError = validationError;
       });
