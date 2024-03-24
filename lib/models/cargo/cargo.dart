@@ -4,9 +4,6 @@ abstract interface class Cargo {
   ///
   int? get id;
 
-  ///
-  int get idx;
-
   /// Name identificator of the [Cargo]
   String get name;
   // Weight of the cargo
@@ -43,8 +40,6 @@ class JsonCargo implements Cargo {
   }) : _json = json;
   @override
   int? get id => _json['id'];
-  @override
-  int get idx => _json['idx'];
   @override
   String get name => _json['name'];
   @override

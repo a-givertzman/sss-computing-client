@@ -26,8 +26,8 @@ class _CargoBodyState extends State<CargoBody> {
             caseData: (context, data) => CargoTable(
               cargos: widget._cargos,
               rows: data,
-              columns: const [
-                CargoColumn(
+              columns: [
+                const CargoColumn(
                   grow: 2,
                   key: 'name',
                   type: 'string',
@@ -38,74 +38,80 @@ class _CargoBodyState extends State<CargoBody> {
                     MinLengthValidationCase(1),
                   ]),
                 ),
-                CargoColumn(
+                CargoColumn<double>(
                   grow: 1,
                   key: 'weight',
                   type: 'real',
                   name: 'Weight [t]',
                   isEditable: true,
                   defaultValue: '0.0',
-                  validator: Validator(cases: [
+                  valueParser: (text) => double.parse(text),
+                  validator: const Validator(cases: [
                     MinLengthValidationCase(1),
                     RealValidationCase(),
                   ]),
                 ),
-                CargoColumn(
+                CargoColumn<double>(
                   grow: 1,
                   key: 'vcg',
                   type: 'real',
                   name: 'VCG [m]',
                   isEditable: true,
                   defaultValue: '0.0',
-                  validator: Validator(cases: [
+                  valueParser: (text) => double.parse(text),
+                  validator: const Validator(cases: [
                     MinLengthValidationCase(1),
                     RealValidationCase(),
                   ]),
                 ),
-                CargoColumn(
+                CargoColumn<double>(
                   grow: 1,
                   key: 'lcg',
                   type: 'real',
                   name: 'LCG [m]',
                   isEditable: true,
                   defaultValue: '0.0',
-                  validator: Validator(cases: [
+                  valueParser: (text) => double.parse(text),
+                  validator: const Validator(cases: [
                     MinLengthValidationCase(1),
                     RealValidationCase(),
                   ]),
                 ),
-                CargoColumn(
+                CargoColumn<double>(
                   grow: 1,
                   key: 'tcg',
                   type: 'real',
                   name: 'TCG [m]',
                   isEditable: true,
                   defaultValue: '0.0',
-                  validator: Validator(cases: [
+                  valueParser: (text) => double.parse(text),
+                  validator: const Validator(cases: [
                     MinLengthValidationCase(1),
                     RealValidationCase(),
                   ]),
                 ),
-                CargoColumn(
+                CargoColumn<double>(
                   grow: 1,
                   key: 'x_1',
                   type: 'real',
                   name: 'X1 [m]',
                   isEditable: true,
                   defaultValue: '0.0',
-                  validator: Validator(cases: [
+                  valueParser: (text) => double.parse(text),
+                  validator: const Validator(cases: [
                     MinLengthValidationCase(1),
                     RealValidationCase(),
                   ]),
                 ),
-                CargoColumn(
+                CargoColumn<double>(
                   grow: 1,
                   key: 'x_2',
                   type: 'real',
                   name: 'X2 [m]',
                   isEditable: true,
                   defaultValue: '0.0',
-                  validator: Validator(cases: [
+                  valueParser: (text) => double.parse(text),
+                  validator: const Validator(cases: [
                     MinLengthValidationCase(1),
                     RealValidationCase(),
                   ]),

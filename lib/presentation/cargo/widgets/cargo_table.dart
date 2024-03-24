@@ -13,13 +13,14 @@ import 'package:sss_computing_client/presentation/cargo/widgets/edit_on_tap_fiel
 import 'package:sss_computing_client/presentation/cargo/widgets/new_cargo_field.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/table_view.dart';
 
-class CargoColumn {
+class CargoColumn<T> {
   final String type;
   final String key;
   final String name;
   final String defaultValue;
   final bool isEditable;
   final Validator? validator;
+  final T Function(String text)? valueParser;
   final double? grow;
 
   const CargoColumn({
@@ -29,6 +30,7 @@ class CargoColumn {
     required this.defaultValue,
     required this.isEditable,
     this.validator,
+    this.valueParser,
     this.grow,
   });
 }
@@ -60,14 +62,12 @@ class _CargoTableState extends State<CargoTable> {
     cases: [MinLengthValidationCase(1)],
   );
   int? _selectedId;
-  int? _newRowIdx;
   Map<String, TextEditingController>? _newRowControllers;
   Map<String, String?>? _newRowValidity;
   Failure? _newRowError;
   Cargo? _newCargo;
 
   @override
-  // ignore: long-method
   void initState() {
     _cargos = widget._rows;
     _model = DaviModel(
@@ -75,9 +75,9 @@ class _CargoTableState extends State<CargoTable> {
         DaviColumn(
           sortable: false,
           pinStatus: PinStatus.left,
-          cellBuilder: (_, row) => row.data.asMap()['idx'] == _newRowIdx
+          cellBuilder: (_, row) => row.data.asMap()['id'] == null
               ? _buildNewRowButtons()
-              : Text('${row.data.asMap()['idx']}'),
+              : Text('${row.index + 1}'),
           cellStyleBuilder: _buildCellStyle,
         ),
         ...widget._columns.map(
@@ -114,16 +114,12 @@ class _CargoTableState extends State<CargoTable> {
   }
 
   void _handleRowDelete(int id) async {
-    Log('$runtimeType').debug(
-      'Delete button callback; CargoID: $_selectedId',
-    );
-    final selectedCargo = _cargos.singleWhere((cargo) => cargo.id == id);
-    switch (await widget._cargos.remove(selectedCargo)) {
+    final cargoDel = _cargos.singleWhere((cargo) => cargo.id == id);
+    switch (await widget._cargos.remove(cargoDel)) {
       case Ok():
         setState(() {
-          _cargos.removeWhere((cargo) => cargo.id == _selectedId);
-          _selectedId = null;
-          _model.removeRow(selectedCargo);
+          _cargos.removeWhere((cargo) => cargo.id == cargoDel.id);
+          _model.removeRow(cargoDel);
         });
       case Err(:final error):
         Log('$runtimeType').error(error);
@@ -131,20 +127,14 @@ class _CargoTableState extends State<CargoTable> {
   }
 
   void _handleRowAddingStart() {
-    if (_newRowIdx != null) return;
+    if (_newCargo != null) return;
     setState(() {
-      _newRowIdx = _cargos.last.asMap()['idx'] + 1;
       final newValues = Map.fromEntries(widget._columns.map(
         (column) => MapEntry(
           column.key,
-          switch (column.type) {
-            'int' => int.parse(column.defaultValue),
-            'real' => double.parse(column.defaultValue),
-            'string' || _ => column.defaultValue,
-          },
+          column.valueParser?.call(column.defaultValue) ?? column.defaultValue,
         ),
-      ))
-        ..['idx'] = _newRowIdx!;
+      ));
       _newRowControllers = widget._columns
           .where((col) => col.isEditable)
           .toList()
@@ -171,7 +161,6 @@ class _CargoTableState extends State<CargoTable> {
 
   void _handleRowAddingEnd({bool remove = false}) {
     if (_newCargo != null) {
-      Log('$runtimeType').error(_newCargo);
       setState(() {
         if (remove) {
           _cargos.remove(_newCargo!);
@@ -180,7 +169,6 @@ class _CargoTableState extends State<CargoTable> {
         _newRowControllers?.forEach((_, controller) => controller.dispose());
         _newRowControllers = null;
         _newRowValidity = null;
-        _newRowIdx = null;
         _newCargo = null;
         _newRowError = null;
       });
@@ -188,24 +176,24 @@ class _CargoTableState extends State<CargoTable> {
   }
 
   void _handleRowAddingSave() async {
-    if (_newRowIdx == null) return;
+    if (_newCargo == null || _newRowControllers == null) return;
     final idx = _cargos.indexOf(_newCargo!);
-    final newValues = _newCargo!.asMap().map((key, value) => MapEntry(
+    final newValues = _newCargo?.asMap().map((key, value) => MapEntry(
           key,
           _newRowControllers!.containsKey(key)
-              ? switch (
-                  widget._columns.singleWhere((col) => col.key == key).type) {
-                  'int' => int.parse(_newRowControllers![key]!.text),
-                  'real' => double.parse(_newRowControllers![key]!.text),
-                  'string' || _ => _newRowControllers![key]!.text,
-                }
+              ? widget._columns
+                      .singleWhere((col) => col.key == key)
+                      .valueParser
+                      ?.call(_newRowControllers![key]!.text) ??
+                  _newRowControllers![key]!.text
               : value,
         ));
+    if (newValues == null) return;
     final cargo = JsonCargo(json: newValues);
     switch (await widget._cargos.add(cargo)) {
-      case Ok():
+      case Ok(value: final id):
         setState(() {
-          _cargos[idx] = cargo;
+          _cargos[idx] = JsonCargo(json: cargo.asMap()..['id'] = id);
           _model.replaceRows(_cargos);
         });
         _handleRowAddingEnd();
@@ -317,11 +305,7 @@ class _CargoTableState extends State<CargoTable> {
       errorColor: Theme.of(context).stateColors.error,
       onSave: (value) => setState(() {
         final idx = _cargos.indexOf(row.data);
-        final newValue = switch (column.type) {
-          'real' => double.tryParse(value),
-          'int' => int.tryParse(value),
-          'string' || _ => value,
-        };
+        final newValue = column.valueParser?.call(value) ?? value;
         final newData = row.data.asMap()..[column.key] = newValue;
         _cargos[idx] = JsonCargo(json: newData);
         _model.replaceRows(_cargos);
@@ -331,7 +315,7 @@ class _CargoTableState extends State<CargoTable> {
   }
 
   Widget _buildCell(DaviRow<Cargo> row, CargoColumn column) {
-    return row.data.asMap()['idx'] == _newRowIdx
+    return row.data.asMap()['id'] == null
         ? _buildNewRowCell(
             row,
             column,
@@ -362,12 +346,17 @@ class _CargoTableState extends State<CargoTable> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            ActionButton(
-              label: const Localized('Add').v,
-              icon: Icons.add,
-              onPressed:
-                  _newRowIdx == null ? () => _handleRowAddingStart() : null,
-            ),
+            _newCargo == null
+                ? ActionButton(
+                    label: const Localized('Add').v,
+                    icon: Icons.add,
+                    onPressed: _handleRowAddingStart,
+                  )
+                : ActionButton(
+                    label: const Localized('Cancel adding').v,
+                    icon: Icons.close,
+                    onPressed: () => _handleRowAddingEnd(remove: true),
+                  ),
             SizedBox(
               width: const Setting('padding', factor: 1.0).toDouble,
             ),
@@ -375,7 +364,11 @@ class _CargoTableState extends State<CargoTable> {
               label: const Localized('Delete').v,
               icon: Icons.delete,
               onPressed: _selectedId != null
-                  ? () => _handleRowDelete(_selectedId!)
+                  ? () {
+                      _handleRowDelete(_selectedId!);
+                      _selectedId = null;
+                      widget._onCargoSelect?.call(null);
+                    }
                   : null,
             ),
           ],
