@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/models/cargos/cargos.dart';
 import 'package:sss_computing_client/models/persistable/value_record.dart';
@@ -8,18 +9,37 @@ import 'package:sss_computing_client/presentation/cargo/widgets/cargo_table.dart
 import 'package:sss_computing_client/validation/real_validation_case.dart';
 
 /// Page with cargo related information
-class CargoPage extends StatelessWidget {
+class CargoPage extends StatefulWidget {
   ///
   const CargoPage({super.key});
+
+  ///
+  @override
+  State<CargoPage> createState() => _CargoPageState();
+}
+
+///
+class _CargoPageState extends State<CargoPage> {
+  late final String _dbName;
+  late final ApiAddress _apiAddress;
+  @override
+  void initState() {
+    _dbName = const Setting('api-database').toString();
+    _apiAddress = ApiAddress(
+      host: const Setting('api-host').toString(),
+      port: const Setting('api-port').toInt,
+    );
+    super.initState();
+  }
 
   ///
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CargoBody(
-        cargos: const DbCargos(
-          dbName: 'sss-computing',
-          apiAddress: ApiAddress(host: '10.131.145.138', port: 8080),
+        cargos: DbCargos(
+          dbName: _dbName,
+          apiAddress: _apiAddress,
         ),
         columns: [
           CargoColumn(
@@ -32,11 +52,8 @@ class CargoPage extends StatelessWidget {
               filter: {'space_id': id},
               key: 'name',
               tableName: 'load_space',
-              dbName: 'sss-computing',
-              apiAddress: const ApiAddress(
-                host: '10.131.145.138',
-                port: 8080,
-              ),
+              dbName: _dbName,
+              apiAddress: _apiAddress,
             ),
             defaultValue: '',
             parseValue: (text) => text,
@@ -54,11 +71,8 @@ class CargoPage extends StatelessWidget {
               filter: {'space_id': id},
               key: 'mass',
               tableName: 'load_space',
-              dbName: 'sss-computing',
-              apiAddress: const ApiAddress(
-                host: '10.131.145.138',
-                port: 8080,
-              ),
+              dbName: _dbName,
+              apiAddress: _apiAddress,
             ),
             defaultValue: '0.0',
             parseValue: (text) => double.parse(text),
@@ -77,11 +91,8 @@ class CargoPage extends StatelessWidget {
               filter: {'space_id': id},
               key: 'center_x',
               tableName: 'load_space',
-              dbName: 'sss-computing',
-              apiAddress: const ApiAddress(
-                host: '10.131.145.138',
-                port: 8080,
-              ),
+              dbName: _dbName,
+              apiAddress: _apiAddress,
             ),
             defaultValue: '0.0',
             parseValue: (text) => double.parse(text),
@@ -100,11 +111,8 @@ class CargoPage extends StatelessWidget {
               filter: {'space_id': id},
               key: 'center_y',
               tableName: 'load_space',
-              dbName: 'sss-computing',
-              apiAddress: const ApiAddress(
-                host: '10.131.145.138',
-                port: 8080,
-              ),
+              dbName: _dbName,
+              apiAddress: _apiAddress,
             ),
             defaultValue: '0.0',
             parseValue: (text) => double.parse(text),
@@ -123,11 +131,8 @@ class CargoPage extends StatelessWidget {
               filter: {'space_id': id},
               key: 'center_z',
               tableName: 'load_space',
-              dbName: 'sss-computing',
-              apiAddress: const ApiAddress(
-                host: '10.131.145.138',
-                port: 8080,
-              ),
+              dbName: _dbName,
+              apiAddress: _apiAddress,
             ),
             defaultValue: '0.0',
             parseValue: (text) => double.parse(text),
@@ -146,11 +151,8 @@ class CargoPage extends StatelessWidget {
               filter: {'space_id': id},
               key: 'bound_x1',
               tableName: 'load_space',
-              dbName: 'sss-computing',
-              apiAddress: const ApiAddress(
-                host: '10.131.145.138',
-                port: 8080,
-              ),
+              dbName: _dbName,
+              apiAddress: _apiAddress,
             ),
             defaultValue: '0.0',
             parseValue: (text) => double.parse(text),
@@ -169,11 +171,8 @@ class CargoPage extends StatelessWidget {
               filter: {'space_id': id},
               key: 'bound_x2',
               tableName: 'load_space',
-              dbName: 'sss-computing',
-              apiAddress: const ApiAddress(
-                host: '10.131.145.138',
-                port: 8080,
-              ),
+              dbName: _dbName,
+              apiAddress: _apiAddress,
             ),
             defaultValue: '0.0',
             parseValue: (text) => double.parse(text),

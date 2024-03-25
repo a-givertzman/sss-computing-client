@@ -201,7 +201,6 @@ class _CargoTableState extends State<CargoTable> {
         _newRowControllers?.forEach((_, controller) => controller.dispose());
         _newRowControllers = null;
         _newRowValidity = null;
-        // _newRowKey = null;
         _newRowError = null;
         _newCargo = null;
       });
