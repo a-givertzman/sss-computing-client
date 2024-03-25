@@ -64,6 +64,7 @@ class CargoTable extends StatefulWidget {
 
 ///
 class _CargoTableState extends State<CargoTable> {
+  late final ScrollController _scrollController;
   late final List<Cargo> _cargos;
   late final DaviModel<Cargo> _model;
   final defaultValidator = const Validator(
@@ -73,12 +74,12 @@ class _CargoTableState extends State<CargoTable> {
   Map<String, TextEditingController>? _newRowControllers;
   Map<String, String?>? _newRowValidity;
   Failure? _newRowError;
-  // Key? _newRowKey;
   Cargo? _newCargo;
 
   ///
   @override
   void initState() {
+    _scrollController = ScrollController();
     _cargos = widget._rows;
     _model = DaviModel(
       columns: [
@@ -117,6 +118,7 @@ class _CargoTableState extends State<CargoTable> {
   ///
   @override
   void dispose() {
+    _scrollController.dispose();
     _handleRowAddingEnd();
     super.dispose();
   }
@@ -150,7 +152,6 @@ class _CargoTableState extends State<CargoTable> {
 
   ///
   void _handleRowAddingStart() {
-    if (_newCargo != null) return;
     setState(() {
       final newValues = Map.fromEntries(widget._columns.map(
         (column) => MapEntry(
@@ -176,7 +177,6 @@ class _CargoTableState extends State<CargoTable> {
                     ? col.validator?.editFieldValidator(col.defaultValue)
                     : defaultValidator.editFieldValidator(col.defaultValue),
               ));
-      // _newRowKey = GlobalKey();
       _newCargo = JsonCargo(json: newValues);
       if (_selectedCargo == null) {
         _cargos.add(_newCargo!);
@@ -252,55 +252,6 @@ class _CargoTableState extends State<CargoTable> {
       iconColor: Theme.of(context).colorScheme.primary,
       errorColor: Theme.of(context).colorScheme.error,
     );
-    // return Row(
-    //   // key: _newRowKey,
-    //   mainAxisAlignment: MainAxisAlignment.center,
-    //   children: [
-    //     _newRowValidity?.entries.fold<String?>(
-    //               null,
-    //               (prev, entry) => prev ?? entry.value,
-    //             ) !=
-    //             null
-    //         ? SizedBox(
-    //             width: IconTheme.of(context).size,
-    //             height: IconTheme.of(context).size,
-    //             child: Tooltip(
-    //               message: const Localized('All values must be valid').v,
-    //               child: Icon(
-    //                 Icons.warning_rounded,
-    //                 color: theme.colorScheme.error,
-    //               ),
-    //             ),
-    //           )
-    //         : SizedBox(
-    //             width: IconTheme.of(context).size,
-    //             height: IconTheme.of(context).size,
-    //             child: InkWell(
-    //               customBorder: const CircleBorder(),
-    //               onTap: _handleRowAddingSave,
-    //               child: Icon(Icons.done, color: theme.colorScheme.primary),
-    //             ),
-    //           ),
-    //     SizedBox(
-    //       width: IconTheme.of(context).size,
-    //       height: IconTheme.of(context).size,
-    //       child: InkWell(
-    //         customBorder: const CircleBorder(),
-    //         onTap: () => _handleRowAddingEnd(remove: true),
-    //         child: Icon(Icons.close, color: theme.colorScheme.primary),
-    //       ),
-    //     ),
-    //     if (_newRowError != null)
-    //       SizedBox(
-    //         width: IconTheme.of(context).size,
-    //         height: IconTheme.of(context).size,
-    //         child: Tooltip(
-    //           message: Localized(_newRowError?.message).v,
-    //           child: Icon(Icons.error_outline, color: theme.colorScheme.error),
-    //         ),
-    //       ),
-    //   ],
-    // );
   }
 
   ///
@@ -393,11 +344,28 @@ class _CargoTableState extends State<CargoTable> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             _newCargo == null
-                ? ActionButton(
-                    label: const Localized('Add').v,
-                    icon: Icons.add,
-                    onPressed: _handleRowAddingStart,
-                  )
+                ? _selectedCargo != null
+                    ? ActionButton(
+                        label: const Localized('Add above').v,
+                        icon: Icons.add,
+                        onPressed: _handleRowAddingStart,
+                      )
+                    : ActionButton(
+                        label: const Localized('Add').v,
+                        icon: Icons.add,
+                        onPressed: () {
+                          _handleRowAddingStart();
+                          Future.delayed(const Duration(milliseconds: 100), () {
+                            if (_scrollController.hasClients) {
+                              _scrollController.animateTo(
+                                _scrollController.position.maxScrollExtent,
+                                curve: Curves.easeOut,
+                                duration: const Duration(milliseconds: 500),
+                              );
+                            }
+                          });
+                        },
+                      )
                 : ActionButton(
                     label: const Localized('Cancel adding').v,
                     icon: Icons.close,
@@ -426,6 +394,7 @@ class _CargoTableState extends State<CargoTable> {
           child: TableView<Cargo>(
             model: _model,
             onRowTap: _toggleSelectedRow,
+            scrollController: _scrollController,
           ),
         ),
       ],

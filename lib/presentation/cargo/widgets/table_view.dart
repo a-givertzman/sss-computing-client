@@ -14,6 +14,7 @@ class TableView<T> extends StatelessWidget {
   final Color? _scrollbarBackgroundColor;
   final Color? _controlElementColor;
   final Color? _thumbColor;
+  final ScrollController? _scrollController;
   final ColumnWidthBehavior _columnWidthBehavior;
 
   ///
@@ -30,8 +31,9 @@ class TableView<T> extends StatelessWidget {
     Color? scrollbarBackgroundColor,
     Color? controlElementColor,
     Color? thumbColor,
-    ColumnWidthBehavior columnWidthBehavior = ColumnWidthBehavior.scrollable,
+    ScrollController? scrollController,
     Color? selectedRowColor,
+    ColumnWidthBehavior columnWidthBehavior = ColumnWidthBehavior.scrollable,
   })  : _rowColor = rowColor,
         _columnWidthBehavior = columnWidthBehavior,
         _thumbColor = thumbColor,
@@ -43,6 +45,7 @@ class TableView<T> extends StatelessWidget {
         _onRowDoubleTap = onRowDoubleTap,
         _rowCursor = rowCursor,
         _outerBorder = outerBorder,
+        _scrollController = scrollController,
         _model = model;
   //
   //
@@ -117,6 +120,7 @@ class TableView<T> extends StatelessWidget {
         rowColor: _rowColor,
         rowCursor: _rowCursor,
         columnWidthBehavior: _columnWidthBehavior,
+        verticalScrollController: _scrollController,
       ),
     );
   }
