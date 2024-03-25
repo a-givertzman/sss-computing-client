@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 ///
+/// Button with icon and action on press
 class ActionButton extends StatelessWidget {
   final String _label;
   final IconData _icon;
@@ -8,7 +9,8 @@ class ActionButton extends StatelessWidget {
   final double? _width;
   final void Function()? _onPressed;
 
-  ///
+  /// Creates [ActionButton] with provided label, icon
+  /// and callback calling when pressed
   const ActionButton({
     super.key,
     required String label,

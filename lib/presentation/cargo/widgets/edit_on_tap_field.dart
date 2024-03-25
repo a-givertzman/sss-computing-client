@@ -7,6 +7,7 @@ import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/models/persistable/value_record.dart';
 import 'package:sss_computing_client/widgets/core/activate_on_tap_builder_widget.dart';
 
+/// Field that can be edited after activation by tap
 class EditOnTapField extends StatefulWidget {
   final String _initialValue;
   final ValueRecord _record;
@@ -16,6 +17,9 @@ class EditOnTapField extends StatefulWidget {
   final Function(String)? _onSave;
   final Function(String)? _onCancel;
   final Validator? _validator;
+
+  /// Creates [EditOnTapField] that can be edited
+  /// after activation by tap
   const EditOnTapField({
     super.key,
     required String initialValue,
@@ -35,10 +39,12 @@ class EditOnTapField extends StatefulWidget {
         _record = record,
         _initialValue = initialValue;
 
+  ///
   @override
   State<EditOnTapField> createState() => _EditOnTapFieldState();
 }
 
+///
 class _EditOnTapFieldState extends State<EditOnTapField> {
   TextEditingController? _controller;
   FocusNode? _focusNode;
@@ -55,6 +61,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
     _focusNode?.requestFocus();
   }
 
+  ///
   void _handleEditingEnd() {
     _controller?.dispose();
     _controller = null;
@@ -64,6 +71,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
     _error = null;
   }
 
+  ///
   @override
   void initState() {
     _initialValue = widget._initialValue;
@@ -71,12 +79,14 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
     super.initState();
   }
 
+  ///
   @override
   void dispose() {
     _handleEditingEnd();
     super.dispose();
   }
 
+  ///
   Future<ResultF<void>> _handleValueSave(String value) async {
     if (_validationError != null) {
       return Err(Failure(
@@ -108,6 +118,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
     }
   }
 
+  ///
   void _handleValueChange(String value) {
     if (_error != null) {
       setState(() {
@@ -122,6 +133,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
     }
   }
 
+  ///
   @override
   Widget build(BuildContext context) {
     final iconSize = IconTheme.of(context).size ?? 10.0;

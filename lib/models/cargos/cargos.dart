@@ -5,25 +5,25 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/models/cargo/cargo.dart';
 
-///
+/// Interface for controlling collection of [Cargo].
 abstract interface class Cargos {
-  ///
+  /// Get all [Cargo] in [Cargos] collection.
   Future<ResultF<List<Cargo>>> fetchAll();
 
-  ///
+  /// Remove [Cargo] from [Cargos] collection.
   Future<ResultF<void>> remove(Cargo cargo);
 
-  ///
+  /// Add new [Cargo] in [Cargos] collection.
   Future<ResultF<int>> add(Cargo cargo);
 }
 
-///
+/// [Cargos] collection stored in DB.
 class DbCargos implements Cargos {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
 
-  ///
+  /// Creates [Cargos] collection stored in DB.
   const DbCargos({
     required String dbName,
     required ApiAddress apiAddress,
@@ -32,6 +32,7 @@ class DbCargos implements Cargos {
         _apiAddress = apiAddress,
         _authToken = authToken;
 
+  ///
   @override
   Future<ResultF<List<Cargo>>> fetchAll() async {
     final sqlAccess = SqlAccess(
@@ -59,6 +60,7 @@ class DbCargos implements Cargos {
     };
   }
 
+  ///
   ResultF<List<Cargo>> _mapReplyToValue(List<Map<String, dynamic>> rows) {
     try {
       return Ok(rows.map((row) {
@@ -80,6 +82,7 @@ class DbCargos implements Cargos {
     }
   }
 
+  ///
   @override
   Future<ResultF<void>> remove(Cargo cargo) async {
     final sqlAccess = SqlAccess(
@@ -99,6 +102,7 @@ class DbCargos implements Cargos {
     };
   }
 
+  ///
   @override
   Future<ResultF<int>> add(Cargo cargo) async {
     final sqlAccess = SqlAccess(

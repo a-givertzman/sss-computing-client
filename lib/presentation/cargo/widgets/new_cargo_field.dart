@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 
+/// Field used to obtain info about new [Cargo] parameter
 class NewCargoField extends StatefulWidget {
   final Color _textColor;
   final Color _errorColor;
@@ -9,6 +10,9 @@ class NewCargoField extends StatefulWidget {
   final void Function(String)? _onValueChange;
   final Validator? _validator;
   final String? _validationError;
+
+  /// Creates [NewCargoField] that used to
+  /// obtain info about new [Cargo] parameter
   const NewCargoField({
     super.key,
     required Color textColor,
@@ -26,14 +30,17 @@ class NewCargoField extends StatefulWidget {
         _validator = validator,
         _validationError = validationError;
 
+  ///
   @override
   State<NewCargoField> createState() => _NewCargoFieldState();
 }
 
+///
 class _NewCargoFieldState extends State<NewCargoField> {
   late final TextEditingController _controller;
   String? _validationError;
 
+  ///
   @override
   void initState() {
     _controller = widget._controller;
@@ -41,6 +48,7 @@ class _NewCargoFieldState extends State<NewCargoField> {
     super.initState();
   }
 
+  ///
   void _handleValueChange(String value) {
     widget._onValueChange?.call(value);
     final validationError = widget._validator?.editFieldValidator(value);
@@ -52,6 +60,7 @@ class _NewCargoFieldState extends State<NewCargoField> {
     }
   }
 
+  ///
   @override
   Widget build(BuildContext context) {
     return Row(

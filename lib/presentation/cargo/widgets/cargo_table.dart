@@ -13,6 +13,7 @@ import 'package:sss_computing_client/presentation/cargo/widgets/edit_on_tap_fiel
 import 'package:sss_computing_client/presentation/cargo/widgets/new_cargo_field.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/table_view.dart';
 
+/// Structure with important information about [CargoTable] column
 class CargoColumn<T> {
   final String type;
   final String key;
@@ -35,11 +36,14 @@ class CargoColumn<T> {
   });
 }
 
+/// Table representation of provided [Cargos]
 class CargoTable extends StatefulWidget {
   final Cargos _cargos;
   final List<Cargo> _rows;
   final List<CargoColumn> _columns;
   final void Function(Cargo?)? _onCargoSelect;
+
+  /// Creates [CargoTable], table representation of [Cargos]
   const CargoTable({
     super.key,
     required Cargos cargos,
@@ -51,10 +55,12 @@ class CargoTable extends StatefulWidget {
         _columns = columns,
         _onCargoSelect = onCargoSelect;
 
+  ///
   @override
   State<CargoTable> createState() => _CargoTableState();
 }
 
+///
 class _CargoTableState extends State<CargoTable> {
   late final List<Cargo> _cargos;
   late final DaviModel<Cargo> _model;
@@ -67,6 +73,7 @@ class _CargoTableState extends State<CargoTable> {
   Failure? _newRowError;
   Cargo? _newCargo;
 
+  ///
   @override
   void initState() {
     _cargos = widget._rows;
@@ -95,12 +102,14 @@ class _CargoTableState extends State<CargoTable> {
     super.initState();
   }
 
+  ///
   @override
   void dispose() {
     _handleRowAddingEnd();
     super.dispose();
   }
 
+  ///
   void _toggleSelectedRow(Cargo? cargo) {
     if (cargo?.asMap()['id'] == null) return;
     setState(() {
@@ -114,6 +123,7 @@ class _CargoTableState extends State<CargoTable> {
     });
   }
 
+  ///
   void _handleRowDelete(Cargo cargo) async {
     switch (await widget._cargos.remove(cargo)) {
       case Ok():
@@ -126,6 +136,7 @@ class _CargoTableState extends State<CargoTable> {
     }
   }
 
+  ///
   void _handleRowAddingStart() {
     if (_newCargo != null) return;
     setState(() {
@@ -166,6 +177,7 @@ class _CargoTableState extends State<CargoTable> {
     });
   }
 
+  ///
   void _handleRowAddingEnd({bool remove = false}) {
     if (_newCargo != null) {
       setState(() {
@@ -182,6 +194,7 @@ class _CargoTableState extends State<CargoTable> {
     }
   }
 
+  ///
   void _handleRowAddingSave() async {
     if (_newCargo == null || _newRowControllers == null) return;
     final idx = _cargos.indexOf(_newCargo!);
@@ -211,6 +224,7 @@ class _CargoTableState extends State<CargoTable> {
     }
   }
 
+  ///
   Widget _buildNewRowButtons() {
     final size = IconTheme.of(context).size;
     final theme = Theme.of(context);
@@ -264,6 +278,7 @@ class _CargoTableState extends State<CargoTable> {
     );
   }
 
+  ///
   Widget _buildNewRowCell(
     DaviRow<Cargo> row,
     CargoColumn column, {
@@ -292,6 +307,7 @@ class _CargoTableState extends State<CargoTable> {
     );
   }
 
+  ///
   Widget _buildEditableCell(
     DaviRow<Cargo> row,
     CargoColumn column, {
@@ -321,6 +337,7 @@ class _CargoTableState extends State<CargoTable> {
     );
   }
 
+  ///
   Widget _buildCell(DaviRow<Cargo> row, CargoColumn column) {
     return !column.isEditable
         ? Text('${row.data.asMap()[column.key] ?? column.defaultValue}')
@@ -336,6 +353,7 @@ class _CargoTableState extends State<CargoTable> {
               );
   }
 
+  ///
   CellStyle? _buildCellStyle(DaviRow<Cargo> row) {
     return row.data == _selectedCargo
         ? CellStyle(
@@ -344,6 +362,7 @@ class _CargoTableState extends State<CargoTable> {
         : null;
   }
 
+  ///
   @override
   Widget build(BuildContext context) {
     return Column(

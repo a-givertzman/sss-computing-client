@@ -6,15 +6,21 @@ import 'package:sss_computing_client/presentation/cargo/widgets/cargo_table.dart
 import 'package:sss_computing_client/validation/real_validation_case.dart';
 import 'package:sss_computing_client/widgets/core/future_builder_widget.dart';
 
+/// Body of [CargoPage]
 class CargoBody extends StatefulWidget {
   final Cargos _cargos;
+
+  /// Creates [CargoBody] for [CargoPage]
   const CargoBody({super.key, required Cargos cargos}) : _cargos = cargos;
 
+  ///
   @override
   State<CargoBody> createState() => _CargoBodyState();
 }
 
+///
 class _CargoBodyState extends State<CargoBody> {
+  ///
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(

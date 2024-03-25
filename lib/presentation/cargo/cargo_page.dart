@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:sss_computing_client/models/cargos/cargos.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/cargo_body.dart';
 
+/// Page with cargo related information
 class CargoPage extends StatelessWidget {
+  ///
   const CargoPage({super.key});
 
+  ///
   @override
   Widget build(BuildContext context) {
     return Scaffold(
