@@ -322,18 +322,18 @@ class _CargoTableState extends State<CargoTable> {
   }
 
   Widget _buildCell(DaviRow<Cargo> row, CargoColumn column) {
-    return row.data.asMap()['id'] == null
-        ? _buildNewRowCell(
-            row,
-            column,
-          )
-        : column.isEditable
-            ? _buildEditableCell(
+    return !column.isEditable
+        ? Text('${row.data.asMap()[column.key] ?? column.defaultValue}')
+        : row.data.asMap()['id'] == null
+            ? _buildNewRowCell(
+                row,
+                column,
+              )
+            : _buildEditableCell(
                 row,
                 column,
                 key: ValueKey('${column.key}-${row.data.id}'),
-              )
-            : Text('${row.data.asMap()[column.key]}');
+              );
   }
 
   CellStyle? _buildCellStyle(DaviRow<Cargo> row) {
