@@ -1,5 +1,4 @@
 import 'package:davi/davi.dart';
-import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
@@ -9,6 +8,7 @@ import 'package:sss_computing_client/models/cargo/cargo.dart';
 import 'package:sss_computing_client/models/cargos/cargos.dart';
 import 'package:sss_computing_client/models/persistable/value_record.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/action_button.dart';
+import 'package:sss_computing_client/presentation/cargo/widgets/cell_action_buttons.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/edit_on_tap_field.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/new_cargo_field.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/table_view.dart';
@@ -21,7 +21,8 @@ class CargoColumn<T> {
   final String defaultValue;
   final bool isEditable;
   final Validator? validator;
-  final T Function(String text)? valueParser;
+  final T Function(String text)? parseValue;
+  final ValueRecord Function(int id)? buildRecord;
   final double? grow;
 
   const CargoColumn({
@@ -31,7 +32,8 @@ class CargoColumn<T> {
     required this.defaultValue,
     required this.isEditable,
     this.validator,
-    this.valueParser,
+    this.parseValue,
+    this.buildRecord,
     this.grow,
   });
 }
@@ -71,6 +73,7 @@ class _CargoTableState extends State<CargoTable> {
   Map<String, TextEditingController>? _newRowControllers;
   Map<String, String?>? _newRowValidity;
   Failure? _newRowError;
+  // Key? _newRowKey;
   Cargo? _newCargo;
 
   ///
@@ -89,7 +92,16 @@ class _CargoTableState extends State<CargoTable> {
         ),
         ...widget._columns.map(
           (column) => DaviColumn(
-            sortable: false,
+            sortable: true,
+            stringValue: column.type == 'text'
+                ? (cargo) => cargo.asMap()[column.key]
+                : null,
+            doubleValue: column.type == 'real'
+                ? (cargo) => cargo.asMap()[column.key]
+                : null,
+            intValue: column.type == 'int'
+                ? (cargo) => cargo.asMap()[column.key]
+                : null,
             grow: column.grow,
             name: column.name,
             cellBuilder: (_, row) => _buildCell(row, column),
@@ -143,7 +155,7 @@ class _CargoTableState extends State<CargoTable> {
       final newValues = Map.fromEntries(widget._columns.map(
         (column) => MapEntry(
           column.key,
-          column.valueParser?.call(column.defaultValue) ?? column.defaultValue,
+          column.parseValue?.call(column.defaultValue) ?? column.defaultValue,
         ),
       ));
       _newRowControllers = widget._columns
@@ -164,6 +176,7 @@ class _CargoTableState extends State<CargoTable> {
                     ? col.validator?.editFieldValidator(col.defaultValue)
                     : defaultValidator.editFieldValidator(col.defaultValue),
               ));
+      // _newRowKey = GlobalKey();
       _newCargo = JsonCargo(json: newValues);
       if (_selectedCargo == null) {
         _cargos.add(_newCargo!);
@@ -188,8 +201,9 @@ class _CargoTableState extends State<CargoTable> {
         _newRowControllers?.forEach((_, controller) => controller.dispose());
         _newRowControllers = null;
         _newRowValidity = null;
-        _newCargo = null;
+        // _newRowKey = null;
         _newRowError = null;
+        _newCargo = null;
       });
     }
   }
@@ -203,7 +217,7 @@ class _CargoTableState extends State<CargoTable> {
           _newRowControllers!.containsKey(key)
               ? widget._columns
                       .singleWhere((col) => col.key == key)
-                      .valueParser
+                      .parseValue
                       ?.call(_newRowControllers![key]!.text) ??
                   _newRowControllers![key]!.text
               : value,
@@ -226,56 +240,68 @@ class _CargoTableState extends State<CargoTable> {
 
   ///
   Widget _buildNewRowButtons() {
-    final size = IconTheme.of(context).size;
-    final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _newRowValidity?.entries.fold<String?>(
-                  null,
-                  (prev, entry) => prev ?? entry.value,
-                ) !=
-                null
-            ? SizedBox(
-                width: size,
-                height: size,
-                child: Tooltip(
-                  message: const Localized('All values must be valid').v,
-                  child: Icon(
-                    Icons.warning_rounded,
-                    color: theme.colorScheme.error,
-                  ),
-                ),
-              )
-            : SizedBox(
-                width: size,
-                height: size,
-                child: InkWell(
-                  customBorder: const CircleBorder(),
-                  onTap: _handleRowAddingSave,
-                  child: Icon(Icons.done, color: theme.colorScheme.primary),
-                ),
-              ),
-        SizedBox(
-          width: size,
-          height: size,
-          child: InkWell(
-            customBorder: const CircleBorder(),
-            onTap: () => _handleRowAddingEnd(remove: true),
-            child: Icon(Icons.close, color: theme.colorScheme.primary),
-          ),
-        ),
-        if (_newRowError != null)
-          SizedBox(
-            width: size,
-            height: size,
-            child: Tooltip(
-              message: Localized(_newRowError?.message).v,
-              child: Icon(Icons.error_outline, color: theme.colorScheme.error),
-            ),
-          ),
-      ],
+    return CellActionButtons(
+      validationError: _newRowValidity?.entries.fold<String?>(
+        null,
+        (prev, entry) =>
+            prev ?? (entry.value != null ? 'All values must be valid' : null),
+      ),
+      error: _newRowError,
+      onConfirm: _handleRowAddingSave,
+      onCancel: () => _handleRowAddingEnd(remove: true),
+      iconSize: IconTheme.of(context).size,
+      iconColor: Theme.of(context).colorScheme.primary,
+      errorColor: Theme.of(context).colorScheme.error,
     );
+    // return Row(
+    //   // key: _newRowKey,
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [
+    //     _newRowValidity?.entries.fold<String?>(
+    //               null,
+    //               (prev, entry) => prev ?? entry.value,
+    //             ) !=
+    //             null
+    //         ? SizedBox(
+    //             width: IconTheme.of(context).size,
+    //             height: IconTheme.of(context).size,
+    //             child: Tooltip(
+    //               message: const Localized('All values must be valid').v,
+    //               child: Icon(
+    //                 Icons.warning_rounded,
+    //                 color: theme.colorScheme.error,
+    //               ),
+    //             ),
+    //           )
+    //         : SizedBox(
+    //             width: IconTheme.of(context).size,
+    //             height: IconTheme.of(context).size,
+    //             child: InkWell(
+    //               customBorder: const CircleBorder(),
+    //               onTap: _handleRowAddingSave,
+    //               child: Icon(Icons.done, color: theme.colorScheme.primary),
+    //             ),
+    //           ),
+    //     SizedBox(
+    //       width: IconTheme.of(context).size,
+    //       height: IconTheme.of(context).size,
+    //       child: InkWell(
+    //         customBorder: const CircleBorder(),
+    //         onTap: () => _handleRowAddingEnd(remove: true),
+    //         child: Icon(Icons.close, color: theme.colorScheme.primary),
+    //       ),
+    //     ),
+    //     if (_newRowError != null)
+    //       SizedBox(
+    //         width: IconTheme.of(context).size,
+    //         height: IconTheme.of(context).size,
+    //         child: Tooltip(
+    //           message: Localized(_newRowError?.message).v,
+    //           child: Icon(Icons.error_outline, color: theme.colorScheme.error),
+    //         ),
+    //       ),
+    //   ],
+    // );
   }
 
   ///
@@ -316,19 +342,15 @@ class _CargoTableState extends State<CargoTable> {
     return EditOnTapField(
       key: key,
       initialValue: '${row.data.asMap()[column.key]}',
-      record: ValueRecord(
-        filter: {'cargo_id': row.data.id},
-        key: column.key,
-        tableName: 'cargo_parameters',
-        dbName: 'sss-computing',
-        apiAddress: ApiAddress.localhost(port: 8080),
-      ),
       textColor: Theme.of(context).colorScheme.onSurface,
       iconColor: Theme.of(context).colorScheme.primary,
       errorColor: Theme.of(context).stateColors.error,
-      onSave: (value) => setState(() {
+      onSubmit: (value) =>
+          column.buildRecord?.call(row.data.asMap()['id']).persist(value) ??
+          Future.value(Ok(value)),
+      onSubmitted: (value) => setState(() {
         final idx = _cargos.indexOf(row.data);
-        final newValue = column.valueParser?.call(value) ?? value;
+        final newValue = column.parseValue?.call(value) ?? value;
         final newData = row.data.asMap()..[column.key] = newValue;
         _cargos[idx] = JsonCargo(json: newData);
         _model.replaceRows(_cargos);

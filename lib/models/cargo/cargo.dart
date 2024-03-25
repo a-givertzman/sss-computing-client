@@ -47,23 +47,23 @@ class JsonCargo implements Cargo {
   @override
   int? get id => _json['id'];
   @override
-  String get name => _json['name'];
+  String get name => _json['name'] ?? 'emptyName';
   @override
-  double get weight => _json['weight'];
+  double get weight => _json['mass'] ?? 0.0;
   @override
-  double get vcg => _json['vcg'];
+  double get vcg => _json['center_x'] ?? 0.0;
   @override
-  double get lcg => _json['lcg'];
+  double get lcg => _json['center_y'] ?? 0.0;
   @override
-  double get tcg => _json['tcg'];
+  double get tcg => _json['center_z'] ?? 0.0;
   @override
-  double get x1 => _json['x_1'];
+  double get x1 => _json['bound_x1'] ?? 0.0;
   @override
-  double get x2 => _json['x_2'];
+  double get x2 => _json['bound_x2'] ?? 0.0;
   @override
-  double get mfsx => _json['m_fsx'];
+  double get mfsx => _json['m_f_s_x'] ?? 0.0;
   @override
-  double get mfsy => _json['m_fsy'];
+  double get mfsy => _json['m_f_s_y'] ?? 0.0;
   @override
   Map<String, dynamic> asMap() {
     return _json;

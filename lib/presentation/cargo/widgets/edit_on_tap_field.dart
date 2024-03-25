@@ -1,21 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
-import 'package:sss_computing_client/models/persistable/value_record.dart';
 import 'package:sss_computing_client/widgets/core/activate_on_tap_builder_widget.dart';
 
 /// Field that can be edited after activation by tap
 class EditOnTapField extends StatefulWidget {
   final String _initialValue;
-  final ValueRecord _record;
   final Color _textColor;
   final Color _iconColor;
   final Color _errorColor;
-  final Function(String)? _onSave;
-  final Function(String)? _onCancel;
+  final FutureOr<ResultF<String>> Function(String) _onSubmit;
+  final void Function(String)? _onSubmitted;
+  final void Function(String)? _onCancel;
   final Validator? _validator;
 
   /// Creates [EditOnTapField] that can be edited
@@ -23,20 +24,20 @@ class EditOnTapField extends StatefulWidget {
   const EditOnTapField({
     super.key,
     required String initialValue,
-    required ValueRecord record,
     required Color textColor,
     required Color iconColor,
     required Color errorColor,
-    dynamic Function(String)? onSave,
+    required FutureOr<ResultF<String>> Function(String value) onSubmit,
+    dynamic Function(String)? onSubmitted,
     dynamic Function(String)? onCancel,
     Validator? validator,
   })  : _validator = validator,
         _onCancel = onCancel,
-        _onSave = onSave,
+        _onSubmit = onSubmit,
+        _onSubmitted = onSubmitted,
         _errorColor = errorColor,
         _iconColor = iconColor,
         _textColor = textColor,
-        _record = record,
         _initialValue = initialValue;
 
   ///
@@ -98,12 +99,11 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
       _isInProcess = true;
       _error = null;
     });
-    final ResultF<String> newValue = value == _initialValue
-        ? Ok(value)
-        : await widget._record.persist(value);
+    final ResultF<String> newValue =
+        value == _initialValue ? Ok(value) : await widget._onSubmit(value);
     switch (newValue) {
       case Ok(:final value):
-        widget._onSave?.call(value);
+        widget._onSubmitted?.call(value);
         setState(() {
           _isInProcess = false;
           _initialValue = value;

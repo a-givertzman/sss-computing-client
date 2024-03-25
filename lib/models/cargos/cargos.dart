@@ -42,12 +42,12 @@ class DbCargos implements Cargos {
       sqlBuilder: (_, __) => Sql(
         sql: """
             SELECT
-              cargo_id,
+              space_id AS cargo_id,
               json_object_agg(
                 key,
-                json_build_object('value', value, 'type', type, 'id', id)
+                json_build_object('value', value, 'type', value_type, 'id', id)
               )::text as parameters
-            FROM cargo_parameters
+            FROM load_space
             GROUP BY cargo_id
             ORDER BY cargo_id ASC;
             """,
@@ -63,6 +63,7 @@ class DbCargos implements Cargos {
   ///
   ResultF<List<Cargo>> _mapReplyToValue(List<Map<String, dynamic>> rows) {
     try {
+      // Log('$runtimeType').warning(rows);
       return Ok(rows.map((row) {
         final Map<String, dynamic> rawJson = jsonDecode(row['parameters']);
         final Map<String, dynamic> json = rawJson.map(
@@ -75,6 +76,7 @@ class DbCargos implements Cargos {
             },
           ),
         )..['id'] = row['cargo_id'];
+        Log('$runtimeType').debug(JsonCargo(json: json));
         return JsonCargo(json: json);
       }).toList());
     } catch (err) {
@@ -91,8 +93,8 @@ class DbCargos implements Cargos {
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-            DELETE FROM cargo_parameters
-            WHERE cargo_id=${cargo.id};
+            DELETE FROM load_space
+            WHERE space_id=${cargo.id};
             """,
       ),
     );
@@ -113,17 +115,17 @@ class DbCargos implements Cargos {
       sqlBuilder: (_, __) => Sql(
         sql: """
             WITH next_id AS
-              (SELECT max(cargo_id)+1 AS value FROM cargo_parameters)
-            INSERT INTO cargo_parameters
-              (ship_id, cargo_id, key, value, type)
+              (SELECT max(space_id)+1 AS value FROM load_space)
+            INSERT INTO load_space
+              (ship_id, space_id, key, value, value_type)
             VALUES
-              (1, (SELECT value FROM next_id), 'name', '${cargo.asMap()['name']}', 'string'),
-              (1, (SELECT value FROM next_id), 'weight', '${cargo.asMap()['weight']}', 'real'),
-              (1, (SELECT value FROM next_id), 'vcg', '${cargo.asMap()['vcg']}', 'real'),
-              (1, (SELECT value FROM next_id), 'tcg', '${cargo.asMap()['tcg']}', 'real'),
-              (1, (SELECT value FROM next_id), 'lcg', '${cargo.asMap()['lcg']}', 'real'),
-              (1, (SELECT value FROM next_id), 'x_1', '${cargo.asMap()['x_1']}', 'real'),
-              (1, (SELECT value FROM next_id), 'x_2', '${cargo.asMap()['x_2']}', 'real')
+              (1, (SELECT value FROM next_id), 'name', '${cargo.asMap()['name']}', 'text'),
+              (1, (SELECT value FROM next_id), 'mass', '${cargo.asMap()['mass']}', 'real'),
+              (1, (SELECT value FROM next_id), 'center_x', '${cargo.asMap()['center_x']}', 'real'),
+              (1, (SELECT value FROM next_id), 'center_z', '${cargo.asMap()['center_z']}', 'real'),
+              (1, (SELECT value FROM next_id), 'center_y', '${cargo.asMap()['center_y']}', 'real'),
+              (1, (SELECT value FROM next_id), 'bound_x1', '${cargo.asMap()['bound_x1']}', 'real'),
+              (1, (SELECT value FROM next_id), 'bound_x2', '${cargo.asMap()['bound_x2']}', 'real')
             RETURNING (SELECT value FROM next_id) AS cargo_id;
             """,
       ),
