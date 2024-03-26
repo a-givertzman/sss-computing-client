@@ -83,10 +83,10 @@ class TableView<T> extends StatelessWidget {
           columnDividerColor: tableBorderColor,
         ),
         row: RowThemeData(
-          dividerColor: tableBorderColor,
+          dividerColor: Colors.transparent,
           dividerThickness: _tableBorderThickness,
           color: RowThemeData.zebraColor(
-            evenColor: Colors.black.withOpacity(0.075),
+            evenColor: Colors.black.withOpacity(0.125),
             oddColor: Colors.transparent,
           ),
         ),
