@@ -60,7 +60,7 @@ class StrengthPage extends StatelessWidget {
                           (_) {
                             const range = 50;
                             final (minY, maxY) = (-200 + range, 200 - range);
-                            final (minX, maxX) = (-100, 100);
+                            final (minX, _) = (-100, 100);
                             final firstY =
                                 minY + Random().nextInt(maxY - minY).toDouble();
                             const firstLimit = 50;
@@ -137,7 +137,7 @@ class StrengthPage extends StatelessWidget {
                           (_) {
                             const range = 100;
                             final (minY, maxY) = (-500 + range, 500 - range);
-                            final (minX, maxX) = (-100, 100);
+                            final (minX, _) = (-100, 100);
                             final firstY =
                                 minY + Random().nextInt(maxY - minY).toDouble();
                             const firstLimit = 150;
