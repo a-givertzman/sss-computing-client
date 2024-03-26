@@ -5,7 +5,7 @@ import 'package:hmi_core/hmi_core.dart';
 /// widget (e.g., [ListView], [GridView] or [SingleChildScrollView]) state.
 ///
 /// Provide information about ability to scroll content.
-class ScrollableBuilder extends StatefulWidget {
+class ScrollableBuilderWiddget extends StatefulWidget {
   final Widget Function(BuildContext context, bool isScrollEnabled) builder;
   final ScrollController controller;
 
@@ -16,17 +16,18 @@ class ScrollableBuilder extends StatefulWidget {
   /// * [controller] - [ScrollController] of tracked scrollable widget;
   ///
   /// To correct work, scrollable widget must be a direct child of
-  /// [ScrollableBuilder]
-  const ScrollableBuilder({
+  /// [ScrollableBuilderWiddget]
+  const ScrollableBuilderWiddget({
     super.key,
     required this.builder,
     required this.controller,
   });
   @override
-  State<ScrollableBuilder> createState() => _ScrollableBuilderState();
+  State<ScrollableBuilderWiddget> createState() =>
+      _ScrollableBuilderWiddgetState();
 }
 
-class _ScrollableBuilderState extends State<ScrollableBuilder> {
+class _ScrollableBuilderWiddgetState extends State<ScrollableBuilderWiddget> {
   bool _isScrollEnabled = false;
   BoxConstraints? _layoutConstraints;
 
@@ -37,14 +38,14 @@ class _ScrollableBuilderState extends State<ScrollableBuilder> {
         final isScrollEnabled =
             position.maxScrollExtent != 0.0 || position.minScrollExtent != 0.0;
         Log('$runtimeType | position.minScrollExtent')
-            .debug('${position.minScrollExtent}');
+            .warning('${position.minScrollExtent}');
         Log('$runtimeType | position.maxScrollExtent')
-            .debug('${position.maxScrollExtent}');
+            .warning('${position.maxScrollExtent}');
         Log('$runtimeType | isScrollEnabled').debug('$_isScrollEnabled');
         if (_isScrollEnabled == isScrollEnabled) return;
         setState(() {
           Log('$runtimeType | isScrollEnabled is set to')
-              .debug('$isScrollEnabled');
+              .warning('$isScrollEnabled');
           _isScrollEnabled = isScrollEnabled;
         });
       },
