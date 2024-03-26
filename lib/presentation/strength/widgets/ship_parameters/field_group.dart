@@ -55,7 +55,7 @@ class _FieldGroupState extends State<FieldGroup> {
         initialValue: data.initialValue,
         fieldType: data.type,
         controller: data.controller,
-        sendError: err?.message,
+        sendError: err != null ? '${err.message}' : null,
         onChanged: (value) {
           data.controller.value = TextEditingValue(
             text: value,
