@@ -2,7 +2,7 @@
     "passwordKey": "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNMЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЁЯЧСМИТЬБЮйцукенгшщзхъфывапролджэёячсмитьбю",
     "connectionStatusMenuWidth": 230,
     "connectionStatusMenuItemHeight": 50,
-    "api-host": "10.131.145.138",
+    "api-host": "localhost",
     "api-port": 8080,
     "api-auth-token": "sss-computing-api-auth-token",
     "api-database": "sss-computing",
