@@ -5,8 +5,9 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/models/field/field_data.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/ship_parameters/cancelable_field.dart';
-import 'package:sss_computing_client/widgets/core/scrollable_builder.dart';
+import 'package:sss_computing_client/widgets/core/scrollable_builder_widget.dart';
 
+///
 class FieldGroup extends StatefulWidget {
   final String _groupName;
   final void Function()? _onChanged;
@@ -87,24 +88,24 @@ class _FieldGroupState extends State<FieldGroup> {
         ),
         SizedBox(height: blockPadding),
         Expanded(
-          child: Scrollbar(
-            thumbVisibility: true,
-            controller: _scrollController,
-            child: ScrollConfiguration(
-              behavior:
-                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
-              child: ScrollableBuilder(
-                controller: _scrollController,
-                builder: (_, isScrollEnabled) => SingleChildScrollView(
-                  controller: _scrollController,
-                  child: FutureBuilder(
-                    future: Future.wait(widget._fieldsData.map(
-                      (field) => field.isSynced
-                          ? Future<ResultF>.value(const Ok(null))
-                          : field.fetch(),
-                    )),
-                    builder: (_, result) => result.hasData
-                        ? Column(
+          child: FutureBuilder(
+            future: Future.wait(widget._fieldsData.map(
+              (field) => field.isSynced
+                  ? Future<ResultF>.value(const Ok(null))
+                  : field.fetch(),
+            )),
+            builder: (_, result) => result.hasData
+                ? Scrollbar(
+                    thumbVisibility: true,
+                    controller: _scrollController,
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context)
+                          .copyWith(scrollbars: false),
+                      child: ScrollableBuilderWiddget(
+                        controller: _scrollController,
+                        builder: (_, isScrollEnabled) => SingleChildScrollView(
+                          controller: _scrollController,
+                          child: Column(
                             children: [
                               for (int i = 0;
                                   i < widget._fieldsData.length;
@@ -126,12 +127,12 @@ class _FieldGroupState extends State<FieldGroup> {
                                   SizedBox(height: padding),
                               ],
                             ],
-                          )
-                        : const CupertinoActivityIndicator(),
-                  ),
-                ),
-              ),
-            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : const CupertinoActivityIndicator(),
           ),
         ),
       ],
