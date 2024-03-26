@@ -110,7 +110,9 @@ class _FieldGroupState extends State<FieldGroup> {
                               for (int i = 0;
                                   i < widget._fieldsData.length;
                                   i++) ...[
-                                Padding(
+                                AnimatedPadding(
+                                  duration: const Duration(milliseconds: 150),
+                                  curve: Curves.easeInOut,
                                   padding: EdgeInsets.only(
                                     right: isScrollEnabled ? padding * 2 : 0.0,
                                   ),
