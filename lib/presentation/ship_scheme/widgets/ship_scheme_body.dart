@@ -10,33 +10,50 @@ class ShipSchemeBody extends StatelessWidget {
   ///
   @override
   Widget build(BuildContext context) {
-    const minX = 0.0;
-    const maxX = 800.0;
-    const frameNumber = 20;
+    const minX = -400.0;
+    const maxX = 400.0;
+    const minY = 0.0;
+    const maxY = 400.0;
+    const frameTNumber = 20;
+    const frameRNumber = 100;
     return Center(
       child: Card(
         margin: EdgeInsets.zero,
         child: Padding(
           padding: EdgeInsets.all(const Setting('padding').toDouble),
           child: ShipScheme(
+            minX: minX,
+            maxX: maxX,
+            minY: minY,
+            maxY: maxY,
             xAxis: const ChartAxis(
-              caption: 'Ship Length [m]',
-              captionSpaceReserved: 20.0,
+              caption: 'm',
               labelsSpaceReserved: 25.0,
               valueInterval: 100.0,
               isGridVisible: false,
             ),
-            frames:
-                List<(double, double, String)>.generate(frameNumber, (index) {
-              const width = (maxX - minX) / frameNumber;
+            yAxis: const ChartAxis(
+              caption: 'm',
+              labelsSpaceReserved: 25.0,
+              valueInterval: 50.0,
+              isGridVisible: false,
+            ),
+            framesTheoretic:
+                List<(double, double, String)>.generate(frameTNumber, (index) {
+              const width = (maxX - minX) / frameTNumber;
               return (
                 minX + index * width,
                 minX + (index + 1) * width,
-                'F${(index + 1).toString()}'
+                '${(index + 1).toString()}${index == 0 ? 'FR.T' : ''}'
               );
             }),
-            minX: minX,
-            maxX: maxX,
+            framesReal: List<(double, String)>.generate(frameRNumber, (index) {
+              const width = (maxX - minX) / frameRNumber;
+              return (
+                minX + index * width,
+                '${(index + 1).toString()}${index == 0 ? 'FR.R' : ''}'
+              );
+            }),
           ),
         ),
       ),
