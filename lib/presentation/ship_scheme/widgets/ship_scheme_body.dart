@@ -10,50 +10,124 @@ class ShipSchemeBody extends StatelessWidget {
   ///
   @override
   Widget build(BuildContext context) {
-    const minX = -400.0;
-    const maxX = 400.0;
-    const minY = 0.0;
-    const maxY = 400.0;
+    const minX = -100.0;
+    const maxX = 100.0;
+    const minY = -10.0;
+    const maxY = 20.0;
     const frameTNumber = 20;
     const frameRNumber = 100;
+    final framesTheoretic = List<(double, double, String)>.generate(
+      frameTNumber,
+      (index) {
+        const width = (maxX - minX) / frameTNumber;
+        return (
+          minX + index * width,
+          minX + (index + 1) * width,
+          '$index${index == 0 ? 'FT' : ''}'
+        );
+      },
+    );
+    final framesReal = [
+      ...List<(double, String)>.generate(25, (index) {
+        const width = (maxX - minX) / 2 / frameRNumber;
+        return (minX + index * width, '$index${index == 0 ? 'FR' : ''}');
+      }),
+      ...List<(double, String)>.generate(25, (index) {
+        const width = (maxX - minX) / frameRNumber;
+        return (
+          minX + ((maxX - minX) / 2 / frameRNumber) * 25 + (index) * width,
+          '${index + 25}'
+        );
+      }),
+      ...List<(double, String)>.generate(50, (index) {
+        const width = (maxX - minX) / 2 / frameRNumber;
+        return (
+          minX +
+              ((maxX - minX) / 2 / frameRNumber) * 25 +
+              ((maxX - minX) / frameRNumber) * 25 +
+              (index) * width,
+          '${index + 50}'
+        );
+      }),
+      ...List<(double, String)>.generate(25, (index) {
+        const width = (maxX - minX) / frameRNumber;
+        return (
+          minX +
+              ((maxX - minX) / 2 / frameRNumber) * 75 +
+              ((maxX - minX) / frameRNumber) * 25 +
+              (index) * width,
+          '${index + 100}'
+        );
+      }),
+      ...List<(double, String)>.generate(25, (index) {
+        const width = (maxX - minX) / 2 / frameRNumber;
+        return (
+          minX +
+              ((maxX - minX) / 2 / frameRNumber) * 25 +
+              ((maxX - minX) / frameRNumber) * 75 +
+              (index) * width,
+          '${index + 125}'
+        );
+      }),
+    ];
     return Center(
       child: Card(
         margin: EdgeInsets.zero,
         child: Padding(
           padding: EdgeInsets.all(const Setting('padding').toDouble),
-          child: ShipScheme(
-            minX: minX,
-            maxX: maxX,
-            minY: minY,
-            maxY: maxY,
-            xAxis: const ChartAxis(
-              caption: 'm',
-              labelsSpaceReserved: 25.0,
-              valueInterval: 100.0,
-              isGridVisible: false,
+          child: SizedBox(
+            width: 1800.0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // InteractiveViewer(
+                //   trackpadScrollCausesScale: false,
+                // child:
+                ShipScheme(
+                  minX: minX,
+                  maxX: maxX,
+                  minY: minY,
+                  maxY: maxY,
+                  xAxis: const ChartAxis(
+                    caption: 'm',
+                    labelsSpaceReserved: 25.0,
+                    valueInterval: 25.0,
+                    isGridVisible: false,
+                  ),
+                  yAxis: const ChartAxis(
+                    caption: 'm',
+                    labelsSpaceReserved: 25.0,
+                    valueInterval: 10.0,
+                    isGridVisible: false,
+                  ),
+                  body: ('assets/img/side3.svg', -100.0, 100.0),
+                  framesTheoretic: framesTheoretic,
+                  framesReal: framesReal,
+                ),
+                // ),
+                ShipScheme(
+                  minX: minX,
+                  maxX: maxX,
+                  minY: -20.0,
+                  maxY: 20.0,
+                  xAxis: const ChartAxis(
+                    caption: 'm',
+                    labelsSpaceReserved: 25.0,
+                    valueInterval: 25.0,
+                    isGridVisible: false,
+                  ),
+                  yAxis: const ChartAxis(
+                    caption: 'm',
+                    labelsSpaceReserved: 25.0,
+                    valueInterval: 10.0,
+                    isGridVisible: false,
+                  ),
+                  body: ('assets/img/top3.svg', -100.0, 100.0),
+                  framesTheoretic: framesTheoretic,
+                  framesReal: framesReal,
+                ),
+              ],
             ),
-            yAxis: const ChartAxis(
-              caption: 'm',
-              labelsSpaceReserved: 25.0,
-              valueInterval: 50.0,
-              isGridVisible: false,
-            ),
-            framesTheoretic:
-                List<(double, double, String)>.generate(frameTNumber, (index) {
-              const width = (maxX - minX) / frameTNumber;
-              return (
-                minX + index * width,
-                minX + (index + 1) * width,
-                '${(index + 1).toString()}${index == 0 ? 'FR.T' : ''}'
-              );
-            }),
-            framesReal: List<(double, String)>.generate(frameRNumber, (index) {
-              const width = (maxX - minX) / frameRNumber;
-              return (
-                minX + index * width,
-                '${(index + 1).toString()}${index == 0 ? 'FR.R' : ''}'
-              );
-            }),
           ),
         ),
       ),
