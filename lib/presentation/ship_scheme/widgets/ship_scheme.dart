@@ -65,6 +65,7 @@ class _ShipSchemeState extends State<ShipScheme> {
       _trScaleY = _trController.value[5];
       _trShiftX = _trController.value.getTranslation()[0];
       _trShiftY = _trController.value.getTranslation()[1];
+      // Log('$runtimeType').warning(widget._caption);
     });
   }
 
@@ -111,6 +112,7 @@ class _ShipSchemeState extends State<ShipScheme> {
           height: _height * scaleY + widget._xAxis.labelsSpaceReserved,
           child: Stack(
             children: [
+              // Grid
               Positioned(
                 left: widget._yAxis.labelsSpaceReserved,
                 bottom: widget._xAxis.labelsSpaceReserved,
@@ -192,7 +194,15 @@ class _ShipSchemeState extends State<ShipScheme> {
               ),
               // Frames (real)
               Positioned(
-                bottom: _height * scaleY * 1 / 2,
+                top: (-((widget._minY ?? 0.0) -
+                                widget._yAxis.valueInterval / 2) *
+                            _trScaleY *
+                            scaleY +
+                        _trShiftY)
+                    .clamp(
+                  0.0,
+                  _height * scaleY - 2 * widget._xAxis.labelsSpaceReserved,
+                ),
                 left: widget._yAxis.labelsSpaceReserved,
                 child: Container(
                   width: _width * scaleX,
