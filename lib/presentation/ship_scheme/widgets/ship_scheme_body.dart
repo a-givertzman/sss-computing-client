@@ -10,6 +10,7 @@ class ShipSchemeBody extends StatelessWidget {
   ///
   @override
   Widget build(BuildContext context) {
+    final controller = TransformationController();
     const minX = -100.0;
     const maxX = 100.0;
     const minY = -10.0;
@@ -23,20 +24,22 @@ class ShipSchemeBody extends StatelessWidget {
         return (
           minX + index * width,
           minX + (index + 1) * width,
-          '$index${index == 0 ? 'FT' : ''}'
+          // '$index${index == 0 ? 'FT' : ''}'
+          '${index}FT'
         );
       },
     );
     final framesReal = [
       ...List<(double, String)>.generate(25, (index) {
         const width = (maxX - minX) / 2 / frameRNumber;
-        return (minX + index * width, '$index${index == 0 ? 'FR' : ''}');
+        // return (minX + index * width, '$index${index == 0 ? 'FR' : ''}');
+        return (minX + index * width, '${index}FR');
       }),
       ...List<(double, String)>.generate(25, (index) {
         const width = (maxX - minX) / frameRNumber;
         return (
           minX + ((maxX - minX) / 2 / frameRNumber) * 25 + (index) * width,
-          '${index + 25}'
+          '${index + 25}FR'
         );
       }),
       ...List<(double, String)>.generate(50, (index) {
@@ -46,7 +49,7 @@ class ShipSchemeBody extends StatelessWidget {
               ((maxX - minX) / 2 / frameRNumber) * 25 +
               ((maxX - minX) / frameRNumber) * 25 +
               (index) * width,
-          '${index + 50}'
+          '${index + 50}FR'
         );
       }),
       ...List<(double, String)>.generate(25, (index) {
@@ -56,7 +59,7 @@ class ShipSchemeBody extends StatelessWidget {
               ((maxX - minX) / 2 / frameRNumber) * 75 +
               ((maxX - minX) / frameRNumber) * 25 +
               (index) * width,
-          '${index + 100}'
+          '${index + 100}FR'
         );
       }),
       ...List<(double, String)>.generate(25, (index) {
@@ -66,7 +69,7 @@ class ShipSchemeBody extends StatelessWidget {
               ((maxX - minX) / 2 / frameRNumber) * 25 +
               ((maxX - minX) / frameRNumber) * 75 +
               (index) * width,
-          '${index + 125}'
+          '${index + 125}FR'
         );
       }),
     ];
@@ -84,6 +87,7 @@ class ShipSchemeBody extends StatelessWidget {
                 //   trackpadScrollCausesScale: false,
                 // child:
                 ShipScheme(
+                  caption: 'Profile view',
                   minX: minX,
                   maxX: maxX,
                   minY: minY,
@@ -103,9 +107,11 @@ class ShipSchemeBody extends StatelessWidget {
                   body: ('assets/img/side3.svg', -100.0, 100.0),
                   framesTheoretic: framesTheoretic,
                   framesReal: framesReal,
+                  trController: controller,
                 ),
                 // ),
                 ShipScheme(
+                  caption: 'Top view',
                   minX: minX,
                   maxX: maxX,
                   minY: -20.0,
@@ -125,6 +131,7 @@ class ShipSchemeBody extends StatelessWidget {
                   body: ('assets/img/top3.svg', -100.0, 100.0),
                   framesTheoretic: framesTheoretic,
                   framesReal: framesReal,
+                  trController: controller,
                 ),
               ],
             ),
