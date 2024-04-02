@@ -293,7 +293,6 @@ class _ShipSchemeState extends State<ShipScheme> {
 ///
 class _ShipSchemeTheoreticFrames extends StatelessWidget {
   final double _minX;
-  final double _maxX;
   final double _scaleX;
   final double _shiftX;
   final List<(double, double, String)> _frames;
@@ -311,7 +310,6 @@ class _ShipSchemeTheoreticFrames extends StatelessWidget {
     Color? color,
   })  : _shiftX = shiftX,
         _scaleX = scaleX,
-        _maxX = maxX,
         _minX = minX,
         _frames = frames,
         _thickness = thickness,
@@ -375,7 +373,6 @@ class _ShipSchemeTheoreticFrames extends StatelessWidget {
 class _ShipSchemeRealFrames extends StatelessWidget {
   final ChartAxis _axis;
   final double _minX;
-  final double _maxX;
   final double _scaleX;
   final double _shiftX;
   final int _minValue;
@@ -404,7 +401,6 @@ class _ShipSchemeRealFrames extends StatelessWidget {
         _thickness = thickness,
         _color = color,
         _minX = minX,
-        _maxX = maxX,
         _axis = axis;
 
   ///

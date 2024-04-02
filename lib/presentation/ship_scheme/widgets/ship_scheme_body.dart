@@ -22,74 +22,74 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
   late final List<(double, String)> _framesReal;
 
   /// Testing scale and shift sync
-  final _profileController = TransformationController();
-  final _topController = TransformationController();
-  double _scaleX = 1.0;
-  double _scaleY = 1.0;
-  double _shiftX = 0.0;
+  final _controller = TransformationController();
+  // final _topController = TransformationController();
+  // double _scaleX = 1.0;
+  // double _scaleY = 1.0;
+  // double _shiftX = 0.0;
 
-  ///
-  void _handleProfileTransform() {
-    final (scaleX, scaleY) = (
-      _profileController.value[0],
-      _profileController.value[5],
-    );
-    final shiftX = _profileController.value.getTranslation()[0];
-    setState(() {
-      if (scaleX != _scaleX) {
-        _topController.value.scale(scaleX / _scaleX);
-        _scaleY = _topController.value[5];
-        _scaleX = scaleX;
-      }
-      if (scaleY != _scaleY) {
-        _topController.value.scale(scaleY / _scaleY);
-        _scaleX = _topController.value[0];
-        _scaleY = scaleY;
-      }
-      if (shiftX != _shiftX) {
-        final oldShift = _topController.value.getTranslation();
-        _topController.value.setTranslationRaw(
-          shiftX,
-          oldShift[1],
-          oldShift[2],
-        );
-        _shiftX = shiftX;
-      }
-    });
-  }
+  // ///
+  // void _handleProfileTransform() {
+  //   final (scaleX, scaleY) = (
+  //     _profileController.value[0],
+  //     _profileController.value[5],
+  //   );
+  //   final shiftX = _profileController.value.getTranslation()[0];
+  //   setState(() {
+  //     if (scaleX != _scaleX) {
+  //       _topController.value.scale(scaleX / _scaleX);
+  //       _scaleY = _topController.value[5];
+  //       _scaleX = scaleX;
+  //     }
+  //     if (scaleY != _scaleY) {
+  //       _topController.value.scale(scaleY / _scaleY);
+  //       _scaleX = _topController.value[0];
+  //       _scaleY = scaleY;
+  //     }
+  //     if (shiftX != _shiftX) {
+  //       final oldShift = _topController.value.getTranslation();
+  //       _topController.value.setTranslationRaw(
+  //         shiftX,
+  //         oldShift[1],
+  //         oldShift[2],
+  //       );
+  //       _shiftX = shiftX;
+  //     }
+  //   });
+  // }
 
-  ///
-  void _handleTopTransform() {
-    final (scaleX, scaleY) = (
-      _topController.value[0],
-      _topController.value[5],
-    );
-    final shiftX = _topController.value.getTranslation()[0];
-    setState(() {
-      if (scaleX != _scaleX) {
-        _profileController.value.scale(scaleX / _scaleX);
-        _profileController.notifyListeners();
-        _scaleY = _profileController.value[5];
-        _scaleX = scaleX;
-      }
-      if (scaleY != _scaleY) {
-        _profileController.value.scale(scaleY / _scaleY);
-        _profileController.notifyListeners();
-        _scaleX = _profileController.value[0];
-        _scaleY = scaleY;
-      }
-      if (shiftX != _shiftX) {
-        final oldShift = _profileController.value.getTranslation();
-        _profileController.value.setTranslationRaw(
-          shiftX,
-          oldShift[1],
-          oldShift[2],
-        );
-        _profileController.notifyListeners();
-        _shiftX = shiftX;
-      }
-    });
-  }
+  // ///
+  // void _handleTopTransform() {
+  //   final (scaleX, scaleY) = (
+  //     _topController.value[0],
+  //     _topController.value[5],
+  //   );
+  //   final shiftX = _topController.value.getTranslation()[0];
+  //   setState(() {
+  //     if (scaleX != _scaleX) {
+  //       _profileController.value.scale(scaleX / _scaleX);
+  //       _profileController.notifyListeners();
+  //       _scaleY = _profileController.value[5];
+  //       _scaleX = scaleX;
+  //     }
+  //     if (scaleY != _scaleY) {
+  //       _profileController.value.scale(scaleY / _scaleY);
+  //       _profileController.notifyListeners();
+  //       _scaleX = _profileController.value[0];
+  //       _scaleY = scaleY;
+  //     }
+  //     if (shiftX != _shiftX) {
+  //       final oldShift = _profileController.value.getTranslation();
+  //       _profileController.value.setTranslationRaw(
+  //         shiftX,
+  //         oldShift[1],
+  //         oldShift[2],
+  //       );
+  //       _profileController.notifyListeners();
+  //       _shiftX = shiftX;
+  //     }
+  //   });
+  // }
 
   ///
   @override
@@ -198,7 +198,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                   body: ('assets/img/side3.svg', -100.0, 100.0),
                   framesTheoretic: _framesTheoretic,
                   framesReal: _framesReal,
-                  trController: _profileController,
+                  trController: _controller,
                 ),
                 ShipScheme(
                   // caption: 'Top view',
@@ -221,7 +221,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                   body: ('assets/img/top3.svg', -100.0, 100.0),
                   framesTheoretic: _framesTheoretic,
                   framesReal: _framesReal,
-                  trController: _profileController,
+                  trController: _controller,
                 ),
               ],
             ),
