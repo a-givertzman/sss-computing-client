@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/presentation/core/models/chart_axis.dart';
 
 ///
@@ -90,7 +89,7 @@ class AxisPainter extends CustomPainter {
         final offsetX = minorTick;
         final dx = _reversed
             ? -(offsetX + valueShift) * _valueScale
-            : (offsetX + _valueShift) * _valueScale;
+            : (offsetX + valueShift) * _valueScale;
         if (dx < 0.0 || dx > size.width) continue;
         canvas.drawLine(
           Offset(dx, startY),
