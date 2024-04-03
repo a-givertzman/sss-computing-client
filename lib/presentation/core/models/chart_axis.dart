@@ -12,11 +12,11 @@ class ChartAxis {
   const ChartAxis({
     this.valueInterval = 100.0,
     this.caption,
-    bool isCaptionVisible = true,
+    bool isCaptionVisible = false,
     this.captionSpaceReserved = 40.0,
-    this.isLabelsVisible = true,
+    this.isLabelsVisible = false,
     this.labelsSpaceReserved = 20.0,
-    this.isGridVisible = true,
+    this.isGridVisible = false,
   }) : _isCaptionVisible = isCaptionVisible;
 
   /// Returns true if [caption] is not null and [_isCaptionVisible] is true

@@ -10,11 +10,12 @@ class ShipSchemeAxis extends StatelessWidget {
   final double _minValue;
   final double _maxValue;
   final Color _color;
-  final bool _reversed;
-  final double _valueShift;
-  final double _valueScale;
+  final Color? _gridColor;
   final double _thickness;
   final TextStyle? _labelStyle;
+  final List<(double, String)>? _majorTicks;
+  final List<double>? _minorTicks;
+  final double Function(double) _transformValue;
 
   ///
   const ShipSchemeAxis({
@@ -23,45 +24,49 @@ class ShipSchemeAxis extends StatelessWidget {
     required double minValue,
     required double maxValue,
     required Color color,
-    bool reversed = false,
+    Color? gridColor,
     double crossAxisOffset = 0.0,
-    double valueShift = 0.0,
-    double valueScale = 1.0,
     double thickness = 1.0,
     TextStyle? labelStyle,
-  })  : _reversed = reversed,
+    List<(double, String)>? majorTicks,
+    List<double>? minorTicks,
+    required double Function(double) transformValue,
+  })  : _transformValue = transformValue,
+        _gridColor = gridColor,
         _axis = axis,
         _crossAxisOffset = crossAxisOffset,
         _maxValue = maxValue,
         _minValue = minValue,
-        _valueShift = valueShift,
-        _valueScale = valueScale,
         _color = color,
         _labelStyle = labelStyle,
-        _thickness = thickness;
+        _thickness = thickness,
+        _majorTicks = majorTicks,
+        _minorTicks = minorTicks;
 
   ///
   @override
   Widget build(BuildContext context) {
-    final (majorTicks, minorTicks) = _getAxisLabels(
-      _minValue,
-      _maxValue,
-      _axis,
-    );
     return CustomPaint(
       painter: AxisPainter(
         axis: _axis,
         crossAxisOffset: _crossAxisOffset,
-        reversed: _reversed,
         color: _color,
+        gridColor: _gridColor,
         thickness: _thickness,
         labelStyle: _labelStyle,
-        valueStart: _minValue,
-        valueEnd: _maxValue,
-        valueShift: _valueShift,
-        valueScale: _valueScale,
-        majorAxisTicks: majorTicks,
-        minorAxisTicks: minorTicks,
+        transformValue: _transformValue,
+        majorAxisTicks: _majorTicks ??
+            _getMajorTicks(
+              _minValue,
+              _maxValue,
+              _axis,
+            ),
+        minorAxisTicks: _minorTicks ??
+            _gitMinorTicks(
+              _minValue,
+              _maxValue,
+              _axis,
+            ),
       ),
     );
   }
@@ -75,26 +80,29 @@ class ShipSchemeAxis extends StatelessWidget {
   }
 
   ///
-  (List<(double, String)>, List<double>) _getAxisLabels(
+  List<(double, String)> _getMajorTicks(
     double minValue,
     double maxValue,
     ChartAxis axis,
   ) {
-    final majorOffset = minValue.abs() % axis.valueInterval;
-    final majorTicks = _getMultiples(
-      axis.valueInterval,
-      (maxValue - minValue),
-    )
+    final offset = minValue.abs() % axis.valueInterval;
+    return _getMultiples(axis.valueInterval, (maxValue - minValue))
         .map((multiple) => (
-              minValue + majorOffset + multiple,
-              '${(minValue + multiple + majorOffset).toInt()}${axis.caption}',
+              minValue + offset + multiple,
+              '${(minValue + multiple + offset).toInt()}${axis.caption}',
             ))
         .toList();
-    final minorOffset = minValue.abs() % (axis.valueInterval / 5.0);
-    final minorTicks = _getMultiples(
-      axis.valueInterval / 5.0,
-      (maxValue - minValue),
-    ).map((multiple) => minValue + minorOffset + multiple).toList();
-    return (majorTicks, minorTicks);
+  }
+
+  ///
+  List<double> _gitMinorTicks(
+    double minValue,
+    double maxValue,
+    ChartAxis axis,
+  ) {
+    final offset = minValue.abs() % (axis.valueInterval / 5.0);
+    return _getMultiples(axis.valueInterval / 5.0, (maxValue - minValue))
+        .map((multiple) => minValue + offset + multiple)
+        .toList();
   }
 }
