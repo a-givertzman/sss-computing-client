@@ -70,16 +70,6 @@ class _ShipSchemeState extends State<ShipScheme> {
   double _trScaleY = 1.0;
 
   ///
-  void _handleTransform() {
-    setState(() {
-      _trScaleX = _transformationController.value[0];
-      _trScaleY = _transformationController.value[5];
-      _trShiftX = _transformationController.value.getTranslation()[0];
-      _trShiftY = _transformationController.value.getTranslation()[1];
-    });
-  }
-
-  ///
   @override
   void initState() {
     _transformationController =
@@ -135,6 +125,7 @@ class _ShipSchemeState extends State<ShipScheme> {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
+              // Y-Axis
               Positioned(
                 top: 0.0,
                 bottom: widget._xAxis.labelsSpaceReserved,
@@ -156,6 +147,7 @@ class _ShipSchemeState extends State<ShipScheme> {
                   ),
                 ),
               ),
+              // X-Axis
               Positioned(
                 top: 0.0,
                 bottom: 0.0,
@@ -173,15 +165,18 @@ class _ShipSchemeState extends State<ShipScheme> {
                   ),
                 ),
               ),
+              // Area of interactive shift & scale
               Positioned(
+                top: 0.0,
+                right: 0.0,
+                left: _yAxisSpaceReserved,
+                bottom: _xAxisSpaceReserved,
                 child: InteractiveViewer(
                   transformationController: widget._transformationController,
-                  child: SizedBox(
-                    width: layoutRawWidth,
-                    height: layoutRawHeight,
+                  child: SizedBox.expand(
                     child: Container(
-                        // color: Colors.amber.withOpacity(0.1),
-                        ),
+                      color: Colors.amber.withOpacity(0.1),
+                    ),
                   ),
                 ),
               ),
@@ -190,5 +185,15 @@ class _ShipSchemeState extends State<ShipScheme> {
         );
       },
     );
+  }
+
+  ///
+  void _handleTransform() {
+    setState(() {
+      _trScaleX = _transformationController.value[0];
+      _trScaleY = _transformationController.value[5];
+      _trShiftX = _transformationController.value.getTranslation()[0];
+      _trShiftY = _transformationController.value.getTranslation()[1];
+    });
   }
 }
