@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/chart_axis.dart';
+import 'package:sss_computing_client/presentation/core/models/chart_axis.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme.dart';
 
 ///

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/axis_painter.dart';
-import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/chart_axis.dart';
+import 'package:sss_computing_client/presentation/core/models/chart_axis.dart';
 
 ///
 class ShipSchemeAxis extends StatelessWidget {

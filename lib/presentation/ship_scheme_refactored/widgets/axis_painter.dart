@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/chart_axis.dart';
+import 'package:sss_computing_client/presentation/core/models/chart_axis.dart';
 
 ///
 class AxisPainter extends CustomPainter {
