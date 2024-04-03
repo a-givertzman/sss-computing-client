@@ -16,8 +16,8 @@ class ShipSchemeBody extends StatefulWidget {
 
 ///
 class _ShipSchemeBodyState extends State<ShipSchemeBody> {
-  final _minX = -50.0;
-  final _maxX = 50.0;
+  final _minX = -100.0;
+  final _maxX = 100.0;
   final _xAxis = const ChartAxis(
     caption: 'm',
     labelsSpaceReserved: 25.0,
@@ -26,7 +26,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
     isGridVisible: true,
   );
   final _minY = 0.0;
-  final _maxY = 50.0;
+  final _maxY = 25.0;
   final _yAxis = const ChartAxis(
     caption: 'm',
     labelsSpaceReserved: 25.0,
