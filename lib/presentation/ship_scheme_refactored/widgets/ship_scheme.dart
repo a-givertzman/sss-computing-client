@@ -122,7 +122,7 @@ class _ShipSchemeState extends State<ShipScheme> {
           if (widget._yAxis.isLabelsVisible)
             Positioned(
               top: 0.0,
-              bottom: widget._xAxis.labelsSpaceReserved,
+              bottom: _xAxisSpaceReserved,
               left: 0.0,
               right: 0.0,
               child: RotatedBox(
@@ -144,7 +144,7 @@ class _ShipSchemeState extends State<ShipScheme> {
             Positioned(
               top: 0.0,
               bottom: 0.0,
-              left: widget._yAxis.labelsSpaceReserved,
+              left: _yAxisSpaceReserved,
               right: 0.0,
               child: ShipSchemeAxis(
                 axis: widget._xAxis,
@@ -161,8 +161,8 @@ class _ShipSchemeState extends State<ShipScheme> {
           if (widget._framesRealAxis.isLabelsVisible)
             Positioned(
               top: 0.0,
-              bottom: widget._xAxis.labelsSpaceReserved,
-              left: widget._yAxis.labelsSpaceReserved,
+              bottom: _xAxisSpaceReserved,
+              left: _yAxisSpaceReserved,
               right: 0.0,
               child: ShipSchemeAxis(
                 axis: widget._framesRealAxis,
