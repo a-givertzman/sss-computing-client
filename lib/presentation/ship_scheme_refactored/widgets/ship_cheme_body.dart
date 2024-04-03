@@ -17,8 +17,8 @@ class ShipSchemeBody extends StatefulWidget {
 class _ShipSchemeBodyState extends State<ShipSchemeBody> {
   final _minX = -50.0;
   final _maxX = 50.0;
-  final _minY = -50.0;
-  final _maxY = 50.0;
+  final _minY = 0.0;
+  final _maxY = 100.0;
   final _frameTNumber = 20;
   final _frameRNumber = 100;
   final _controller = TransformationController();

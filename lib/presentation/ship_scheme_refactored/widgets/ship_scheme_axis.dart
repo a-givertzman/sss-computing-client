@@ -56,6 +56,8 @@ class ShipSchemeAxis extends StatelessWidget {
         color: _color,
         thickness: _thickness,
         labelStyle: _labelStyle,
+        valueStart: _minValue,
+        valueEnd: _maxValue,
         valueShift: _valueShift,
         valueScale: _valueScale,
         majorAxisTicks: majorTicks,

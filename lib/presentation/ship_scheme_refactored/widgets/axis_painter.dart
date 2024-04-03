@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/presentation/core/models/chart_axis.dart';
 
 ///
@@ -8,6 +9,8 @@ class AxisPainter extends CustomPainter {
   final double _crossAxisOffset;
   final Color _color;
   final Color? _gridColor;
+  final double _valueStart;
+  final double _valueEnd;
   final double _valueShift;
   final double _valueScale;
   final double _thickness;
@@ -22,6 +25,8 @@ class AxisPainter extends CustomPainter {
     required double crossAxisOffset,
     required Color color,
     Color? gridColor,
+    required double valueStart,
+    required double valueEnd,
     double valueShift = 0.0,
     double valueScale = 1.0,
     double thickness = 1.0,
@@ -29,7 +34,9 @@ class AxisPainter extends CustomPainter {
     required List<(double, String)> majorAxisTicks,
     List<double>? minorAxisTicks,
     TextStyle? labelStyle,
-  })  : _reversed = reversed,
+  })  : _valueEnd = valueEnd,
+        _valueStart = valueStart,
+        _reversed = reversed,
         _crossAxisOffset = crossAxisOffset,
         _gridColor = gridColor,
         _majorAxisTicks = majorAxisTicks,
@@ -54,18 +61,17 @@ class AxisPainter extends CustomPainter {
       ..color = _gridColor ?? _color.withOpacity(0.25)
       ..strokeWidth = _thickness;
     final startY = size.height - _crossAxisOffset - _axis.labelsSpaceReserved;
-    final valueShift = _reversed
-        ? (size.width - _valueShift * _valueScale) / _valueScale
-        : _valueShift;
     canvas.drawLine(
       Offset(0.0, startY),
       Offset(size.width, startY),
       axisPaint,
     );
+    final valueShift =
+        _reversed ? -_valueShift - _valueEnd : _valueShift - _valueStart;
     for (final majorTick in _majorAxisTicks) {
       final (offsetX, text) = majorTick;
       final dx = _reversed
-          ? size.width - (offsetX + valueShift) * _valueScale
+          ? -(offsetX + valueShift) * _valueScale
           : (offsetX + valueShift) * _valueScale;
       final centerY = startY + _axis.labelsSpaceReserved / 2.0;
       if (dx < 0.0 || dx > size.width) continue;
@@ -83,8 +89,8 @@ class AxisPainter extends CustomPainter {
       for (final minorTick in _minorAxisTicks) {
         final offsetX = minorTick;
         final dx = _reversed
-            ? size.width - (offsetX + valueShift) * _valueScale
-            : (offsetX + valueShift) * _valueScale;
+            ? -(offsetX + valueShift) * _valueScale
+            : (offsetX + _valueShift) * _valueScale;
         if (dx < 0.0 || dx > size.width) continue;
         canvas.drawLine(
           Offset(dx, startY),

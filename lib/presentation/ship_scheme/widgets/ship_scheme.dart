@@ -65,7 +65,6 @@ class _ShipSchemeState extends State<ShipScheme> {
       _trScaleY = _trController.value[5];
       _trShiftX = _trController.value.getTranslation()[0];
       _trShiftY = _trController.value.getTranslation()[1];
-      // Log('$runtimeType').warning(widget._caption);
     });
   }
 

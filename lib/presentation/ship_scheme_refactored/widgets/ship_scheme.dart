@@ -138,7 +138,7 @@ class _ShipSchemeState extends State<ShipScheme> {
                     reversed: true,
                     minValue: _minY,
                     maxValue: _maxY,
-                    valueShift: _trShiftY / (scaleY * _trScaleY) - _minY,
+                    valueShift: _trShiftY / (scaleY * _trScaleY),
                     valueScale: scaleY * _trScaleY,
                     color: widget._axisColor ?? theme.colorScheme.primary,
                     labelStyle: theme.textTheme.labelSmall?.copyWith(
@@ -155,9 +155,10 @@ class _ShipSchemeState extends State<ShipScheme> {
                 right: 0.0,
                 child: ShipSchemeAxis(
                   axis: widget._xAxis,
+                  reversed: true,
                   minValue: _minX,
                   maxValue: _maxX,
-                  valueShift: _trShiftX / (scaleX * _trScaleX) - _minX,
+                  valueShift: _trShiftX / (scaleX * _trScaleX),
                   valueScale: scaleX * _trScaleX,
                   color: widget._axisColor ?? theme.colorScheme.primary,
                   labelStyle: theme.textTheme.labelSmall?.copyWith(
