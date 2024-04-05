@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:sss_computing_client/presentation/core/models/chart_axis.dart';
+import 'package:sss_computing_client/presentation/core/models/ship_scheme/chart_axis.dart';
+import 'package:sss_computing_client/presentation/core/models/ship_scheme/figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_axis.dart';
+import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_figures.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_grid.dart';
 
 class ShipScheme extends StatefulWidget {
+  // for tests TODO: remove
+  final String projection;
+  final List<Figure> figures;
+  //
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
   final ChartAxis _framesRealAxis;
   // final List<(double, double, String)> _framesTheoretic;
   final List<(double, int)> _framesReal;
-  final (String, double, double) _body;
+  // final (String, double, double) _body;
   final TransformationController? _transformationController;
   final bool _invertHorizontal;
   final bool _invertVertical;
@@ -25,10 +30,12 @@ class ShipScheme extends StatefulWidget {
   ///
   const ShipScheme({
     super.key,
+    required this.projection,
+    required this.figures,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
     required ChartAxis framesRealAxis,
-    required (String, double, double) body,
+    // required (String, double, double) body,
     required List<(double, double, String)> framesTheoretic,
     required List<(double, int)> framesReal,
     TransformationController? transformationController,
@@ -48,7 +55,7 @@ class ShipScheme extends StatefulWidget {
         _invertHorizontal = invertHorizontal,
         _framesRealAxis = framesRealAxis,
         _axisColor = axisColor,
-        _body = body,
+        // _body = body,
         _yAxis = yAxis,
         // _framesTheoretic = framesTheoretic,
         _framesReal = framesReal,
@@ -80,10 +87,10 @@ class _ShipSchemeState extends State<ShipScheme> {
   late final double _xAxisSpaceReserved;
   late final double _yAxisSpaceReserved;
   late final TransformationController _transformationController;
-  double _trShiftX = 0.0;
-  double _trShiftY = 0.0;
-  double _trScaleX = 1.0;
-  double _trScaleY = 1.0;
+  double _transformtaionShiftX = 0.0;
+  double _transformtaionShiftY = 0.0;
+  double _transformtaionScaleX = 1.0;
+  double _transformtaionScaleY = 1.0;
 
   ///
   @override
@@ -95,18 +102,19 @@ class _ShipSchemeState extends State<ShipScheme> {
     _maxX = widget._maxX ?? 0.0;
     _minY = widget._minY ?? 0.0;
     _maxY = widget._maxY ?? 0.0;
-    _contentWidth = _maxX - _minX;
-    _contentHeight = _maxY - _minY;
     _xAxisSpaceReserved =
         widget._xAxis.isLabelsVisible ? widget._xAxis.labelsSpaceReserved : 0.0;
     _yAxisSpaceReserved =
         widget._yAxis.isLabelsVisible ? widget._yAxis.labelsSpaceReserved : 0.0;
+    _contentWidth = _maxX - _minX;
+    _contentHeight = _maxY - _minY;
     _xMajorTicks = _getMajorTicks(_minX, _maxX, widget._xAxis);
     _xMinorTicks = _getMinorTicks(_minX, _maxX, widget._xAxis);
     _yMajorTicks = _getMajorTicks(_minY, _maxY, widget._yAxis);
     _yMinorTicks = _getMinorTicks(_minY, _maxY, widget._yAxis);
     _xAxisGrid = _xMajorTicks.map((tick) => tick.$1).toList();
     _yAxisGrid = _yMajorTicks.map((tick) => tick.$1).toList();
+
     super.initState();
   }
 
@@ -122,13 +130,13 @@ class _ShipSchemeState extends State<ShipScheme> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final (layoutWidth, layoutHeight) = (
-      _contentWidth * widget._scaleX + _yAxisSpaceReserved,
-      _contentHeight * widget._scaleY + _xAxisSpaceReserved,
-    );
+    final contentRawWidth = _contentWidth * widget._scaleX;
+    final contentRawHeight = _contentHeight * widget._scaleY;
+    final layoutRawWidth = contentRawWidth + _yAxisSpaceReserved;
+    final layoutRawHeight = contentRawHeight + _xAxisSpaceReserved;
     return SizedBox(
-      width: layoutWidth,
-      height: layoutHeight,
+      width: layoutRawWidth,
+      height: layoutRawHeight,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -170,7 +178,7 @@ class _ShipSchemeState extends State<ShipScheme> {
               ),
             ),
           // X-Axis
-          if (widget._xAxis.isLabelsVisible)
+          if (widget._xAxis.isLabelsVisible) ...[
             Positioned(
               bottom: 0.0,
               left: _yAxisSpaceReserved,
@@ -186,8 +194,21 @@ class _ShipSchemeState extends State<ShipScheme> {
                 minorTicks: _xMinorTicks,
               ),
             ),
+            // Center lines
+            Positioned(
+              top: 0.0,
+              right: 0.0,
+              left: _yAxisSpaceReserved,
+              bottom: _xAxisSpaceReserved,
+              child: ShipSchemeGrid(
+                color: widget._axisColor ?? theme.colorScheme.primary,
+                axisGrid: const [0.0],
+                transformValue: _transformX,
+              ),
+            ),
+          ],
           // X-Axis Grid
-          if (widget._xAxis.isGridVisible)
+          if (widget._xAxis.isGridVisible) ...[
             Positioned(
               top: 0.0,
               bottom: _xAxisSpaceReserved,
@@ -200,93 +221,79 @@ class _ShipSchemeState extends State<ShipScheme> {
                 axisGrid: _xAxisGrid,
               ),
             ),
+            Positioned(
+              top: 0.0,
+              right: 0.0,
+              left: _yAxisSpaceReserved,
+              bottom: _xAxisSpaceReserved,
+              child: RotatedBox(
+                quarterTurns: 1,
+                child: ShipSchemeGrid(
+                  color: widget._axisColor ?? theme.colorScheme.primary,
+                  axisGrid: const [0.0],
+                  transformValue: _transformY,
+                ),
+              ),
+            ),
+          ],
           // Layout content
           Positioned(
             top: 0.0,
             bottom: _xAxisSpaceReserved,
             left: _yAxisSpaceReserved,
             right: 0.0,
-            child: Stack(
-              children: [
-                Positioned(
-                  top: _transformY(15.0),
-                  bottom: layoutHeight - _transformY(0.0) - _xAxisSpaceReserved,
-                  left: _transformX(widget._body.$2),
-                  right: layoutWidth -
-                      _transformX(widget._body.$3) -
-                      _yAxisSpaceReserved,
-                  child: SvgPicture.asset(
-                    fit: BoxFit.fill,
-                    widget._body.$1,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
+            child: ClipRect(
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: ShipSchemeFigures(
+                      projection: widget.projection,
+                      transfromX: _transformX,
+                      transfromY: _transformY,
+                      thickness: 2.0,
+                      figures: widget.figures,
                     ),
                   ),
-                ),
-                // Center lines
-                Positioned.fill(
-                  child: ShipSchemeGrid(
-                    color: widget._axisColor ?? theme.colorScheme.primary,
-                    axisGrid: const [0.0],
-                    transformValue: _transformX,
-                  ),
-                ),
-                // Center lines
-                Positioned.fill(
-                  child: RotatedBox(
-                    quarterTurns: 1,
-                    child: ShipSchemeGrid(
-                      color: widget._axisColor ?? theme.colorScheme.primary,
-                      axisGrid: const [0.0],
-                      transformValue: _transformY,
-                    ),
-                  ),
-                ),
-                // Frames-Real
-                if (widget._framesRealAxis.isLabelsVisible)
-                  Positioned(
-                    top: _transformY(0.0).clamp(
-                      0.0,
-                      layoutHeight -
-                          _xAxisSpaceReserved -
-                          widget._framesRealAxis.labelsSpaceReserved,
-                    ),
-                    left: 0.0,
-                    right: 0.0,
-                    child: ClipRect(
-                      child: ShipSchemeAxis(
-                        axis: widget._framesRealAxis,
-                        transformValue: _transformX,
-                        majorTicks: widget._framesReal.where((frame) {
-                          final (_, idx) = frame;
-                          return idx % widget._framesRealAxis.valueInterval ==
-                              0;
-                        }).map((frame) {
-                          final (offset, idx) = frame;
-                          return (
-                            offset,
-                            '$idx${widget._framesRealAxis.caption}'
-                          );
-                        }).toList(),
-                        minorTicks: widget._framesReal.where((frame) {
-                          final (_, idx) = frame;
-                          return idx % widget._framesRealAxis.valueInterval !=
-                              0;
-                        }).map((frame) {
-                          final (offset, _) = frame;
-                          return offset;
-                        }).toList(),
-                        color: widget._axisColor ?? theme.colorScheme.primary,
-                        labelStyle: theme.textTheme.labelSmall?.copyWith(
-                          color: widget._axisColor ?? theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
+          // Frames-Real
+          if (widget._framesRealAxis.isLabelsVisible)
+            Positioned(
+              top: _transformY(0.0).clamp(
+                0.0,
+                layoutRawHeight -
+                    _xAxisSpaceReserved -
+                    widget._framesRealAxis.labelsSpaceReserved,
+              ),
+              left: _xAxisSpaceReserved,
+              right: 0.0,
+              child: ClipRect(
+                child: ShipSchemeAxis(
+                  axis: widget._framesRealAxis,
+                  transformValue: _transformX,
+                  majorTicks: widget._framesReal.where((frame) {
+                    final (_, idx) = frame;
+                    return idx % widget._framesRealAxis.valueInterval == 0;
+                  }).map((frame) {
+                    final (offset, idx) = frame;
+                    return (offset, '$idx${widget._framesRealAxis.caption}');
+                  }).toList(),
+                  minorTicks: widget._framesReal.where((frame) {
+                    final (_, idx) = frame;
+                    return idx % widget._framesRealAxis.valueInterval != 0;
+                  }).map((frame) {
+                    final (offset, _) = frame;
+                    return offset;
+                  }).toList(),
+                  color: widget._axisColor ?? theme.colorScheme.primary,
+                  labelStyle: theme.textTheme.labelSmall?.copyWith(
+                    color: widget._axisColor ?? theme.colorScheme.primary,
+                  ),
+                ),
+              ),
+            ),
           // Area of interactive shift & scale
           Positioned(
             top: 0.0,
@@ -296,8 +303,8 @@ class _ShipSchemeState extends State<ShipScheme> {
             child: InteractiveViewer(
               transformationController: widget._transformationController,
               child: SizedBox(
-                width: layoutWidth - _yAxisSpaceReserved,
-                height: layoutHeight - _xAxisSpaceReserved,
+                width: layoutRawWidth - _yAxisSpaceReserved,
+                height: layoutRawHeight - _xAxisSpaceReserved,
               ),
             ),
           ),
@@ -309,17 +316,19 @@ class _ShipSchemeState extends State<ShipScheme> {
   ///
   void _handleTransform() {
     setState(() {
-      _trScaleX = _transformationController.value[0];
-      _trScaleY = _transformationController.value[5];
-      _trShiftX = _transformationController.value.getTranslation()[0];
-      _trShiftY = _transformationController.value.getTranslation()[1];
+      _transformtaionScaleX = _transformationController.value[0];
+      _transformtaionScaleY = _transformationController.value[5];
+      _transformtaionShiftX =
+          _transformationController.value.getTranslation()[0];
+      _transformtaionShiftY =
+          _transformationController.value.getTranslation()[1];
     });
   }
 
-  ///
+  /// get x raw offset from left
   double _transformX(double value) {
-    final scale = _trScaleX * widget._scaleX;
-    final shift = _trShiftX / scale;
+    final scale = _transformtaionScaleX * widget._scaleX;
+    final shift = _transformtaionShiftX / scale;
     final actualShift =
         widget._invertHorizontal ? -shift - _maxX : shift - _minX;
     return widget._invertHorizontal
@@ -327,10 +336,10 @@ class _ShipSchemeState extends State<ShipScheme> {
         : (value + actualShift) * scale;
   }
 
-  ///
+  /// get y raw offset from top
   double _transformY(double value) {
-    final scale = _trScaleY * widget._scaleY;
-    final shift = _trShiftY / scale;
+    final scale = _transformtaionScaleY * widget._scaleY;
+    final shift = _transformtaionShiftY / scale;
     final actualShift = widget._invertVertical ? -shift - _maxY : shift - _minY;
     return widget._invertVertical
         ? -(value + actualShift) * scale
