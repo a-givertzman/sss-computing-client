@@ -1,7 +1,7 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/presentation/core/models/ship_scheme/chart_axis.dart';
+import 'package:sss_computing_client/presentation/core/models/ship_scheme/figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/figures_test.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme.dart';
 
@@ -26,10 +26,17 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
     valueInterval: 25.0,
     isGridVisible: true,
   );
-  final _minYSide = 0.0;
-  final _maxYSide = 25.0;
-  final _minYTop = -15.0;
-  final _maxYTop = 15.0;
+  final _minZ = 0.0;
+  final _maxZ = 25.0;
+  final _zAxis = const ChartAxis(
+    caption: 'm',
+    labelsSpaceReserved: 25.0,
+    isLabelsVisible: true,
+    valueInterval: 25.0,
+    isGridVisible: true,
+  );
+  final _minY = -15.0;
+  final _maxY = 15.0;
   final _yAxis = const ChartAxis(
     caption: 'm',
     labelsSpaceReserved: 25.0,
@@ -42,6 +49,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
   final _controller = TransformationController();
   late final List<(double, double, String)> _framesTheoretic;
   late final List<(double, int)> _framesReal;
+  late final List<Figure> _figures;
 
   ///
   @override
@@ -104,55 +112,39 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
         );
       }),
     ];
+    _figures = const [
+      shipBody,
+      ...compartments,
+      ...tanks,
+    ];
     super.initState();
   }
 
   ///
   @override
   Widget build(BuildContext context) {
+    final padding = const Setting('padding').toDouble;
     return Center(
       child: Card(
         margin: EdgeInsets.zero,
         child: Padding(
           padding: EdgeInsets.all(const Setting('padding').toDouble),
           child: SizedBox(
-            width: 1000.0,
-            child: LayoutBuilder(builder: (_, constraints) {
-              final BoxConstraints(
-                maxWidth: width,
-                maxHeight: height,
-              ) = constraints;
-              final (scaleX, scaleY) = (
-                (width -
-                        (_yAxis.isLabelsVisible
-                            ? _yAxis.labelsSpaceReserved
-                            : 0.0)) /
-                    (_maxX - _minX + _xAxis.valueInterval),
-                (height -
-                        (_xAxis.isLabelsVisible
-                            ? _xAxis.labelsSpaceReserved * 2
-                            : 0.0)) /
-                    (_maxYSide -
-                        _minYSide +
-                        _maxYTop -
-                        _minYTop +
-                        _yAxis.valueInterval * 2),
-              );
-              final scale = min(scaleX, scaleY);
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ShipScheme(
-                    projection: 'xz',
+            width: 800,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: ShipScheme(
+                    projection: (FigureAxis.x, FigureAxis.z),
                     minX: _minX - _xAxis.valueInterval / 2.0,
                     maxX: _maxX + _xAxis.valueInterval / 2.0,
-                    scaleX: scale,
                     xAxis: _xAxis,
                     invertHorizontal: false,
-                    minY: _minYSide - _yAxis.valueInterval / 2.0,
-                    maxY: _maxYSide + _yAxis.valueInterval / 2.0,
-                    scaleY: scale,
-                    yAxis: _yAxis,
+                    minY: _minZ - _zAxis.valueInterval / 2.0,
+                    maxY: _maxZ + _zAxis.valueInterval / 2.0,
+                    yAxis: _zAxis,
                     invertVertical: true,
                     framesReal: _framesReal,
                     framesRealAxis: const ChartAxis(
@@ -163,23 +155,23 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                     ),
                     framesTheoretic: _framesTheoretic,
                     transformationController: _controller,
-                    // body: ('assets/img/side3.svg', -100.0, 100.0),
-                    figures: const [
-                      shipBody,
-                      ...compartments,
-                    ],
+                    figures: _figures,
                   ),
-                  ShipScheme(
-                    projection: 'xy',
+                ),
+                SizedBox(
+                  height: padding,
+                ),
+                Flexible(
+                  flex: 1,
+                  child: ShipScheme(
+                    projection: (FigureAxis.x, FigureAxis.y),
                     minX: _minX - _xAxis.valueInterval / 2.0,
                     maxX: _maxX + _xAxis.valueInterval / 2.0,
-                    scaleX: scale,
                     xAxis: _xAxis,
                     invertHorizontal: false,
-                    minY: _minYTop - _yAxis.valueInterval / 2.0,
-                    maxY: _maxYTop + _yAxis.valueInterval / 2.0,
-                    scaleY: scale,
-                    yAxis: _yAxis,
+                    minY: _minY - _yAxis.valueInterval / 2.0,
+                    maxY: _maxY + _yAxis.valueInterval / 2.0,
+                    yAxis: _zAxis,
                     invertVertical: false,
                     framesReal: _framesReal,
                     framesRealAxis: const ChartAxis(
@@ -190,15 +182,39 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                     ),
                     framesTheoretic: _framesTheoretic,
                     transformationController: _controller,
-                    // body: ('assets/img/side3.svg', -100.0, 100.0),
-                    figures: const [
-                      shipBody,
-                      ...compartments,
-                    ],
+                    figures: _figures,
                   ),
-                ],
-              );
-            }),
+                ),
+                SizedBox(
+                  height: padding,
+                ),
+                Flexible(
+                  flex: 1,
+                  child: ShipScheme(
+                    projection: (FigureAxis.y, FigureAxis.z),
+                    minX: _minY - _yAxis.valueInterval / 2.0,
+                    maxX: _maxY + _yAxis.valueInterval / 2.0,
+                    xAxis: _yAxis,
+                    invertHorizontal: false,
+                    minY: _minZ - _zAxis.valueInterval / 2.0,
+                    maxY: _maxZ + _zAxis.valueInterval / 2.0,
+                    yAxis: _zAxis,
+                    invertVertical: true,
+                    framesReal: _framesReal,
+                    framesRealAxis: const ChartAxis(
+                      caption: 'FR',
+                      labelsSpaceReserved: 25.0,
+                      isLabelsVisible: false,
+                      isGridVisible: false,
+                      valueInterval: 10.0,
+                    ),
+                    framesTheoretic: _framesTheoretic,
+                    transformationController: _controller,
+                    figures: _figures,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -4,26 +4,22 @@ import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets
 
 ///
 class ShipSchemeFigures extends StatelessWidget {
-  // for tests TODO: remove
-  final String projection;
-  //
+  final (FigureAxis, FigureAxis) _projection;
+  final Matrix4 _transform;
   final List<Figure> _figures;
   final double? _thickness;
-  final double Function(double)? _transfromX;
-  final double Function(double)? _transfromY;
 
   ///
   const ShipSchemeFigures({
     super.key,
-    required this.projection,
+    required (FigureAxis, FigureAxis) projection,
+    required Matrix4 transform,
     required List<Figure> figures,
     double? thickness,
-    double Function(double)? transfromX,
-    double Function(double)? transfromY,
-  })  : _figures = figures,
-        _thickness = thickness,
-        _transfromX = transfromX,
-        _transfromY = transfromY;
+  })  : _projection = projection,
+        _transform = transform,
+        _figures = figures,
+        _thickness = thickness;
 
   ///
   @override
@@ -32,11 +28,10 @@ class ShipSchemeFigures extends StatelessWidget {
       children: [
         ..._figures.map((figure) => Positioned.fill(
               child: ShipSchemeFigure(
-                projection: projection,
+                projection: _projection,
+                transform: _transform,
                 figure: figure,
                 thickness: _thickness,
-                transformX: _transfromX,
-                transformY: _transfromY,
               ),
             )),
       ],
