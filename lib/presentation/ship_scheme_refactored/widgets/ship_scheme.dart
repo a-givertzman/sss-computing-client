@@ -5,6 +5,7 @@ import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_figures.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_grid.dart';
 import 'package:sss_computing_client/widgets/core/fitted_builder_widget.dart';
+import 'package:vector_math/vector_math_64.dart';
 
 class ShipScheme extends StatefulWidget {
   final (FigureAxis, FigureAxis) _projection;
@@ -126,8 +127,9 @@ class _ShipSchemeState extends State<ShipScheme> {
       builder: (context, scaleX, scaleY) {
         final layoutWidth = _contentWidth * scaleX + yAxisSpaceReserved;
         final layoutHeight = _contentHeight * scaleY + xAxisSpaceReserved;
-        final xTransform = _getXTransform(scaleX);
-        final yTransform = _getYTransform(scaleY);
+        final transform = _getTransform(scaleX, scaleY);
+        final xTransform = _getXTransform(transform);
+        final yTransform = _getYTransform(transform);
         return SizedBox(
           width: layoutWidth,
           height: layoutHeight,
@@ -298,34 +300,23 @@ class _ShipSchemeState extends State<ShipScheme> {
   }
 
   ///
-  double Function(double) _getXTransform(scale) {
-    return (value) => _transformX(value, scale);
+  double Function(double) _getXTransform(Matrix4 transform) {
+    return (value) => _transformX(value, transform);
   }
 
   ///
-  double Function(double) _getYTransform(scale) {
-    return (value) => _transformY(value, scale);
+  double Function(double) _getYTransform(Matrix4 transform) {
+    return (value) => _transformY(value, transform);
   }
 
   /// get x raw offset from left
-  double _transformX(double value, double scale) {
-    final transformScale = _transformtaionScaleX * scale;
-    final shift = _transformtaionShiftX / transformScale;
-    final actualShift =
-        widget._invertHorizontal ? -shift - _maxX : shift - _minX;
-    return widget._invertHorizontal
-        ? -(value + actualShift) * transformScale
-        : (value + actualShift) * transformScale;
+  double _transformX(double value, Matrix4 transform) {
+    return transform.transform3(Vector3(value, 0.0, 0.0)).x;
   }
 
   /// get y raw offset from top
-  double _transformY(double value, double scale) {
-    final transformScale = _transformtaionScaleY * scale;
-    final shift = _transformtaionShiftY / transformScale;
-    final actualShift = widget._invertVertical ? -shift - _maxY : shift - _minY;
-    return widget._invertVertical
-        ? -(value + actualShift) * transformScale
-        : (value + actualShift) * transformScale;
+  double _transformY(double value, Matrix4 transform) {
+    return transform.transform3(Vector3(0.0, value, 0.0)).y;
   }
 
   /// get transform matrix
