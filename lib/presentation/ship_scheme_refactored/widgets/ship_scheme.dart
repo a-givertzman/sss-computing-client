@@ -120,17 +120,22 @@ class _ShipSchemeState extends State<ShipScheme> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final padding = const Setting('padding').toDouble;
-    final xAxisSpaceReserved =
+    final horizontalContentPadding =
         widget._xAxis.isLabelsVisible ? widget._xAxis.labelsSpaceReserved : 0.0;
-    final yAxisSpaceReserved =
+    final verticalContentPadding =
         widget._yAxis.isLabelsVisible ? widget._yAxis.labelsSpaceReserved : 0.0;
     return FittedBuilderWidget(
       size: Size(_contentWidth, _contentHeight),
-      offset: Offset(yAxisSpaceReserved, xAxisSpaceReserved),
+      offset: Offset(
+        widget._yAxis.labelsSpaceReserved,
+        widget._xAxis.labelsSpaceReserved,
+      ),
       fit: BoxFit.contain,
       builder: (context, scaleX, scaleY) {
-        final layoutWidth = _contentWidth * scaleX + yAxisSpaceReserved;
-        final layoutHeight = _contentHeight * scaleY + xAxisSpaceReserved;
+        final layoutWidth =
+            _contentWidth * scaleX + widget._yAxis.labelsSpaceReserved;
+        final layoutHeight =
+            _contentHeight * scaleY + widget._xAxis.labelsSpaceReserved;
         final transform = _getTransform(scaleX, scaleY);
         final xTransform = _getXTransform(transform);
         final yTransform = _getYTransform(transform);
@@ -142,8 +147,8 @@ class _ShipSchemeState extends State<ShipScheme> {
             children: [
               // Border
               Positioned(
-                left: yAxisSpaceReserved,
-                bottom: xAxisSpaceReserved,
+                left: verticalContentPadding,
+                bottom: horizontalContentPadding,
                 top: 0.0,
                 right: 0.0,
                 child: DecoratedBox(
@@ -170,7 +175,7 @@ class _ShipSchemeState extends State<ShipScheme> {
               if (widget._yAxis.isLabelsVisible)
                 Positioned(
                   top: 0.0,
-                  bottom: xAxisSpaceReserved,
+                  bottom: horizontalContentPadding,
                   left: 0.0,
                   child: RotatedBox(
                     quarterTurns: 1,
@@ -190,8 +195,8 @@ class _ShipSchemeState extends State<ShipScheme> {
               if (widget._yAxis.isGridVisible)
                 Positioned(
                   top: 0.0,
-                  bottom: xAxisSpaceReserved,
-                  left: yAxisSpaceReserved,
+                  bottom: horizontalContentPadding,
+                  left: verticalContentPadding,
                   right: 0.0,
                   child: RotatedBox(
                     quarterTurns: 1,
@@ -207,7 +212,7 @@ class _ShipSchemeState extends State<ShipScheme> {
               if (widget._xAxis.isLabelsVisible) ...[
                 Positioned(
                   bottom: 0.0,
-                  left: yAxisSpaceReserved,
+                  left: verticalContentPadding,
                   right: 0.0,
                   child: ShipSchemeAxis(
                     axis: widget._xAxis,
@@ -225,8 +230,8 @@ class _ShipSchemeState extends State<ShipScheme> {
               if (widget._xAxis.isGridVisible) ...[
                 Positioned(
                   top: 0.0,
-                  bottom: xAxisSpaceReserved,
-                  left: yAxisSpaceReserved,
+                  bottom: horizontalContentPadding,
+                  left: verticalContentPadding,
                   right: 0.0,
                   child: ShipSchemeGrid(
                     transformValue: xTransform,
@@ -239,8 +244,8 @@ class _ShipSchemeState extends State<ShipScheme> {
               // Layout content
               Positioned(
                 top: 0.0,
-                bottom: xAxisSpaceReserved,
-                left: yAxisSpaceReserved,
+                bottom: horizontalContentPadding,
+                left: verticalContentPadding,
                 right: 0.0,
                 child: ClipRect(
                   child: Stack(
@@ -263,10 +268,10 @@ class _ShipSchemeState extends State<ShipScheme> {
                   top: yTransform(0.0).clamp(
                     0.0,
                     layoutHeight -
-                        xAxisSpaceReserved -
+                        horizontalContentPadding -
                         widget._framesRealAxis.labelsSpaceReserved,
                   ),
-                  left: xAxisSpaceReserved,
+                  left: horizontalContentPadding,
                   right: 0.0,
                   child: ClipRect(
                     child: ShipSchemeAxis(
@@ -300,13 +305,13 @@ class _ShipSchemeState extends State<ShipScheme> {
               Positioned(
                 top: 0.0,
                 right: 0.0,
-                left: yAxisSpaceReserved,
-                bottom: xAxisSpaceReserved,
+                left: verticalContentPadding,
+                bottom: horizontalContentPadding,
                 child: InteractiveViewer(
                   transformationController: widget._transformationController,
                   child: SizedBox(
-                    width: layoutWidth - yAxisSpaceReserved,
-                    height: layoutHeight - xAxisSpaceReserved,
+                    width: layoutWidth - verticalContentPadding,
+                    height: layoutHeight - horizontalContentPadding,
                   ),
                 ),
               ),
@@ -357,12 +362,18 @@ class _ShipSchemeState extends State<ShipScheme> {
     final actualScaleY = widget._invertVertical
         ? -_transformtaionScaleY * scaleY
         : _transformtaionScaleY * scaleY;
+    final extraShiftX = (widget._yAxis.isLabelsVisible
+        ? 0.0
+        : widget._yAxis.labelsSpaceReserved / 2.0);
+    final extraShiftY = (widget._xAxis.isLabelsVisible
+        ? 0.0
+        : widget._xAxis.labelsSpaceReserved / 2.0);
     final actualShiftX = widget._invertHorizontal
-        ? _transformtaionShiftX - _maxX * actualScaleX
-        : _transformtaionShiftX - _minX * actualScaleX;
+        ? _transformtaionShiftX - _maxX * actualScaleX + extraShiftX
+        : _transformtaionShiftX - _minX * actualScaleX + extraShiftX;
     final actualShiftY = widget._invertVertical
-        ? _transformtaionShiftY - _maxY * actualScaleY
-        : _transformtaionShiftY - _minY * actualScaleY;
+        ? _transformtaionShiftY - _maxY * actualScaleY + extraShiftY
+        : _transformtaionShiftY - _minY * actualScaleY + extraShiftY;
     return Matrix4(
       actualScaleX, 0.0, 0.0, 0.0, //
       0.0, actualScaleY, 0.0, 0.0, //

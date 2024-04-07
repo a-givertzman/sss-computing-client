@@ -151,19 +151,12 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: _options.contains(ShipSchemeOption.showAxes)
-                          ? _axesSpaceReserved
-                          : 0.0,
-                    ),
-                    child: ShipSchemeOptions(
-                      initialOptions: _options,
-                      onOptionsChanged: (newOptions) => setState(() {
-                        _options = newOptions;
-                      }),
-                    ),
+                  alignment: Alignment.centerRight,
+                  child: ShipSchemeOptions(
+                    initialOptions: _options,
+                    onOptionsChanged: (newOptions) => setState(() {
+                      _options = newOptions;
+                    }),
                   ),
                 ),
                 SizedBox(
