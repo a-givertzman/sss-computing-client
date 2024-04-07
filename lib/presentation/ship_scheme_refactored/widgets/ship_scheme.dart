@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/presentation/core/models/ship_scheme/chart_axis.dart';
 import 'package:sss_computing_client/presentation/core/models/ship_scheme/figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_axis.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_figures.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_grid.dart';
 import 'package:sss_computing_client/widgets/core/fitted_builder_widget.dart';
-import 'package:vector_math/vector_math_64.dart';
+import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 class ShipScheme extends StatefulWidget {
   final (FigureAxis, FigureAxis) _projection;
@@ -22,6 +23,7 @@ class ShipScheme extends StatefulWidget {
   final double? _maxX;
   final double? _minY;
   final double? _maxY;
+  final String? _caption;
   final Color? _axisColor;
 
   ///
@@ -57,6 +59,7 @@ class ShipScheme extends StatefulWidget {
         _minX = minX,
         _maxY = maxY,
         _minY = minY,
+        _caption = caption,
         _xAxis = xAxis;
 
   ///
@@ -116,6 +119,7 @@ class _ShipSchemeState extends State<ShipScheme> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final padding = const Setting('padding').toDouble;
     final xAxisSpaceReserved =
         widget._xAxis.isLabelsVisible ? widget._xAxis.labelsSpaceReserved : 0.0;
     final yAxisSpaceReserved =
@@ -136,6 +140,32 @@ class _ShipSchemeState extends State<ShipScheme> {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
+              // Border
+              Positioned(
+                left: yAxisSpaceReserved,
+                bottom: xAxisSpaceReserved,
+                top: 0.0,
+                right: 0.0,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    border: Border.fromBorderSide(
+                      BorderSide(
+                        color: widget._axisColor?.withOpacity(0.25) ??
+                            theme.colorScheme.primary.withOpacity(0.25),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // Caption
+              if (widget._caption != null)
+                Positioned(
+                  top: padding,
+                  right: padding,
+                  child: _ShipSchemeCaption(
+                    text: widget._caption!,
+                  ),
+                ),
               // Y-Axis
               if (widget._yAxis.isLabelsVisible)
                 Positioned(
@@ -374,5 +404,40 @@ class _ShipSchemeState extends State<ShipScheme> {
     return _getMultiples(axis.valueInterval / 5.0, (maxValue - minValue))
         .map((multiple) => minValue + offset + multiple)
         .toList();
+  }
+}
+
+///
+class _ShipSchemeCaption extends StatelessWidget {
+  final String _text;
+  final Color? _color;
+  final Color? _backgroundColor;
+
+  ///
+  const _ShipSchemeCaption({
+    required String text,
+    Color? color,
+    Color? backgroundColor,
+  })  : _text = text,
+        _color = color,
+        _backgroundColor = backgroundColor;
+
+  ///
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textStyle = theme.textTheme.labelSmall?.copyWith(
+      color: _color ?? theme.colorScheme.primary,
+      fontWeight: FontWeight.bold,
+      height: 1.0,
+    );
+    return Chip(
+      label: Text(_text),
+      labelStyle: textStyle,
+      backgroundColor:
+          _backgroundColor ?? theme.colorScheme.primary.withOpacity(0.15),
+      padding: EdgeInsets.zero,
+      side: BorderSide.none,
+    );
   }
 }

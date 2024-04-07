@@ -172,6 +172,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                 Flexible(
                   flex: 1,
                   child: ShipScheme(
+                    caption: 'Side View',
                     projection: (FigureAxis.x, FigureAxis.z),
                     minX: _minX - xAxis.valueInterval / 2.0,
                     maxX: _maxX + xAxis.valueInterval / 2.0,
@@ -194,6 +195,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                 Flexible(
                   flex: 1,
                   child: ShipScheme(
+                    caption: 'Top View',
                     projection: (FigureAxis.x, FigureAxis.y),
                     minX: _minX - xAxis.valueInterval / 2.0,
                     maxX: _maxX + xAxis.valueInterval / 2.0,
@@ -216,6 +218,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                 Flexible(
                   flex: 1,
                   child: ShipScheme(
+                    caption: 'Front View',
                     projection: (FigureAxis.y, FigureAxis.z),
                     minX: _minY - yAxis.valueInterval / 2.0,
                     maxX: _maxY + yAxis.valueInterval / 2.0,
