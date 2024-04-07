@@ -4,6 +4,13 @@ import 'package:sss_computing_client/presentation/core/models/ship_scheme/chart_
 import 'package:sss_computing_client/presentation/core/models/ship_scheme/figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/figures_test.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme.dart';
+import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_options.dart';
+
+const Set<ShipSchemeOption> _initialOptions = {
+  ShipSchemeOption.showGrid,
+  ShipSchemeOption.showAxes,
+  ShipSchemeOption.showFramesReal,
+};
 
 ///
 class ShipSchemeBody extends StatefulWidget {
@@ -17,35 +24,16 @@ class ShipSchemeBody extends StatefulWidget {
 
 ///
 class _ShipSchemeBodyState extends State<ShipSchemeBody> {
-  final _minX = -100.0;
-  final _maxX = 100.0;
-  final _xAxis = const ChartAxis(
-    caption: 'm',
-    labelsSpaceReserved: 25.0,
-    isLabelsVisible: true,
-    valueInterval: 25.0,
-    isGridVisible: true,
-  );
-  final _minZ = 0.0;
-  final _maxZ = 25.0;
-  final _zAxis = const ChartAxis(
-    caption: 'm',
-    labelsSpaceReserved: 25.0,
-    isLabelsVisible: true,
-    valueInterval: 25.0,
-    isGridVisible: true,
-  );
-  final _minY = -15.0;
-  final _maxY = 15.0;
-  final _yAxis = const ChartAxis(
-    caption: 'm',
-    labelsSpaceReserved: 25.0,
-    isLabelsVisible: true,
-    valueInterval: 25.0,
-    isGridVisible: true,
-  );
-  final _frameTNumber = 20;
-  final _frameRNumber = 100;
+  var _options = _initialOptions;
+  static const _axesSpaceReserved = 25.0;
+  static const _minX = -100.0;
+  static const _maxX = 100.0;
+  static const _minZ = 0.0;
+  static const _maxZ = 25.0;
+  static const _minY = -15.0;
+  static const _maxY = 15.0;
+  static const _frameTNumber = 20;
+  static const _frameRNumber = 100;
   final _controller = TransformationController();
   late final List<(double, double, String)> _framesTheoretic;
   late final List<(double, int)> _framesReal;
@@ -58,7 +46,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
     _framesTheoretic = List<(double, double, String)>.generate(
       _frameTNumber,
       (index) {
-        final width = (_maxX - _minX) / _frameTNumber;
+        const width = (_maxX - _minX) / _frameTNumber;
         return (
           _minX + index * width,
           _minX + (index + 1) * width,
@@ -70,19 +58,19 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
     const framesRealIdxShift = -10;
     _framesReal = [
       ...List<(double, int)>.generate(25, (index) {
-        final width = (_maxX - _minX) / 2 / _frameRNumber;
+        const width = (_maxX - _minX) / 2 / _frameRNumber;
         // return (minX + index * width, '$index${index == 0 ? 'FR' : ''}');
         return (_minX + index * width, index + framesRealIdxShift);
       }),
       ...List<(double, int)>.generate(25, (index) {
-        final width = (_maxX - _minX) / _frameRNumber;
+        const width = (_maxX - _minX) / _frameRNumber;
         return (
           _minX + ((_maxX - _minX) / 2 / _frameRNumber) * 25 + (index) * width,
           index + 25 + framesRealIdxShift,
         );
       }),
       ...List<(double, int)>.generate(50, (index) {
-        final width = (_maxX - _minX) / 2 / _frameRNumber;
+        const width = (_maxX - _minX) / 2 / _frameRNumber;
         return (
           _minX +
               ((_maxX - _minX) / 2 / _frameRNumber) * 25 +
@@ -92,7 +80,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
         );
       }),
       ...List<(double, int)>.generate(25, (index) {
-        final width = (_maxX - _minX) / _frameRNumber;
+        const width = (_maxX - _minX) / _frameRNumber;
         return (
           _minX +
               ((_maxX - _minX) / 2 / _frameRNumber) * 75 +
@@ -102,7 +90,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
         );
       }),
       ...List<(double, int)>.generate(25, (index) {
-        final width = (_maxX - _minX) / 2 / _frameRNumber;
+        const width = (_maxX - _minX) / 2 / _frameRNumber;
         return (
           _minX +
               ((_maxX - _minX) / 2 / _frameRNumber) * 25 +
@@ -124,6 +112,33 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
   @override
   Widget build(BuildContext context) {
     final padding = const Setting('padding').toDouble;
+    final xAxis = ChartAxis(
+      caption: 'm',
+      labelsSpaceReserved: _axesSpaceReserved,
+      isLabelsVisible: _options.contains(ShipSchemeOption.showAxes),
+      valueInterval: 25.0,
+      isGridVisible: _options.contains(ShipSchemeOption.showGrid),
+    );
+    final yAxis = ChartAxis(
+      caption: 'm',
+      labelsSpaceReserved: _axesSpaceReserved,
+      isLabelsVisible: _options.contains(ShipSchemeOption.showAxes),
+      valueInterval: 25.0,
+      isGridVisible: _options.contains(ShipSchemeOption.showGrid),
+    );
+    final zAxis = ChartAxis(
+      caption: 'm',
+      labelsSpaceReserved: _axesSpaceReserved,
+      isLabelsVisible: _options.contains(ShipSchemeOption.showAxes),
+      valueInterval: 25.0,
+      isGridVisible: _options.contains(ShipSchemeOption.showGrid),
+    );
+    final framesRealAxis = ChartAxis(
+      caption: 'FR',
+      labelsSpaceReserved: _axesSpaceReserved,
+      isLabelsVisible: _options.contains(ShipSchemeOption.showFramesReal),
+      valueInterval: 10.0,
+    );
     return Center(
       child: Card(
         margin: EdgeInsets.zero,
@@ -133,26 +148,41 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
             width: 800,
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: _options.contains(ShipSchemeOption.showAxes)
+                          ? _axesSpaceReserved
+                          : 0.0,
+                    ),
+                    child: ShipSchemeOptions(
+                      initialOptions: _options,
+                      onOptionsChanged: (newOptions) => setState(() {
+                        _options = newOptions;
+                      }),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: padding * 2,
+                ),
                 Flexible(
                   flex: 1,
                   child: ShipScheme(
                     projection: (FigureAxis.x, FigureAxis.z),
-                    minX: _minX - _xAxis.valueInterval / 2.0,
-                    maxX: _maxX + _xAxis.valueInterval / 2.0,
-                    xAxis: _xAxis,
+                    minX: _minX - xAxis.valueInterval / 2.0,
+                    maxX: _maxX + xAxis.valueInterval / 2.0,
+                    xAxis: xAxis,
                     invertHorizontal: false,
-                    minY: _minZ - _zAxis.valueInterval / 2.0,
-                    maxY: _maxZ + _zAxis.valueInterval / 2.0,
-                    yAxis: _zAxis,
+                    minY: _minZ - zAxis.valueInterval / 2.0,
+                    maxY: _maxZ + zAxis.valueInterval / 2.0,
+                    yAxis: zAxis,
                     invertVertical: true,
                     framesReal: _framesReal,
-                    framesRealAxis: const ChartAxis(
-                      caption: 'FR',
-                      labelsSpaceReserved: 25.0,
-                      isLabelsVisible: true,
-                      valueInterval: 10.0,
-                    ),
+                    framesRealAxis: framesRealAxis,
                     framesTheoretic: _framesTheoretic,
                     transformationController: _controller,
                     figures: _figures,
@@ -165,21 +195,16 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                   flex: 1,
                   child: ShipScheme(
                     projection: (FigureAxis.x, FigureAxis.y),
-                    minX: _minX - _xAxis.valueInterval / 2.0,
-                    maxX: _maxX + _xAxis.valueInterval / 2.0,
-                    xAxis: _xAxis,
+                    minX: _minX - xAxis.valueInterval / 2.0,
+                    maxX: _maxX + xAxis.valueInterval / 2.0,
+                    xAxis: xAxis,
                     invertHorizontal: false,
-                    minY: _minY - _yAxis.valueInterval / 2.0,
-                    maxY: _maxY + _yAxis.valueInterval / 2.0,
-                    yAxis: _zAxis,
+                    minY: _minY - yAxis.valueInterval / 2.0,
+                    maxY: _maxY + yAxis.valueInterval / 2.0,
+                    yAxis: zAxis,
                     invertVertical: false,
                     framesReal: _framesReal,
-                    framesRealAxis: const ChartAxis(
-                      caption: 'FR',
-                      labelsSpaceReserved: 25.0,
-                      isLabelsVisible: true,
-                      valueInterval: 10.0,
-                    ),
+                    framesRealAxis: framesRealAxis,
                     framesTheoretic: _framesTheoretic,
                     transformationController: _controller,
                     figures: _figures,
@@ -192,13 +217,13 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                   flex: 1,
                   child: ShipScheme(
                     projection: (FigureAxis.y, FigureAxis.z),
-                    minX: _minY - _yAxis.valueInterval / 2.0,
-                    maxX: _maxY + _yAxis.valueInterval / 2.0,
-                    xAxis: _yAxis,
+                    minX: _minY - yAxis.valueInterval / 2.0,
+                    maxX: _maxY + yAxis.valueInterval / 2.0,
+                    xAxis: yAxis,
                     invertHorizontal: false,
-                    minY: _minZ - _zAxis.valueInterval / 2.0,
-                    maxY: _maxZ + _zAxis.valueInterval / 2.0,
-                    yAxis: _zAxis,
+                    minY: _minZ - zAxis.valueInterval / 2.0,
+                    maxY: _maxZ + zAxis.valueInterval / 2.0,
+                    yAxis: zAxis,
                     invertVertical: true,
                     framesReal: _framesReal,
                     framesRealAxis: const ChartAxis(
