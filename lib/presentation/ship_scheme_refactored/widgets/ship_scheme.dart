@@ -120,9 +120,9 @@ class _ShipSchemeState extends State<ShipScheme> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final padding = const Setting('padding').toDouble;
-    final horizontalContentPadding =
+    final bottomContentPadding =
         widget._xAxis.isLabelsVisible ? widget._xAxis.labelsSpaceReserved : 0.0;
-    final verticalContentPadding =
+    final leftContentPadding =
         widget._yAxis.isLabelsVisible ? widget._yAxis.labelsSpaceReserved : 0.0;
     return FittedBuilderWidget(
       size: Size(_contentWidth, _contentHeight),
@@ -147,8 +147,8 @@ class _ShipSchemeState extends State<ShipScheme> {
             children: [
               // Border
               Positioned(
-                left: verticalContentPadding,
-                bottom: horizontalContentPadding,
+                left: leftContentPadding,
+                bottom: bottomContentPadding,
                 top: 0.0,
                 right: 0.0,
                 child: DecoratedBox(
@@ -175,7 +175,7 @@ class _ShipSchemeState extends State<ShipScheme> {
               if (widget._yAxis.isLabelsVisible)
                 Positioned(
                   top: 0.0,
-                  bottom: horizontalContentPadding,
+                  bottom: bottomContentPadding,
                   left: 0.0,
                   child: RotatedBox(
                     quarterTurns: 1,
@@ -195,8 +195,8 @@ class _ShipSchemeState extends State<ShipScheme> {
               if (widget._yAxis.isGridVisible)
                 Positioned(
                   top: 0.0,
-                  bottom: horizontalContentPadding,
-                  left: verticalContentPadding,
+                  bottom: bottomContentPadding,
+                  left: leftContentPadding,
                   right: 0.0,
                   child: RotatedBox(
                     quarterTurns: 1,
@@ -212,7 +212,7 @@ class _ShipSchemeState extends State<ShipScheme> {
               if (widget._xAxis.isLabelsVisible) ...[
                 Positioned(
                   bottom: 0.0,
-                  left: verticalContentPadding,
+                  left: leftContentPadding,
                   right: 0.0,
                   child: ShipSchemeAxis(
                     axis: widget._xAxis,
@@ -230,8 +230,8 @@ class _ShipSchemeState extends State<ShipScheme> {
               if (widget._xAxis.isGridVisible) ...[
                 Positioned(
                   top: 0.0,
-                  bottom: horizontalContentPadding,
-                  left: verticalContentPadding,
+                  bottom: bottomContentPadding,
+                  left: leftContentPadding,
                   right: 0.0,
                   child: ShipSchemeGrid(
                     transformValue: xTransform,
@@ -244,8 +244,8 @@ class _ShipSchemeState extends State<ShipScheme> {
               // Layout content
               Positioned(
                 top: 0.0,
-                bottom: horizontalContentPadding,
-                left: verticalContentPadding,
+                bottom: bottomContentPadding,
+                left: leftContentPadding,
                 right: 0.0,
                 child: ClipRect(
                   child: Stack(
@@ -268,10 +268,10 @@ class _ShipSchemeState extends State<ShipScheme> {
                   top: yTransform(0.0).clamp(
                     0.0,
                     layoutHeight -
-                        horizontalContentPadding -
+                        bottomContentPadding -
                         widget._framesRealAxis.labelsSpaceReserved,
                   ),
-                  left: horizontalContentPadding,
+                  left: bottomContentPadding,
                   right: 0.0,
                   child: ClipRect(
                     child: ShipSchemeAxis(
@@ -305,13 +305,13 @@ class _ShipSchemeState extends State<ShipScheme> {
               Positioned(
                 top: 0.0,
                 right: 0.0,
-                left: verticalContentPadding,
-                bottom: horizontalContentPadding,
+                left: leftContentPadding,
+                bottom: bottomContentPadding,
                 child: InteractiveViewer(
                   transformationController: widget._transformationController,
                   child: SizedBox(
-                    width: layoutWidth - verticalContentPadding,
-                    height: layoutHeight - horizontalContentPadding,
+                    width: layoutWidth - leftContentPadding,
+                    height: layoutHeight - bottomContentPadding,
                   ),
                 ),
               ),
