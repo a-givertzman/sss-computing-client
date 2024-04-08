@@ -289,41 +289,47 @@ class _ShipSchemeState extends State<ShipScheme> {
               // Frames-Real
               if (widget._framesRealAxis.isLabelsVisible)
                 Positioned(
-                  top: yTransform(0.0).clamp(
-                    0.0,
+                  top: yTransform(-1.0).clamp(
+                    -1.0,
                     layoutHeight -
                         bottomContentPadding -
                         (widget._framesTheoreticAxis.isLabelsVisible
                             ? widget._framesTheoreticAxis.labelsSpaceReserved
                             : 0.0) -
-                        widget._framesRealAxis.labelsSpaceReserved,
+                        widget._framesRealAxis.labelsSpaceReserved +
+                        1.0,
                   ),
                   left: leftContentPadding,
                   right: 0.0,
                   child: ClipRect(
-                    child: ShipSchemeAxis(
-                      axis: widget._framesRealAxis,
-                      transformValue: xTransform,
-                      majorTicks: widget._framesReal.where((frame) {
-                        final (_, idx) = frame;
-                        return idx % widget._framesRealAxis.valueInterval == 0;
-                      }).map((frame) {
-                        final (offset, idx) = frame;
-                        return (
-                          offset,
-                          '$idx${widget._framesRealAxis.caption}'
-                        );
-                      }).toList(),
-                      minorTicks: widget._framesReal.where((frame) {
-                        final (_, idx) = frame;
-                        return idx % widget._framesRealAxis.valueInterval != 0;
-                      }).map((frame) {
-                        final (offset, _) = frame;
-                        return offset;
-                      }).toList(),
-                      color: widget._axisColor ?? theme.colorScheme.primary,
-                      labelStyle: theme.textTheme.labelSmall?.copyWith(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 1.0),
+                      child: ShipSchemeAxis(
+                        axis: widget._framesRealAxis,
+                        transformValue: xTransform,
+                        majorTicks: widget._framesReal.where((frame) {
+                          final (_, idx) = frame;
+                          return idx % widget._framesRealAxis.valueInterval ==
+                              0;
+                        }).map((frame) {
+                          final (offset, idx) = frame;
+                          return (
+                            offset,
+                            '$idx${widget._framesRealAxis.caption}'
+                          );
+                        }).toList(),
+                        minorTicks: widget._framesReal.where((frame) {
+                          final (_, idx) = frame;
+                          return idx % widget._framesRealAxis.valueInterval !=
+                              0;
+                        }).map((frame) {
+                          final (offset, _) = frame;
+                          return offset;
+                        }).toList(),
                         color: widget._axisColor ?? theme.colorScheme.primary,
+                        labelStyle: theme.textTheme.labelSmall?.copyWith(
+                          color: widget._axisColor ?? theme.colorScheme.primary,
+                        ),
                       ),
                     ),
                   ),

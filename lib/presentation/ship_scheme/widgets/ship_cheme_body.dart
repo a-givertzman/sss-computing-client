@@ -149,7 +149,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
         child: Padding(
           padding: EdgeInsets.all(const Setting('padding').toDouble),
           child: SizedBox(
-            width: 1000,
+            width: 1200,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
