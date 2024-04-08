@@ -6,10 +6,11 @@ import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_options.dart';
 
+///
 const Set<ShipSchemeOption> _initialOptions = {
   ShipSchemeOption.showGrid,
   ShipSchemeOption.showAxes,
-  ShipSchemeOption.showFramesReal,
+  ShipSchemeOption.showFrames,
 };
 
 ///
@@ -35,7 +36,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
   static const _frameTNumber = 20;
   static const _frameRNumber = 100;
   final _controller = TransformationController();
-  late final List<(double, double, String)> _framesTheoretic;
+  late final List<(double, double, int)> _framesTheoretic;
   late final List<(double, int)> _framesReal;
   late final List<Figure> _figures;
 
@@ -43,15 +44,14 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
   @override
   // ignore: long-method
   void initState() {
-    _framesTheoretic = List<(double, double, String)>.generate(
+    _framesTheoretic = List<(double, double, int)>.generate(
       _frameTNumber,
       (index) {
         const width = (_maxX - _minX) / _frameTNumber;
         return (
           _minX + index * width,
           _minX + (index + 1) * width,
-          // '$index${index == 0 ? 'FT' : ''}'
-          '${index}FT'
+          index,
         );
       },
     );
@@ -59,7 +59,6 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
     _framesReal = [
       ...List<(double, int)>.generate(25, (index) {
         const width = (_maxX - _minX) / 2 / _frameRNumber;
-        // return (minX + index * width, '$index${index == 0 ? 'FR' : ''}');
         return (_minX + index * width, index + framesRealIdxShift);
       }),
       ...List<(double, int)>.generate(25, (index) {
@@ -134,10 +133,15 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
       isGridVisible: _options.contains(ShipSchemeOption.showGrid),
     );
     final framesRealAxis = ChartAxis(
-      caption: 'FR',
+      caption: 'F',
       labelsSpaceReserved: _axesSpaceReserved,
-      isLabelsVisible: _options.contains(ShipSchemeOption.showFramesReal),
+      isLabelsVisible: _options.contains(ShipSchemeOption.showFrames),
       valueInterval: 10.0,
+    );
+    final framesTheoreticAxis = ChartAxis(
+      caption: 'FT',
+      labelsSpaceReserved: _axesSpaceReserved / 2.0,
+      isLabelsVisible: _options.contains(ShipSchemeOption.showFrames),
     );
     return Center(
       child: Card(
@@ -145,7 +149,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
         child: Padding(
           padding: EdgeInsets.all(const Setting('padding').toDouble),
           child: SizedBox(
-            width: 800,
+            width: 1000,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -178,6 +182,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                     framesReal: _framesReal,
                     framesRealAxis: framesRealAxis,
                     framesTheoretic: _framesTheoretic,
+                    framesTheoreticAxis: framesTheoreticAxis,
                     transformationController: _controller,
                     figures: _figures,
                   ),
@@ -201,6 +206,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                     framesReal: _framesReal,
                     framesRealAxis: framesRealAxis,
                     framesTheoretic: _framesTheoretic,
+                    framesTheoreticAxis: framesTheoreticAxis,
                     transformationController: _controller,
                     figures: _figures,
                   ),
@@ -223,13 +229,12 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                     invertVertical: true,
                     framesReal: _framesReal,
                     framesRealAxis: const ChartAxis(
-                      caption: 'FR',
-                      labelsSpaceReserved: 25.0,
                       isLabelsVisible: false,
-                      isGridVisible: false,
-                      valueInterval: 10.0,
                     ),
                     framesTheoretic: _framesTheoretic,
+                    framesTheoreticAxis: const ChartAxis(
+                      isLabelsVisible: false,
+                    ),
                     transformationController: _controller,
                     figures: _figures,
                   ),

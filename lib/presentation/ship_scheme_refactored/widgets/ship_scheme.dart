@@ -4,6 +4,7 @@ import 'package:sss_computing_client/presentation/core/models/ship_scheme/chart_
 import 'package:sss_computing_client/presentation/core/models/ship_scheme/figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_axis.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_figures.dart';
+import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_frames_theoretic.dart';
 import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_scheme_grid.dart';
 import 'package:sss_computing_client/widgets/core/fitted_builder_widget.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
@@ -13,8 +14,9 @@ class ShipScheme extends StatefulWidget {
   final List<Figure> _figures;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
+  final ChartAxis _framesTheoreticAxis;
   final ChartAxis _framesRealAxis;
-  // final List<(double, double, String)> _framesTheoretic;
+  final List<(double, double, int)> _framesTheoretic;
   final List<(double, int)> _framesReal;
   final TransformationController? _transformationController;
   final bool _invertHorizontal;
@@ -33,8 +35,9 @@ class ShipScheme extends StatefulWidget {
     required List<Figure> figures,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
+    required ChartAxis framesTheoreticAxis,
     required ChartAxis framesRealAxis,
-    required List<(double, double, String)> framesTheoretic,
+    required List<(double, double, int)> framesTheoretic,
     required List<(double, int)> framesReal,
     TransformationController? transformationController,
     bool invertHorizontal = false,
@@ -49,10 +52,11 @@ class ShipScheme extends StatefulWidget {
         _projection = projection,
         _invertVertical = invertVertical,
         _invertHorizontal = invertHorizontal,
+        _framesTheoreticAxis = framesTheoreticAxis,
         _framesRealAxis = framesRealAxis,
         _axisColor = axisColor,
         _yAxis = yAxis,
-        // _framesTheoretic = framesTheoretic,
+        _framesTheoretic = framesTheoretic,
         _framesReal = framesReal,
         _transformationController = transformationController,
         _maxX = maxX,
@@ -262,6 +266,26 @@ class _ShipSchemeState extends State<ShipScheme> {
                   ),
                 ),
               ),
+              // Frames-Theoretic
+              if (widget._framesTheoreticAxis.isLabelsVisible)
+                Positioned(
+                  left: leftContentPadding,
+                  right: 0.0,
+                  top: layoutHeight -
+                      bottomContentPadding -
+                      widget._framesTheoreticAxis.labelsSpaceReserved,
+                  child: ClipRect(
+                    child: ShipSchemeFramesTheoretic(
+                      axis: widget._framesTheoreticAxis,
+                      frames: widget._framesTheoretic,
+                      transformValue: xTransform,
+                      color: widget._axisColor ?? theme.colorScheme.primary,
+                      labelStyle: theme.textTheme.labelSmall?.copyWith(
+                        color: widget._axisColor ?? theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
               // Frames-Real
               if (widget._framesRealAxis.isLabelsVisible)
                 Positioned(
@@ -269,9 +293,12 @@ class _ShipSchemeState extends State<ShipScheme> {
                     0.0,
                     layoutHeight -
                         bottomContentPadding -
+                        (widget._framesTheoreticAxis.isLabelsVisible
+                            ? widget._framesTheoreticAxis.labelsSpaceReserved
+                            : 0.0) -
                         widget._framesRealAxis.labelsSpaceReserved,
                   ),
-                  left: bottomContentPadding,
+                  left: leftContentPadding,
                   right: 0.0,
                   child: ClipRect(
                     child: ShipSchemeAxis(

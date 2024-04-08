@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 enum ShipSchemeOption {
   showAxes,
   showGrid,
-  showFramesReal,
+  showFrames,
 }
 
 ///
@@ -82,8 +82,8 @@ class _ShipSchemeOptionsState extends State<ShipSchemeOptions> {
           icon: Icon(Icons.grid_4x4),
         ),
         ButtonSegment<ShipSchemeOption>(
-          value: ShipSchemeOption.showFramesReal,
-          label: const Text('Real Frames'),
+          value: ShipSchemeOption.showFrames,
+          label: const Text('Frames'),
           icon: Transform.rotate(
             angle: pi / 2.0,
             child: const Icon(Icons.density_small),
