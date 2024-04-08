@@ -1,46 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:sss_computing_client/presentation/ship_scheme/widgets/chart_axis.dart';
-import 'package:sss_computing_client/presentation/ship_scheme/widgets/grid_line.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/presentation/core/models/ship_scheme/chart_axis.dart';
+import 'package:sss_computing_client/presentation/core/models/ship_scheme/figure.dart';
+import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_axis.dart';
+import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_figures.dart';
+import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_frames_theoretic.dart';
+import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_grid.dart';
+import 'package:sss_computing_client/widgets/core/fitted_builder_widget.dart';
+import 'package:vector_math/vector_math_64.dart' hide Colors;
 
-///
 class ShipScheme extends StatefulWidget {
+  final (FigureAxis, FigureAxis) _projection;
+  final List<Figure> _figures;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
-  final List<(double, double, String)> _framesTheoretic;
-  final List<(double, String)> _framesReal;
-  final (String, double, double) _body;
+  final ChartAxis _framesTheoreticAxis;
+  final ChartAxis _framesRealAxis;
+  final List<(double, double, int)> _framesTheoretic;
+  final List<(double, int)> _framesReal;
+  final TransformationController? _transformationController;
+  final bool _invertHorizontal;
+  final bool _invertVertical;
   final double? _minX;
   final double? _maxX;
   final double? _minY;
   final double? _maxY;
   final String? _caption;
-  final TransformationController? _trController;
+  final Color? _axisColor;
 
   ///
   const ShipScheme({
     super.key,
+    required (FigureAxis, FigureAxis) projection,
+    required List<Figure> figures,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
-    required (String, double, double) body,
-    required List<(double, double, String)> framesTheoretic,
-    required List<(double, String)> framesReal,
+    required ChartAxis framesTheoreticAxis,
+    required ChartAxis framesRealAxis,
+    required List<(double, double, int)> framesTheoretic,
+    required List<(double, int)> framesReal,
+    TransformationController? transformationController,
+    bool invertHorizontal = false,
+    bool invertVertical = false,
     double? minX,
     double? maxX,
     double? minY,
     double? maxY,
     String? caption,
-    TransformationController? trController,
-  })  : _caption = caption,
-        _trController = trController,
-        _body = body,
+    Color? axisColor,
+  })  : _figures = figures,
+        _projection = projection,
+        _invertVertical = invertVertical,
+        _invertHorizontal = invertHorizontal,
+        _framesTheoreticAxis = framesTheoreticAxis,
+        _framesRealAxis = framesRealAxis,
+        _axisColor = axisColor,
         _yAxis = yAxis,
         _framesTheoretic = framesTheoretic,
         _framesReal = framesReal,
+        _transformationController = transformationController,
         _maxX = maxX,
         _minX = minX,
         _maxY = maxY,
         _minY = minY,
+        _caption = caption,
         _xAxis = xAxis;
 
   ///
@@ -48,775 +71,411 @@ class ShipScheme extends StatefulWidget {
   State<ShipScheme> createState() => _ShipSchemeState();
 }
 
-///
 class _ShipSchemeState extends State<ShipScheme> {
-  late final TransformationController _trController;
-  late double _width;
-  late double _height;
-  double _trShiftX = 0.0;
-  double _trShiftY = 0.0;
-  double _trScaleX = 1.0;
-  double _trScaleY = 1.0;
-
-  ///
-  void _handleTransform() {
-    setState(() {
-      _trScaleX = _trController.value[0];
-      _trScaleY = _trController.value[5];
-      _trShiftX = _trController.value.getTranslation()[0];
-      _trShiftY = _trController.value.getTranslation()[1];
-    });
-  }
+  late final double _minX;
+  late final double _maxX;
+  late final List<(double, String)> _xMajorTicks;
+  late final List<double> _xMinorTicks;
+  late final List<double> _xAxisGrid;
+  late final double _minY;
+  late final double _maxY;
+  late final List<(double, String)> _yMajorTicks;
+  late final List<double> _yMinorTicks;
+  late final List<double> _yAxisGrid;
+  late final double _contentWidth;
+  late final double _contentHeight;
+  late final TransformationController _transformationController;
+  double _transformtaionShiftX = 0.0;
+  double _transformtaionShiftY = 0.0;
+  double _transformtaionScaleX = 1.0;
+  double _transformtaionScaleY = 1.0;
 
   ///
   @override
   void initState() {
-    _trController = widget._trController ?? TransformationController();
-    _trController.addListener(_handleTransform);
-    _width = (widget._maxX ?? 0.0) -
-        (widget._minX ?? 0.0) +
-        widget._xAxis.valueInterval;
-    _height = (widget._maxY ?? 0.0) -
-        (widget._minY ?? 0.0) +
-        widget._yAxis.valueInterval;
+    _transformationController =
+        widget._transformationController ?? TransformationController();
+    _transformationController.addListener(_handleTransform);
+    _minX = widget._minX ?? 0.0;
+    _maxX = widget._maxX ?? 0.0;
+    _minY = widget._minY ?? 0.0;
+    _maxY = widget._maxY ?? 0.0;
+    _contentWidth = _maxX - _minX;
+    _contentHeight = _maxY - _minY;
+    _xMajorTicks = _getMajorTicks(_minX, _maxX, widget._xAxis);
+    _xMinorTicks = _getMinorTicks(_minX, _maxX, widget._xAxis);
+    _yMajorTicks = _getMajorTicks(_minY, _maxY, widget._yAxis);
+    _yMinorTicks = _getMinorTicks(_minY, _maxY, widget._yAxis);
+    _xAxisGrid = _xMajorTicks.map((tick) => tick.$1).toList();
+    _yAxisGrid = _yMajorTicks.map((tick) => tick.$1).toList();
     super.initState();
   }
 
   ///
   @override
   void dispose() {
-    _trController.removeListener(_handleTransform);
-    _trController.dispose();
+    _transformationController.removeListener(_handleTransform);
+    _transformationController.dispose();
     super.dispose();
   }
 
   ///
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (_, constraints) {
-        final BoxConstraints(
-          :maxWidth,
-          :maxHeight,
-        ) = constraints;
-
-        var (scaleX, scaleY) = (
-          (maxWidth - widget._yAxis.labelsSpaceReserved) / _width,
-          (maxHeight - widget._xAxis.labelsSpaceReserved) / _height,
-        );
-        scaleX = scaleX < scaleY ? scaleX : scaleY;
-        scaleY = scaleY < scaleX ? scaleY : scaleX;
+    final theme = Theme.of(context);
+    final padding = const Setting('padding').toDouble;
+    final bottomContentPadding =
+        widget._xAxis.isLabelsVisible ? widget._xAxis.labelsSpaceReserved : 0.0;
+    final leftContentPadding =
+        widget._yAxis.isLabelsVisible ? widget._yAxis.labelsSpaceReserved : 0.0;
+    return FittedBuilderWidget(
+      size: Size(_contentWidth, _contentHeight),
+      offset: Offset(
+        widget._yAxis.labelsSpaceReserved,
+        widget._xAxis.labelsSpaceReserved,
+      ),
+      fit: BoxFit.contain,
+      builder: (context, scaleX, scaleY) {
+        final layoutWidth =
+            _contentWidth * scaleX + widget._yAxis.labelsSpaceReserved;
+        final layoutHeight =
+            _contentHeight * scaleY + widget._xAxis.labelsSpaceReserved;
+        final transform = _getTransform(scaleX, scaleY);
+        final xTransform = _getXTransform(transform);
+        final yTransform = _getYTransform(transform);
         return SizedBox(
-          width: _width * scaleX + widget._yAxis.labelsSpaceReserved,
-          height: _height * scaleY + widget._xAxis.labelsSpaceReserved,
+          width: layoutWidth,
+          height: layoutHeight,
           child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              // Grid
+              // Border
               Positioned(
-                left: widget._yAxis.labelsSpaceReserved,
-                bottom: widget._xAxis.labelsSpaceReserved,
-                right: 0.0,
+                left: leftContentPadding,
+                bottom: bottomContentPadding,
                 top: 0.0,
-                child: _ShipSchemeGrid(
-                  xAxis: widget._xAxis,
-                  scaleX: scaleX * _trScaleX,
-                  shiftX: _trShiftX / _trScaleX / scaleX,
-                  minX: (widget._minX ?? 0.0) - widget._xAxis.valueInterval / 2,
-                  maxX: (widget._maxX ?? 0.0) + widget._xAxis.valueInterval / 2,
-                  yAxis: widget._yAxis,
-                  scaleY: scaleY * _trScaleY,
-                  shiftY: _trShiftY / _trScaleY / scaleY,
-                  minY: (widget._minY ?? 0.0) - widget._yAxis.valueInterval / 2,
-                  maxY: (widget._maxY ?? 0.0) + widget._yAxis.valueInterval / 2,
-                  color:
-                      Theme.of(context).colorScheme.primary.withOpacity(0.25),
-                ),
-              ),
-              // Y-Axis
-              Positioned(
-                left: 0.0,
-                bottom: widget._xAxis.labelsSpaceReserved,
-                child: Container(
-                  width: widget._yAxis.labelsSpaceReserved,
-                  height: _height * scaleY,
-                  decoration: const BoxDecoration(
-                      // color: Colors.amber,
-                      ),
-                  child: _ShipSchemeYAxis(
-                    axis: widget._yAxis,
-                    scaleY: scaleY * _trScaleY,
-                    shiftY: _trShiftY / _trScaleY / scaleY,
-                    minY:
-                        (widget._minY ?? 0.0) - widget._yAxis.valueInterval / 2,
-                    maxY:
-                        (widget._maxY ?? 0.0) + widget._yAxis.valueInterval / 2,
-                  ),
-                ),
-              ),
-              // Layout content
-              Positioned(
-                left: widget._yAxis.labelsSpaceReserved,
-                bottom: widget._xAxis.labelsSpaceReserved,
-                child: Container(
-                  decoration: const BoxDecoration(
-                      // color: Colors.amber,
-                      ),
-                  child: InteractiveViewer(
-                    transformationController: _trController,
-                    child: SizedBox(
-                      width: _width * scaleX,
-                      height: _height * scaleY,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 0.0,
-                            bottom: 0.0,
-                            left: (widget._body.$2 -
-                                    (widget._minX ?? 0.0) +
-                                    widget._xAxis.valueInterval / 2.0) *
-                                scaleX,
-                            child: SvgPicture.asset(
-                              widget._body.$1,
-                              width:
-                                  (widget._body.$3 - widget._body.$2) * scaleX,
-                              colorFilter: const ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ),
-                        ],
+                right: 0.0,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    border: Border.fromBorderSide(
+                      BorderSide(
+                        color: widget._axisColor?.withOpacity(0.25) ??
+                            theme.colorScheme.primary.withOpacity(0.25),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              // Frames (real)
-              Positioned(
-                top: (-((widget._minY ?? 0.0) -
-                                widget._yAxis.valueInterval / 2) *
-                            _trScaleY *
-                            scaleY +
-                        _trShiftY)
-                    .clamp(
-                  0.0,
-                  _height * scaleY - 2 * widget._xAxis.labelsSpaceReserved,
-                ),
-                left: widget._yAxis.labelsSpaceReserved,
-                child: Container(
-                  width: _width * scaleX,
-                  height: 25.0,
-                  decoration: const BoxDecoration(
-                      // color: Colors.amber,
-                      ),
-                  child: _ShipSchemeRealFrames(
-                    frames: widget._framesReal,
-                    axis: const ChartAxis(
-                      labelsSpaceReserved: 25.0,
-                      valueInterval: 10.0,
-                    ),
-                    scaleX: scaleX * _trScaleX,
-                    shiftX: _trShiftX / _trScaleX / scaleX,
-                    minX:
-                        (widget._minX ?? 0.0) - widget._xAxis.valueInterval / 2,
-                    maxX:
-                        (widget._maxX ?? 0.0) + widget._xAxis.valueInterval / 2,
-                    minValue: 0,
-                    maxValue: widget._framesReal.length - 1,
-                  ),
-                ),
-              ),
-              // Frames (theoretic)
-              Positioned(
-                bottom: widget._xAxis.labelsSpaceReserved,
-                left: widget._yAxis.labelsSpaceReserved,
-                child: Container(
-                  width: _width * scaleX,
-                  height: widget._xAxis.labelsSpaceReserved,
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  decoration: const BoxDecoration(
-                      // color: Colors.lightGreen,
-                      ),
-                  child: _ShipSchemeTheoreticFrames(
-                    scaleX: scaleX * _trScaleX,
-                    shiftX: _trShiftX / _trScaleX / scaleX,
-                    minX:
-                        (widget._minX ?? 0.0) - widget._xAxis.valueInterval / 2,
-                    maxX:
-                        (widget._maxX ?? 0.0) + widget._xAxis.valueInterval / 2,
-                    frames: widget._framesTheoretic,
-                  ),
-                ),
-              ),
-              // X-Axis
-              Positioned(
-                bottom: 0.0,
-                left: widget._yAxis.labelsSpaceReserved,
-                child: Container(
-                  width: _width * scaleX,
-                  height: widget._xAxis.labelsSpaceReserved,
-                  decoration: const BoxDecoration(
-                      // color: Colors.amber,
-                      ),
-                  child: _ShipSchemeXAxis(
-                    axis: widget._xAxis,
-                    scaleX: scaleX * _trScaleX,
-                    shiftX: _trShiftX / _trScaleX / scaleX,
-                    minX:
-                        (widget._minX ?? 0.0) - widget._xAxis.valueInterval / 2,
-                    maxX:
-                        (widget._maxX ?? 0.0) + widget._xAxis.valueInterval / 2,
                   ),
                 ),
               ),
               // Caption
               if (widget._caption != null)
                 Positioned(
-                  top: 0.0,
-                  right: 0.0,
-                  child: Text(
-                    widget._caption!,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                  top: padding,
+                  right: padding,
+                  child: _ShipSchemeCaption(
+                    text: widget._caption!,
                   ),
                 ),
+              // Y-Axis
+              if (widget._yAxis.isLabelsVisible)
+                Positioned(
+                  top: 0.0,
+                  bottom: bottomContentPadding,
+                  left: 0.0,
+                  child: RotatedBox(
+                    quarterTurns: 1,
+                    child: ShipSchemeAxis(
+                      axis: widget._yAxis,
+                      transformValue: yTransform,
+                      color: widget._axisColor ?? theme.colorScheme.primary,
+                      labelStyle: theme.textTheme.labelSmall?.copyWith(
+                        color: widget._axisColor ?? theme.colorScheme.primary,
+                      ),
+                      majorTicks: _yMajorTicks,
+                      minorTicks: _yMinorTicks,
+                    ),
+                  ),
+                ),
+              // Y-Axis Grid
+              if (widget._yAxis.isGridVisible)
+                Positioned(
+                  top: 0.0,
+                  bottom: bottomContentPadding,
+                  left: leftContentPadding,
+                  right: 0.0,
+                  child: RotatedBox(
+                    quarterTurns: 1,
+                    child: ShipSchemeGrid(
+                      transformValue: yTransform,
+                      color: widget._axisColor?.withOpacity(0.25) ??
+                          theme.colorScheme.primary.withOpacity(0.25),
+                      axisGrid: _yAxisGrid,
+                    ),
+                  ),
+                ),
+              // X-Axis
+              if (widget._xAxis.isLabelsVisible) ...[
+                Positioned(
+                  bottom: 0.0,
+                  left: leftContentPadding,
+                  right: 0.0,
+                  child: ShipSchemeAxis(
+                    axis: widget._xAxis,
+                    transformValue: xTransform,
+                    color: widget._axisColor ?? theme.colorScheme.primary,
+                    labelStyle: theme.textTheme.labelSmall?.copyWith(
+                      color: widget._axisColor ?? theme.colorScheme.primary,
+                    ),
+                    majorTicks: _xMajorTicks,
+                    minorTicks: _xMinorTicks,
+                  ),
+                ),
+              ],
+              // X-Axis Grid
+              if (widget._xAxis.isGridVisible) ...[
+                Positioned(
+                  top: 0.0,
+                  bottom: bottomContentPadding,
+                  left: leftContentPadding,
+                  right: 0.0,
+                  child: ShipSchemeGrid(
+                    transformValue: xTransform,
+                    color: widget._axisColor?.withOpacity(0.25) ??
+                        theme.colorScheme.primary.withOpacity(0.25),
+                    axisGrid: _xAxisGrid,
+                  ),
+                ),
+              ],
+              // Layout content
+              Positioned(
+                top: 0.0,
+                bottom: bottomContentPadding,
+                left: leftContentPadding,
+                right: 0.0,
+                child: ClipRect(
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: ShipSchemeFigures(
+                          projection: widget._projection,
+                          transform: _getTransform(scaleX, scaleY),
+                          figures: widget._figures,
+                          thickness: 2.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Frames-Theoretic
+              if (widget._framesTheoreticAxis.isLabelsVisible)
+                Positioned(
+                  left: leftContentPadding,
+                  right: 0.0,
+                  top: layoutHeight -
+                      bottomContentPadding -
+                      widget._framesTheoreticAxis.labelsSpaceReserved,
+                  child: ClipRect(
+                    child: ShipSchemeFramesTheoretic(
+                      axis: widget._framesTheoreticAxis,
+                      frames: widget._framesTheoretic,
+                      transformValue: xTransform,
+                      color: widget._axisColor ?? theme.colorScheme.primary,
+                      labelStyle: theme.textTheme.labelSmall?.copyWith(
+                        color: widget._axisColor ?? theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
+              // Frames-Real
+              if (widget._framesRealAxis.isLabelsVisible)
+                Positioned(
+                  top: yTransform(0.0).clamp(
+                    0.0,
+                    layoutHeight -
+                        bottomContentPadding -
+                        (widget._framesTheoreticAxis.isLabelsVisible
+                            ? widget._framesTheoreticAxis.labelsSpaceReserved
+                            : 0.0) -
+                        widget._framesRealAxis.labelsSpaceReserved,
+                  ),
+                  left: leftContentPadding,
+                  right: 0.0,
+                  child: ClipRect(
+                    child: ShipSchemeAxis(
+                      axis: widget._framesRealAxis,
+                      transformValue: xTransform,
+                      majorTicks: widget._framesReal.where((frame) {
+                        final (_, idx) = frame;
+                        return idx % widget._framesRealAxis.valueInterval == 0;
+                      }).map((frame) {
+                        final (offset, idx) = frame;
+                        return (
+                          offset,
+                          '$idx${widget._framesRealAxis.caption}'
+                        );
+                      }).toList(),
+                      minorTicks: widget._framesReal.where((frame) {
+                        final (_, idx) = frame;
+                        return idx % widget._framesRealAxis.valueInterval != 0;
+                      }).map((frame) {
+                        final (offset, _) = frame;
+                        return offset;
+                      }).toList(),
+                      color: widget._axisColor ?? theme.colorScheme.primary,
+                      labelStyle: theme.textTheme.labelSmall?.copyWith(
+                        color: widget._axisColor ?? theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
+              // Area of interactive shift & scale
+              Positioned(
+                top: 0.0,
+                right: 0.0,
+                left: leftContentPadding,
+                bottom: bottomContentPadding,
+                child: InteractiveViewer(
+                  transformationController: widget._transformationController,
+                  child: SizedBox(
+                    width: layoutWidth - leftContentPadding,
+                    height: layoutHeight - bottomContentPadding,
+                  ),
+                ),
+              ),
             ],
           ),
         );
       },
     );
   }
-}
-
-///
-class _ShipSchemeTheoreticFrames extends StatelessWidget {
-  final double _minX;
-  final double _scaleX;
-  final double _shiftX;
-  final List<(double, double, String)> _frames;
-  final double _thickness;
-  final Color? _color;
 
   ///
-  const _ShipSchemeTheoreticFrames({
-    required double minX,
-    required double maxX,
-    required double scaleX,
-    required double shiftX,
-    required List<(double, double, String)> frames,
-    double thickness = 1.0,
-    Color? color,
-  })  : _shiftX = shiftX,
-        _scaleX = scaleX,
-        _minX = minX,
-        _frames = frames,
-        _thickness = thickness,
-        _color = color;
-
-  ///
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return LayoutBuilder(builder: (_, __) {
-      return Stack(
-        // clipBehavior: Clip.none,
-        children: [
-          ..._frames.map((frame) {
-            return Positioned(
-              left: (frame.$1 - _minX + _shiftX) * _scaleX - _thickness / 2.0,
-              top: 0.0,
-              bottom: 0.0,
-              child: GridLine(
-                direction: Direction.vertical,
-                thickness: _thickness,
-                color: _color ?? theme.colorScheme.primary,
-              ),
-            );
-          }),
-          ..._frames.map((frame) {
-            return Positioned(
-              left: (frame.$2 - _minX + _shiftX) * _scaleX - _thickness / 2.0,
-              top: 0.0,
-              bottom: 0.0,
-              child: GridLine(
-                direction: Direction.vertical,
-                thickness: _thickness,
-                color: _color ?? theme.colorScheme.primary,
-              ),
-            );
-          }),
-          ..._frames.map((frame) {
-            return Positioned(
-              left: (frame.$1 - _minX + _shiftX) * _scaleX,
-              top: 0.0,
-              bottom: 0.0,
-              child: SizedBox(
-                width: (frame.$2 - frame.$1) * _scaleX,
-                child: Text(
-                  frame.$3,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: _color ?? theme.colorScheme.primary,
-                  ),
-                ),
-              ),
-            );
-          }),
-        ],
-      );
+  void _handleTransform() {
+    setState(() {
+      _transformtaionScaleX = _transformationController.value[0];
+      _transformtaionScaleY = _transformationController.value[5];
+      _transformtaionShiftX =
+          _transformationController.value.getTranslation()[0];
+      _transformtaionShiftY =
+          _transformationController.value.getTranslation()[1];
     });
   }
-}
-
-class _ShipSchemeRealFrames extends StatelessWidget {
-  final ChartAxis _axis;
-  final double _minX;
-  final double _scaleX;
-  final double _shiftX;
-  final int _minValue;
-  final int _maxValue;
-  final List<(double, String)> _frames;
-  final double _thickness;
-  final Color? _color;
 
   ///
-  const _ShipSchemeRealFrames({
-    required ChartAxis axis,
-    required double minX,
-    required double maxX,
-    required double scaleX,
-    required double shiftX,
-    required int minValue,
-    required int maxValue,
-    required List<(double, String)> frames,
-    double thickness = 1.0,
-    Color? color,
-  })  : _shiftX = shiftX,
-        _scaleX = scaleX,
-        _frames = frames,
-        _maxValue = maxValue,
-        _minValue = minValue,
-        _thickness = thickness,
-        _color = color,
-        _minX = minX,
-        _axis = axis;
+  double Function(double) _getXTransform(Matrix4 transform) {
+    return (value) => _transformX(value, transform);
+  }
 
   ///
-  List<int> _getMultiples(double divisor, double offset) {
-    final size = (_maxValue - _minValue) - offset;
-    return List<int>.generate(
-      size ~/ divisor + 1,
-      (idx) => (idx * divisor).toInt(),
+  double Function(double) _getYTransform(Matrix4 transform) {
+    return (value) => _transformY(value, transform);
+  }
+
+  /// get x raw offset from left
+  double _transformX(double value, Matrix4 transform) {
+    return transform.transform3(Vector3(value, 0.0, 0.0)).x;
+  }
+
+  /// get y raw offset from top
+  double _transformY(double value, Matrix4 transform) {
+    return transform.transform3(Vector3(0.0, value, 0.0)).y;
+  }
+
+  /// get transform matrix
+  Matrix4 _getTransform(double scaleX, double scaleY) {
+    final actualScaleX = widget._invertHorizontal
+        ? -_transformtaionScaleX * scaleX
+        : _transformtaionScaleX * scaleX;
+    final actualScaleY = widget._invertVertical
+        ? -_transformtaionScaleY * scaleY
+        : _transformtaionScaleY * scaleY;
+    final extraShiftX = (widget._yAxis.isLabelsVisible
+        ? 0.0
+        : widget._yAxis.labelsSpaceReserved / 2.0);
+    final extraShiftY = (widget._xAxis.isLabelsVisible
+        ? 0.0
+        : widget._xAxis.labelsSpaceReserved / 2.0);
+    final actualShiftX = widget._invertHorizontal
+        ? _transformtaionShiftX - _maxX * actualScaleX + extraShiftX
+        : _transformtaionShiftX - _minX * actualScaleX + extraShiftX;
+    final actualShiftY = widget._invertVertical
+        ? _transformtaionShiftY - _maxY * actualScaleY + extraShiftY
+        : _transformtaionShiftY - _minY * actualScaleY + extraShiftY;
+    return Matrix4(
+      actualScaleX, 0.0, 0.0, 0.0, //
+      0.0, actualScaleY, 0.0, 0.0, //
+      0.0, 0.0, 1.0, 0.0, //
+      actualShiftX, actualShiftY, 0.0, 1.0, //
     );
   }
 
-  ///
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return LayoutBuilder(builder: (_, constraints) {
-      final BoxConstraints(maxHeight: height) = constraints;
-      return Stack(
-        // clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            child: GridLine(
-              direction: Direction.horizontal,
-              color: _color ?? theme.colorScheme.primary,
-            ),
-          ),
-          // Major axis ticks
-          ..._getMultiples(_axis.valueInterval, 0.0).map(
-            (value) => Positioned(
-              left: (_frames[value].$1 - _minX + _shiftX) * _scaleX -
-                  _thickness / 2.0,
-              top: 0.0,
-              bottom: height * 1 / 2,
-              child: GridLine(
-                direction: Direction.vertical,
-                color: _color ?? theme.colorScheme.primary,
-                thickness: _thickness,
-              ),
-            ),
-          ),
-          // Minor axis ticks
-          ..._getMultiples(1.0, 0.0).map(
-            (value) => Positioned(
-              left: (_frames[value].$1 - _minX + _shiftX) * _scaleX -
-                  _thickness / 2.0,
-              top: 0.0,
-              bottom: height * 3 / 4,
-              child: GridLine(
-                direction: Direction.vertical,
-                color: _color ?? theme.colorScheme.primary,
-                thickness: _thickness,
-              ),
-            ),
-          ),
-          // Value marks
-          ..._getMultiples(_axis.valueInterval, 0.0).map(
-            (value) => Positioned(
-              left: (_frames[value].$1 - _minX + _shiftX) * _scaleX -
-                  100.0 / 2 -
-                  _thickness / 2.0,
-              top: height * 1 / 2,
-              bottom: 0.0,
-              child: SizedBox(
-                width: 100.0,
-                height: height * 1 / 2,
-                child: Text(
-                  _frames[value].$2,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: (_color ?? theme.colorScheme.primary),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
-    });
-  }
-}
-
-///
-class _ShipSchemeGrid extends StatelessWidget {
-  final ChartAxis _xAxis;
-  final ChartAxis _yAxis;
-  final double _minX;
-  final double _maxX;
-  final double _minY;
-  final double _maxY;
-  final double _scaleX;
-  final double _shiftX;
-  final double _scaleY;
-  final double _shiftY;
-  final double _thickness;
-  final Color? _color;
-
-  ///
-  const _ShipSchemeGrid({
-    required ChartAxis xAxis,
-    required ChartAxis yAxis,
-    required double minX,
-    required double maxX,
-    required double minY,
-    required double maxY,
-    required double scaleX,
-    required double shiftX,
-    required double scaleY,
-    required double shiftY,
-    double thickness = 1.0,
-    Color? color,
-  })  : _shiftY = shiftY,
-        _scaleY = scaleY,
-        _maxY = maxY,
-        _minY = minY,
-        _yAxis = yAxis,
-        _shiftX = shiftX,
-        _scaleX = scaleX,
-        _thickness = thickness,
-        _color = color,
-        _maxX = maxX,
-        _minX = minX,
-        _xAxis = xAxis;
-
-  ///
-  List<double> _getMultiples(double divisor, double offset, double size) {
+  /// Returns multiples of [divisor] less than or equal to [max]
+  List<double> _getMultiples(double divisor, double max) {
     return List<double>.generate(
-      (size - offset) ~/ divisor + 1,
-      (idx) => idx * divisor,
+      max ~/ divisor + 1,
+      (idx) => (idx * divisor),
     );
   }
 
   ///
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return LayoutBuilder(builder: (_, constraints) {
-      // final BoxConstraints(maxHeight: height, max) = constraints;
-      return Stack(
-        children: [
-          // Vertical lines
-          ..._getMultiples(
-            _xAxis.valueInterval,
-            _xAxis.valueInterval,
-            _maxX - _minX,
-          ).map(
-            (value) => Positioned(
-              left: (value + _minX.abs() % _xAxis.valueInterval + _shiftX) *
-                      _scaleX -
-                  _thickness / 2.0,
-              top: 0.0,
-              bottom: 0.0,
-              child: GridLine(
-                direction: Direction.vertical,
-                color: _color ?? theme.colorScheme.primary,
-                thickness: _thickness,
-              ),
-            ),
-          ),
-          // Horizontal lines
-          ..._getMultiples(
-            _yAxis.valueInterval,
-            _yAxis.valueInterval,
-            _maxY - _minY,
-          ).map(
-            (value) => Positioned(
-              top: (value + _minY.abs() % _yAxis.valueInterval + _shiftY) *
-                      _scaleY -
-                  _thickness / 2.0,
-              right: 0.0,
-              left: 0.0,
-              child: GridLine(
-                direction: Direction.horizontal,
-                color: _color ?? theme.colorScheme.primary,
-                thickness: _thickness,
-              ),
-            ),
-          ),
-        ],
-      );
-    });
+  List<(double, String)> _getMajorTicks(
+    double minValue,
+    double maxValue,
+    ChartAxis axis,
+  ) {
+    final offset = minValue.abs() % axis.valueInterval;
+    return _getMultiples(axis.valueInterval, (maxValue - minValue))
+        .map((multiple) => (
+              minValue + offset + multiple,
+              '${(minValue + multiple + offset).toInt()}${axis.caption}',
+            ))
+        .toList();
+  }
+
+  ///
+  List<double> _getMinorTicks(
+    double minValue,
+    double maxValue,
+    ChartAxis axis,
+  ) {
+    final offset = minValue.abs() % (axis.valueInterval / 5.0);
+    return _getMultiples(axis.valueInterval / 5.0, (maxValue - minValue))
+        .map((multiple) => minValue + offset + multiple)
+        .toList();
   }
 }
 
 ///
-class _ShipSchemeXAxis extends StatelessWidget {
-  final ChartAxis _axis;
-  final double _minX;
-  final double _maxX;
-  final double _scaleX;
-  final double _shiftX;
-  final double _thickness;
+class _ShipSchemeCaption extends StatelessWidget {
+  final String _text;
   final Color? _color;
+  final Color? _backgroundColor;
 
   ///
-  const _ShipSchemeXAxis({
-    required ChartAxis axis,
-    required double minX,
-    required double maxX,
-    required double scaleX,
-    required double shiftX,
-    double thickness = 1.0,
+  const _ShipSchemeCaption({
+    required String text,
     Color? color,
-  })  : _shiftX = shiftX,
-        _scaleX = scaleX,
-        _thickness = thickness,
+    Color? backgroundColor,
+  })  : _text = text,
         _color = color,
-        _maxX = maxX,
-        _minX = minX,
-        _axis = axis;
-
-  ///
-  List<double> _getMultiples(double divisor, double offset) {
-    final size = (_maxX - _minX) - offset;
-    return List<double>.generate(
-      size ~/ divisor + 1,
-      (idx) => idx * divisor,
-    );
-  }
+        _backgroundColor = backgroundColor;
 
   ///
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return LayoutBuilder(builder: (_, constraints) {
-      final BoxConstraints(maxHeight: height) = constraints;
-      return Stack(
-        // clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            child: GridLine(
-              direction: Direction.horizontal,
-              color: _color ?? theme.colorScheme.primary,
-            ),
-          ),
-          // Major axis ticks
-          ..._getMultiples(_axis.valueInterval, _axis.valueInterval).map(
-            (value) => Positioned(
-              left: (value + _minX.abs() % _axis.valueInterval + _shiftX) *
-                      _scaleX -
-                  _thickness / 2.0,
-              top: 0.0,
-              bottom: height * 1 / 2,
-              child: GridLine(
-                direction: Direction.vertical,
-                color: _color ?? theme.colorScheme.primary,
-                thickness: _thickness,
-              ),
-            ),
-          ),
-          // Minor axis ticks
-          ..._getMultiples(_axis.valueInterval / 4.0, 0.0).map(
-            (value) => Positioned(
-              left: (value +
-                          _minX.abs() % (_axis.valueInterval / 4.0) +
-                          _shiftX) *
-                      _scaleX -
-                  _thickness / 2.0,
-              top: 0.0,
-              bottom: height * 3 / 4,
-              child: GridLine(
-                direction: Direction.vertical,
-                color: _color ?? theme.colorScheme.primary,
-                thickness: _thickness,
-              ),
-            ),
-          ),
-          // Value marks
-          ..._getMultiples(_axis.valueInterval, _axis.valueInterval)
-              .indexed
-              .map(
-                (value) => Positioned(
-                  left: (value.$2 +
-                              _minX.abs() % _axis.valueInterval -
-                              _axis.valueInterval / 2.0 +
-                              _shiftX) *
-                          _scaleX -
-                      _thickness / 2.0,
-                  top: height * 1 / 2,
-                  bottom: 0.0,
-                  child: SizedBox(
-                    width: _axis.valueInterval * _scaleX,
-                    height: height * 1 / 2,
-                    child: Text(
-                      // '${(value.$2 + _minX + _minX.abs() % _axis.valueInterval).toInt()}${value.$1 == 0 ? '${_axis.caption}' : ''}',
-                      '${(value.$2 + _minX + _minX.abs() % _axis.valueInterval).toInt()}${_axis.caption}',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: (_color ?? theme.colorScheme.primary),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-        ],
-      );
-    });
-  }
-}
-
-///
-class _ShipSchemeYAxis extends StatelessWidget {
-  final ChartAxis _axis;
-  final double _minY;
-  final double _maxY;
-  final double _scaleY;
-  final double _shiftY;
-  final double _thickness;
-  final Color? _color;
-
-  ///
-  const _ShipSchemeYAxis({
-    required ChartAxis axis,
-    required double minY,
-    required double maxY,
-    required double scaleY,
-    required double shiftY,
-    double thickness = 1.0,
-    Color? color,
-  })  : _shiftY = shiftY,
-        _scaleY = scaleY,
-        _thickness = thickness,
-        _color = color,
-        _maxY = maxY,
-        _minY = minY,
-        _axis = axis;
-
-  ///
-  List<double> _getMultiples(double divisor, double offset) {
-    final size = (_maxY - _minY) - offset;
-    return List<double>.generate(
-      size ~/ divisor + 1,
-      (idx) => idx * divisor,
+    final textStyle = theme.textTheme.labelSmall?.copyWith(
+      color: _color ?? theme.colorScheme.primary,
+      fontWeight: FontWeight.bold,
+      height: 1.0,
     );
-  }
-
-  ///
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return LayoutBuilder(builder: (_, constraints) {
-      final BoxConstraints(maxWidth: width) = constraints;
-      return Stack(
-        // clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            top: 0.0,
-            bottom: 0.0,
-            right: 0.0,
-            child: GridLine(
-              direction: Direction.vertical,
-              color: _color ?? theme.colorScheme.primary,
-            ),
-          ),
-          // Major axis ticks
-          ..._getMultiples(_axis.valueInterval, _axis.valueInterval).map(
-            (value) => Positioned(
-              top: (value + _minY.abs() % _axis.valueInterval + _shiftY) *
-                      _scaleY -
-                  _thickness / 2.0,
-              right: 0.0,
-              left: width * 1 / 2,
-              child: GridLine(
-                direction: Direction.horizontal,
-                color: _color ?? theme.colorScheme.primary,
-                thickness: _thickness,
-              ),
-            ),
-          ),
-          // Minor axis ticks
-          ..._getMultiples(_axis.valueInterval / 4.0, 0.0).map(
-            (value) => Positioned(
-              top: (value +
-                          _minY.abs() % (_axis.valueInterval / 4.0) +
-                          _shiftY) *
-                      _scaleY -
-                  _thickness / 2.0,
-              right: 0.0,
-              left: width * 3 / 4,
-              child: GridLine(
-                direction: Direction.horizontal,
-                color: _color ?? theme.colorScheme.primary,
-                thickness: _thickness,
-              ),
-            ),
-          ),
-          // Value marks
-          ..._getMultiples(_axis.valueInterval, _axis.valueInterval)
-              .indexed
-              .map(
-                (value) => Positioned(
-                  top: (value.$2 +
-                              _minY.abs() % _axis.valueInterval -
-                              _axis.valueInterval / 2.0 +
-                              _shiftY) *
-                          _scaleY -
-                      _thickness / 2.0,
-                  right: width * 1 / 2,
-                  left: 0.0,
-                  child: RotatedBox(
-                    quarterTurns: 3,
-                    child: SizedBox(
-                      width: _axis.valueInterval * _scaleY,
-                      height: width * 1 / 2,
-                      child: Text(
-                        // '${(value.$2 + _minY + _minY.abs() % _axis.valueInterval).toInt()}${value.$1 == 0 ? '${_axis.caption}' : ''}',
-                        '${(value.$2 + _minY + _minY.abs() % _axis.valueInterval).toInt()}${_axis.caption}',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: (_color ?? theme.colorScheme.primary),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-        ],
-      );
-    });
+    return Chip(
+      label: Text(_text),
+      labelStyle: textStyle,
+      backgroundColor:
+          _backgroundColor ?? theme.colorScheme.primary.withOpacity(0.15),
+      padding: EdgeInsets.zero,
+      side: BorderSide.none,
+    );
   }
 }

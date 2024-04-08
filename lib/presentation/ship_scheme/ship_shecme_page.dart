@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sss_computing_client/presentation/ship_scheme_refactored/widgets/ship_cheme_body.dart';
+import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_cheme_body.dart';
 
 ///
 class ShipSchemePage extends StatelessWidget {

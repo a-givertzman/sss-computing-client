@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
-import 'package:sss_computing_client/presentation/ship_scheme_refactored/ship_shecme_page.dart';
+import 'package:sss_computing_client/presentation/ship_scheme/ship_shecme_page.dart';
 import 'package:window_manager/window_manager.dart';
 
 class AppWidget extends StatefulWidget {
