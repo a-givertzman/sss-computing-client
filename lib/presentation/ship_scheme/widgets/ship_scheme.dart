@@ -289,16 +289,17 @@ class _ShipSchemeState extends State<ShipScheme> {
               // Frames-Real
               if (widget._framesRealAxis.isLabelsVisible)
                 Positioned(
-                  top: yTransform(-1.0).clamp(
-                    -1.0,
-                    layoutHeight -
-                        bottomContentPadding -
-                        (widget._framesTheoreticAxis.isLabelsVisible
-                            ? widget._framesTheoreticAxis.labelsSpaceReserved
-                            : 0.0) -
-                        widget._framesRealAxis.labelsSpaceReserved +
-                        1.0,
-                  ),
+                  top: yTransform(0.0).clamp(
+                        0.0,
+                        layoutHeight -
+                            bottomContentPadding -
+                            (widget._framesTheoreticAxis.isLabelsVisible
+                                ? widget
+                                    ._framesTheoreticAxis.labelsSpaceReserved
+                                : 0.0) -
+                            widget._framesRealAxis.labelsSpaceReserved,
+                      ) -
+                      1.0,
                   left: leftContentPadding,
                   right: 0.0,
                   child: ClipRect(
@@ -341,7 +342,7 @@ class _ShipSchemeState extends State<ShipScheme> {
                 left: leftContentPadding,
                 bottom: bottomContentPadding,
                 child: InteractiveViewer(
-                  transformationController: widget._transformationController,
+                  transformationController: _transformationController,
                   child: SizedBox(
                     width: layoutWidth - leftContentPadding,
                     height: layoutHeight - bottomContentPadding,
