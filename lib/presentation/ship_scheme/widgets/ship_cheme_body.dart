@@ -11,6 +11,7 @@ const Set<ShipSchemeOption> _initialOptions = {
   ShipSchemeOption.showGrid,
   ShipSchemeOption.showAxes,
   ShipSchemeOption.showFrames,
+  ShipSchemeOption.showWaterline,
 };
 
 ///
@@ -35,7 +36,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
   static const _maxY = 15.0;
   static const _frameTNumber = 20;
   static const _frameRNumber = 100;
-  final _controller = TransformationController();
+  // final _controller = TransformationController();
   late final List<(double, double, int)> _framesTheoretic;
   late final List<(double, int)> _framesReal;
   late final List<Figure> _figures;
@@ -143,6 +144,24 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
       labelsSpaceReserved: _axesSpaceReserved / 2.0,
       isLabelsVisible: _options.contains(ShipSchemeOption.showFrames),
     );
+    const waterlines = [
+      WaterineFigure(
+        begin: Offset(_minX * 2, 2.5),
+        end: Offset(_maxX * 2, 2.5),
+        axes: (FigureAxis.x, FigureAxis.z),
+        color: Colors.blue,
+      ),
+      WaterineFigure(
+        begin: Offset(_minY * 2, 2.5),
+        end: Offset(_maxY * 2, 2.5),
+        axes: (FigureAxis.y, FigureAxis.z),
+        color: Colors.blue,
+      ),
+    ];
+    final figures = [
+      ..._figures,
+      if (_options.contains(ShipSchemeOption.showWaterline)) ...waterlines,
+    ];
     return Center(
       child: Card(
         margin: EdgeInsets.zero,
@@ -155,7 +174,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Align(
-                  alignment: Alignment.centerRight,
+                  alignment: Alignment.center,
                   child: ShipSchemeOptions(
                     initialOptions: _options,
                     onOptionsChanged: (newOptions) => setState(() {
@@ -183,8 +202,8 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                     framesRealAxis: framesRealAxis,
                     framesTheoretic: _framesTheoretic,
                     framesTheoreticAxis: framesTheoreticAxis,
-                    transformationController: _controller,
-                    figures: _figures,
+                    // transformationController: _controller,
+                    figures: figures,
                   ),
                 ),
                 SizedBox(
@@ -207,8 +226,8 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                     framesRealAxis: framesRealAxis,
                     framesTheoretic: _framesTheoretic,
                     framesTheoreticAxis: framesTheoreticAxis,
-                    transformationController: _controller,
-                    figures: _figures,
+                    // transformationController: _controller,
+                    figures: figures,
                   ),
                 ),
                 SizedBox(
@@ -235,8 +254,8 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                     framesTheoreticAxis: const ChartAxis(
                       isLabelsVisible: false,
                     ),
-                    transformationController: _controller,
-                    figures: _figures,
+                    // transformationController: _controller,
+                    figures: figures,
                   ),
                 ),
               ],

@@ -6,6 +6,7 @@ enum ShipSchemeOption {
   showAxes,
   showGrid,
   showFrames,
+  showWaterline,
 }
 
 ///
@@ -88,6 +89,11 @@ class _ShipSchemeOptionsState extends State<ShipSchemeOptions> {
             angle: pi / 2.0,
             child: const Icon(Icons.density_small),
           ),
+        ),
+        const ButtonSegment<ShipSchemeOption>(
+          value: ShipSchemeOption.showWaterline,
+          label: Text('Waterline'),
+          icon: Icon(Icons.sailing_rounded),
         ),
       ],
       selected: selection,

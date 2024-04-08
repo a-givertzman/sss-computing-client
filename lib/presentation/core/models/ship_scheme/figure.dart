@@ -127,6 +127,69 @@ class BarellFigure implements Figure {
   }
 }
 
+class WaterineFigure implements Figure {
+  final Color? _color;
+  final Offset _begin;
+  final Offset _end;
+  final (FigureAxis, FigureAxis) _axes;
+
+  ///
+  const WaterineFigure({
+    Color? color,
+    double thickness = 1.0,
+    required Offset begin,
+    required Offset end,
+    required (FigureAxis, FigureAxis) axes,
+  })  : _color = color,
+        _begin = begin,
+        _end = end,
+        _axes = axes;
+
+  ///
+  @override
+  Color? get borderColor => _color;
+
+  ///
+  @override
+  Color? get fillColor => _color?.withOpacity(0.15);
+
+  ///
+  @override
+  Path getOrthoProjection(FigureAxis x, FigureAxis y) {
+    final height = _end.dx - _begin.dx;
+    if (_axes.$1 == x && _axes.$2 == y) {
+      // return Path()
+      //   ..moveTo(_begin.dx, _begin.dy)
+      //   ..lineTo(_end.dx, _end.dy);
+      return Path()
+        ..addPolygon(
+          [
+            _begin, _end, //
+            _end.translate(0.0, -height), _begin.translate(0.0, -height), //
+          ],
+          true,
+        );
+    }
+    if (_axes.$1 == y && _axes.$2 == x) {
+      // return Path()
+      //   ..moveTo(_begin.dy, _begin.dx)
+      //   ..lineTo(_end.dy, _end.dx);
+      final beginTranspose = Offset(_begin.dy, _begin.dx);
+      final endTranspose = Offset(_end.dy, _end.dx);
+      return Path()
+        ..addPolygon(
+          [
+            beginTranspose, endTranspose, //
+            endTranspose.translate(-height, 0.0),
+            beginTranspose.translate(-height, 0.0),
+          ],
+          true,
+        );
+    }
+    return Path();
+  }
+}
+
 ///
 class PathFigure implements Figure {
   final Color? _borderColor;
