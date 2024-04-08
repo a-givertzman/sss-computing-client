@@ -66,6 +66,36 @@ class RectFigure implements Figure {
   }
 }
 
+class BoundedFigure implements Figure {
+  final Figure _figure;
+  final Figure _bounder;
+
+  ///
+  const BoundedFigure({
+    required RectFigure figure,
+    required Figure bounder,
+  })  : _figure = figure,
+        _bounder = bounder;
+
+  ///
+  @override
+  Color? get borderColor => _figure.borderColor;
+
+  ///
+  @override
+  Color? get fillColor => _figure.fillColor;
+
+  ///
+  @override
+  Path getOrthoProjection(FigureAxis x, FigureAxis y) {
+    return Path.combine(
+      PathOperation.intersect,
+      _figure.getOrthoProjection(x, y),
+      _bounder.getOrthoProjection(x, y),
+    );
+  }
+}
+
 class BarellFigure implements Figure {
   final Color? _borderColor;
   final Color? _fillColor;

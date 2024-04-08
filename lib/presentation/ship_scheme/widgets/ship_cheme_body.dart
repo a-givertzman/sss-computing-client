@@ -10,8 +10,8 @@ import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_schem
 const Set<ShipSchemeOption> _initialOptions = {
   ShipSchemeOption.showGrid,
   ShipSchemeOption.showAxes,
-  ShipSchemeOption.showFrames,
-  ShipSchemeOption.showWaterline,
+  // ShipSchemeOption.showFrames,
+  // ShipSchemeOption.showWaterline,
 };
 
 ///
@@ -34,12 +34,15 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
   static const _maxZ = 25.0;
   static const _minY = -15.0;
   static const _maxY = 15.0;
-  static const _frameTNumber = 20;
-  static const _frameRNumber = 100;
   // final _controller = TransformationController();
+  late final List<Figure> _figures;
+  late final Figure _body;
   late final List<(double, double, int)> _framesTheoretic;
   late final List<(double, int)> _framesReal;
-  late final List<Figure> _figures;
+  static const _frameTNumber = 20;
+  static const _frameRNumber = 100;
+  static const _framesRealIdxShift = -10;
+  late int _currentRFrameIdx;
 
   ///
   @override
@@ -56,17 +59,16 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
         );
       },
     );
-    const framesRealIdxShift = -10;
     _framesReal = [
       ...List<(double, int)>.generate(25, (index) {
         const width = (_maxX - _minX) / 2 / _frameRNumber;
-        return (_minX + index * width, index + framesRealIdxShift);
+        return (_minX + index * width, index + _framesRealIdxShift);
       }),
       ...List<(double, int)>.generate(25, (index) {
         const width = (_maxX - _minX) / _frameRNumber;
         return (
           _minX + ((_maxX - _minX) / 2 / _frameRNumber) * 25 + (index) * width,
-          index + 25 + framesRealIdxShift,
+          index + 25 + _framesRealIdxShift,
         );
       }),
       ...List<(double, int)>.generate(50, (index) {
@@ -76,7 +78,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
               ((_maxX - _minX) / 2 / _frameRNumber) * 25 +
               ((_maxX - _minX) / _frameRNumber) * 25 +
               (index) * width,
-          index + 50 + framesRealIdxShift,
+          index + 50 + _framesRealIdxShift,
         );
       }),
       ...List<(double, int)>.generate(25, (index) {
@@ -86,7 +88,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
               ((_maxX - _minX) / 2 / _frameRNumber) * 75 +
               ((_maxX - _minX) / _frameRNumber) * 25 +
               (index) * width,
-          index + 100 + framesRealIdxShift,
+          index + 100 + _framesRealIdxShift,
         );
       }),
       ...List<(double, int)>.generate(25, (index) {
@@ -96,15 +98,17 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
               ((_maxX - _minX) / 2 / _frameRNumber) * 25 +
               ((_maxX - _minX) / _frameRNumber) * 75 +
               (index) * width,
-          index + 125 + framesRealIdxShift,
+          index + 125 + _framesRealIdxShift,
         );
       }),
     ];
-    _figures = const [
-      shipBody,
-      ...compartments,
-      ...tanks,
+    _currentRFrameIdx = (_framesReal.length / 2.0).ceil();
+    _figures = [
+      ...compartments.map(
+        (compartment) => BoundedFigure(figure: compartment, bounder: shipBody),
+      ),
     ];
+    _body = shipBody;
     super.initState();
   }
 
@@ -136,31 +140,32 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
     final framesRealAxis = ChartAxis(
       caption: 'F',
       labelsSpaceReserved: _axesSpaceReserved,
-      isLabelsVisible: _options.contains(ShipSchemeOption.showFrames),
+      isLabelsVisible: _options.contains(ShipSchemeOption.showRealFrames),
       valueInterval: 10.0,
     );
     final framesTheoreticAxis = ChartAxis(
       caption: 'FT',
       labelsSpaceReserved: _axesSpaceReserved / 2.0,
-      isLabelsVisible: _options.contains(ShipSchemeOption.showFrames),
+      isLabelsVisible: _options.contains(ShipSchemeOption.showTheoreticFrames),
     );
-    const waterlines = [
-      WaterineFigure(
-        begin: Offset(_minX * 2, 2.5),
-        end: Offset(_maxX * 2, 2.5),
-        axes: (FigureAxis.x, FigureAxis.z),
-        color: Colors.blue,
-      ),
-      WaterineFigure(
-        begin: Offset(_minY * 2, 2.5),
-        end: Offset(_maxY * 2, 2.5),
-        axes: (FigureAxis.y, FigureAxis.z),
-        color: Colors.blue,
-      ),
+    final waterlines = [
+      if (_options.contains(ShipSchemeOption.showWaterline)) ...{
+        const WaterineFigure(
+          begin: Offset(_minX * 2, 2.5),
+          end: Offset(_maxX * 2, 2.5),
+          axes: (FigureAxis.x, FigureAxis.z),
+          color: Colors.blue,
+        ),
+        const WaterineFigure(
+          begin: Offset(_minY * 3, 2.5),
+          end: Offset(_maxY * 3, 2.5),
+          axes: (FigureAxis.y, FigureAxis.z),
+          color: Colors.blue,
+        ),
+      },
     ];
     final figures = [
       ..._figures,
-      if (_options.contains(ShipSchemeOption.showWaterline)) ...waterlines,
     ];
     return Center(
       child: Card(
@@ -168,7 +173,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
         child: Padding(
           padding: EdgeInsets.all(const Setting('padding').toDouble),
           child: SizedBox(
-            width: 1200,
+            width: 1150,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -203,7 +208,11 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                     framesTheoretic: _framesTheoretic,
                     framesTheoreticAxis: framesTheoreticAxis,
                     // transformationController: _controller,
-                    figures: figures,
+                    shipBody: _body,
+                    figures: [
+                      ...figures,
+                      ...waterlines,
+                    ],
                   ),
                 ),
                 SizedBox(
@@ -227,7 +236,11 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                     framesTheoretic: _framesTheoretic,
                     framesTheoreticAxis: framesTheoreticAxis,
                     // transformationController: _controller,
-                    figures: figures,
+                    shipBody: _body,
+                    figures: [
+                      ...figures,
+                      ...waterlines,
+                    ],
                   ),
                 ),
                 SizedBox(
@@ -235,27 +248,107 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                 ),
                 Flexible(
                   flex: 1,
-                  child: ShipScheme(
-                    caption: 'Front View',
-                    projection: (FigureAxis.y, FigureAxis.z),
-                    minX: _minY - yAxis.valueInterval / 2.0,
-                    maxX: _maxY + yAxis.valueInterval / 2.0,
-                    xAxis: yAxis,
-                    invertHorizontal: false,
-                    minY: _minZ - zAxis.valueInterval / 2.0,
-                    maxY: _maxZ + zAxis.valueInterval / 2.0,
-                    yAxis: zAxis,
-                    invertVertical: true,
-                    framesReal: _framesReal,
-                    framesRealAxis: const ChartAxis(
-                      isLabelsVisible: false,
-                    ),
-                    framesTheoretic: _framesTheoretic,
-                    framesTheoreticAxis: const ChartAxis(
-                      isLabelsVisible: false,
-                    ),
-                    // transformationController: _controller,
-                    figures: figures,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ShipScheme(
+                        caption: 'Front View',
+                        projection: (FigureAxis.y, FigureAxis.z),
+                        minX: _minY - yAxis.valueInterval / 2.0,
+                        maxX: _maxY + yAxis.valueInterval / 2.0,
+                        xAxis: yAxis,
+                        invertHorizontal: false,
+                        minY: _minZ - zAxis.valueInterval / 2.0,
+                        maxY: _maxZ + zAxis.valueInterval / 2.0,
+                        yAxis: zAxis,
+                        invertVertical: true,
+                        framesReal: _framesReal,
+                        framesRealAxis: const ChartAxis(
+                          isLabelsVisible: false,
+                        ),
+                        framesTheoretic: _framesTheoretic,
+                        framesTheoreticAxis: const ChartAxis(
+                          isLabelsVisible: false,
+                        ),
+                        // transformationController: _controller,
+                        shipBody: _body,
+                        figures: [
+                          ...figures,
+                          ...waterlines,
+                        ],
+                      ),
+                      SizedBox(
+                        width: padding,
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ShipScheme(
+                            caption:
+                                '${_currentRFrameIdx + _framesRealIdxShift} Fr. FWD→AFT',
+                            projection: (FigureAxis.y, FigureAxis.z),
+                            minX: _minY - yAxis.valueInterval / 2.0,
+                            maxX: _maxY + yAxis.valueInterval / 2.0,
+                            xAxis: yAxis,
+                            invertHorizontal: false,
+                            minY: _minZ - zAxis.valueInterval / 2.0,
+                            maxY: _maxZ + zAxis.valueInterval / 2.0,
+                            yAxis: zAxis,
+                            invertVertical: true,
+                            framesReal: _framesReal,
+                            framesRealAxis: const ChartAxis(
+                              isLabelsVisible: false,
+                            ),
+                            framesTheoretic: _framesTheoretic,
+                            framesTheoreticAxis: const ChartAxis(
+                              isLabelsVisible: false,
+                            ),
+                            // transformationController: _controller,
+                            shipBody: _body,
+                            figures: [
+                              ...waterlines,
+                              ...figures.where((figure) {
+                                final dxCut = _framesReal[_currentRFrameIdx].$1;
+                                final bounds = figure
+                                    .getOrthoProjection(
+                                      FigureAxis.x,
+                                      FigureAxis.y,
+                                    )
+                                    .getBounds();
+                                return (dxCut > bounds.left &&
+                                    dxCut <= bounds.right);
+                              }),
+                            ],
+                          ),
+                          SizedBox(
+                            width: padding,
+                          ),
+                          RotatedBox(
+                            quarterTurns: -1,
+                            child: SliderTheme(
+                              data: SliderThemeData(
+                                overlayShape: SliderComponentShape.noOverlay,
+                              ),
+                              child: Slider(
+                                activeColor:
+                                    Theme.of(context).colorScheme.primary,
+                                inactiveColor: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.25),
+                                min: 0.0,
+                                max: _framesReal.length.toDouble() - 1,
+                                value: _currentRFrameIdx.toDouble(),
+                                onChanged: (value) => setState(() {
+                                  _currentRFrameIdx = value.toInt();
+                                }),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],

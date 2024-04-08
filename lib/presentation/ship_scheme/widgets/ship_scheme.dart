@@ -11,6 +11,7 @@ import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 class ShipScheme extends StatefulWidget {
   final (FigureAxis, FigureAxis) _projection;
+  final Figure _shipBody;
   final List<Figure> _figures;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
@@ -32,6 +33,7 @@ class ShipScheme extends StatefulWidget {
   const ShipScheme({
     super.key,
     required (FigureAxis, FigureAxis) projection,
+    required Figure shipBody,
     required List<Figure> figures,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
@@ -48,8 +50,9 @@ class ShipScheme extends StatefulWidget {
     double? maxY,
     String? caption,
     Color? axisColor,
-  })  : _figures = figures,
-        _projection = projection,
+  })  : _projection = projection,
+        _shipBody = shipBody,
+        _figures = figures,
         _invertVertical = invertVertical,
         _invertHorizontal = invertHorizontal,
         _framesTheoreticAxis = framesTheoreticAxis,
@@ -166,15 +169,6 @@ class _ShipSchemeState extends State<ShipScheme> {
                   ),
                 ),
               ),
-              // Caption
-              if (widget._caption != null)
-                Positioned(
-                  top: padding,
-                  right: padding,
-                  child: _ShipSchemeCaption(
-                    text: widget._caption!,
-                  ),
-                ),
               // Y-Axis
               if (widget._yAxis.isLabelsVisible)
                 Positioned(
@@ -254,6 +248,16 @@ class _ShipSchemeState extends State<ShipScheme> {
                 child: ClipRect(
                   child: Stack(
                     children: [
+                      // Ship body-lines
+                      Positioned.fill(
+                        child: ShipSchemeFigures(
+                          projection: widget._projection,
+                          transform: _getTransform(scaleX, scaleY),
+                          figures: [widget._shipBody],
+                          thickness: 1.5,
+                        ),
+                      ),
+                      // Compartments body-lines
                       Positioned.fill(
                         child: ShipSchemeFigures(
                           projection: widget._projection,
@@ -349,6 +353,15 @@ class _ShipSchemeState extends State<ShipScheme> {
                   ),
                 ),
               ),
+              // Caption
+              if (widget._caption != null)
+                Positioned(
+                  top: padding,
+                  right: padding,
+                  child: _ShipSchemeCaption(
+                    text: widget._caption!,
+                  ),
+                ),
             ],
           ),
         );
