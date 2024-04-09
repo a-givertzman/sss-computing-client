@@ -43,6 +43,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
   static const _frameRNumber = 100;
   static const _framesRealIdxShift = -10;
   late int _currentRFrameIdx;
+  late bool _isViewInteractive;
 
   ///
   @override
@@ -109,6 +110,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
       ),
     ];
     _body = shipBody;
+    _isViewInteractive = true;
     super.initState();
   }
 
@@ -154,13 +156,13 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
           begin: Offset(_minX * 2, 2.5),
           end: Offset(_maxX * 2, 2.5),
           axes: (FigureAxis.x, FigureAxis.z),
-          color: Colors.blue,
+          borderColor: Colors.blue,
         ),
         const WaterineFigure(
           begin: Offset(_minY * 3, 2.5),
           end: Offset(_maxY * 3, 2.5),
           axes: (FigureAxis.y, FigureAxis.z),
-          color: Colors.blue,
+          borderColor: Colors.blue,
         ),
       },
     ];
@@ -178,14 +180,26 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: ShipSchemeOptions(
-                    initialOptions: _options,
-                    onOptionsChanged: (newOptions) => setState(() {
-                      _options = newOptions;
-                    }),
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Switch(
+                        value: _isViewInteractive,
+                        onChanged: (val) => setState(() {
+                          _isViewInteractive = val;
+                        }),
+                      ),
+                    ),
+                    ShipSchemeOptions(
+                      initialOptions: _options,
+                      onOptionsChanged: (newOptions) => setState(() {
+                        _options = newOptions;
+                      }),
+                    ),
+                    const Spacer(),
+                  ],
                 ),
                 SizedBox(
                   height: padding * 2,
@@ -213,6 +227,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                       ...figures,
                       ...waterlines,
                     ],
+                    isViewInteractive: _isViewInteractive,
                   ),
                 ),
                 SizedBox(
@@ -241,6 +256,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                       ...figures,
                       ...waterlines,
                     ],
+                    isViewInteractive: _isViewInteractive,
                   ),
                 ),
                 SizedBox(
@@ -276,6 +292,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                           ...figures,
                           ...waterlines,
                         ],
+                        isViewInteractive: _isViewInteractive,
                       ),
                       SizedBox(
                         width: padding,
@@ -320,6 +337,7 @@ class _ShipSchemeBodyState extends State<ShipSchemeBody> {
                                     dxCut <= bounds.right);
                               }),
                             ],
+                            isViewInteractive: _isViewInteractive,
                           ),
                           SizedBox(
                             width: padding,

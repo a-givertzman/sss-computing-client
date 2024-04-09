@@ -7,6 +7,7 @@ class ShipSchemeFigure extends StatelessWidget {
   final Figure _figure;
   final double? _thickness;
   final Matrix4 _transform;
+  final void Function(Figure figure)? _onTap;
 
   ///
   const ShipSchemeFigure({
@@ -15,20 +16,29 @@ class ShipSchemeFigure extends StatelessWidget {
     required Figure figure,
     double? thickness,
     required Matrix4 transform,
+    void Function(Figure figure)? onTap,
   })  : _projection = projection,
         _figure = figure,
         _thickness = thickness,
-        _transform = transform;
+        _transform = transform,
+        _onTap = onTap;
 
   ///
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _FigurePainter(
-        projection: _projection,
-        transform: _transform,
-        figure: _figure,
-        thickness: _thickness ?? 1.0,
+    return GestureDetector(
+      behavior: HitTestBehavior.deferToChild,
+      onTap: () {
+        _onTap?.call(_figure);
+      },
+      child: CustomPaint(
+        painter: _FigurePainter(
+          projection: _projection,
+          transform: _transform,
+          figure: _figure,
+          thickness: _thickness ?? 1.0,
+        ),
+        willChange: true,
       ),
     );
   }
@@ -52,6 +62,16 @@ class _FigurePainter extends CustomPainter {
         _thickness = thickness,
         _transform = transform;
 
+  ///
+  @override
+  bool? hitTest(Offset position) {
+    return _figure
+        .getOrthoProjection(_projection.$1, _projection.$2)
+        .transform(_transform.storage)
+        .contains(position);
+  }
+
+  ///
   @override
   void paint(Canvas canvas, Size size) {
     final (xAxis, yAxis) = _projection;
@@ -82,7 +102,9 @@ class _FigurePainter extends CustomPainter {
 
   ///
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+  bool shouldRepaint(covariant _FigurePainter oldDelegate) {
+    return (_figure != oldDelegate._figure ||
+        _transform != oldDelegate._transform ||
+        _projection != oldDelegate._projection);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/presentation/core/models/ship_scheme/chart_axis.dart';
 import 'package:sss_computing_client/presentation/core/models/ship_scheme/figure.dart';
@@ -22,6 +23,7 @@ class ShipScheme extends StatefulWidget {
   final TransformationController? _transformationController;
   final bool _invertHorizontal;
   final bool _invertVertical;
+  final bool _isViewInteractive;
   final double? _minX;
   final double? _maxX;
   final double? _minY;
@@ -44,6 +46,7 @@ class ShipScheme extends StatefulWidget {
     TransformationController? transformationController,
     bool invertHorizontal = false,
     bool invertVertical = false,
+    bool isViewInteractive = false,
     double? minX,
     double? maxX,
     double? minY,
@@ -55,6 +58,7 @@ class ShipScheme extends StatefulWidget {
         _figures = figures,
         _invertVertical = invertVertical,
         _invertHorizontal = invertHorizontal,
+        _isViewInteractive = isViewInteractive,
         _framesTheoreticAxis = framesTheoreticAxis,
         _framesRealAxis = framesRealAxis,
         _axisColor = axisColor,
@@ -88,6 +92,7 @@ class _ShipSchemeState extends State<ShipScheme> {
   late final double _contentWidth;
   late final double _contentHeight;
   late final TransformationController _transformationController;
+  late final List<Figure> _selectedFigures;
   double _transformtaionShiftX = 0.0;
   double _transformtaionShiftY = 0.0;
   double _transformtaionScaleX = 1.0;
@@ -111,6 +116,7 @@ class _ShipSchemeState extends State<ShipScheme> {
     _yMinorTicks = _getMinorTicks(_minY, _maxY, widget._yAxis);
     _xAxisGrid = _xMajorTicks.map((tick) => tick.$1).toList();
     _yAxisGrid = _yMajorTicks.map((tick) => tick.$1).toList();
+    _selectedFigures = [];
     super.initState();
   }
 
@@ -257,13 +263,30 @@ class _ShipSchemeState extends State<ShipScheme> {
                           thickness: 1.5,
                         ),
                       ),
-                      // Compartments body-lines
+                      // Figures body-lines
                       Positioned.fill(
                         child: ShipSchemeFigures(
                           projection: widget._projection,
                           transform: _getTransform(scaleX, scaleY),
-                          figures: widget._figures,
+                          figures: _getSortedFigures(),
                           thickness: 2.0,
+                          onTap: (figure) => setState(() {
+                            _selectedFigures.add(figure.copyWith(
+                              borderColor: Colors.amber,
+                            ));
+                          }),
+                        ),
+                      ),
+                      // Selected figures body-lines
+                      Positioned.fill(
+                        child: ShipSchemeFigures(
+                          projection: widget._projection,
+                          transform: _getTransform(scaleX, scaleY),
+                          figures: _selectedFigures,
+                          thickness: 2.0,
+                          onTap: (figure) => setState(() {
+                            _selectedFigures.remove(figure);
+                          }),
                         ),
                       ),
                     ],
@@ -339,20 +362,6 @@ class _ShipSchemeState extends State<ShipScheme> {
                     ),
                   ),
                 ),
-              // Area of interactive shift & scale
-              Positioned(
-                top: 0.0,
-                right: 0.0,
-                left: leftContentPadding,
-                bottom: bottomContentPadding,
-                child: InteractiveViewer(
-                  transformationController: _transformationController,
-                  child: SizedBox(
-                    width: layoutWidth - leftContentPadding,
-                    height: layoutHeight - bottomContentPadding,
-                  ),
-                ),
-              ),
               // Caption
               if (widget._caption != null)
                 Positioned(
@@ -360,6 +369,21 @@ class _ShipSchemeState extends State<ShipScheme> {
                   right: padding,
                   child: _ShipSchemeCaption(
                     text: widget._caption!,
+                  ),
+                ),
+              // Area of interactive shift & scale
+              if (widget._isViewInteractive)
+                Positioned(
+                  top: 0.0,
+                  right: 0.0,
+                  left: leftContentPadding,
+                  bottom: bottomContentPadding,
+                  child: InteractiveViewer(
+                    transformationController: _transformationController,
+                    child: SizedBox(
+                      width: layoutWidth - leftContentPadding,
+                      height: layoutHeight - bottomContentPadding,
+                    ),
                   ),
                 ),
             ],
@@ -462,6 +486,37 @@ class _ShipSchemeState extends State<ShipScheme> {
     return _getMultiples(axis.valueInterval / 5.0, (maxValue - minValue))
         .map((multiple) => minValue + offset + multiple)
         .toList();
+  }
+
+  /// For te
+  List<Figure> _getSortedFigures() {
+    // final comparitionProjection = (
+    //   widget._projection.$1,
+    //   ([...FigureAxis.values]
+    //         ..remove(widget._projection.$1)
+    //         ..remove(widget._projection.$2))
+    //       .first
+    // );
+    // var figuresCopy = [...widget._figures];
+    // figuresCopy.sort((one, other) {
+    //   return (one
+    //               .getOrthoProjection(
+    //                 comparitionProjection.$1,
+    //                 comparitionProjection.$2,
+    //               )
+    //               .getBounds()
+    //               .bottom -
+    //           other
+    //               .getOrthoProjection(
+    //                 comparitionProjection.$1,
+    //                 comparitionProjection.$2,
+    //               )
+    //               .getBounds()
+    //               .bottom)
+    //       .toInt();
+    // });
+    // return figuresCopy;
+    return widget._figures;
   }
 }
 

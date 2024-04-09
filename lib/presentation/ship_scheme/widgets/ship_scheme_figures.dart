@@ -8,6 +8,7 @@ class ShipSchemeFigures extends StatelessWidget {
   final Matrix4 _transform;
   final List<Figure> _figures;
   final double? _thickness;
+  final void Function(Figure figure)? _onTap;
 
   ///
   const ShipSchemeFigures({
@@ -16,10 +17,12 @@ class ShipSchemeFigures extends StatelessWidget {
     required Matrix4 transform,
     required List<Figure> figures,
     double? thickness,
+    void Function(Figure figure)? onTap,
   })  : _projection = projection,
         _transform = transform,
         _figures = figures,
-        _thickness = thickness;
+        _thickness = thickness,
+        _onTap = onTap;
 
   ///
   @override
@@ -32,6 +35,7 @@ class ShipSchemeFigures extends StatelessWidget {
                 transform: _transform,
                 figure: figure,
                 thickness: _thickness,
+                onTap: _onTap,
               ),
             )),
       ],

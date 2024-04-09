@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 enum FigureAxis { x, y, z }
@@ -13,8 +13,11 @@ abstract interface class Figure {
   Color? get fillColor;
 
   /// Returns orthogonal projection of [Figure]
-  /// onto plane parallel to axis one and two to XY-plane
+  /// onto plane parallel to axes one and two
   Path getOrthoProjection(FigureAxis x, FigureAxis y);
+
+  /// Returns copy of [Figure]
+  Figure copyWith({Color? borderColor, Color? fillColor});
 }
 
 ///
@@ -64,6 +67,21 @@ class RectFigure implements Figure {
         true,
       );
   }
+
+  ///
+  @override
+  Figure copyWith({Color? borderColor, Color? fillColor}) {
+    return RectFigure(
+      borderColor: borderColor ?? _borderColor,
+      fillColor: fillColor ?? _fillColor,
+      dx: _center.$1,
+      dy: _center.$2,
+      dz: _center.$3,
+      width: _size.$1,
+      length: _size.$2,
+      height: _size.$3,
+    );
+  }
 }
 
 class BoundedFigure implements Figure {
@@ -72,7 +90,7 @@ class BoundedFigure implements Figure {
 
   ///
   const BoundedFigure({
-    required RectFigure figure,
+    required Figure figure,
     required Figure bounder,
   })  : _figure = figure,
         _bounder = bounder;
@@ -92,6 +110,18 @@ class BoundedFigure implements Figure {
       PathOperation.intersect,
       _figure.getOrthoProjection(x, y),
       _bounder.getOrthoProjection(x, y),
+    );
+  }
+
+  ///
+  @override
+  Figure copyWith({Color? borderColor, Color? fillColor}) {
+    return BoundedFigure(
+      figure: _figure.copyWith(
+        borderColor: borderColor,
+        fillColor: fillColor,
+      ),
+      bounder: _bounder,
     );
   }
 }
@@ -155,42 +185,57 @@ class BarellFigure implements Figure {
         );
     }
   }
+
+  ///
+  @override
+  Figure copyWith({Color? borderColor, Color? fillColor}) {
+    return BarellFigure(
+      borderColor: borderColor ?? _borderColor,
+      fillColor: fillColor ?? _fillColor,
+      dx: _center.$1,
+      dy: _center.$2,
+      dz: _center.$3,
+      width: _size.$1,
+      length: _size.$2,
+      height: _size.$3,
+      axis: _axis,
+    );
+  }
 }
 
 class WaterineFigure implements Figure {
-  final Color? _color;
+  final Color? _borderColor;
+  final Color? _fillColor;
   final Offset _begin;
   final Offset _end;
   final (FigureAxis, FigureAxis) _axes;
 
   ///
   const WaterineFigure({
-    Color? color,
-    double thickness = 1.0,
+    Color? borderColor,
+    Color? fillColor,
     required Offset begin,
     required Offset end,
     required (FigureAxis, FigureAxis) axes,
-  })  : _color = color,
+  })  : _borderColor = borderColor,
+        _fillColor = fillColor,
         _begin = begin,
         _end = end,
         _axes = axes;
 
   ///
   @override
-  Color? get borderColor => _color;
+  Color? get borderColor => _borderColor;
 
   ///
   @override
-  Color? get fillColor => _color?.withOpacity(0.15);
+  Color? get fillColor => _fillColor ?? _borderColor?.withOpacity(0.15);
 
   ///
   @override
   Path getOrthoProjection(FigureAxis x, FigureAxis y) {
     final height = _end.dx - _begin.dx;
     if (_axes.$1 == x && _axes.$2 == y) {
-      // return Path()
-      //   ..moveTo(_begin.dx, _begin.dy)
-      //   ..lineTo(_end.dx, _end.dy);
       return Path()
         ..addPolygon(
           [
@@ -201,9 +246,6 @@ class WaterineFigure implements Figure {
         );
     }
     if (_axes.$1 == y && _axes.$2 == x) {
-      // return Path()
-      //   ..moveTo(_begin.dy, _begin.dx)
-      //   ..lineTo(_end.dy, _end.dx);
       final beginTranspose = Offset(_begin.dy, _begin.dx);
       final endTranspose = Offset(_end.dy, _end.dx);
       return Path()
@@ -217,6 +259,17 @@ class WaterineFigure implements Figure {
         );
     }
     return Path();
+  }
+
+  @override
+  Figure copyWith({Color? borderColor, Color? fillColor}) {
+    return WaterineFigure(
+      borderColor: borderColor ?? _borderColor,
+      fillColor: fillColor ?? _fillColor,
+      begin: _begin,
+      end: _end,
+      axes: _axes,
+    );
   }
 }
 
@@ -265,5 +318,15 @@ class PathFigure implements Figure {
         ),
       _ => Path(),
     };
+  }
+
+  ///
+  @override
+  Figure copyWith({Color? borderColor, Color? fillColor}) {
+    return PathFigure(
+      borderColor: borderColor ?? _borderColor,
+      fillColor: fillColor ?? _fillColor,
+      pathProjection: _pathProjection,
+    );
   }
 }
