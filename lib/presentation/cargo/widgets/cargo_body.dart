@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/models/cargos/cargos.dart';
+import 'package:sss_computing_client/models/cargo/cargos.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/cargo_table.dart';
 import 'package:sss_computing_client/widgets/core/future_builder_widget.dart';
 

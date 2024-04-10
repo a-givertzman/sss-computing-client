@@ -5,7 +5,7 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/models/cargo/cargo.dart';
-import 'package:sss_computing_client/models/cargos/cargos.dart';
+import 'package:sss_computing_client/models/cargo/cargos.dart';
 import 'package:sss_computing_client/models/persistable/value_record.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/action_button.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/cell_action_buttons.dart';

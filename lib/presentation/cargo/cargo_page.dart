@@ -2,7 +2,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
-import 'package:sss_computing_client/models/cargos/cargos.dart';
+import 'package:sss_computing_client/models/cargo/cargos.dart';
 import 'package:sss_computing_client/models/persistable/value_record.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/cargo_body.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/cargo_table.dart';
