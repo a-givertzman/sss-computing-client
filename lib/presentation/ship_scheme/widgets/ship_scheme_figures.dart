@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sss_computing_client/presentation/core/models/ship_scheme/figure.dart';
+import 'package:sss_computing_client/models/ship_scheme/figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_figure.dart';
 
 ///

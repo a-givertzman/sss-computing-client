@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/presentation/core/models/ship_scheme/chart_axis.dart';
-import 'package:sss_computing_client/presentation/core/models/ship_scheme/figure.dart';
+import 'package:sss_computing_client/models/ship_scheme/chart_axis.dart';
+import 'package:sss_computing_client/models/ship_scheme/figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_axis.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_figures.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_frames_theoretic.dart';
@@ -268,7 +267,7 @@ class _ShipSchemeState extends State<ShipScheme> {
                         child: ShipSchemeFigures(
                           projection: widget._projection,
                           transform: _getTransform(scaleX, scaleY),
-                          figures: _getSortedFigures(),
+                          figures: widget._figures,
                           thickness: 2.0,
                           onTap: (figure) => setState(() {
                             _selectedFigures.add(figure.copyWith(
@@ -486,37 +485,6 @@ class _ShipSchemeState extends State<ShipScheme> {
     return _getMultiples(axis.valueInterval / 5.0, (maxValue - minValue))
         .map((multiple) => minValue + offset + multiple)
         .toList();
-  }
-
-  /// For te
-  List<Figure> _getSortedFigures() {
-    // final comparitionProjection = (
-    //   widget._projection.$1,
-    //   ([...FigureAxis.values]
-    //         ..remove(widget._projection.$1)
-    //         ..remove(widget._projection.$2))
-    //       .first
-    // );
-    // var figuresCopy = [...widget._figures];
-    // figuresCopy.sort((one, other) {
-    //   return (one
-    //               .getOrthoProjection(
-    //                 comparitionProjection.$1,
-    //                 comparitionProjection.$2,
-    //               )
-    //               .getBounds()
-    //               .bottom -
-    //           other
-    //               .getOrthoProjection(
-    //                 comparitionProjection.$1,
-    //                 comparitionProjection.$2,
-    //               )
-    //               .getBounds()
-    //               .bottom)
-    //       .toInt();
-    // });
-    // return figuresCopy;
-    return widget._figures;
   }
 }
 

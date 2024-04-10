@@ -24,23 +24,23 @@ abstract interface class Figure {
 class RectFigure implements Figure {
   final Color? _borderColor;
   final Color? _fillColor;
-  final (double dx, double dy, double dz) _center;
-  final (double widht, double length, double height) _size;
+  final (double dx, double dy, double dz) _point1;
+  final (double dx, double dy, double dz) _point2;
 
   ///
   const RectFigure({
     Color? borderColor,
     Color? fillColor,
-    double dx = 0.0,
-    double dy = 0.0,
-    double dz = 0.0,
-    double width = 0.0,
-    double length = 0.0,
-    double height = 0.0,
+    double dx1 = 0.0,
+    double dy1 = 0.0,
+    double dz1 = 0.0,
+    double dx2 = 0.0,
+    double dy2 = 0.0,
+    double dz2 = 0.0,
   })  : _borderColor = borderColor,
         _fillColor = fillColor,
-        _center = (dx, dy, dz),
-        _size = (width, length, height);
+        _point1 = (dx1, dy1, dz1),
+        _point2 = (dx2, dy2, dz2);
 
   ///
   @override
@@ -53,19 +53,28 @@ class RectFigure implements Figure {
   ///
   @override
   Path getOrthoProjection(FigureAxis x, FigureAxis y) {
-    final center = Vector3(_center.$1, _center.$2, _center.$3);
-    final size = Vector3(_size.$1, _size.$2, _size.$3);
-    final (leftOffset, rightOffset) = (center - size / 2, center + size / 2);
+    final point1 = Vector3(_point1.$1, _point1.$2, _point1.$3);
+    final point2 = Vector3(_point2.$1, _point2.$2, _point2.$3);
     return Path()
-      ..addPolygon(
-        [
-          Offset(leftOffset[x.index], rightOffset[y.index]),
-          Offset(rightOffset[x.index], rightOffset[y.index]),
-          Offset(rightOffset[x.index], leftOffset[y.index]),
-          Offset(leftOffset[x.index], leftOffset[y.index]),
-        ],
-        true,
-      );
+      ..addRect(Rect.fromPoints(
+        Offset(point1[x.index], point1[y.index]),
+        Offset(point2[x.index], point2[y.index]),
+      ));
+  }
+
+  /// TODO: remove
+  @override
+  String toString() {
+    final point1 = Vector3(_point1.$1, _point1.$2, _point1.$3);
+    final point2 = Vector3(_point2.$1, _point2.$2, _point2.$3);
+    final (center, size) = ((point1 + point2) / 2, (point2 - point1));
+    return '''\n
+      center: $center ,
+      size: $size,
+      x1, x2: ($point1.x, $point2.x)
+      y1, y2: ($point1.y, $point2.y)
+      z1, z2: ($point1.z, $point2.z)
+    ''';
   }
 
   ///
@@ -74,12 +83,12 @@ class RectFigure implements Figure {
     return RectFigure(
       borderColor: borderColor ?? _borderColor,
       fillColor: fillColor ?? _fillColor,
-      dx: _center.$1,
-      dy: _center.$2,
-      dz: _center.$3,
-      width: _size.$1,
-      length: _size.$2,
-      height: _size.$3,
+      dx1: _point1.$1,
+      dy1: _point1.$2,
+      dz1: _point1.$3,
+      dx2: _point2.$1,
+      dy2: _point2.$2,
+      dz2: _point2.$3,
     );
   }
 }
@@ -111,6 +120,12 @@ class BoundedFigure implements Figure {
       _figure.getOrthoProjection(x, y),
       _bounder.getOrthoProjection(x, y),
     );
+  }
+
+  ///
+  @override
+  String toString() {
+    return _figure.toString();
   }
 
   ///
@@ -273,6 +288,9 @@ class WaterineFigure implements Figure {
   }
 }
 
+/// TODO: remove
+const scale = 0.59195;
+
 ///
 class PathFigure implements Figure {
   final Color? _borderColor;
@@ -300,7 +318,7 @@ class PathFigure implements Figure {
   @override
   Path getOrthoProjection(FigureAxis x, FigureAxis y) {
     final projection = (x, y);
-    return switch (projection) {
+    final path = switch (projection) {
       (FigureAxis.x, FigureAxis.y) => Path()
         ..addPolygon(
           _pathProjection[(FigureAxis.x, FigureAxis.y)] ?? [],
@@ -318,6 +336,12 @@ class PathFigure implements Figure {
         ),
       _ => Path(),
     };
+    return path.transform(Matrix4(
+      1.0, 0.0, 0.0, 0.0, //
+      0.0, 1.0, 0.0, 0.0, //
+      0.0, 0.0, 1.0, 0.0, //
+      0.0, 0.0, 0.0, 1.0 / scale, //
+    ).storage);
   }
 
   ///
