@@ -7,7 +7,7 @@ class ShipSchemeFigure extends StatelessWidget {
   final Figure _figure;
   final double? _thickness;
   final Matrix4 _transform;
-  final void Function(Figure figure)? _onTap;
+  final void Function()? _onTap;
 
   ///
   const ShipSchemeFigure({
@@ -16,7 +16,7 @@ class ShipSchemeFigure extends StatelessWidget {
     required Figure figure,
     double? thickness,
     required Matrix4 transform,
-    void Function(Figure figure)? onTap,
+    void Function()? onTap,
   })  : _projection = projection,
         _figure = figure,
         _thickness = thickness,
@@ -29,7 +29,7 @@ class ShipSchemeFigure extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.deferToChild,
       onTap: () {
-        _onTap?.call(_figure);
+        _onTap?.call();
       },
       child: CustomPaint(
         painter: _FigurePainter(

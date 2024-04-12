@@ -288,9 +288,6 @@ class WaterineFigure implements Figure {
   }
 }
 
-/// TODO: remove
-const scale = 0.59195;
-
 ///
 class PathFigure implements Figure {
   final Color? _borderColor;
@@ -318,7 +315,7 @@ class PathFigure implements Figure {
   @override
   Path getOrthoProjection(FigureAxis x, FigureAxis y) {
     final projection = (x, y);
-    final path = switch (projection) {
+    return switch (projection) {
       (FigureAxis.x, FigureAxis.y) => Path()
         ..addPolygon(
           _pathProjection[(FigureAxis.x, FigureAxis.y)] ?? [],
@@ -336,12 +333,6 @@ class PathFigure implements Figure {
         ),
       _ => Path(),
     };
-    return path.transform(Matrix4(
-      1.0, 0.0, 0.0, 0.0, //
-      0.0, 1.0, 0.0, 0.0, //
-      0.0, 0.0, 1.0, 0.0, //
-      0.0, 0.0, 0.0, 1.0 / scale, //
-    ).storage);
   }
 
   ///

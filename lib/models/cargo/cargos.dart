@@ -63,7 +63,6 @@ class DbCargos implements Cargos {
   ///
   ResultF<List<Cargo>> _mapReplyToValue(List<Map<String, dynamic>> rows) {
     try {
-      // Log('$runtimeType').warning(rows);
       return Ok(rows.map((row) {
         final Map<String, dynamic> rawJson = jsonDecode(row['parameters']);
         final Map<String, dynamic> json = rawJson.map(
@@ -76,7 +75,6 @@ class DbCargos implements Cargos {
             },
           ),
         )..['id'] = row['cargo_id'];
-        Log('$runtimeType').debug(JsonCargo(json: json));
         return JsonCargo(json: json);
       }).toList());
     } catch (err) {
