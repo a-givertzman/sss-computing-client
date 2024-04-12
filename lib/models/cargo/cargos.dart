@@ -33,6 +33,12 @@ class DbCargos implements Cargos {
         _authToken = authToken;
 
   ///
+  get apiAddress => _apiAddress;
+
+  ///
+  get dbName => _dbName;
+
+  ///
   @override
   Future<ResultF<List<Cargo>>> fetchAll() async {
     final sqlAccess = SqlAccess(
@@ -102,6 +108,7 @@ class DbCargos implements Cargos {
     };
   }
 
+  /// TODO: write sql builder
   ///
   @override
   Future<ResultF<int>> add(Cargo cargo) async {
@@ -123,7 +130,11 @@ class DbCargos implements Cargos {
               (1, (SELECT value FROM next_id), 'center_z', '${cargo.asMap()['center_z']}', 'real'),
               (1, (SELECT value FROM next_id), 'center_y', '${cargo.asMap()['center_y']}', 'real'),
               (1, (SELECT value FROM next_id), 'bound_x1', '${cargo.asMap()['bound_x1']}', 'real'),
-              (1, (SELECT value FROM next_id), 'bound_x2', '${cargo.asMap()['bound_x2']}', 'real')
+              (1, (SELECT value FROM next_id), 'bound_x2', '${cargo.asMap()['bound_x2']}', 'real'),
+              (1, (SELECT value FROM next_id), 'bound_y1', '${cargo.asMap()['bound_y1']}', 'real'),
+              (1, (SELECT value FROM next_id), 'bound_y2', '${cargo.asMap()['bound_y2']}', 'real'),
+              (1, (SELECT value FROM next_id), 'bound_z1', '${cargo.asMap()['bound_z1']}', 'real'),
+              (1, (SELECT value FROM next_id), 'bound_z2', '${cargo.asMap()['bound_z2']}', 'real')
             RETURNING (SELECT value FROM next_id) AS cargo_id;
             """,
       ),

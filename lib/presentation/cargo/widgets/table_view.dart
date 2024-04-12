@@ -92,6 +92,7 @@ class TableView<T> extends StatelessWidget {
         ),
         cell: const CellThemeData(
           alignment: Alignment.center,
+          contentHeight: 30.0,
         ),
         scrollbar: TableScrollbarThemeData(
           margin: theme.scrollbarTheme.mainAxisMargin ??

@@ -32,6 +32,7 @@ class ShipScheme extends StatefulWidget {
   final double? _maxY;
   final String? _caption;
   final Color? _axisColor;
+  final BoxFit _fit;
 
   ///
   const ShipScheme({
@@ -57,6 +58,7 @@ class ShipScheme extends StatefulWidget {
     double? maxY,
     String? caption,
     Color? axisColor,
+    BoxFit fit = BoxFit.contain,
   })  : _projection = projection,
         _shipBody = shipBody,
         _cargos = cargos,
@@ -77,7 +79,8 @@ class ShipScheme extends StatefulWidget {
         _maxY = maxY,
         _minY = minY,
         _caption = caption,
-        _xAxis = xAxis;
+        _xAxis = xAxis,
+        _fit = fit;
 
   ///
   @override
@@ -147,7 +150,7 @@ class _ShipSchemeState extends State<ShipScheme> {
         widget._yAxis.labelsSpaceReserved,
         widget._xAxis.labelsSpaceReserved,
       ),
-      fit: BoxFit.contain,
+      fit: widget._fit,
       builder: (context, scaleX, scaleY) {
         final layoutWidth =
             _contentWidth * scaleX + widget._yAxis.labelsSpaceReserved;

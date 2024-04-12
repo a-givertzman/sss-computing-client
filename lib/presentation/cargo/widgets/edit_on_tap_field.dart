@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
-import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/widgets/core/activate_on_tap_builder_widget.dart';
@@ -55,8 +54,6 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
   late String _initialValue;
 
   void _handleEditingStart() {
-    Log('$runtimeType').debug('${widget.key}');
-    Log('$runtimeType').debug('editing start');
     _controller = TextEditingController(text: _initialValue);
     _focusNode = FocusNode();
     _focusNode?.requestFocus();

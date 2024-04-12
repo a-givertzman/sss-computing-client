@@ -17,17 +17,17 @@ class ShipSchemePage extends StatefulWidget {
 }
 
 class _ShipSchemePageState extends State<ShipSchemePage> {
-  late final String _dbName;
-  late final ApiAddress _address;
+  late final DbCargos _dbCargos;
 
   ///
   @override
   void initState() {
-    _dbName = const Setting('api-database').toString();
-    _address = ApiAddress(
+    final dbName = const Setting('api-database').toString();
+    final address = ApiAddress(
       host: const Setting('api-host').toString(),
       port: const Setting('api-port').toInt,
     );
+    _dbCargos = DbCargos(dbName: dbName, apiAddress: address);
     super.initState();
   }
 
@@ -36,11 +36,11 @@ class _ShipSchemePageState extends State<ShipSchemePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilderWidget<List<Cargo>>(
-        onFuture: DbCargos(
-          dbName: _dbName,
-          apiAddress: _address,
-        ).fetchAll,
-        caseData: (context, data) => ShipSchemeTest(cargos: data),
+        onFuture: _dbCargos.fetchAll,
+        caseData: (context, data) => ShipSchemeTestPage(
+          cargos: data,
+          dbCargos: _dbCargos,
+        ),
       ),
     );
   }

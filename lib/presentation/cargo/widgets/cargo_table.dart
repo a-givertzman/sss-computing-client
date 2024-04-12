@@ -12,6 +12,7 @@ import 'package:sss_computing_client/presentation/cargo/widgets/cell_action_butt
 import 'package:sss_computing_client/presentation/cargo/widgets/edit_on_tap_field.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/new_cargo_field.dart';
 import 'package:sss_computing_client/presentation/cargo/widgets/table_view.dart';
+import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_test.dart';
 
 /// Structure with important information about [CargoTable] column
 class CargoColumn<T> {
@@ -24,6 +25,7 @@ class CargoColumn<T> {
   final T Function(String text)? parseValue;
   final ValueRecord Function(int id)? buildRecord;
   final double? grow;
+  final double? width;
 
   const CargoColumn({
     required this.type,
@@ -35,27 +37,31 @@ class CargoColumn<T> {
     this.parseValue,
     this.buildRecord,
     this.grow,
+    this.width,
   });
 }
 
 /// Table representation of provided [Cargos]
 class CargoTable extends StatefulWidget {
   final Cargos _cargos;
-  final List<Cargo> _rows;
+  // final List<Cargo> _rows;
   final List<CargoColumn> _columns;
-  final void Function(Cargo?)? _onCargoSelect;
+  final ShipCargoModel _shipCargoNotifier;
+  // final void Function(Cargo?)? _onCargoSelect;
 
   /// Creates [CargoTable], table representation of [Cargos]
   const CargoTable({
     super.key,
     required Cargos cargos,
-    required List<Cargo> rows,
+    // required List<Cargo> rows,
     required List<CargoColumn> columns,
-    void Function(Cargo? cargo)? onCargoSelect,
+    required ShipCargoModel shipCargoNotifier,
+    // void Function(Cargo? cargo)? onCargoSelect,
   })  : _cargos = cargos,
-        _rows = rows,
+        // _rows = rows,
         _columns = columns,
-        _onCargoSelect = onCargoSelect;
+        _shipCargoNotifier = shipCargoNotifier;
+  // _onCargoSelect = onCargoSelect;
 
   ///
   @override
@@ -70,22 +76,39 @@ class _CargoTableState extends State<CargoTable> {
   final defaultValidator = const Validator(
     cases: [MinLengthValidationCase(1)],
   );
-  Cargo? _selectedCargo;
   Map<String, TextEditingController>? _newRowControllers;
   Map<String, String?>? _newRowValidity;
   Failure? _newRowError;
   Cargo? _newCargo;
 
+  /// TODO: refactor
+  void _handleCargoSelect() {
+    final selected = widget._shipCargoNotifier.selectedCargo;
+    if (selected == null) return;
+    final index = widget._shipCargoNotifier.cargos.indexOf(selected);
+
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        (index * 30.0).clamp(
+          _scrollController.position.minScrollExtent,
+          _scrollController.position.maxScrollExtent,
+        ),
+        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 500),
+      );
+    }
+  }
+
   ///
   @override
   void initState() {
+    widget._shipCargoNotifier.addListener(_handleCargoSelect);
     _scrollController = ScrollController();
-    _cargos = widget._rows;
+    _cargos = widget._shipCargoNotifier.cargos;
     _model = DaviModel(
       columns: [
         DaviColumn(
           sortable: false,
-          pinStatus: PinStatus.left,
           cellBuilder: (_, row) => row.data.asMap()['id'] == null
               ? _buildNewRowButtons()
               : Text('${row.index + 1}'),
@@ -103,6 +126,7 @@ class _CargoTableState extends State<CargoTable> {
             intValue: column.type == 'int'
                 ? (cargo) => cargo.asMap()[column.key]
                 : null,
+            width: column.width ?? 100.0,
             grow: column.grow,
             name: column.name,
             cellBuilder: (_, row) => _buildCell(row, column),
@@ -118,6 +142,7 @@ class _CargoTableState extends State<CargoTable> {
   ///
   @override
   void dispose() {
+    widget._shipCargoNotifier.removeListener(_handleCargoSelect);
     _scrollController.dispose();
     _handleRowAddingEnd();
     super.dispose();
@@ -125,16 +150,18 @@ class _CargoTableState extends State<CargoTable> {
 
   ///
   void _toggleSelectedRow(Cargo? cargo) {
-    if (cargo?.asMap()['id'] == null) return;
-    setState(() {
-      if (_selectedCargo != cargo) {
-        _selectedCargo = cargo;
-        widget._onCargoSelect?.call(cargo);
-        return;
-      }
-      _selectedCargo = null;
-      widget._onCargoSelect?.call(null);
-    });
+    widget._shipCargoNotifier.toggleSelected(cargo);
+    // if (cargo?.asMap()['id'] == null) return;
+    // setState(() {
+    // if (_selectedCargo != cargo) {
+    // _selectedCargo = cargo;
+    // widget._onCargoSelect?.call(cargo);
+
+    // return;
+    // }
+    // _selectedCargo = null;
+    // widget._onCargoSelect?.call(null);
+    // });
   }
 
   ///
@@ -144,6 +171,8 @@ class _CargoTableState extends State<CargoTable> {
         setState(() {
           _cargos.removeWhere((element) => element.id == cargo.id);
           _model.removeRow(cargo);
+          // TODO: remove
+          widget._shipCargoNotifier.setCargos(_cargos);
         });
       case Err(:final error):
         Log('$runtimeType').error(error);
@@ -178,14 +207,18 @@ class _CargoTableState extends State<CargoTable> {
                     : defaultValidator.editFieldValidator(col.defaultValue),
               ));
       _newCargo = JsonCargo(json: newValues);
-      if (_selectedCargo == null) {
+      if (widget._shipCargoNotifier.selectedCargo == null) {
         _cargos.add(_newCargo!);
         _model.addRow(_newCargo!);
+        // TODO: remove
+        widget._shipCargoNotifier.setCargos(_cargos);
       } else {
-        final index = _cargos.indexOf(_selectedCargo!);
-        _toggleSelectedRow(_selectedCargo!);
+        final index = _cargos.indexOf(widget._shipCargoNotifier.selectedCargo!);
+        _toggleSelectedRow(widget._shipCargoNotifier.selectedCargo!);
         _cargos.insert(index, _newCargo!);
         _model.replaceRows(_cargos);
+        // TODO: remove
+        widget._shipCargoNotifier.setCargos(_cargos);
       }
     });
   }
@@ -197,6 +230,8 @@ class _CargoTableState extends State<CargoTable> {
         if (remove) {
           _cargos.remove(_newCargo!);
           _model.removeRow(_newCargo!);
+          // TODO: remove
+          widget._shipCargoNotifier.setCargos(_cargos);
         }
         _newRowControllers?.forEach((_, controller) => controller.dispose());
         _newRowControllers = null;
@@ -228,6 +263,8 @@ class _CargoTableState extends State<CargoTable> {
         setState(() {
           _cargos[idx] = JsonCargo(json: cargo.asMap()..['id'] = id);
           _model.replaceRows(_cargos);
+          // TODO: remove
+          widget._shipCargoNotifier.setCargos(_cargos);
         });
         _handleRowAddingEnd();
       case Err(:final error):
@@ -304,6 +341,9 @@ class _CargoTableState extends State<CargoTable> {
         final newData = row.data.asMap()..[column.key] = newValue;
         _cargos[idx] = JsonCargo(json: newData);
         _model.replaceRows(_cargos);
+        // TODO: remove
+        widget._shipCargoNotifier.setCargos(_cargos);
+        widget._shipCargoNotifier.toggleSelected(_cargos[idx]);
       }),
       validator: column.validator ?? defaultValidator,
     );
@@ -314,22 +354,27 @@ class _CargoTableState extends State<CargoTable> {
     return !column.isEditable
         ? Text('${row.data.asMap()[column.key] ?? column.defaultValue}')
         : row.data.asMap()['id'] == null
-            ? _buildNewRowCell(
-                row,
-                column,
-              )
-            : _buildEditableCell(
-                row,
-                column,
-                key: ValueKey('${column.key}-${row.data.id}'),
-              );
+            ? Builder(builder: (_) {
+                return _buildNewRowCell(
+                  row,
+                  column,
+                );
+              })
+            : Builder(builder: (_) {
+                return _buildEditableCell(
+                  row,
+                  column,
+                  key: ValueKey('${column.key}-${row.data.id}'),
+                );
+              });
   }
 
   ///
   CellStyle? _buildCellStyle(DaviRow<Cargo> row) {
-    return row.data == _selectedCargo
+    return row.data == widget._shipCargoNotifier.selectedCargo
         ? CellStyle(
-            background: Theme.of(context).colorScheme.primary.withOpacity(0.25),
+            // background: Theme.of(context).colorScheme.primary.withOpacity(0.25),
+            background: Colors.amber.withOpacity(0.15),
           )
         : null;
   }
@@ -337,67 +382,81 @@ class _CargoTableState extends State<CargoTable> {
   ///
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+    return ListenableBuilder(
+      listenable: widget._shipCargoNotifier,
+      builder: (context, _) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _newCargo == null
-                ? _selectedCargo != null
-                    ? ActionButton(
-                        label: const Localized('Add above').v,
-                        icon: Icons.add,
-                        onPressed: _handleRowAddingStart,
-                      )
-                    : ActionButton(
-                        label: const Localized('Add').v,
-                        icon: Icons.add,
-                        onPressed: () {
-                          _handleRowAddingStart();
-                          Future.delayed(const Duration(milliseconds: 100), () {
-                            if (_scrollController.hasClients) {
-                              _scrollController.animateTo(
-                                _scrollController.position.maxScrollExtent,
-                                curve: Curves.easeOut,
-                                duration: const Duration(milliseconds: 500),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                _newCargo == null
+                    ? widget._shipCargoNotifier.selectedCargo != null
+                        ? ActionButton(
+                            label: const Localized('Add above').v,
+                            icon: Icons.add,
+                            onPressed: _handleRowAddingStart,
+                          )
+                        : ActionButton(
+                            label: const Localized('Add').v,
+                            icon: Icons.add,
+                            onPressed: () {
+                              _handleRowAddingStart();
+                              Future.delayed(
+                                const Duration(milliseconds: 100),
+                                () {
+                                  if (_scrollController.hasClients) {
+                                    _scrollController.animateTo(
+                                      _scrollController
+                                          .position.maxScrollExtent,
+                                      curve: Curves.easeOut,
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                    );
+                                  }
+                                },
                               );
-                            }
-                          });
-                        },
-                      )
-                : ActionButton(
-                    label: const Localized('Cancel adding').v,
-                    icon: Icons.close,
-                    onPressed: () => _handleRowAddingEnd(remove: true),
-                  ),
-            SizedBox(
-              width: const Setting('padding', factor: 1.0).toDouble,
+                            },
+                          )
+                    : ActionButton(
+                        label: const Localized('Cancel adding').v,
+                        icon: Icons.close,
+                        onPressed: () => _handleRowAddingEnd(remove: true),
+                      ),
+                SizedBox(
+                  width: const Setting('padding', factor: 1.0).toDouble,
+                ),
+                ActionButton(
+                  label: const Localized('Delete').v,
+                  icon: Icons.delete,
+                  onPressed: widget._shipCargoNotifier.selectedCargo != null
+                      ? () {
+                          _handleRowDelete(
+                            widget._shipCargoNotifier.selectedCargo!,
+                          );
+                          _toggleSelectedRow(
+                            widget._shipCargoNotifier.selectedCargo!,
+                          );
+                        }
+                      : null,
+                ),
+              ],
             ),
-            ActionButton(
-              label: const Localized('Delete').v,
-              icon: Icons.delete,
-              onPressed: _selectedCargo != null
-                  ? () {
-                      _handleRowDelete(_selectedCargo!);
-                      _toggleSelectedRow(_selectedCargo!);
-                    }
-                  : null,
+            SizedBox(
+              height: const Setting('padding', factor: 1.0).toDouble,
+            ),
+            Expanded(
+              flex: 1,
+              child: TableView<Cargo>(
+                model: _model,
+                onRowTap: _toggleSelectedRow,
+                scrollController: _scrollController,
+              ),
             ),
           ],
-        ),
-        SizedBox(
-          height: const Setting('padding', factor: 1.0).toDouble,
-        ),
-        Expanded(
-          flex: 1,
-          child: TableView<Cargo>(
-            model: _model,
-            onRowTap: _toggleSelectedRow,
-            scrollController: _scrollController,
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 }
