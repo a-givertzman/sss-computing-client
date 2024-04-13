@@ -26,6 +26,7 @@ dependencies:
   flutter_svg: ^2.0.9
   vector_math: ^2.1.4
   davi: ^3.3.0
+  path_drawing: ^1.0.1
 
 dev_dependencies:
   flutter_test:

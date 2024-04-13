@@ -4,7 +4,7 @@ import 'package:hmi_core/hmi_core.dart';
 ///
 class CellActionButtons extends StatefulWidget {
   final String? _validationError;
-  final Failure? _error;
+  final Failure<String>? _error;
   final void Function()? _onConfirm;
   final void Function()? _onCancel;
   final double? _iconSize;
@@ -15,7 +15,7 @@ class CellActionButtons extends StatefulWidget {
   const CellActionButtons({
     super.key,
     String? validationError,
-    Failure<dynamic>? error,
+    Failure<String>? error,
     void Function()? onConfirm,
     void Function()? onCancel,
     double? iconSize,

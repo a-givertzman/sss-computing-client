@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:sss_computing_client/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 
 /// Interface for controlling collection of [Cargo].
 abstract interface class Cargos {
@@ -62,7 +62,10 @@ class DbCargos implements Cargos {
     );
     return switch (await sqlAccess.fetch()) {
       Ok(value: final rows) => _mapReplyToValue(rows),
-      Err(:final error) => Err(error),
+      Err(:final error) => Err(Failure<String>(
+          message: '${error.message}',
+          stackTrace: StackTrace.current,
+        )),
     };
   }
 
@@ -84,7 +87,10 @@ class DbCargos implements Cargos {
         return JsonCargo(json: json);
       }).toList());
     } catch (err) {
-      return Err(Failure(message: err, stackTrace: StackTrace.current));
+      return Err(Failure<String>(
+        message: '$err',
+        stackTrace: StackTrace.current,
+      ));
     }
   }
 
@@ -104,7 +110,10 @@ class DbCargos implements Cargos {
     );
     return switch (await sqlAccess.fetch()) {
       Ok() => const Ok(null),
-      Err(:final error) => Err(error),
+      Err(:final error) => Err(Failure<String>(
+          message: '${error.message}',
+          stackTrace: StackTrace.current,
+        )),
     };
   }
 
@@ -141,7 +150,10 @@ class DbCargos implements Cargos {
     );
     return switch (await sqlAccess.fetch()) {
       Ok(value: final rows) => Ok(rows.first['cargo_id']),
-      Err(:final error) => Err(error),
+      Err(:final error) => Err(Failure<String>(
+          message: '${error.message}',
+          stackTrace: StackTrace.current,
+        )),
     };
   }
 }

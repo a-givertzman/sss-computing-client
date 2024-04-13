@@ -3,20 +3,20 @@ import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 
 ///
-class IntValidationCase implements ValidationCase {
+class RealValidationCase implements ValidationCase {
   ///
-  const IntValidationCase();
+  const RealValidationCase();
   //
   @override
   ResultF<void> isSatisfiedBy(String? value) {
     if (value != null && value.isNotEmpty) {
-      if (int.tryParse(value) != null) {
+      if (double.tryParse(value) != null) {
         return const Ok(null);
       }
     }
     return Err(
-      Failure(
-        message: 'Only integer number allowed',
+      Failure<String>(
+        message: 'Only real number allowed',
         stackTrace: StackTrace.current,
       ),
     );

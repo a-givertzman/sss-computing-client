@@ -1,7 +1,7 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:sss_computing_client/models/persistable/persistable.dart';
+import 'package:sss_computing_client/core/models/persistable/persistable.dart';
 
 class ValueRecord implements Persistable<String> {
   final Map<String, dynamic> _filter;
@@ -58,7 +58,10 @@ class ValueRecord implements Persistable<String> {
     );
     return switch (await sqlAccess.fetch()) {
       Ok(value: final rows) => _mapReplyToValue(rows),
-      Err(:final error) => Err(error),
+      Err(:final error) => Err(Failure<String>(
+          message: '${error.message}',
+          stackTrace: StackTrace.current,
+        )),
     };
   }
 
@@ -91,7 +94,10 @@ class ValueRecord implements Persistable<String> {
     );
     return switch (await sqlAccess.fetch()) {
       Ok(value: final rows) => _mapReplyToValue(rows),
-      Err(:final error) => Err(error),
+      Err(:final error) => Err(Failure<String>(
+          message: '${error.message}',
+          stackTrace: StackTrace.current,
+        )),
     };
   }
 
@@ -101,7 +107,10 @@ class ValueRecord implements Persistable<String> {
       final value = _onFetch?.call(reply) ?? reply;
       return Ok(value);
     } catch (err) {
-      return Err(Failure(message: err, stackTrace: StackTrace.current));
+      return Err(Failure<String>(
+        message: '$err',
+        stackTrace: StackTrace.current,
+      ));
     }
   }
 }

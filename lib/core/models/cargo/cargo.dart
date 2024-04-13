@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 ///
 /// Common data for corresponding [Cargo].
 abstract interface class Cargo {
@@ -42,6 +44,12 @@ abstract interface class Cargo {
   /// y-moment of inertia of the free surface of the water
   double get mfsy;
 
+  /// type of the cargo
+  String get type;
+
+  ///
+  String? get path;
+
   /// Returns [Map] representation of the [Cargo]
   Map<String, dynamic> asMap();
 }
@@ -85,10 +93,26 @@ class JsonCargo implements Cargo {
   @override
   double get mfsy => _json['m_f_s_y'] ?? 0.0;
   @override
+  String? get path => _json['path'];
+  @override
+  String get type => _json['type'] ?? 'other';
+  @override
   Map<String, dynamic> asMap() {
     return _json;
   }
 
   @override
   String toString() => _json.toString();
+}
+
+///
+Color mapCargoToColor(Cargo cargo) {
+  return switch (cargo.type) {
+    'BALLAST' => Colors.green,
+    'OILS_AND_FUELS' => Colors.brown,
+    'FRESH_WATER' => Colors.blue,
+    'ACIDS_AND_ALKALIS' => Colors.purple,
+    'POLLUTED_LIQUIDS' => Colors.black,
+    _ => Colors.grey,
+  };
 }

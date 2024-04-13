@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class ActionButton extends StatelessWidget {
   final String _label;
   final IconData _icon;
+  final IconAlignment _iconAlignment;
   final double? _height;
   final double? _width;
   final void Function()? _onPressed;
@@ -15,11 +16,13 @@ class ActionButton extends StatelessWidget {
     super.key,
     required String label,
     required IconData icon,
+    IconAlignment iconAlignment = IconAlignment.start,
     double? height,
     double? width,
     void Function()? onPressed,
   })  : _label = label,
         _icon = icon,
+        _iconAlignment = iconAlignment,
         _width = width,
         _height = height,
         _onPressed = onPressed;
@@ -27,28 +30,14 @@ class ActionButton extends StatelessWidget {
   ///
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return SizedBox(
       height: _height,
       width: _width,
       child: ElevatedButton.icon(
         onPressed: _onPressed,
-        icon: Icon(
-          _icon,
-          size: 20,
-        ),
-        label: Text(
-          _label,
-          textAlign: TextAlign.center,
-        ),
-        style: ButtonStyle(
-          textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
-            (_) => theme.textTheme.titleLarge?.copyWith(
-              color: theme.colorScheme.onPrimary,
-              height: 1.0,
-            ),
-          ),
-        ),
+        icon: Icon(_icon, size: 20),
+        iconAlignment: _iconAlignment,
+        label: Text(_label, textAlign: TextAlign.end),
       ),
     );
   }

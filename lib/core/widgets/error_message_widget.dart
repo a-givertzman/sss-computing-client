@@ -8,7 +8,7 @@ class ErrorMessageWidget extends StatelessWidget {
   final TextStyle? _style;
   final Color? _iconColor;
   final void Function()? _onConfirm;
-  final Failure? _error;
+  final Failure<String>? _error;
   final String _message;
 
   ///
@@ -17,7 +17,7 @@ class ErrorMessageWidget extends StatelessWidget {
     TextStyle? style,
     Color? iconColor,
     void Function()? onConfirm,
-    Failure? error,
+    Failure<String>? error,
     required String message,
   })  : _style = style,
         _iconColor = iconColor,

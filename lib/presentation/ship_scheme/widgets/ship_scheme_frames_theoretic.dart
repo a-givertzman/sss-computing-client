@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:sss_computing_client/models/ship_scheme/chart_axis.dart';
+import 'package:sss_computing_client/core/models/ship_scheme/chart_axis.dart';
 
 ///
 class ShipSchemeFramesTheoretic extends StatelessWidget {

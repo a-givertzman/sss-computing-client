@@ -1,11 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
-import 'package:sss_computing_client/widgets/core/activate_on_tap_builder_widget.dart';
+import 'package:sss_computing_client/core/widgets/activate_on_tap_builder_widget.dart';
 
 /// Field that can be edited after activation by tap
 class EditOnTapField extends StatefulWidget {
@@ -13,7 +12,7 @@ class EditOnTapField extends StatefulWidget {
   final Color _textColor;
   final Color _iconColor;
   final Color _errorColor;
-  final FutureOr<ResultF<String>> Function(String) _onSubmit;
+  final Future<ResultF<String>> Function(String) _onSubmit;
   final void Function(String)? _onSubmitted;
   final void Function(String)? _onCancel;
   final Validator? _validator;
@@ -26,7 +25,7 @@ class EditOnTapField extends StatefulWidget {
     required Color textColor,
     required Color iconColor,
     required Color errorColor,
-    required FutureOr<ResultF<String>> Function(String value) onSubmit,
+    required Future<ResultF<String>> Function(String value) onSubmit,
     dynamic Function(String)? onSubmitted,
     dynamic Function(String)? onCancel,
     Validator? validator,
@@ -48,7 +47,7 @@ class EditOnTapField extends StatefulWidget {
 class _EditOnTapFieldState extends State<EditOnTapField> {
   TextEditingController? _controller;
   FocusNode? _focusNode;
-  Failure? _error;
+  Failure<String>? _error;
   String? _validationError;
   bool _isInProcess = false;
   late String _initialValue;
@@ -100,16 +99,19 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
         value == _initialValue ? Ok(value) : await widget._onSubmit(value);
     switch (newValue) {
       case Ok(:final value):
-        widget._onSubmitted?.call(value);
         setState(() {
           _isInProcess = false;
           _initialValue = value;
         });
+        widget._onSubmitted?.call(value);
         return const Ok(null);
       case Err(:final error):
         setState(() {
           _isInProcess = false;
-          _error = error;
+          _error = Failure<String>(
+            message: '${error.message}',
+            stackTrace: StackTrace.current,
+          );
         });
         return Err(error);
     }
@@ -225,7 +227,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
                     width: iconSize,
                     height: iconSize,
                     child: Tooltip(
-                      message: _error?.message ?? '',
+                      message: '${_error?.message}',
                       child: Icon(
                         Icons.error_outline,
                         color: widget._errorColor,

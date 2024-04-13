@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/models/cargo/cargo.dart';
-import 'package:sss_computing_client/models/ship_scheme/chart_axis.dart';
-import 'package:sss_computing_client/models/ship_scheme/figure.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/ship_scheme/chart_axis.dart';
+import 'package:sss_computing_client/core/models/ship_scheme/figure.dart';
+import 'package:sss_computing_client/core/widgets/chart_legend.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_axis.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_frames_theoretic.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_grid.dart';
-import 'package:sss_computing_client/widgets/core/fitted_builder_widget.dart';
+import 'package:sss_computing_client/core/widgets/fitted_builder_widget.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 class ShipScheme extends StatefulWidget {
-  final (FigureAxis, FigureAxis) _projection;
+  final (FigureAxes, FigureAxes) _projection;
   final Figure _shipBody;
+  final Figure? _shipBodyPretty;
   final List<(Cargo, Figure)> _cargos;
   final List<(Cargo, Figure)> _selectedCargos;
   final ChartAxis _xAxis;
@@ -37,8 +39,9 @@ class ShipScheme extends StatefulWidget {
   ///
   const ShipScheme({
     super.key,
-    required (FigureAxis, FigureAxis) projection,
+    required (FigureAxes, FigureAxes) projection,
     required Figure shipBody,
+    Figure? shipBodyPretty,
     required List<(Cargo, Figure)> cargos,
     List<(Cargo, Figure)> selectedCargos = const [],
     required ChartAxis xAxis,
@@ -61,6 +64,7 @@ class ShipScheme extends StatefulWidget {
     BoxFit fit = BoxFit.contain,
   })  : _projection = projection,
         _shipBody = shipBody,
+        _shipBodyPretty = shipBodyPretty,
         _cargos = cargos,
         _selectedCargos = selectedCargos,
         _invertVertical = invertVertical,
@@ -298,6 +302,15 @@ class _ShipSchemeState extends State<ShipScheme> {
                           thickness: 1.5,
                         ),
                       ),
+                      if (widget._shipBodyPretty != null)
+                        Positioned.fill(
+                          child: ShipSchemeFigure(
+                            projection: widget._projection,
+                            transform: _getTransform(scaleX, scaleY),
+                            figure: widget._shipBodyPretty!,
+                            thickness: 1.0,
+                          ),
+                        ),
                       // Figures body-lines
                       Positioned.fill(
                         child: _ShipSchemeCargos(
@@ -331,13 +344,15 @@ class _ShipSchemeState extends State<ShipScheme> {
                       bottomContentPadding -
                       widget._framesTheoreticAxis.labelsSpaceReserved,
                   child: ClipRect(
-                    child: ShipSchemeFramesTheoretic(
-                      axis: widget._framesTheoreticAxis,
-                      frames: widget._framesTheoretic,
-                      transformValue: xTransform,
-                      color: widget._axisColor ?? theme.colorScheme.primary,
-                      labelStyle: theme.textTheme.labelSmall?.copyWith(
+                    child: IgnorePointer(
+                      child: ShipSchemeFramesTheoretic(
+                        axis: widget._framesTheoreticAxis,
+                        frames: widget._framesTheoretic,
+                        transformValue: xTransform,
                         color: widget._axisColor ?? theme.colorScheme.primary,
+                        labelStyle: theme.textTheme.labelSmall?.copyWith(
+                          color: widget._axisColor ?? theme.colorScheme.primary,
+                        ),
                       ),
                     ),
                   ),
@@ -361,31 +376,34 @@ class _ShipSchemeState extends State<ShipScheme> {
                   child: ClipRect(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 1.0),
-                      child: ShipSchemeAxis(
-                        axis: widget._framesRealAxis,
-                        transformValue: xTransform,
-                        majorTicks: widget._framesReal.where((frame) {
-                          final (_, idx) = frame;
-                          return idx % widget._framesRealAxis.valueInterval ==
-                              0;
-                        }).map((frame) {
-                          final (offset, idx) = frame;
-                          return (
-                            offset,
-                            '$idx${widget._framesRealAxis.caption}'
-                          );
-                        }).toList(),
-                        minorTicks: widget._framesReal.where((frame) {
-                          final (_, idx) = frame;
-                          return idx % widget._framesRealAxis.valueInterval !=
-                              0;
-                        }).map((frame) {
-                          final (offset, _) = frame;
-                          return offset;
-                        }).toList(),
-                        color: widget._axisColor ?? theme.colorScheme.primary,
-                        labelStyle: theme.textTheme.labelSmall?.copyWith(
+                      child: IgnorePointer(
+                        child: ShipSchemeAxis(
+                          axis: widget._framesRealAxis,
+                          transformValue: xTransform,
+                          majorTicks: widget._framesReal.where((frame) {
+                            final (_, idx) = frame;
+                            return idx % widget._framesRealAxis.valueInterval ==
+                                0;
+                          }).map((frame) {
+                            final (offset, idx) = frame;
+                            return (
+                              offset,
+                              '$idx${widget._framesRealAxis.caption}'
+                            );
+                          }).toList(),
+                          minorTicks: widget._framesReal.where((frame) {
+                            final (_, idx) = frame;
+                            return idx % widget._framesRealAxis.valueInterval !=
+                                0;
+                          }).map((frame) {
+                            final (offset, _) = frame;
+                            return offset;
+                          }).toList(),
                           color: widget._axisColor ?? theme.colorScheme.primary,
+                          labelStyle: theme.textTheme.labelSmall?.copyWith(
+                            color:
+                                widget._axisColor ?? theme.colorScheme.primary,
+                          ),
                         ),
                       ),
                     ),
@@ -522,40 +540,50 @@ class _ShipSchemeState extends State<ShipScheme> {
 class _ShipSchemeCaption extends StatelessWidget {
   final String _text;
   final Color? _color;
-  final Color? _backgroundColor;
+  // final Color? _backgroundColor;
 
   ///
   const _ShipSchemeCaption({
     required String text,
     Color? color,
-    Color? backgroundColor,
+    // Color? backgroundColor,
   })  : _text = text,
-        _color = color,
-        _backgroundColor = backgroundColor;
+        _color = color;
+  // _backgroundColor = backgroundColor;
 
   ///
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textStyle = theme.textTheme.labelSmall?.copyWith(
-      color: _color ?? theme.colorScheme.primary,
-      fontWeight: FontWeight.bold,
-      height: 1.0,
-    );
-    return Chip(
-      label: Text(_text),
-      labelStyle: textStyle,
-      backgroundColor:
-          _backgroundColor ?? theme.colorScheme.primary.withOpacity(0.15),
-      padding: EdgeInsets.zero,
-      side: BorderSide.none,
+    return ChartLegend(
+      names: [_text],
+      colors: [_color ?? Theme.of(context).colorScheme.primary],
+      height: 20.0,
     );
   }
+
+  ///
+  // @override
+  // Widget build(BuildContext context) {
+  //   final theme = Theme.of(context);
+  //   final textStyle = theme.textTheme.labelSmall?.copyWith(
+  //     color: _color ?? theme.colorScheme.primary,
+  //     fontWeight: FontWeight.bold,
+  //     height: 1.0,
+  //   );
+  //   return Chip(
+  //     label: Text(_text),
+  //     labelStyle: textStyle,
+  //     backgroundColor:
+  //         _backgroundColor ?? theme.colorScheme.primary.withOpacity(0.15),
+  //     padding: EdgeInsets.zero,
+  //     side: BorderSide.none,
+  //   );
+  // }
 }
 
 ///
 class _ShipSchemeCargos extends StatelessWidget {
-  final (FigureAxis, FigureAxis) _projection;
+  final (FigureAxes, FigureAxes) _projection;
   final Matrix4 _transform;
   final List<(Cargo, Figure)> _cargos;
   final double? _thickness;
@@ -563,7 +591,7 @@ class _ShipSchemeCargos extends StatelessWidget {
 
   ///
   const _ShipSchemeCargos({
-    required (FigureAxis, FigureAxis) projection,
+    required (FigureAxes, FigureAxes) projection,
     required Matrix4 transform,
     required List<(Cargo, Figure)> cargos,
     double? thickness,

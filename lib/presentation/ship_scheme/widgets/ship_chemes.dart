@@ -1,23 +1,40 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/models/cargo/cargo.dart';
-import 'package:sss_computing_client/models/ship_scheme/chart_axis.dart';
-import 'package:sss_computing_client/models/ship_scheme/figure.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/ship_scheme/chart_axis.dart';
+import 'package:sss_computing_client/core/models/ship_scheme/figure.dart';
+import 'package:sss_computing_client/core/widgets/buttons/dropdown_multiselect_button.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/figures_test.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme.dart';
-import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_interact_options.dart';
+import 'package:sss_computing_client/core/widgets/buttons/segmented_button_options.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_test.dart';
-import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_view_options.dart';
 
 ///
-const Set<ShipSchemeViewOption> _initialViewOptions = {
-  ShipSchemeViewOption.showGrid,
-  ShipSchemeViewOption.showAxes,
+enum ShipSchemeViewOptions {
+  showAxes,
+  showGrid,
+  showRealFrames,
+  showTheoreticFrames,
+  showWaterline,
+}
+
+///
+const Set<ShipSchemeViewOptions> _initialViewOptions = {
+  ShipSchemeViewOptions.showGrid,
+  ShipSchemeViewOptions.showAxes,
 };
-const Set<ShipSchemeInteractOption> _initialInteractOptions = {
-  ShipSchemeInteractOption.select,
+
+///
+enum ShipSchemeInteractOptions {
+  view,
+  select,
+}
+
+///
+const Set<ShipSchemeInteractOptions> _initialInteractOptions = {
+  ShipSchemeInteractOptions.select,
 };
 
 ///
@@ -46,18 +63,27 @@ class ShipSchemes extends StatefulWidget {
 
 ///
 class _ShipSchemesState extends State<ShipSchemes> {
-  Set<ShipSchemeViewOption> _viewOptions = _initialViewOptions;
-  Set<ShipSchemeInteractOption> _interactOptions = _initialInteractOptions;
+  Set<ShipSchemeViewOptions> _viewOptions = _initialViewOptions;
+  Set<ShipSchemeInteractOptions> _interactOptions = _initialInteractOptions;
+  Map<String, bool> _cargoTypeFilter = {
+    'BALLAST': true,
+    'FRESH_WATER': false,
+    'OILS_AND_FUELS': false,
+    'ACIDS_AND_ALKALIS': false,
+    'POLLUTED_LIQUIDS': false,
+    'CARGO': false,
+  };
   static const _axesSpaceReserved = 25.0;
   static const _minX = -65.0;
   static const _maxX = 65.0;
-  static const _minZ = -5.0;
-  static const _maxZ = 15.0;
+  static const _minZ = -2.5;
+  static const _maxZ = 20.0;
   static const _minY = -11.0;
   static const _maxY = 11.0;
   static const _shipLeft = -60.0;
   static const _shipRight = 60.0;
   late final Figure _body;
+  late final Figure? _bodyPretty;
   late final List<(double, double, int)> _framesTheoretic;
   late final List<(double, int)> _framesReal;
   static const _frameTNumber = 20;
@@ -127,6 +153,7 @@ class _ShipSchemesState extends State<ShipSchemes> {
     ];
     _defaultRFrameIdx = (_framesReal.length / 2.0).ceil();
     _body = shipBody;
+    _bodyPretty = shipBodyPretty;
     super.initState();
   }
 
@@ -140,51 +167,58 @@ class _ShipSchemesState extends State<ShipSchemes> {
         final xAxis = ChartAxis(
           caption: 'm',
           labelsSpaceReserved: _axesSpaceReserved,
-          isLabelsVisible: _viewOptions.contains(ShipSchemeViewOption.showAxes),
+          isLabelsVisible:
+              _viewOptions.contains(ShipSchemeViewOptions.showAxes),
           valueInterval: 10.0,
-          isGridVisible: _viewOptions.contains(ShipSchemeViewOption.showGrid),
+          isGridVisible: _viewOptions.contains(ShipSchemeViewOptions.showGrid),
         );
         final yAxis = ChartAxis(
           caption: 'm',
           labelsSpaceReserved: _axesSpaceReserved,
-          isLabelsVisible: _viewOptions.contains(ShipSchemeViewOption.showAxes),
+          isLabelsVisible:
+              _viewOptions.contains(ShipSchemeViewOptions.showAxes),
           valueInterval: 10.0,
-          isGridVisible: _viewOptions.contains(ShipSchemeViewOption.showGrid),
+          isGridVisible: _viewOptions.contains(ShipSchemeViewOptions.showGrid),
         );
         final zAxis = ChartAxis(
           caption: 'm',
           labelsSpaceReserved: _axesSpaceReserved,
-          isLabelsVisible: _viewOptions.contains(ShipSchemeViewOption.showAxes),
+          isLabelsVisible:
+              _viewOptions.contains(ShipSchemeViewOptions.showAxes),
           valueInterval: 10.0,
-          isGridVisible: _viewOptions.contains(ShipSchemeViewOption.showGrid),
+          isGridVisible: _viewOptions.contains(ShipSchemeViewOptions.showGrid),
         );
         final framesRealAxis = ChartAxis(
           caption: 'F',
           labelsSpaceReserved: _axesSpaceReserved,
           isLabelsVisible:
-              _viewOptions.contains(ShipSchemeViewOption.showRealFrames),
+              _viewOptions.contains(ShipSchemeViewOptions.showRealFrames),
           valueInterval: 10.0,
         );
         final framesTheoreticAxis = ChartAxis(
           caption: 'FT',
           labelsSpaceReserved: _axesSpaceReserved / 2.0,
           isLabelsVisible:
-              _viewOptions.contains(ShipSchemeViewOption.showTheoreticFrames),
+              _viewOptions.contains(ShipSchemeViewOptions.showTheoreticFrames),
         );
-        final cargos = _mapShipCargosToFigures(
-          widget._shipCargoNotifier.cargos,
-          Colors.brown,
-          Colors.brown.withOpacity(0.15),
+        final cargos = widget._shipCargoNotifier.cargos.where((cargo) {
+          if (_cargoTypeFilter.containsKey(cargo.type)) {
+            return _cargoTypeFilter[cargo.type]!;
+          }
+          return false;
+        }).toList();
+        final cargoFigures = _mapShipCargosToFigures(
+          cargos,
           shipBody,
         );
-        final selectedCargo = _mapShipCargosToFigures(
+        final selectedCargoFigures = _mapShipCargosToFigures(
           [
             if (widget._shipCargoNotifier.selectedCargo != null)
               widget._shipCargoNotifier.selectedCargo!,
           ],
-          Colors.amber,
-          Colors.amber.withOpacity(0.15),
           _body,
+          borderColor: Colors.amber,
+          fillColor: Colors.amber.withOpacity(0.25),
         );
         var currentRFrameIdx = widget._shipCargoNotifier.selectedCargo != null
             ? _framesReal.indexWhere(
@@ -201,7 +235,7 @@ class _ShipSchemesState extends State<ShipSchemes> {
         currentRFrameIdx =
             (currentRFrameIdx == -1 ? _defaultRFrameIdx : currentRFrameIdx);
         final sectionedCargos = _extractShipCargosFromSection(
-          cargos,
+          cargoFigures,
           _framesReal[currentRFrameIdx].$1,
         );
         return Column(
@@ -213,29 +247,43 @@ class _ShipSchemesState extends State<ShipSchemes> {
               children: [
                 Expanded(
                   flex: 1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ShipSchemeInteractOptions(
-                        initialOptions: _interactOptions,
-                        availableOptions: const {
-                          ShipSchemeInteractOption.view,
-                          ShipSchemeInteractOption.select,
-                        },
-                        onOptionsChanged: (newOptions) => setState(() {
-                          _interactOptions = newOptions;
-                        }),
-                      ),
-                    ],
+                  child: Center(
+                    child: DropdownMultiselectButton(
+                      itemHeight: 50.0,
+                      label: const Localized('Cargos').v,
+                      items: _cargoTypeFilter,
+                      onChanged: (newFilter) => setState(() {
+                        _cargoTypeFilter = newFilter;
+                      }),
+                    ),
                   ),
                 ),
-                ShipSchemeViewOptions(
+                SegmentedButtonOptions<ShipSchemeViewOptions>(
+                  multiSelectionEnabled: true,
+                  emptySelectionEnabled: true,
                   initialOptions: _viewOptions,
-                  availableOptions: const {
-                    ShipSchemeViewOption.showAxes,
-                    ShipSchemeViewOption.showGrid,
-                    ShipSchemeViewOption.showRealFrames,
-                    ShipSchemeViewOption.showTheoreticFrames,
+                  availableOptions: {
+                    ShipSchemeViewOptions.showAxes: SegmentedButtonOption(
+                      label: const Localized('Axes').v,
+                      tooltip: const Localized('Show axes').v,
+                      icon: Icons.merge,
+                    ),
+                    ShipSchemeViewOptions.showGrid: SegmentedButtonOption(
+                      label: const Localized('Grid').v,
+                      tooltip: const Localized('Show grid').v,
+                      icon: Icons.grid_4x4,
+                    ),
+                    ShipSchemeViewOptions.showRealFrames: SegmentedButtonOption(
+                      label: const Localized('Fr. R.').v,
+                      tooltip: const Localized('Show real frames').v,
+                      icon: Icons.horizontal_distribute_outlined,
+                    ),
+                    ShipSchemeViewOptions.showTheoreticFrames:
+                        SegmentedButtonOption(
+                      label: const Localized('Fr. Th.').v,
+                      tooltip: const Localized('Show theoretic frames').v,
+                      icon: Icons.horizontal_distribute_outlined,
+                    ),
                   },
                   onOptionsChanged: (newOptions) => setState(() {
                     _viewOptions = newOptions;
@@ -243,10 +291,23 @@ class _ShipSchemesState extends State<ShipSchemes> {
                 ),
                 Expanded(
                   flex: 1,
-                  child: Text(
-                    widget._shipCargoNotifier.selectedCargo?.name ?? '',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
+                  child: Center(
+                    child: SegmentedButtonOptions<ShipSchemeInteractOptions>(
+                      initialOptions: _interactOptions,
+                      availableOptions: {
+                        ShipSchemeInteractOptions.view: SegmentedButtonOption(
+                          icon: Icons.open_with,
+                          tooltip: const Localized('View tool').v,
+                        ),
+                        ShipSchemeInteractOptions.select: SegmentedButtonOption(
+                          icon: Icons.highlight_alt_outlined,
+                          tooltip: const Localized('Select tool').v,
+                        ),
+                      },
+                      onOptionsChanged: (newOptions) => setState(() {
+                        _interactOptions = newOptions;
+                      }),
+                    ),
                   ),
                 ),
               ],
@@ -265,13 +326,13 @@ class _ShipSchemesState extends State<ShipSchemes> {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Flexible(
                           flex: 1,
                           child: ShipScheme(
                             caption: 'Side View',
-                            projection: (FigureAxis.x, FigureAxis.z),
+                            projection: (FigureAxes.x, FigureAxes.z),
                             minX: _minX,
                             maxX: _maxX,
                             xAxis: xAxis,
@@ -285,15 +346,19 @@ class _ShipSchemesState extends State<ShipSchemes> {
                             framesTheoretic: _framesTheoretic,
                             framesTheoreticAxis: framesTheoreticAxis,
                             shipBody: _body,
-                            cargos: [...cargos]..sort(
-                                (one, other) =>
-                                    (one.$1.y2 - other.$1.y2).toInt(),
-                              ),
+                            shipBodyPretty: _bodyPretty,
+                            cargos: _getSortedShipCargos(
+                              cargoFigures,
+                              FigureAxes.y,
+                            ),
                             onCargoTap: (cargo) =>
                                 widget._shipCargoNotifier.toggleSelected(cargo),
-                            selectedCargos: selectedCargo,
+                            selectedCargos: _getSortedShipCargos(
+                              selectedCargoFigures,
+                              FigureAxes.y,
+                            ),
                             isViewInteractive: _interactOptions.contains(
-                              ShipSchemeInteractOption.view,
+                              ShipSchemeInteractOptions.view,
                             ),
                             fit: BoxFit.fitWidth,
                           ),
@@ -305,7 +370,7 @@ class _ShipSchemesState extends State<ShipSchemes> {
                           flex: 1,
                           child: ShipScheme(
                             caption: 'Top View',
-                            projection: (FigureAxis.x, FigureAxis.y),
+                            projection: (FigureAxes.x, FigureAxes.y),
                             minX: _minX,
                             maxX: _maxX,
                             xAxis: xAxis,
@@ -319,12 +384,19 @@ class _ShipSchemesState extends State<ShipSchemes> {
                             framesTheoretic: _framesTheoretic,
                             framesTheoreticAxis: framesTheoreticAxis,
                             shipBody: _body,
-                            cargos: cargos,
+                            shipBodyPretty: _bodyPretty,
+                            cargos: _getSortedShipCargos(
+                              cargoFigures,
+                              FigureAxes.z,
+                            ),
                             onCargoTap: (cargo) =>
                                 widget._shipCargoNotifier.toggleSelected(cargo),
-                            selectedCargos: selectedCargo,
+                            selectedCargos: _getSortedShipCargos(
+                              selectedCargoFigures,
+                              FigureAxes.z,
+                            ),
                             isViewInteractive: _interactOptions.contains(
-                              ShipSchemeInteractOption.view,
+                              ShipSchemeInteractOptions.view,
                             ),
                             fit: BoxFit.fitWidth,
                           ),
@@ -332,12 +404,15 @@ class _ShipSchemesState extends State<ShipSchemes> {
                       ],
                     ),
                   ),
+                  SizedBox(
+                    width: padding,
+                  ),
                   Flexible(
                     flex: 1,
                     child: ShipScheme(
                       caption:
-                          '${currentRFrameIdx + _framesRealIdxShift} Fr. FWD→AFT',
-                      projection: (FigureAxis.y, FigureAxis.z),
+                          '${currentRFrameIdx + _framesRealIdxShift} Fr. AFT→FWD',
+                      projection: (FigureAxes.y, FigureAxes.z),
                       minX: _minY,
                       maxX: _maxY,
                       xAxis: yAxis,
@@ -355,12 +430,19 @@ class _ShipSchemesState extends State<ShipSchemes> {
                         isLabelsVisible: false,
                       ),
                       shipBody: _body,
-                      cargos: sectionedCargos,
+                      shipBodyPretty: _bodyPretty,
+                      cargos: _getSortedShipCargos(
+                        sectionedCargos,
+                        FigureAxes.x,
+                      ),
                       onCargoTap: (cargo) =>
                           widget._shipCargoNotifier.toggleSelected(cargo),
-                      selectedCargos: selectedCargo,
+                      selectedCargos: _getSortedShipCargos(
+                        selectedCargoFigures,
+                        FigureAxes.x,
+                      ),
                       isViewInteractive: _interactOptions.contains(
-                        ShipSchemeInteractOption.view,
+                        ShipSchemeInteractOptions.view,
                       ),
                       fit: BoxFit.contain,
                     ),
@@ -376,45 +458,82 @@ class _ShipSchemesState extends State<ShipSchemes> {
 
   List<(Cargo, Figure)> _mapShipCargosToFigures(
     List<Cargo> cargos,
-    Color borderColor,
-    Color fillColor,
-    Figure bounder,
-  ) {
-    return cargos
-        .map(
-          (cargo) => (
-            cargo,
-            BoundedFigure(
-              figure: RectFigure(
-                borderColor: borderColor,
-                fillColor: fillColor,
-                dx1: cargo.asMap()['bound_x1'] ?? 0.0,
-                dx2: cargo.asMap()['bound_x2'] ?? 0.0,
-                dy1: cargo.asMap()['bound_y1'] ?? 0.0,
-                dy2: cargo.asMap()['bound_y2'] ?? 0.0,
-                dz1: cargo.asMap()['bound_z1'] ?? 0.0,
-                dz2: cargo.asMap()['bound_z2'] ?? 0.0,
-              ),
-              bounder: bounder,
-            )
+    Figure bounder, {
+    Color? borderColor,
+    Color? fillColor,
+  }) {
+    return cargos.map((cargo) {
+      final pathJson = cargo.path;
+      if (pathJson != null) {
+        final path = json.decode(pathJson);
+        return (
+          cargo,
+          PathFigure(
+            borderColor: borderColor ?? mapCargoToColor(cargo),
+            fillColor: fillColor ?? mapCargoToColor(cargo).withOpacity(0.15),
+            pathProjection: {
+              (FigureAxes.x, FigureAxes.y): path['xy'] ?? '',
+              (FigureAxes.x, FigureAxes.z): path['xz'] ?? '',
+              (FigureAxes.y, FigureAxes.z): path['yz'] ?? '',
+            },
+          )
+        );
+      }
+      return (
+        cargo,
+        BoundedFigure(
+          figure: RectFigure(
+            borderColor: borderColor ?? mapCargoToColor(cargo),
+            fillColor: fillColor ?? mapCargoToColor(cargo).withOpacity(0.15),
+            dx1: cargo.x1,
+            dx2: cargo.x2,
+            dy1: cargo.y1,
+            dy2: cargo.y2,
+            dz1: cargo.z1,
+            dz2: cargo.z2,
           ),
+          bounder: bounder,
         )
-        .toList();
+      );
+    }).toList();
   }
 
   List<(Cargo, Figure)> _extractShipCargosFromSection(
     List<(Cargo, Figure)> cargosFigures,
     double dx,
   ) {
-    return cargosFigures.where((cargo) {
-      final (_, figure) = cargo;
+    return cargosFigures.where((cargoFigure) {
+      final (_, figure) = cargoFigure;
       final bounds = figure
           .getOrthoProjection(
-            FigureAxis.x,
-            FigureAxis.y,
+            FigureAxes.x,
+            FigureAxes.y,
           )
           .getBounds();
       return (dx > bounds.left && dx <= bounds.right);
     }).toList();
+  }
+
+  List<(Cargo, Figure)> _getSortedShipCargos(
+    List<(Cargo, Figure)> cargos,
+    FigureAxes axis, {
+    int direction = 1,
+  }) {
+    final int Function(Cargo, Cargo) compareCargos = switch (axis) {
+      FigureAxes.x => (one, other) => direction > 0
+          ? (one.x2 - other.x2).toInt()
+          : (other.x1 - one.x1).toInt(),
+      FigureAxes.y => (one, other) => direction > 0
+          ? (one.y2 - other.y2).toInt()
+          : (other.y1 - one.y1).toInt(),
+      FigureAxes.z => (one, other) => direction > 0
+          ? (one.z2 - other.z2).toInt()
+          : (other.z1 - one.z1).toInt(),
+    };
+    return [...cargos]..sort((one, other) {
+        final (oneCargo, _) = one;
+        final (otherCargo, _) = other;
+        return compareCargos(oneCargo, otherCargo);
+      });
   }
 }

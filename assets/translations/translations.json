@@ -17,5 +17,9 @@
     "Frames": ["Frames", "Шпангоуты"],
     "kN": ["kN", "кН"],
     "kNm": ["kNm", "кНм"],
-    "Limit": ["Limit", "лимит"]
+    "Limit": ["Limit", "Лимит"],
+    "Add": ["Add", "Добавить"],
+    "Add above": ["Add above", "Добавить выше"],
+    "Cancel adding": ["Cancel adding", "Отменить добавление"],
+    "Delete": ["Delete", "Удалить"]
 }

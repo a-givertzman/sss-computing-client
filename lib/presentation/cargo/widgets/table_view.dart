@@ -84,13 +84,14 @@ class TableView<T> extends StatelessWidget {
         ),
         row: RowThemeData(
           dividerColor: Colors.transparent,
-          dividerThickness: _tableBorderThickness,
+          dividerThickness: 0.0,
           color: RowThemeData.zebraColor(
             evenColor: Colors.black.withOpacity(0.125),
             oddColor: Colors.transparent,
           ),
         ),
         cell: const CellThemeData(
+          padding: EdgeInsets.zero,
           alignment: Alignment.center,
           contentHeight: 30.0,
         ),

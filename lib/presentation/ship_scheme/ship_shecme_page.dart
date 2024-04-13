@@ -1,10 +1,10 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/models/cargo/cargo.dart';
-import 'package:sss_computing_client/models/cargo/cargos.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/cargo/cargos.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_test.dart';
-import 'package:sss_computing_client/widgets/core/future_builder_widget.dart';
+import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 
 ///
 class ShipSchemePage extends StatefulWidget {

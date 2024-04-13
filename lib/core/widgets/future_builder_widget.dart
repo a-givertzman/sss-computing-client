@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:sss_computing_client/widgets/core/error_message_widget.dart';
+import 'package:sss_computing_client/core/widgets/error_message_widget.dart';
 
 ///
 class FutureBuilderWidget<T> extends StatefulWidget {
@@ -92,7 +92,8 @@ class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
 
   ///
   /// Default indicator builder for [FutureBuilderWidget]  error state
-  Widget defaultCaseError(BuildContext _, Failure error) => ErrorMessageWidget(
+  Widget defaultCaseError(BuildContext _, Failure<String> error) =>
+      ErrorMessageWidget(
         message: const Localized('Error loading data').v,
         error: error,
         onConfirm: _reload,
@@ -119,8 +120,14 @@ class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
           _WithDataState<T>(:final data) => caseData(context, data),
           _LoadingState() =>
             caseLoading?.call(context) ?? defaultCaseLoading(context),
-          _WithErrorState(:final error) =>
-            caseError?.call(context, error) ?? defaultCaseError(context, error),
+          _WithErrorState(:final error) => caseError?.call(context, error) ??
+              defaultCaseError(
+                context,
+                Failure<String>(
+                  message: '${error.message}',
+                  stackTrace: StackTrace.current,
+                ),
+              ),
           _NothingState() =>
             caseNothing?.call(context) ?? defaultCaseNothing(context),
         };
@@ -148,7 +155,7 @@ sealed class _AsyncSnapshotState<T> {
           Ok(:final value) => switch (validateData?.call(value) ?? true) {
               true => _WithDataState(value),
               false => _WithErrorState(
-                  Failure(
+                  Failure<String>(
                     message: 'Invalid data',
                     stackTrace: StackTrace.current,
                   ),
@@ -164,7 +171,7 @@ sealed class _AsyncSnapshotState<T> {
         :final stackTrace,
       ) =>
         _WithErrorState(
-          Failure(
+          Failure<String>(
             message: error?.toString() ?? 'Something went wrong',
             stackTrace: stackTrace ?? StackTrace.current,
           ),
