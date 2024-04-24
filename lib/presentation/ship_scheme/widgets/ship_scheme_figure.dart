@@ -107,8 +107,8 @@ class _FigurePainter extends CustomPainter {
   ///
   @override
   bool shouldRepaint(covariant _FigurePainter oldDelegate) {
-    return (_figure != oldDelegate._figure ||
+    return _figure != oldDelegate._figure ||
         _transform != oldDelegate._transform ||
-        _projection != oldDelegate._projection);
+        _projection != oldDelegate._projection;
   }
 }
