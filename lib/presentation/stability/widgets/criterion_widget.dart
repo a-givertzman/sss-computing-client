@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 ///
-class Criterion extends StatelessWidget {
+class CriterionWidget extends StatelessWidget {
   final double _value;
   final double _limit;
   final String _label;
@@ -14,7 +15,7 @@ class Criterion extends StatelessWidget {
   final Color? _passedColor;
   final Color? _errorColor;
   ///
-  const Criterion({
+  const CriterionWidget({
     super.key,
     required double value,
     required double limit,
@@ -46,6 +47,7 @@ class Criterion extends StatelessWidget {
     final color = _color ?? theme.colorScheme.onSurface;
     final passedColor = _passedColor ?? Colors.lightGreen;
     final errorColor = _errorColor ?? theme.alarmColors.class3;
+    final padding = const Setting('padding').toDouble;
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,10 +65,11 @@ class Criterion extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(width: padding),
             Expanded(
               flex: 1,
               child: Text(
-                '$_limit',
+                _limit.toStringAsFixed(3),
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.end,
                 style: textStyle?.copyWith(color: color),
@@ -84,12 +87,13 @@ class Criterion extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Text(
-                '$_value',
+                _value.toStringAsFixed(3),
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
                 style: textStyle?.copyWith(color: color),
               ),
             ),
+            SizedBox(width: padding),
             _passed
                 ? Icon(
                     Icons.done,
