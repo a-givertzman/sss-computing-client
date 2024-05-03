@@ -21,6 +21,7 @@ class CriterionList extends StatefulWidget {
         criterions: _criterions,
       );
 }
+///
 class _CriterionListState extends State<CriterionList> {
   final List<Criterion> _criterions;
   late final ScrollController scrollController;
@@ -43,39 +44,45 @@ class _CriterionListState extends State<CriterionList> {
   ///
   @override
   Widget build(BuildContext context) {
+    const scrollbarThickness = 8.0;
     final padding = const Setting('padding').toDouble;
     return Scrollbar(
       controller: scrollController,
       thumbVisibility: true,
-      child: ScrollableBuilderWiddget(
-        controller: scrollController,
-        builder: (context, isScrollable) {
-          return ListView.builder(
-            controller: scrollController,
-            itemCount: _criterions.length,
-            itemBuilder: (context, index) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: index.isEven
-                      ? Colors.transparent
-                      : Colors.black.withOpacity(0.15),
-                ),
-                child: AnimatedPadding(
-                  duration: const Duration(milliseconds: 150),
-                  padding: EdgeInsets.only(
-                    left: padding,
-                    top: padding,
-                    right: padding + (isScrollable ? 8.0 : 0.0),
-                    bottom: padding,
+      thickness: scrollbarThickness,
+      child: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+        child: ScrollableBuilderWiddget(
+          controller: scrollController,
+          builder: (context, isScrollable) {
+            return ListView.builder(
+              controller: scrollController,
+              itemCount: _criterions.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: index.isEven
+                        ? Colors.transparent
+                        : Colors.black.withOpacity(0.15),
                   ),
-                  child: Builder(
-                    builder: (_) => _buildCriterionWidget(_criterions[index]),
+                  child: AnimatedPadding(
+                    duration: const Duration(milliseconds: 150),
+                    padding: EdgeInsets.only(
+                      left: padding,
+                      top: padding,
+                      right:
+                          padding + (isScrollable ? scrollbarThickness : 0.0),
+                      bottom: padding,
+                    ),
+                    child: Builder(
+                      builder: (_) => _buildCriterionWidget(_criterions[index]),
+                    ),
                   ),
-                ),
-              );
-            },
-          );
-        },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
@@ -91,7 +98,7 @@ class _CriterionListState extends State<CriterionList> {
       Ok(value: final isPassed) => CriterionWidget(
           value: criterion.value,
           limit: criterion.limit,
-          relation: relation.asString,
+          relation: relation.swaped().operator,
           passed: isPassed,
           errorMessage: isPassed
               ? null
@@ -105,7 +112,7 @@ class _CriterionListState extends State<CriterionList> {
       Err(:final error) => CriterionWidget(
           value: criterion.value,
           limit: criterion.limit,
-          relation: relation.asString,
+          relation: relation.swaped().operator,
           passed: false,
           errorMessage: error.message,
           errorColor: theme.alarmColors.class1,

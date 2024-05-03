@@ -3,107 +3,93 @@ import 'package:sss_computing_client/core/models/criterion/number_math_relation.
 ///
 void main() {
   //
-  group('[NumberMathRelation] asString, [LessThan] |', () {
+  group('[NumberMathRelation] operator', () {
+    //
     test(
-      'return correct asString value',
+      '[LessThan] return correct operator value',
       () {
         const relation = LessThan();
         expect(
-          relation.asString,
+          relation.operator,
           '<',
-          reason: 'asString for [LessThan] should return "<"',
+          reason: 'operator for [LessThan] should return "<"',
         );
       },
     );
-  });
-  //
-  group('[NumberMathRelation] asString, [GreaterThan] |', () {
+    //
     test(
-      'return correct asString value',
+      '[GreaterThan] return correct operator value',
       () {
         const relation = GreaterThan();
         expect(
-          relation.asString,
+          relation.operator,
           '>',
-          reason: 'asString for [GreaterThan] should return ">"',
+          reason: 'operator for [GreaterThan] should return ">"',
         );
       },
     );
-  });
-  //
-  group('[NumberMathRelation] asString, [EqualTo] |', () {
+    //
     test(
-      'return correct asString value',
+      '[EqualTo] return correct operator value',
       () {
         const relation = EqualTo();
         expect(
-          relation.asString,
+          relation.operator,
           '=',
-          reason: 'asString for [EqualTo] should return "="',
+          reason: 'operator for [EqualTo] should return "="',
         );
       },
     );
-  });
-  //
-  group('[NumberMathRelation] asString, [NotEqualTo] |', () {
+    //
     test(
-      'return correct asString value',
+      '[NotEqualTo] return correct operator value',
       () {
         const relation = NotEqualTo();
         expect(
-          relation.asString,
+          relation.operator,
           '≠',
-          reason: 'asString for [NotEqualTo] should return "≠"',
+          reason: 'operator for [NotEqualTo] should return "≠"',
         );
       },
     );
-  });
-  //
-  group('[NumberMathRelation] asString, [LessThanOrEqualTo] |', () {
+    //
     test(
-      'return correct asString value',
+      '[LessThanOrEqualTo] return correct operator value',
       () {
         const relation = LessThanOrEqualTo();
         expect(
-          relation.asString,
+          relation.operator,
           '≤',
-          reason: 'asString for [LessThanOrEqualTo] should return "≤"',
+          reason: 'operator for [LessThanOrEqualTo] should return "≤"',
         );
       },
     );
-  });
-  //
-  group('[NumberMathRelation] asString, [GreaterThanOrEqualTo] |', () {
+    //
     test(
-      'return correct asString value',
+      '[GreaterThanOrEqualTo] return correct operator value',
       () {
         const relation = GreaterThanOrEqualTo();
         expect(
-          relation.asString,
+          relation.operator,
           '≥',
-          reason: 'asString for [GreaterThanOrEqualTo] should return "≥"',
+          reason: 'operator for [GreaterThanOrEqualTo] should return "≥"',
         );
       },
     );
-  });
-  //
-  group('[NumberMathRelation] asString, [UnimplementedMathRelation] |', () {
-    final values = ['', '-', '.', '>>', '<<', '><', '=>', '=<', '!!='];
-    for (final value in values) {
-      test(
-        'return correct asString value',
-        () {
-          final relation = UnimplementedMathRelation(
-            stringRepresentaion: value,
-          );
-          expect(
-            relation.asString,
-            value,
-            reason:
-                'asString for [UnimplementedMathRelation] should return stringRepresentaion passed in constructor',
-          );
-        },
-      );
-    }
+    //
+    test('[UnimplementedMathRelation] return correct operator value', () {
+      final values = ['', '-', '.', '>>', '<<', '><', '=>', '=<', '!!='];
+      for (final value in values) {
+        final relation = UnimplementedMathRelation(
+          stringRepresentaion: value,
+        );
+        expect(
+          relation.operator,
+          value,
+          reason:
+              'operator for [UnimplementedMathRelation] should return stringRepresentaion passed in constructor',
+        );
+      }
+    });
   });
 }
