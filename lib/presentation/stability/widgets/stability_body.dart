@@ -5,6 +5,7 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/stability/stability_criterions.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/stability/widgets/criterion_list.dart';
+import 'package:sss_computing_client/presentation/stability/widgets/criterions_summary.dart';
 ///
 class StabilityBody extends StatelessWidget {
   final String _dbName;
@@ -19,6 +20,7 @@ class StabilityBody extends StatelessWidget {
   ///
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final padding = const Setting('padding').toDouble;
     return Scaffold(
       body: FutureBuilderWidget(
@@ -40,15 +42,18 @@ class StabilityBody extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
-                          '${const Localized('Критерии остойчивости').v}:',
-                          textAlign: TextAlign.start,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${const Localized('Критерии остойчивости').v}:',
+                              textAlign: TextAlign.start,
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: theme.colorScheme.onSurface,
                               ),
+                            ),
+                            CriterionsSummary(criterions: criterions),
+                          ],
                         ),
                         SizedBox(height: padding),
                         Expanded(
