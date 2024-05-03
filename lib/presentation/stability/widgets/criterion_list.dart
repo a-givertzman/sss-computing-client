@@ -98,7 +98,7 @@ class _CriterionListState extends State<CriterionList> {
       Ok(value: final isPassed) => CriterionWidget(
           value: criterion.value,
           limit: criterion.limit,
-          relation: relation.asString,
+          relation: relation.swaped().operator,
           passed: isPassed,
           errorMessage: isPassed
               ? null
@@ -112,7 +112,7 @@ class _CriterionListState extends State<CriterionList> {
       Err(:final error) => CriterionWidget(
           value: criterion.value,
           limit: criterion.limit,
-          relation: relation.asString,
+          relation: relation.swaped().operator,
           passed: false,
           errorMessage: error.message,
           errorColor: theme.alarmColors.class1,
