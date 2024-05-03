@@ -9,7 +9,7 @@ void main() {
       () {
         const relation = LessThan();
         expect(
-          relation.asString,
+          relation.operator,
           '<',
           reason: 'asString for [LessThan] should return "<"',
         );
@@ -23,7 +23,7 @@ void main() {
       () {
         const relation = GreaterThan();
         expect(
-          relation.asString,
+          relation.operator,
           '>',
           reason: 'asString for [GreaterThan] should return ">"',
         );
@@ -37,7 +37,7 @@ void main() {
       () {
         const relation = EqualTo();
         expect(
-          relation.asString,
+          relation.operator,
           '=',
           reason: 'asString for [EqualTo] should return "="',
         );
@@ -51,7 +51,7 @@ void main() {
       () {
         const relation = NotEqualTo();
         expect(
-          relation.asString,
+          relation.operator,
           '≠',
           reason: 'asString for [NotEqualTo] should return "≠"',
         );
@@ -65,7 +65,7 @@ void main() {
       () {
         const relation = LessThanOrEqualTo();
         expect(
-          relation.asString,
+          relation.operator,
           '≤',
           reason: 'asString for [LessThanOrEqualTo] should return "≤"',
         );
@@ -79,7 +79,7 @@ void main() {
       () {
         const relation = GreaterThanOrEqualTo();
         expect(
-          relation.asString,
+          relation.operator,
           '≥',
           reason: 'asString for [GreaterThanOrEqualTo] should return "≥"',
         );
@@ -97,7 +97,7 @@ void main() {
             stringRepresentaion: value,
           );
           expect(
-            relation.asString,
+            relation.operator,
             value,
             reason:
                 'asString for [UnimplementedMathRelation] should return stringRepresentaion passed in constructor',
