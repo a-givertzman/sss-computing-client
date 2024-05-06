@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/presentation/core/models/ship_scheme/chart_axis.dart';
-import 'package:sss_computing_client/presentation/core/models/ship_scheme/figure.dart';
+import 'package:sss_computing_client/models/cargo/cargo.dart';
+import 'package:sss_computing_client/models/ship_scheme/chart_axis.dart';
+import 'package:sss_computing_client/models/ship_scheme/figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_axis.dart';
-import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_figures.dart';
+import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_frames_theoretic.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_grid.dart';
 import 'package:sss_computing_client/widgets/core/fitted_builder_widget.dart';
@@ -12,7 +13,8 @@ import 'package:vector_math/vector_math_64.dart' hide Colors;
 class ShipScheme extends StatefulWidget {
   final (FigureAxis, FigureAxis) _projection;
   final Figure _shipBody;
-  final List<Figure> _figures;
+  final List<(Cargo, Figure)> _cargos;
+  final List<(Cargo, Figure)> _selectedCargos;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
   final ChartAxis _framesTheoreticAxis;
@@ -20,8 +22,10 @@ class ShipScheme extends StatefulWidget {
   final List<(double, double, int)> _framesTheoretic;
   final List<(double, int)> _framesReal;
   final TransformationController? _transformationController;
+  final void Function(Cargo)? _onCargoTap;
   final bool _invertHorizontal;
   final bool _invertVertical;
+  final bool _isViewInteractive;
   final double? _minX;
   final double? _maxX;
   final double? _minY;
@@ -34,7 +38,8 @@ class ShipScheme extends StatefulWidget {
     super.key,
     required (FigureAxis, FigureAxis) projection,
     required Figure shipBody,
-    required List<Figure> figures,
+    required List<(Cargo, Figure)> cargos,
+    List<(Cargo, Figure)> selectedCargos = const [],
     required ChartAxis xAxis,
     required ChartAxis yAxis,
     required ChartAxis framesTheoreticAxis,
@@ -42,8 +47,10 @@ class ShipScheme extends StatefulWidget {
     required List<(double, double, int)> framesTheoretic,
     required List<(double, int)> framesReal,
     TransformationController? transformationController,
+    void Function(Cargo cargo)? onCargoTap,
     bool invertHorizontal = false,
     bool invertVertical = false,
+    bool isViewInteractive = false,
     double? minX,
     double? maxX,
     double? minY,
@@ -52,9 +59,11 @@ class ShipScheme extends StatefulWidget {
     Color? axisColor,
   })  : _projection = projection,
         _shipBody = shipBody,
-        _figures = figures,
+        _cargos = cargos,
+        _selectedCargos = selectedCargos,
         _invertVertical = invertVertical,
         _invertHorizontal = invertHorizontal,
+        _isViewInteractive = isViewInteractive,
         _framesTheoreticAxis = framesTheoreticAxis,
         _framesRealAxis = framesRealAxis,
         _axisColor = axisColor,
@@ -62,6 +71,7 @@ class ShipScheme extends StatefulWidget {
         _framesTheoretic = framesTheoretic,
         _framesReal = framesReal,
         _transformationController = transformationController,
+        _onCargoTap = onCargoTap,
         _maxX = maxX,
         _minX = minX,
         _maxY = maxY,
@@ -190,7 +200,7 @@ class _ShipSchemeState extends State<ShipScheme> {
                   ),
                 ),
               // Y-Axis Grid
-              if (widget._yAxis.isGridVisible)
+              if (widget._yAxis.isGridVisible) ...[
                 Positioned(
                   top: 0.0,
                   bottom: bottomContentPadding,
@@ -206,6 +216,22 @@ class _ShipSchemeState extends State<ShipScheme> {
                     ),
                   ),
                 ),
+                Positioned(
+                  top: 0.0,
+                  bottom: bottomContentPadding,
+                  left: leftContentPadding,
+                  right: 0.0,
+                  child: RotatedBox(
+                    quarterTurns: 1,
+                    child: ShipSchemeGrid(
+                      transformValue: yTransform,
+                      color: widget._axisColor?.withOpacity(0.5) ??
+                          theme.colorScheme.primary.withOpacity(0.5),
+                      axisGrid: const [0.0],
+                    ),
+                  ),
+                ),
+              ],
               // X-Axis
               if (widget._xAxis.isLabelsVisible) ...[
                 Positioned(
@@ -238,6 +264,18 @@ class _ShipSchemeState extends State<ShipScheme> {
                     axisGrid: _xAxisGrid,
                   ),
                 ),
+                Positioned(
+                  top: 0.0,
+                  bottom: bottomContentPadding,
+                  left: leftContentPadding,
+                  right: 0.0,
+                  child: ShipSchemeGrid(
+                    transformValue: xTransform,
+                    color: widget._axisColor?.withOpacity(0.5) ??
+                        theme.colorScheme.primary.withOpacity(0.5),
+                    axisGrid: const [0.0],
+                  ),
+                ),
               ],
               // Layout content
               Positioned(
@@ -250,20 +288,31 @@ class _ShipSchemeState extends State<ShipScheme> {
                     children: [
                       // Ship body-lines
                       Positioned.fill(
-                        child: ShipSchemeFigures(
+                        child: ShipSchemeFigure(
                           projection: widget._projection,
                           transform: _getTransform(scaleX, scaleY),
-                          figures: [widget._shipBody],
+                          figure: widget._shipBody,
                           thickness: 1.5,
                         ),
                       ),
-                      // Compartments body-lines
+                      // Figures body-lines
                       Positioned.fill(
-                        child: ShipSchemeFigures(
+                        child: _ShipSchemeCargos(
                           projection: widget._projection,
                           transform: _getTransform(scaleX, scaleY),
-                          figures: widget._figures,
+                          cargos: widget._cargos,
                           thickness: 2.0,
+                          onTap: widget._onCargoTap,
+                        ),
+                      ),
+                      // Selected figure body-lines
+                      Positioned.fill(
+                        child: _ShipSchemeCargos(
+                          projection: widget._projection,
+                          transform: _getTransform(scaleX, scaleY),
+                          cargos: widget._selectedCargos,
+                          thickness: 2.0,
+                          onTap: widget._onCargoTap,
                         ),
                       ),
                     ],
@@ -339,20 +388,6 @@ class _ShipSchemeState extends State<ShipScheme> {
                     ),
                   ),
                 ),
-              // Area of interactive shift & scale
-              Positioned(
-                top: 0.0,
-                right: 0.0,
-                left: leftContentPadding,
-                bottom: bottomContentPadding,
-                child: InteractiveViewer(
-                  transformationController: _transformationController,
-                  child: SizedBox(
-                    width: layoutWidth - leftContentPadding,
-                    height: layoutHeight - bottomContentPadding,
-                  ),
-                ),
-              ),
               // Caption
               if (widget._caption != null)
                 Positioned(
@@ -360,6 +395,21 @@ class _ShipSchemeState extends State<ShipScheme> {
                   right: padding,
                   child: _ShipSchemeCaption(
                     text: widget._caption!,
+                  ),
+                ),
+              // Area of interactive shift & scale
+              if (widget._isViewInteractive)
+                Positioned(
+                  top: 0.0,
+                  right: 0.0,
+                  left: leftContentPadding,
+                  bottom: bottomContentPadding,
+                  child: InteractiveViewer(
+                    transformationController: _transformationController,
+                    child: SizedBox(
+                      width: layoutWidth - leftContentPadding,
+                      height: layoutHeight - bottomContentPadding,
+                    ),
                   ),
                 ),
             ],
@@ -496,6 +546,48 @@ class _ShipSchemeCaption extends StatelessWidget {
           _backgroundColor ?? theme.colorScheme.primary.withOpacity(0.15),
       padding: EdgeInsets.zero,
       side: BorderSide.none,
+    );
+  }
+}
+
+///
+class _ShipSchemeCargos extends StatelessWidget {
+  final (FigureAxis, FigureAxis) _projection;
+  final Matrix4 _transform;
+  final List<(Cargo, Figure)> _cargos;
+  final double? _thickness;
+  final void Function(Cargo)? _onTap;
+
+  ///
+  const _ShipSchemeCargos({
+    required (FigureAxis, FigureAxis) projection,
+    required Matrix4 transform,
+    required List<(Cargo, Figure)> cargos,
+    double? thickness,
+    void Function(Cargo cargo)? onTap,
+  })  : _projection = projection,
+        _transform = transform,
+        _cargos = cargos,
+        _thickness = thickness,
+        _onTap = onTap;
+
+  ///
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        ..._cargos.map(
+          (cargo) => Positioned.fill(
+            child: ShipSchemeFigure(
+              projection: _projection,
+              transform: _transform,
+              figure: cargo.$2,
+              thickness: _thickness,
+              onTap: () => _onTap?.call(cargo.$1),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
