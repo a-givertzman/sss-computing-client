@@ -1,57 +1,47 @@
+import 'package:flutter/material.dart';
 ///
 /// Common data for corresponding [Cargo].
 abstract interface class Cargo {
   /// ID of the [Cargo]
   int? get id;
-
   /// Name identificator of the [Cargo]
   String get name;
   // Weight of the cargo
   double get weight;
-
   /// Vertital Center of Gravity of the [Cargo]
   double get vcg;
-
   /// Longitudinal Center of Gravity
   double get lcg;
-
   /// Transversal Center of Gravity
   double get tcg;
-
   /// Offset of the left [Cargo] side from the midship
   double get x1;
-
   /// Offset of the right [Cargo] side from the midship
   double get x2;
-
   /// Offset of the near [Cargo] side from the midship
   double get y1;
-
   /// Offset of the far [Cargo] side from the midship
   double get y2;
-
   /// Offset of the bottom [Cargo] side from the midship
   double get z1;
-
   /// Offset of the top [Cargo] side from the midship
   double get z2;
-
   /// x-moment of inertia of the free surface of the water
   double get mfsx;
-
   /// y-moment of inertia of the free surface of the water
   double get mfsy;
-
+  /// type of the cargo
+  String get type;
+  ///
+  String? get path;
   /// Returns [Map] representation of the [Cargo]
   Map<String, dynamic> asMap();
 }
-
 ///
 /// [Cargo] that parses itself from json map.
 class JsonCargo implements Cargo {
   /// Json representaion of the [Cargo].
   final Map<String, dynamic> _json;
-
   /// Creates [Cargo] that parses itself from json map.
   const JsonCargo({
     required Map<String, dynamic> json,
@@ -85,10 +75,24 @@ class JsonCargo implements Cargo {
   @override
   double get mfsy => _json['m_f_s_y'] ?? 0.0;
   @override
+  String? get path => _json['path'];
+  @override
+  String get type => _json['type'] ?? 'other';
+  @override
   Map<String, dynamic> asMap() {
     return _json;
   }
-
   @override
   String toString() => _json.toString();
+}
+///
+Color mapCargoToColor(Cargo cargo) {
+  return switch (cargo.type) {
+    'BALLAST' => Colors.green,
+    'OILS_AND_FUELS' => Colors.brown,
+    'FRESH_WATER' => Colors.blue,
+    'ACIDS_AND_ALKALIS' => Colors.purple,
+    'POLLUTED_LIQUIDS' => Colors.black,
+    _ => Colors.grey,
+  };
 }

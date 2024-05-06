@@ -24,7 +24,7 @@ class ShipSchemeFramesTheoretic extends StatelessWidget {
         _labelStyle = labelStyle,
         _frames = frames,
         _transformValue = transformValue;
-  //
+  ///
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -65,7 +65,7 @@ class _AxisPainter extends CustomPainter {
         _frames = frames,
         _transformValue = transformValue,
         super();
-  //
+  ///
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
@@ -89,7 +89,7 @@ class _AxisPainter extends CustomPainter {
       );
     }
   }
-  //
+  ///
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;

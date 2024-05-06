@@ -1,32 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math_64.dart';
-
-enum FigureAxis { x, y, z }
-
+import 'package:path_drawing/path_drawing.dart';
+import 'package:vector_math/vector_math_64.dart' hide Colors;
+enum FigureAxes { x, y, z }
 /// Used to obtain orthogonal projection onto three main planes
 /// and store data about figure.
 abstract interface class Figure {
   /// Border color of [Figure]
   Color? get borderColor;
-
   /// Fill color of [Figure]
   Color? get fillColor;
-
   /// Returns orthogonal projection of [Figure]
   /// onto plane parallel to axes one and two
-  Path getOrthoProjection(FigureAxis x, FigureAxis y);
-
+  Path getOrthoProjection(FigureAxes x, FigureAxes y);
   /// Returns copy of [Figure]
   Figure copyWith({Color? borderColor, Color? fillColor});
 }
-
 ///
 class RectFigure implements Figure {
   final Color? _borderColor;
   final Color? _fillColor;
   final (double dx, double dy, double dz) _point1;
   final (double dx, double dy, double dz) _point2;
-
   ///
   const RectFigure({
     Color? borderColor,
@@ -41,18 +35,15 @@ class RectFigure implements Figure {
         _fillColor = fillColor,
         _point1 = (dx1, dy1, dz1),
         _point2 = (dx2, dy2, dz2);
-
-  ///
+  //
   @override
   Color? get borderColor => _borderColor;
-
-  ///
+  //
   @override
   Color? get fillColor => _fillColor;
-
-  ///
+  //
   @override
-  Path getOrthoProjection(FigureAxis x, FigureAxis y) {
+  Path getOrthoProjection(FigureAxes x, FigureAxes y) {
     final point1 = Vector3(_point1.$1, _point1.$2, _point1.$3);
     final point2 = Vector3(_point2.$1, _point2.$2, _point2.$3);
     return Path()
@@ -61,74 +52,48 @@ class RectFigure implements Figure {
         Offset(point2[x.index], point2[y.index]),
       ));
   }
-
-  /// TODO: remove
-  @override
-  String toString() {
-    final point1 = Vector3(_point1.$1, _point1.$2, _point1.$3);
-    final point2 = Vector3(_point2.$1, _point2.$2, _point2.$3);
-    final (center, size) = ((point1 + point2) / 2, (point2 - point1));
-    return '''\n
-      center: $center ,
-      size: $size,
-      x1, x2: ($point1.x, $point2.x)
-      y1, y2: ($point1.y, $point2.y)
-      z1, z2: ($point1.z, $point2.z)
-    ''';
-  }
-
-  ///
+  //
   @override
   Figure copyWith({Color? borderColor, Color? fillColor}) {
     return RectFigure(
       borderColor: borderColor ?? _borderColor,
       fillColor: fillColor ?? _fillColor,
-      dx1: _point1.$1,
-      dy1: _point1.$2,
-      dz1: _point1.$3,
-      dx2: _point2.$1,
-      dy2: _point2.$2,
-      dz2: _point2.$3,
+      dx1: _point1.$1, dx2: _point2.$1, //
+      dy1: _point1.$2, dy2: _point2.$2, //
+      dz1: _point1.$3, dz2: _point2.$3, //
     );
   }
 }
-
 class BoundedFigure implements Figure {
   final Figure _figure;
   final Figure _bounder;
-
   ///
   const BoundedFigure({
     required Figure figure,
     required Figure bounder,
   })  : _figure = figure,
         _bounder = bounder;
-
-  ///
+  //
   @override
   Color? get borderColor => _figure.borderColor;
-
-  ///
+  //
   @override
   Color? get fillColor => _figure.fillColor;
-
-  ///
+  //
   @override
-  Path getOrthoProjection(FigureAxis x, FigureAxis y) {
+  Path getOrthoProjection(FigureAxes x, FigureAxes y) {
     return Path.combine(
       PathOperation.intersect,
       _figure.getOrthoProjection(x, y),
       _bounder.getOrthoProjection(x, y),
     );
   }
-
   ///
   @override
   String toString() {
     return _figure.toString();
   }
-
-  ///
+  //
   @override
   Figure copyWith({Color? borderColor, Color? fillColor}) {
     return BoundedFigure(
@@ -140,115 +105,71 @@ class BoundedFigure implements Figure {
     );
   }
 }
-
-class BarellFigure implements Figure {
+///
+class TransformedProjectionFigure implements Figure {
   final Color? _borderColor;
   final Color? _fillColor;
-  final (double dx, double dy, double dz) _center;
-  final (double widht, double length, double height) _size;
-  final FigureAxis _axis;
-
+  final Figure _figure;
+  final Matrix4 _transform;
   ///
-  const BarellFigure({
+  const TransformedProjectionFigure({
     Color? borderColor,
     Color? fillColor,
-    double dx = 0.0,
-    double dy = 0.0,
-    double dz = 0.0,
-    double width = 0.0,
-    double length = 0.0,
-    double height = 0.0,
-    required FigureAxis axis,
+    required Figure figure,
+    required Matrix4 transform,
   })  : _borderColor = borderColor,
         _fillColor = fillColor,
-        _center = (dx, dy, dz),
-        _size = (width, length, height),
-        _axis = axis;
-
-  ///
+        _figure = figure,
+        _transform = transform;
+  //
   @override
-  Color? get borderColor => _borderColor;
-
-  ///
+  Color? get borderColor => _borderColor ?? _figure.borderColor;
+  //
   @override
-  Color? get fillColor => _fillColor;
-
-  ///
+  Color? get fillColor => _fillColor ?? _figure.fillColor;
+  //
   @override
-  Path getOrthoProjection(FigureAxis x, FigureAxis y) {
-    final center = Vector3(_center.$1, _center.$2, _center.$3);
-    final size = Vector3(_size.$1, _size.$2, _size.$3);
-    final (leftOffset, rightOffset) = (center - size / 2, center + size / 2);
-    if (x == _axis || y == _axis) {
-      return Path()
-        ..addPolygon(
-          [
-            Offset(leftOffset[x.index], rightOffset[y.index]),
-            Offset(rightOffset[x.index], rightOffset[y.index]),
-            Offset(rightOffset[x.index], leftOffset[y.index]),
-            Offset(leftOffset[x.index], leftOffset[y.index]),
-          ],
-          true,
-        );
-    } else {
-      return Path()
-        ..addOval(
-          Rect.fromPoints(
-            Offset(leftOffset[x.index], rightOffset[y.index]),
-            Offset(rightOffset[x.index], leftOffset[y.index]),
-          ),
-        );
-    }
+  Path getOrthoProjection(FigureAxes x, FigureAxes y) {
+    return _figure.getOrthoProjection(x, y).transform(_transform.storage);
   }
-
-  ///
+  //
   @override
   Figure copyWith({Color? borderColor, Color? fillColor}) {
-    return BarellFigure(
+    return TransformedProjectionFigure(
       borderColor: borderColor ?? _borderColor,
       fillColor: fillColor ?? _fillColor,
-      dx: _center.$1,
-      dy: _center.$2,
-      dz: _center.$3,
-      width: _size.$1,
-      length: _size.$2,
-      height: _size.$3,
-      axis: _axis,
+      figure: _figure,
+      transform: _transform,
     );
   }
 }
-
 class WaterineFigure implements Figure {
   final Color? _borderColor;
   final Color? _fillColor;
   final Offset _begin;
   final Offset _end;
-  final (FigureAxis, FigureAxis) _axes;
-
+  final (FigureAxes, FigureAxes) _axes;
   ///
   const WaterineFigure({
     Color? borderColor,
     Color? fillColor,
     required Offset begin,
     required Offset end,
-    required (FigureAxis, FigureAxis) axes,
+    required (FigureAxes, FigureAxes) axes,
   })  : _borderColor = borderColor,
         _fillColor = fillColor,
         _begin = begin,
         _end = end,
         _axes = axes;
-
-  ///
+  //
   @override
   Color? get borderColor => _borderColor;
-
-  ///
+  //
   @override
   Color? get fillColor => _fillColor ?? _borderColor?.withOpacity(0.15);
-
-  ///
+  //
   @override
-  Path getOrthoProjection(FigureAxis x, FigureAxis y) {
+  Path getOrthoProjection(FigureAxes x, FigureAxes y) {
     final height = _end.dx - _begin.dx;
     if (_axes.$1 == x && _axes.$2 == y) {
       return Path()
@@ -275,7 +196,6 @@ class WaterineFigure implements Figure {
     }
     return Path();
   }
-
   @override
   Figure copyWith({Color? borderColor, Color? fillColor}) {
     return WaterineFigure(
@@ -287,61 +207,135 @@ class WaterineFigure implements Figure {
     );
   }
 }
-
 ///
-class PathFigure implements Figure {
+class PolygonFigure implements Figure {
   final Color? _borderColor;
   final Color? _fillColor;
-  final Map<(FigureAxis, FigureAxis), List<Offset>> _pathProjection;
-
+  final Map<(FigureAxes, FigureAxes), List<Offset>> _pathProjection;
   ///
-  const PathFigure({
+  const PolygonFigure({
     Color? borderColor,
     Color? fillColor,
-    required Map<(FigureAxis, FigureAxis), List<Offset>> pathProjection,
+    required Map<(FigureAxes, FigureAxes), List<Offset>> pathProjection,
   })  : _borderColor = borderColor,
         _fillColor = fillColor,
         _pathProjection = pathProjection;
-
-  ///
+  //
   @override
   Color? get borderColor => _borderColor;
-
-  ///
+  //
   @override
   Color? get fillColor => _fillColor;
-
-  ///
+  //
   @override
-  Path getOrthoProjection(FigureAxis x, FigureAxis y) {
+  Path getOrthoProjection(FigureAxes x, FigureAxes y) {
     final projection = (x, y);
     return switch (projection) {
-      (FigureAxis.x, FigureAxis.y) => Path()
+      (FigureAxes.x, FigureAxes.y) => Path()
         ..addPolygon(
-          _pathProjection[(FigureAxis.x, FigureAxis.y)] ?? [],
+          _pathProjection[(FigureAxes.x, FigureAxes.y)] ?? [],
           true,
         ),
-      (FigureAxis.y, FigureAxis.z) => Path()
+      (FigureAxes.y, FigureAxes.z) => Path()
         ..addPolygon(
-          _pathProjection[(FigureAxis.y, FigureAxis.z)] ?? [],
+          _pathProjection[(FigureAxes.y, FigureAxes.z)] ?? [],
           true,
         ),
-      (FigureAxis.x, FigureAxis.z) => Path()
+      (FigureAxes.x, FigureAxes.z) => Path()
         ..addPolygon(
-          _pathProjection[(FigureAxis.x, FigureAxis.z)] ?? [],
+          _pathProjection[(FigureAxes.x, FigureAxes.z)] ?? [],
           true,
         ),
       _ => Path(),
     };
   }
-
-  ///
+  //
   @override
   Figure copyWith({Color? borderColor, Color? fillColor}) {
-    return PathFigure(
+    return PolygonFigure(
       borderColor: borderColor ?? _borderColor,
       fillColor: fillColor ?? _fillColor,
       pathProjection: _pathProjection,
+    );
+  }
+}
+///
+class ProjectionPathFigure implements Figure {
+  final Color? _borderColor;
+  final Color? _fillColor;
+  final Path _path;
+  ///
+  const ProjectionPathFigure({
+    Color? borderColor,
+    Color? fillColor,
+    required Path path,
+  })  : _borderColor = borderColor,
+        _fillColor = fillColor,
+        _path = path;
+  //
+  @override
+  Color? get borderColor => _borderColor;
+  //
+  @override
+  Color? get fillColor => _fillColor;
+  //
+  @override
+  Path getOrthoProjection(FigureAxes x, FigureAxes y) {
+    return _path;
+  }
+  //
+  @override
+  Figure copyWith({Color? borderColor, Color? fillColor}) {
+    return ProjectionPathFigure(
+      borderColor: borderColor ?? _borderColor,
+      fillColor: fillColor ?? _fillColor,
+      path: _path,
+    );
+  }
+}
+///
+class SVGPathFigure implements Figure {
+  final Color? _borderColor;
+  final Color? _fillColor;
+  final Map<(FigureAxes, FigureAxes), String> _projectionPath;
+  ///
+  const SVGPathFigure({
+    Color? borderColor,
+    Color? fillColor,
+    required Map<(FigureAxes, FigureAxes), String> projectionPath,
+  })  : _borderColor = borderColor,
+        _fillColor = fillColor,
+        _projectionPath = projectionPath;
+  //
+  @override
+  Color? get borderColor => _borderColor;
+  //
+  @override
+  Color? get fillColor => _fillColor;
+  //
+  @override
+  Path getOrthoProjection(FigureAxes x, FigureAxes y) {
+    final projection = (x, y);
+    return switch (projection) {
+      (FigureAxes.x, FigureAxes.y) => parseSvgPathData(
+          _projectionPath[(FigureAxes.x, FigureAxes.y)] ?? '',
+        ),
+      (FigureAxes.y, FigureAxes.z) => parseSvgPathData(
+          _projectionPath[(FigureAxes.y, FigureAxes.z)] ?? '',
+        ),
+      (FigureAxes.x, FigureAxes.z) => parseSvgPathData(
+          _projectionPath[(FigureAxes.x, FigureAxes.z)] ?? '',
+        ),
+      _ => Path(),
+    };
+  }
+  //
+  @override
+  Figure copyWith({Color? borderColor, Color? fillColor}) {
+    return SVGPathFigure(
+      borderColor: borderColor ?? _borderColor,
+      fillColor: fillColor ?? _fillColor,
+      projectionPath: _projectionPath,
     );
   }
 }

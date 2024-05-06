@@ -27,7 +27,7 @@ class ShipSchemeAxis extends StatelessWidget {
         _thickness = thickness,
         _majorTicks = majorTicks,
         _minorTicks = minorTicks;
-  //
+  ///
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -72,7 +72,7 @@ class _AxisPainter extends CustomPainter {
         _labelStyle = labelStyle,
         _thickness = thickness,
         super();
-  //
+  ///
   @override
   void paint(Canvas canvas, Size size) {
     final axisPaint = Paint()
@@ -106,7 +106,7 @@ class _AxisPainter extends CustomPainter {
       }
     }
   }
-  //
+  ///
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;

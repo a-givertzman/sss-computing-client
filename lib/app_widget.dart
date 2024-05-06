@@ -13,15 +13,21 @@ class AppWidget extends StatefulWidget {
   }) : _themeSwitch = themeSwitch;
   //
   @override
-  State<AppWidget> createState() => _AppWidgetState();
+  State<AppWidget> createState() => _AppWidgetState(
+        themeSwitch: _themeSwitch,
+      );
 }
 ///
 class _AppWidgetState extends State<AppWidget> {
+  final AppThemeSwitch _themeSwitch;
+  _AppWidgetState({
+    required AppThemeSwitch themeSwitch,
+  }) : _themeSwitch = themeSwitch;
   //
   @override
   void initState() {
     super.initState();
-    widget._themeSwitch.addListener(_themeSwitchListener);
+    _themeSwitch.addListener(_themeSwitchListener);
     Future.delayed(
       Duration.zero,
       () async {
@@ -47,7 +53,7 @@ class _AppWidgetState extends State<AppWidget> {
   //
   @override
   void dispose() {
-    widget._themeSwitch.removeListener(_themeSwitchListener);
+    _themeSwitch.removeListener(_themeSwitchListener);
     super.dispose();
   }
   ///
@@ -63,7 +69,7 @@ class _AppWidgetState extends State<AppWidget> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: widget._themeSwitch.themeData,
+      theme: _themeSwitch.themeData,
       home: const ShipSchemePage(),
     );
   }

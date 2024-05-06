@@ -4,25 +4,20 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
-
 /// Interface for controlling collection of [Cargo].
 abstract interface class Cargos {
   /// Get all [Cargo] in [Cargos] collection.
   Future<ResultF<List<Cargo>>> fetchAll();
-
   /// Remove [Cargo] from [Cargos] collection.
   Future<ResultF<void>> remove(Cargo cargo);
-
   /// Add new [Cargo] in [Cargos] collection.
   Future<ResultF<int>> add(Cargo cargo);
 }
-
 /// [Cargos] collection stored in DB.
 class DbCargos implements Cargos {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
-
   /// Creates [Cargos] collection stored in DB.
   const DbCargos({
     required String dbName,
@@ -31,7 +26,10 @@ class DbCargos implements Cargos {
   })  : _dbName = dbName,
         _apiAddress = apiAddress,
         _authToken = authToken;
-
+  ///
+  get apiAddress => _apiAddress;
+  ///
+  get dbName => _dbName;
   ///
   @override
   Future<ResultF<List<Cargo>>> fetchAll() async {
@@ -56,10 +54,12 @@ class DbCargos implements Cargos {
     );
     return switch (await sqlAccess.fetch()) {
       Ok(value: final rows) => _mapReplyToValue(rows),
-      Err(:final error) => Err(error),
+      Err(:final error) => Err(Failure<String>(
+          message: '${error.message}',
+          stackTrace: StackTrace.current,
+        )),
     };
   }
-
   ///
   ResultF<List<Cargo>> _mapReplyToValue(List<Map<String, dynamic>> rows) {
     try {
@@ -78,10 +78,12 @@ class DbCargos implements Cargos {
         return JsonCargo(json: json);
       }).toList());
     } catch (err) {
-      return Err(Failure(message: err, stackTrace: StackTrace.current));
+      return Err(Failure<String>(
+        message: '$err',
+        stackTrace: StackTrace.current,
+      ));
     }
   }
-
   ///
   @override
   Future<ResultF<void>> remove(Cargo cargo) async {
@@ -98,10 +100,13 @@ class DbCargos implements Cargos {
     );
     return switch (await sqlAccess.fetch()) {
       Ok() => const Ok(null),
-      Err(:final error) => Err(error),
+      Err(:final error) => Err(Failure<String>(
+          message: '${error.message}',
+          stackTrace: StackTrace.current,
+        )),
     };
   }
-
+  /// TODO: write sql builder
   ///
   @override
   Future<ResultF<int>> add(Cargo cargo) async {
@@ -123,14 +128,21 @@ class DbCargos implements Cargos {
               (1, (SELECT value FROM next_id), 'center_z', '${cargo.asMap()['center_z']}', 'real'),
               (1, (SELECT value FROM next_id), 'center_y', '${cargo.asMap()['center_y']}', 'real'),
               (1, (SELECT value FROM next_id), 'bound_x1', '${cargo.asMap()['bound_x1']}', 'real'),
-              (1, (SELECT value FROM next_id), 'bound_x2', '${cargo.asMap()['bound_x2']}', 'real')
+              (1, (SELECT value FROM next_id), 'bound_x2', '${cargo.asMap()['bound_x2']}', 'real'),
+              (1, (SELECT value FROM next_id), 'bound_y1', '${cargo.asMap()['bound_y1']}', 'real'),
+              (1, (SELECT value FROM next_id), 'bound_y2', '${cargo.asMap()['bound_y2']}', 'real'),
+              (1, (SELECT value FROM next_id), 'bound_z1', '${cargo.asMap()['bound_z1']}', 'real'),
+              (1, (SELECT value FROM next_id), 'bound_z2', '${cargo.asMap()['bound_z2']}', 'real')
             RETURNING (SELECT value FROM next_id) AS cargo_id;
             """,
       ),
     );
     return switch (await sqlAccess.fetch()) {
       Ok(value: final rows) => Ok(rows.first['cargo_id']),
-      Err(:final error) => Err(error),
+      Err(:final error) => Err(Failure<String>(
+          message: '${error.message}',
+          stackTrace: StackTrace.current,
+        )),
     };
   }
 }

@@ -16,7 +16,7 @@ class ShipSchemeGrid extends StatelessWidget {
         _color = color,
         _thickness = thickness,
         _axisGrid = axisGrid;
-  //
+  ///
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
@@ -46,7 +46,7 @@ class _GridPainter extends CustomPainter {
         _color = color,
         _thickness = thickness,
         super();
-  //
+  ///
   @override
   void paint(Canvas canvas, Size size) {
     final axisPaint = Paint()
@@ -59,7 +59,7 @@ class _GridPainter extends CustomPainter {
       canvas.drawLine(Offset(dx, 0.0), Offset(dx, size.height), axisPaint);
     }
   }
-  //
+  ///
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
