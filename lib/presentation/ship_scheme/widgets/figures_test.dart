@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sss_computing_client/core/models/ship_scheme/figure.dart';
-
+///
 const shipBody = PathFigure(
   pathProjection: {
     (FigureAxis.x, FigureAxis.z): [

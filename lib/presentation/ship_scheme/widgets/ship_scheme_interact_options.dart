@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-
 ///
 enum ShipSchemeInteractOption {
   view,
   select,
 }
-
 ///
 class ShipSchemeInteractOptions extends StatefulWidget {
   final Set<ShipSchemeInteractOption> _initialOptions;
@@ -15,7 +13,6 @@ class ShipSchemeInteractOptions extends StatefulWidget {
   final Color? _backgroundColor;
   final Color? _selectedForegroundColor;
   final Color? _selectedBackgroundColor;
-
   ///
   const ShipSchemeInteractOptions({
     super.key,
@@ -33,25 +30,21 @@ class ShipSchemeInteractOptions extends StatefulWidget {
         _backgroundColor = backgroundColor,
         _selectedForegroundColor = selectedForegroundColor,
         _selectedBackgroundColor = selectedBackgroundColor;
-
-  ///
+  //
   @override
   State<ShipSchemeInteractOptions> createState() =>
       _ShipSchemeInteractOptionsState();
 }
-
 ///
 class _ShipSchemeInteractOptionsState extends State<ShipSchemeInteractOptions> {
   late Set<ShipSchemeInteractOption> selection;
-
-  ///
+  //
   @override
   void initState() {
     selection = widget._initialOptions;
     super.initState();
   }
-
-  ///
+  //
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

@@ -7,7 +7,6 @@ import 'package:sss_computing_client/presentation/ship_scheme/widgets/figures_te
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_interact_options.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_view_options.dart';
-
 ///
 const Set<ShipSchemeViewOption> _initialViewOptions = {
   ShipSchemeViewOption.showGrid,
@@ -16,13 +15,11 @@ const Set<ShipSchemeViewOption> _initialViewOptions = {
 const Set<ShipSchemeInteractOption> _initialInteractOptions = {
   ShipSchemeInteractOption.select,
 };
-
 ///
 class ShipSchemes extends StatefulWidget {
   final List<Cargo> _cargos;
   final Cargo? _selectedCargo;
   final void Function(Cargo)? _onCargoSelect;
-
   ///
   const ShipSchemes({
     super.key,
@@ -32,12 +29,10 @@ class ShipSchemes extends StatefulWidget {
   })  : _cargos = cargos,
         _selectedCargo = selectedCargo,
         _onCargoSelect = onCargoSelect;
-
-  ///
+  //
   @override
   State<ShipSchemes> createState() => _ShipSchemesState();
 }
-
 ///
 class _ShipSchemesState extends State<ShipSchemes> {
   Set<ShipSchemeViewOption> _viewOptions = _initialViewOptions;
@@ -58,8 +53,7 @@ class _ShipSchemesState extends State<ShipSchemes> {
   static const _frameRNumber = 100;
   static const _framesRealIdxShift = -10;
   late int _defaultRFrameIdx;
-
-  ///
+  //
   @override
   // ignore: long-method
   void initState() {
@@ -123,8 +117,7 @@ class _ShipSchemesState extends State<ShipSchemes> {
     _body = shipBody;
     super.initState();
   }
-
-  ///
+  //
   @override
   Widget build(BuildContext context) {
     final padding = const Setting('padding').toDouble;
@@ -342,7 +335,6 @@ class _ShipSchemesState extends State<ShipSchemes> {
       ),
     );
   }
-
   List<(Cargo, Figure)> _mapShipCargosToFigures(
     List<Cargo> cargos,
     Color borderColor,
@@ -370,7 +362,6 @@ class _ShipSchemesState extends State<ShipSchemes> {
         )
         .toList();
   }
-
   List<(Cargo, Figure)> _extractShipCargosFromSection(
     List<(Cargo, Figure)> cargosFigures,
     double dx,

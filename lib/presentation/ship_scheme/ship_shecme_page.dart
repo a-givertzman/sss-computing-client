@@ -5,22 +5,18 @@ import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargos.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_test.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
-
 ///
 class ShipSchemePage extends StatefulWidget {
   ///
   const ShipSchemePage({super.key});
-
-  ///
+  //
   @override
   State<ShipSchemePage> createState() => _ShipSchemePageState();
 }
-
 class _ShipSchemePageState extends State<ShipSchemePage> {
   late final String _dbName;
   late final ApiAddress _address;
-
-  ///
+  //
   @override
   void initState() {
     _dbName = const Setting('api-database').toString();
@@ -30,8 +26,7 @@ class _ShipSchemePageState extends State<ShipSchemePage> {
     );
     super.initState();
   }
-
-  ///
+  //
   @override
   Widget build(BuildContext context) {
     return Scaffold(

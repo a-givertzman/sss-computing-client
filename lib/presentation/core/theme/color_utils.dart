@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 /// Возвращает тот же цвет,
 ///   но темнее если 0 < factor < 1.0,
 ///   или светлее если factor > 1.0,
@@ -11,7 +10,6 @@ Color colorShiftLightness(Color color, double factor) {
   if (lightness > 1) return hslColor.withLightness(1).toColor();
   return hslColor.withLightness(lightness).toColor();
 }
-
 ///
 Color colorInvert(Color color) {
   final r = 255 - color.red;

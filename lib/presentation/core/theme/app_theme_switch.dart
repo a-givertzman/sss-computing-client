@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
-
 ///
 class AppThemeSwitch with ChangeNotifier {
   static const _debug = true;
-  // final _streamController = StreamController<AppTheme>();
   late ThemeData _themeData;
   AppTheme _theme = AppTheme.dark;
   ThemeMode _themeMode = ThemeMode.light;
-
   ///
   AppTheme get theme => _theme;
-
   ///
   ThemeMode get themeMode => _themeMode;
-
   ///
   ThemeData get themeData => _themeData;
-
   ///
   AppThemeSwitch() : super() {
     log(_debug, '[$AppThemeSwitch]');
@@ -33,7 +27,6 @@ class AppThemeSwitch with ChangeNotifier {
       throw _unexpectedFailure();
     }
   }
-
   ///
   Failure _unexpectedFailure() {
     return Failure.unexpected(
@@ -41,7 +34,6 @@ class AppThemeSwitch with ChangeNotifier {
       stackTrace: StackTrace.current,
     );
   }
-
   ///
   void toggleMode(ThemeMode? mode) {
     if (mode != null) {
@@ -49,7 +41,6 @@ class AppThemeSwitch with ChangeNotifier {
     }
     notifyListeners();
   }
-
   ///
   void toggleTheme(AppTheme? theme) {
     log(_debug, '[$AppThemeSwitch.toggleTheme()] theme: $theme');

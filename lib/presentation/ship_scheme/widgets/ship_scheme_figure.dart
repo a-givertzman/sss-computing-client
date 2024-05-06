@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sss_computing_client/core/models/ship_scheme/figure.dart';
-
 ///
 class ShipSchemeFigure extends StatelessWidget {
   final (FigureAxis, FigureAxis) _projection;
@@ -8,7 +7,6 @@ class ShipSchemeFigure extends StatelessWidget {
   final double? _thickness;
   final Matrix4 _transform;
   final void Function()? _onTap;
-
   ///
   const ShipSchemeFigure({
     super.key,
@@ -22,8 +20,7 @@ class ShipSchemeFigure extends StatelessWidget {
         _thickness = thickness,
         _transform = transform,
         _onTap = onTap;
-
-  ///
+  //
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -43,14 +40,12 @@ class ShipSchemeFigure extends StatelessWidget {
     );
   }
 }
-
 ///
 class _FigurePainter extends CustomPainter {
   final (FigureAxis, FigureAxis) _projection;
   final Figure _figure;
   final double _thickness;
   final Matrix4 _transform;
-
   ///
   const _FigurePainter({
     required (FigureAxis, FigureAxis) projection,
@@ -61,8 +56,7 @@ class _FigurePainter extends CustomPainter {
         _figure = figure,
         _thickness = thickness,
         _transform = transform;
-
-  ///
+  //
   @override
   bool? hitTest(Offset position) {
     return _figure
@@ -70,8 +64,7 @@ class _FigurePainter extends CustomPainter {
         .transform(_transform.storage)
         .contains(position);
   }
-
-  ///
+  //
   @override
   void paint(Canvas canvas, Size size) {
     final (xAxis, yAxis) = _projection;
@@ -99,8 +92,7 @@ class _FigurePainter extends CustomPainter {
       canvas.drawPath(path, fillPaint);
     }
   }
-
-  ///
+  //
   @override
   bool shouldRepaint(covariant _FigurePainter oldDelegate) {
     return (_figure != oldDelegate._figure ||

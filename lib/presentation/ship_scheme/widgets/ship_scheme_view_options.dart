@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-
 ///
 enum ShipSchemeViewOption {
   showAxes,
@@ -9,7 +8,6 @@ enum ShipSchemeViewOption {
   showTheoreticFrames,
   showWaterline,
 }
-
 ///
 class ShipSchemeViewOptions extends StatefulWidget {
   final Set<ShipSchemeViewOption> _initialOptions;
@@ -19,7 +17,6 @@ class ShipSchemeViewOptions extends StatefulWidget {
   final Color? _backgroundColor;
   final Color? _selectedForegroundColor;
   final Color? _selectedBackgroundColor;
-
   ///
   const ShipSchemeViewOptions({
     super.key,
@@ -37,24 +34,20 @@ class ShipSchemeViewOptions extends StatefulWidget {
         _backgroundColor = backgroundColor,
         _selectedForegroundColor = selectedForegroundColor,
         _selectedBackgroundColor = selectedBackgroundColor;
-
-  ///
+  //
   @override
   State<ShipSchemeViewOptions> createState() => _ShipSchemeViewOptionsState();
 }
-
 ///
 class _ShipSchemeViewOptionsState extends State<ShipSchemeViewOptions> {
   late Set<ShipSchemeViewOption> selection;
-
-  ///
+  //
   @override
   void initState() {
     selection = widget._initialOptions;
     super.initState();
   }
-
-  ///
+  //
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

@@ -9,7 +9,6 @@ import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_schem
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_grid.dart';
 import 'package:sss_computing_client/core/widgets/fitted_builder_widget.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
-
 class ShipScheme extends StatefulWidget {
   final (FigureAxis, FigureAxis) _projection;
   final Figure _shipBody;
@@ -32,7 +31,6 @@ class ShipScheme extends StatefulWidget {
   final double? _maxY;
   final String? _caption;
   final Color? _axisColor;
-
   ///
   const ShipScheme({
     super.key,
@@ -78,12 +76,10 @@ class ShipScheme extends StatefulWidget {
         _minY = minY,
         _caption = caption,
         _xAxis = xAxis;
-
-  ///
+  //
   @override
   State<ShipScheme> createState() => _ShipSchemeState();
 }
-
 class _ShipSchemeState extends State<ShipScheme> {
   late final double _minX;
   late final double _maxX;
@@ -102,8 +98,7 @@ class _ShipSchemeState extends State<ShipScheme> {
   double _transformtaionShiftY = 0.0;
   double _transformtaionScaleX = 1.0;
   double _transformtaionScaleY = 1.0;
-
-  ///
+  //
   @override
   void initState() {
     _transformationController =
@@ -123,16 +118,14 @@ class _ShipSchemeState extends State<ShipScheme> {
     _yAxisGrid = _yMajorTicks.map((tick) => tick.$1).toList();
     super.initState();
   }
-
-  ///
+  //
   @override
   void dispose() {
     _transformationController.removeListener(_handleTransform);
     _transformationController.dispose();
     super.dispose();
   }
-
-  ///
+  //
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -418,7 +411,6 @@ class _ShipSchemeState extends State<ShipScheme> {
       },
     );
   }
-
   ///
   void _handleTransform() {
     setState(() {
@@ -430,27 +422,22 @@ class _ShipSchemeState extends State<ShipScheme> {
           _transformationController.value.getTranslation()[1];
     });
   }
-
   ///
   double Function(double) _getXTransform(Matrix4 transform) {
     return (value) => _transformX(value, transform);
   }
-
   ///
   double Function(double) _getYTransform(Matrix4 transform) {
     return (value) => _transformY(value, transform);
   }
-
   /// get x raw offset from left
   double _transformX(double value, Matrix4 transform) {
     return transform.transform3(Vector3(value, 0.0, 0.0)).x;
   }
-
   /// get y raw offset from top
   double _transformY(double value, Matrix4 transform) {
     return transform.transform3(Vector3(0.0, value, 0.0)).y;
   }
-
   /// get transform matrix
   Matrix4 _getTransform(double scaleX, double scaleY) {
     final actualScaleX = widget._invertHorizontal
@@ -478,7 +465,6 @@ class _ShipSchemeState extends State<ShipScheme> {
       actualShiftX, actualShiftY, 0.0, 1.0, //
     );
   }
-
   /// Returns multiples of [divisor] less than or equal to [max]
   List<double> _getMultiples(double divisor, double max) {
     return List<double>.generate(
@@ -486,7 +472,6 @@ class _ShipSchemeState extends State<ShipScheme> {
       (idx) => (idx * divisor),
     );
   }
-
   ///
   List<(double, String)> _getMajorTicks(
     double minValue,
@@ -501,7 +486,6 @@ class _ShipSchemeState extends State<ShipScheme> {
             ))
         .toList();
   }
-
   ///
   List<double> _getMinorTicks(
     double minValue,
@@ -514,13 +498,11 @@ class _ShipSchemeState extends State<ShipScheme> {
         .toList();
   }
 }
-
 ///
 class _ShipSchemeCaption extends StatelessWidget {
   final String _text;
   final Color? _color;
   final Color? _backgroundColor;
-
   ///
   const _ShipSchemeCaption({
     required String text,
@@ -529,7 +511,6 @@ class _ShipSchemeCaption extends StatelessWidget {
   })  : _text = text,
         _color = color,
         _backgroundColor = backgroundColor;
-
   ///
   @override
   Widget build(BuildContext context) {
@@ -549,7 +530,6 @@ class _ShipSchemeCaption extends StatelessWidget {
     );
   }
 }
-
 ///
 class _ShipSchemeCargos extends StatelessWidget {
   final (FigureAxis, FigureAxis) _projection;
@@ -557,7 +537,6 @@ class _ShipSchemeCargos extends StatelessWidget {
   final List<(Cargo, Figure)> _cargos;
   final double? _thickness;
   final void Function(Cargo)? _onTap;
-
   ///
   const _ShipSchemeCargos({
     required (FigureAxis, FigureAxis) projection,
@@ -570,8 +549,7 @@ class _ShipSchemeCargos extends StatelessWidget {
         _cargos = cargos,
         _thickness = thickness,
         _onTap = onTap;
-
-  ///
+  //
   @override
   Widget build(BuildContext context) {
     return Stack(

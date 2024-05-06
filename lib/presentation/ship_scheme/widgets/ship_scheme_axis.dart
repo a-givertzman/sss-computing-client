@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sss_computing_client/core/models/ship_scheme/chart_axis.dart';
-
 ///
 class ShipSchemeAxis extends StatelessWidget {
   final ChartAxis _axis;
@@ -11,7 +10,6 @@ class ShipSchemeAxis extends StatelessWidget {
   final List<(double, String)> _majorTicks;
   final List<double>? _minorTicks;
   final double Function(double) _transformValue;
-
   ///
   const ShipSchemeAxis({
     super.key,
@@ -29,8 +27,7 @@ class ShipSchemeAxis extends StatelessWidget {
         _thickness = thickness,
         _majorTicks = majorTicks,
         _minorTicks = minorTicks;
-
-  ///
+  //
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -49,7 +46,6 @@ class ShipSchemeAxis extends StatelessWidget {
     );
   }
 }
-
 ///
 class _AxisPainter extends CustomPainter {
   final ChartAxis _axis;
@@ -59,7 +55,6 @@ class _AxisPainter extends CustomPainter {
   final List<double>? _minorAxisTicks;
   final TextStyle? _labelStyle;
   final double Function(double) _transformValue;
-
   ///
   const _AxisPainter({
     required ChartAxis axis,
@@ -77,8 +72,7 @@ class _AxisPainter extends CustomPainter {
         _labelStyle = labelStyle,
         _thickness = thickness,
         super();
-
-  ///
+  //
   @override
   void paint(Canvas canvas, Size size) {
     final axisPaint = Paint()
@@ -112,13 +106,11 @@ class _AxisPainter extends CustomPainter {
       }
     }
   }
-
-  ///
+  //
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
   }
-
   /// Paints text on canvas and rotate it if angle is specified
   void _paintText(
     canvas, {
