@@ -1,7 +1,7 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:sss_computing_client/models/persistable/persistable.dart';
+import 'package:sss_computing_client/core/models/persistable/persistable.dart';
 
 class ValueRecord implements Persistable<String> {
   final Map<String, dynamic> _filter;

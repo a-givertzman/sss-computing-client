@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sss_computing_client/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_chemes.dart';
 
 ///

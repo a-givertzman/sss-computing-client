@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/models/cargo/cargo.dart';
-import 'package:sss_computing_client/models/ship_scheme/chart_axis.dart';
-import 'package:sss_computing_client/models/ship_scheme/figure.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/ship_scheme/chart_axis.dart';
+import 'package:sss_computing_client/core/models/ship_scheme/figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/figures_test.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_interact_options.dart';

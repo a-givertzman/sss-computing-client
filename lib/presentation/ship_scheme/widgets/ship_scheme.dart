@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/models/cargo/cargo.dart';
-import 'package:sss_computing_client/models/ship_scheme/chart_axis.dart';
-import 'package:sss_computing_client/models/ship_scheme/figure.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/ship_scheme/chart_axis.dart';
+import 'package:sss_computing_client/core/models/ship_scheme/figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_axis.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_figure.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_frames_theoretic.dart';
 import 'package:sss_computing_client/presentation/ship_scheme/widgets/ship_scheme_grid.dart';
-import 'package:sss_computing_client/widgets/core/fitted_builder_widget.dart';
+import 'package:sss_computing_client/core/widgets/fitted_builder_widget.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 class ShipScheme extends StatefulWidget {
