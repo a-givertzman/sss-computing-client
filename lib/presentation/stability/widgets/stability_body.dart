@@ -22,20 +22,31 @@ class StabilityBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final padding = const Setting('padding').toDouble;
-    return Scaffold(
-      body: FutureBuilderWidget(
-        onFuture: DBStabilityCriterions(
-          dbName: _dbName,
-          apiAddress: _apiAddress,
-        ).fetchAll,
-        caseData: (context, data) {
-          final criterions = data;
-          return Row(
+    final blockPadding = const Setting('blockPadding').toDouble;
+    return FutureBuilderWidget(
+      onFuture: DBStabilityCriterions(
+        dbName: _dbName,
+        apiAddress: _apiAddress,
+      ).fetchAll,
+      caseData: (context, data) {
+        final criterions = data;
+        return Padding(
+          padding: EdgeInsets.all(blockPadding),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Spacer(),
+              const Expanded(
+                flex: 1,
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  child: Text('[Empty]'),
+                ),
+              ),
+              SizedBox(width: blockPadding),
               Expanded(
                 flex: 1,
                 child: Card(
+                  margin: EdgeInsets.zero,
                   child: Padding(
                     padding: EdgeInsets.all(padding * 1.5),
                     child: Column(
@@ -46,7 +57,7 @@ class StabilityBody extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '${const Localized('Критерии остойчивости').v}:',
+                              '${const Localized('Stability criteria').v}:',
                               textAlign: TextAlign.start,
                               style: theme.textTheme.bodyLarge?.copyWith(
                                 color: theme.colorScheme.onSurface,
@@ -66,9 +77,9 @@ class StabilityBody extends StatelessWidget {
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

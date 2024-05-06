@@ -21,5 +21,11 @@
     "Add": ["Add", "Добавить"],
     "Add above": ["Add above", "Добавить выше"],
     "Cancel adding": ["Cancel adding", "Отменить добавление"],
-    "Delete": ["Delete", "Удалить"]
+    "Delete": ["Delete", "Удалить"],
+    "Stability criteria": ["Stability criteria", "Критерии остойчивости"],
+    "Main": ["Main", "Главная"],
+    "Stability": ["Stability", "Остойчивость"],
+    "deg": ["°", "°"],
+    "m": ["m", "м"],
+    "m*rad": ["m•rad", "м•рад"]
 }

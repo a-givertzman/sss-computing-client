@@ -47,14 +47,16 @@ class ErrorMessageWidget extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
-          height: padding,
-        ),
-        ElevatedButton.icon(
-          onPressed: _onConfirm,
-          label: Text(const Localized('Retry').v),
-          icon: const Icon(Icons.refresh),
-        ),
+        if (_onConfirm != null) ...[
+          SizedBox(
+            height: padding,
+          ),
+          ElevatedButton.icon(
+            onPressed: _onConfirm,
+            label: Text(const Localized('Retry').v),
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
       ],
     );
   }

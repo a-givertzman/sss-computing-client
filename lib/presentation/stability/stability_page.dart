@@ -28,6 +28,11 @@ class _StabilityPageState extends State<StabilityPage> {
   ///
   @override
   Widget build(BuildContext context) {
-    return StabilityBody(dbName: dbName, apiAddress: apiAddress);
+    return Scaffold(
+      body: StabilityBody(
+        dbName: dbName,
+        apiAddress: apiAddress,
+      ),
+    );
   }
 }

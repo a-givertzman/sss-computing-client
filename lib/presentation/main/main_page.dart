@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sss_computing_client/presentation/main/widgets/main_body.dart';
 ///
 class MainPage extends StatelessWidget {
   static const routeName = '/main';
@@ -7,6 +8,8 @@ class MainPage extends StatelessWidget {
   ///
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return const Scaffold(
+      body: MainBody(),
+    );
   }
 }
