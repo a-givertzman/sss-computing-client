@@ -5,23 +5,26 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_axis.dart';
+import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_bars.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_layout.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_legend.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_lines.dart';
-
+///
 class BarChart extends StatelessWidget {
   final double? _minX;
   final double? _maxX;
   final double? _minY;
   final double? _maxY;
   final Color? _barColor;
+  final Color? _axisColor;
   final Color? _limitColor;
+  final TextStyle? _textStyle;
   final String _caption;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
   final Stream<Map<String, dynamic>> _stream;
+  ///
   const BarChart({
     super.key,
     double? minX,
@@ -29,7 +32,9 @@ class BarChart extends StatelessWidget {
     double? minY,
     double? maxY,
     Color? barColor,
+    Color? axisColor,
     Color? limitColor,
+    TextStyle? textStyle,
     required String caption,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
@@ -39,59 +44,31 @@ class BarChart extends StatelessWidget {
         _minY = minY,
         _maxY = maxY,
         _barColor = barColor,
+        _axisColor = axisColor,
         _limitColor = limitColor,
+        _textStyle = textStyle,
         _caption = caption,
         _xAxis = xAxis,
         _yAxis = yAxis,
         _stream = stream;
-
-  double _getMinX(List<(double, double)?> offsets) => offsets.isEmpty
-      ? 0.0
-      : offsets.fold(offsets[0]?.$1 ?? 0.0, (prev, offset) {
-          if (offset != null) {
-            final (left, right) = offset;
-            return min(min(left, right), prev);
-          }
-          return prev;
-        });
-
-  double _getMaxX(List<(double, double)?> offsets) => offsets.isEmpty
-      ? 0.0
-      : offsets.fold(offsets[0]?.$1 ?? 0.0, (prev, offset) {
-          if (offset != null) {
-            final (left, right) = offset;
-            return max(max(left, right), prev);
-          }
-          return prev;
-        });
-
-  double _getMinY(List<double?> values) => values.isEmpty
-      ? 0.0
-      : values.fold(values[0] ?? 0.0, (prev, value) {
-          if (value != null) return min(prev, value);
-          return prev;
-        });
-
-  double _getMaxY(List<double?> values) => values.isEmpty
-      ? 0.0
-      : values.fold(values[0] ?? 0.0, (prev, value) {
-          if (value != null) return max(prev, value);
-          return prev;
-        });
-
+  //
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final barColor = _barColor ?? theme.colorScheme.primary;
+    final limitColor = _limitColor ?? theme.stateColors.alarm;
+    final axisColor = _axisColor ?? theme.colorScheme.primary;
+    final textStyle = _textStyle ?? theme.textTheme.bodySmall;
     final verticalPad =
         _xAxis.labelsSpaceReserved + _xAxis.captionSpaceReserved;
     final horizontalPad =
         _yAxis.labelsSpaceReserved + _yAxis.captionSpaceReserved;
     final layoutBottomPad = verticalPad -
         (_xAxis.isLabelsVisible ? _xAxis.labelsSpaceReserved : 0.0) -
-        (_xAxis.caption != null ? _xAxis.captionSpaceReserved : 0.0);
+        (_xAxis.isCaptionVisible ? _xAxis.captionSpaceReserved : 0.0);
     final layoutLetfPad = horizontalPad -
         (_yAxis.isLabelsVisible ? _yAxis.labelsSpaceReserved : 0.0) -
-        (_yAxis.caption != null ? _yAxis.captionSpaceReserved : 0.0);
+        (_yAxis.isCaptionVisible ? _yAxis.captionSpaceReserved : 0.0);
     return StreamBuilder(
       stream: _stream,
       builder: (_, snapshot) {
@@ -137,6 +114,8 @@ class BarChart extends StatelessWidget {
                       maxY: maxY,
                       xAxis: _xAxis,
                       yAxis: _yAxis,
+                      axisColor: axisColor,
+                      textStyle: textStyle,
                     ),
                   ),
                   Padding(
@@ -157,8 +136,10 @@ class BarChart extends StatelessWidget {
                         minY: minY,
                         maxY: maxY,
                         xAxis: _xAxis,
-                        color: _barColor ?? theme.colorScheme.primary,
-                        limitColor: _limitColor ?? theme.stateColors.alarm,
+                        valueColor: barColor,
+                        limitColor: limitColor,
+                        axisColor: axisColor,
+                        textStyle: textStyle,
                         barCaptions: barCaptions,
                       ),
                     ),
@@ -178,7 +159,7 @@ class BarChart extends StatelessWidget {
                         maxY: maxY,
                         yValues: lowLimits,
                         xOffsets: xOffsets,
-                        color: _limitColor ?? theme.stateColors.alarm,
+                        valueColor: _limitColor ?? theme.stateColors.alarm,
                       ),
                     ),
                   ),
@@ -197,7 +178,7 @@ class BarChart extends StatelessWidget {
                         maxY: maxY,
                         yValues: highLimits,
                         xOffsets: xOffsets,
-                        color: _limitColor ?? theme.stateColors.alarm,
+                        valueColor: _limitColor ?? theme.stateColors.alarm,
                       ),
                     ),
                   ),
@@ -227,4 +208,38 @@ class BarChart extends StatelessWidget {
       },
     );
   }
+  ///
+  double _getMinX(List<(double, double)?> offsets) => offsets.isEmpty
+      ? 0.0
+      : offsets.fold(offsets[0]?.$1 ?? 0.0, (prev, offset) {
+          if (offset != null) {
+            final (left, right) = offset;
+            return min(min(left, right), prev);
+          }
+          return prev;
+        });
+  ///
+  double _getMaxX(List<(double, double)?> offsets) => offsets.isEmpty
+      ? 0.0
+      : offsets.fold(offsets[0]?.$1 ?? 0.0, (prev, offset) {
+          if (offset != null) {
+            final (left, right) = offset;
+            return max(max(left, right), prev);
+          }
+          return prev;
+        });
+  ///
+  double _getMinY(List<double?> values) => values.isEmpty
+      ? 0.0
+      : values.fold(values[0] ?? 0.0, (prev, value) {
+          if (value != null) return min(prev, value);
+          return prev;
+        });
+  ///
+  double _getMaxY(List<double?> values) => values.isEmpty
+      ? 0.0
+      : values.fold(values[0] ?? 0.0, (prev, value) {
+          if (value != null) return max(prev, value);
+          return prev;
+        });
 }

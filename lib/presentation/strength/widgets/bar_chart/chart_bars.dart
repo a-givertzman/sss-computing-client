@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_axis.dart';
-
+import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
+///
 class ChartBars extends StatelessWidget {
   final double _minX;
   final double _maxX;
@@ -14,8 +14,11 @@ class ChartBars extends StatelessWidget {
   final List<double?> _highLimits;
   final List<(double, double)?> _xOffsets;
   final List<String?> _barCaptions;
-  final Color _color;
+  final Color _valueColor;
   final Color _limitColor;
+  final Color _axisColor;
+  final TextStyle? _textStyle;
+  ///
   const ChartBars({
     super.key,
     required double minX,
@@ -28,8 +31,10 @@ class ChartBars extends StatelessWidget {
     required List<double?> highLimits,
     required List<(double, double)?> xOffsets,
     required List<String?> barCaptions,
-    required Color color,
+    required Color valueColor,
     required Color limitColor,
+    required Color axisColor,
+    required TextStyle? textStyle,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
@@ -40,9 +45,11 @@ class ChartBars extends StatelessWidget {
         _highLimits = highLimits,
         _xOffsets = xOffsets,
         _barCaptions = barCaptions,
-        _color = color,
-        _limitColor = limitColor;
-
+        _valueColor = valueColor,
+        _limitColor = limitColor,
+        _axisColor = axisColor,
+        _textStyle = textStyle;
+  //
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, contstraints) {
@@ -55,9 +62,7 @@ class ChartBars extends StatelessWidget {
           maxY: _maxY,
           alignment: BarChartAlignment.start,
           groupsSpace: 0.0,
-          gridData: const FlGridData(
-            show: false,
-          ),
+          gridData: const FlGridData(show: false),
           titlesData: FlTitlesData(
             show: true,
             topTitles: AxisTitles(
@@ -67,6 +72,8 @@ class ChartBars extends StatelessWidget {
                     _xAxis.labelsSpaceReserved + _xAxis.captionSpaceReserved,
                 getTitlesWidget: (value, _) => _AxisLabel(
                   value: _barCaptions[value.toInt()] ?? '',
+                  color: _axisColor,
+                  textStyle: _textStyle,
                 ),
               ),
             ),
@@ -93,7 +100,7 @@ class ChartBars extends StatelessWidget {
                       fromY: 0.0,
                       toY: value,
                       width: (offsetR - offsetL) * xAxisScale,
-                      color: _color,
+                      color: _valueColor,
                       borderRadius: const BorderRadius.all(Radius.zero),
                     ),
                     BarChartRodData(
@@ -131,7 +138,7 @@ class ChartBars extends StatelessWidget {
                       color: Colors.transparent,
                       borderRadius: const BorderRadius.all(Radius.zero),
                       borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: _axisColor,
                       ),
                     ),
                     BarChartRodData(
@@ -141,7 +148,7 @@ class ChartBars extends StatelessWidget {
                       color: Colors.transparent,
                       borderRadius: const BorderRadius.all(Radius.zero),
                       borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: _axisColor,
                       ),
                     ),
                   ],
@@ -153,7 +160,7 @@ class ChartBars extends StatelessWidget {
       );
     });
   }
-
+  ///
   LinearGradient _getLimitStripsGradient({
     required double rawWidgetHeight,
     required double stripedBarHeight,
@@ -166,10 +173,7 @@ class ChartBars extends StatelessWidget {
     final stripFraction = rawStripHeight / (stripedBarHeight * yAxisScale);
     return LinearGradient(
       begin: const FractionalOffset(0, 0),
-      end: FractionalOffset(
-        0.0,
-        2 * stripFraction,
-      ),
+      end: FractionalOffset(0.0, 2 * stripFraction),
       transform: const GradientRotation(pi / 4),
       stops: const [0.0, 0.5, 0.5, 1],
       colors: [
@@ -182,11 +186,18 @@ class ChartBars extends StatelessWidget {
     );
   }
 }
-
+///
 class _AxisLabel extends StatelessWidget {
   final String value;
-  const _AxisLabel({required this.value});
-
+  final Color color;
+  final TextStyle? textStyle;
+  ///
+  const _AxisLabel({
+    required this.value,
+    required this.color,
+    required this.textStyle,
+  });
+  //
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -194,7 +205,7 @@ class _AxisLabel extends StatelessWidget {
       child: Text(
         value,
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodySmall,
+        style: textStyle?.copyWith(color: color),
       ),
     );
   }

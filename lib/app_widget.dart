@@ -3,25 +3,26 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
 import 'package:sss_computing_client/presentation/strength/strength_page.dart';
 import 'package:window_manager/window_manager.dart';
-
+///
 class AppWidget extends StatefulWidget {
   final AppThemeSwitch _themeSwitch;
+  ///
   const AppWidget({
     super.key,
     required AppThemeSwitch themeSwitch,
   }) : _themeSwitch = themeSwitch;
-
+  ///
   @override
   State<AppWidget> createState() => _AppWidgetState();
 }
-
+///
 class _AppWidgetState extends State<AppWidget> {
+  ///
   @override
   void dispose() {
     widget._themeSwitch.removeListener(_themeSwitchListener);
     super.dispose();
   }
-
   ///
   @override
   void initState() {
@@ -50,7 +51,6 @@ class _AppWidgetState extends State<AppWidget> {
       },
     );
   }
-
   ///
   void _themeSwitchListener() {
     if (mounted) {
@@ -59,15 +59,13 @@ class _AppWidgetState extends State<AppWidget> {
       });
     }
   }
-
+  ///
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: widget._themeSwitch.themeData,
-      home: const Scaffold(
-        body: StrengthPage(),
-      ),
+      home: const StrengthPage(),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-
+///
 class ChartLines extends StatelessWidget {
   final double _minX;
   final double _maxX;
@@ -9,7 +9,8 @@ class ChartLines extends StatelessWidget {
   final double _maxY;
   final List<double?> _yValues;
   final List<(double, double)?> _xOffsets;
-  final Color _color;
+  final Color _valueColor;
+  ///
   const ChartLines({
     super.key,
     required double minX,
@@ -18,15 +19,15 @@ class ChartLines extends StatelessWidget {
     required double maxY,
     required List<double?> yValues,
     required List<(double, double)?> xOffsets,
-    required Color color,
+    required Color valueColor,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
         _maxY = maxY,
         _yValues = yValues,
         _xOffsets = xOffsets,
-        _color = color;
-
+        _valueColor = valueColor;
+  //
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, contstraints) {
@@ -54,14 +55,11 @@ class ChartLines extends StatelessWidget {
                 final index = indexedValue.$1;
                 final value = indexedValue.$2 ?? 0.0;
                 final (offsetL, offsetR) = _xOffsets[index] ?? (0.0, 0.0);
-                const Log('ChartLines | offset').debug(
-                  '{idx: $index, offsetL: $offsetL, offsetR: $offsetR}',
-                );
                 return LineChartBarData(
                   dotData: const FlDotData(
                     show: false,
                   ),
-                  color: _color,
+                  color: _valueColor,
                   spots: [
                     FlSpot(
                       offsetL,

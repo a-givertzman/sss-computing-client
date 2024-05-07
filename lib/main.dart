@@ -3,10 +3,9 @@ import 'package:flutter/material.dart' hide Localizations;
 import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
 import 'package:sss_computing_client/app_widget.dart';
-
+///
 void main() async {
   Log.initialize(level: LogLevel.all);
-
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();

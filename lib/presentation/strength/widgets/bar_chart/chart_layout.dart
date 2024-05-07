@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_axis.dart';
-
+import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
+///
 class ChartLayout extends StatelessWidget {
   final double _minX;
   final double _maxX;
@@ -9,6 +9,9 @@ class ChartLayout extends StatelessWidget {
   final double _maxY;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
+  final Color _axisColor;
+  final TextStyle? _textStyle;
+  ///
   const ChartLayout({
     super.key,
     required double minX,
@@ -17,13 +20,17 @@ class ChartLayout extends StatelessWidget {
     required double maxY,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
+    required Color axisColor,
+    required TextStyle? textStyle,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
         _maxY = maxY,
         _yAxis = yAxis,
-        _xAxis = xAxis;
-
+        _xAxis = xAxis,
+        _axisColor = axisColor,
+        _textStyle = textStyle;
+  //
   @override
   Widget build(BuildContext context) {
     return LineChart(
@@ -39,43 +46,61 @@ class ChartLayout extends StatelessWidget {
               showTitles: _yAxis.isLabelsVisible,
               reservedSize: _yAxis.labelsSpaceReserved,
               interval: _yAxis.valueInterval,
-              getTitlesWidget: (value, meta) => _AxisLabel(value: value),
+              getTitlesWidget: (value, meta) => _AxisLabel(
+                value: value,
+                color: _axisColor,
+                textStyle: _textStyle,
+              ),
             ),
             drawBelowEverything: true,
             axisNameWidget: switch (_yAxis.caption) {
-              String caption => _AxisCaption(caption: caption),
+              String caption => _yAxis.isCaptionVisible
+                  ? _AxisCaption(
+                      caption: caption,
+                      color: _axisColor,
+                      textStyle: _textStyle,
+                    )
+                  : null,
               _ => null,
             },
             axisNameSize: _yAxis.captionSpaceReserved,
           ),
           topTitles: const AxisTitles(),
+          rightTitles: const AxisTitles(),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: _xAxis.isLabelsVisible,
               reservedSize: _xAxis.labelsSpaceReserved,
               interval: _xAxis.valueInterval,
-              getTitlesWidget: (value, meta) => _AxisLabel(value: value),
+              getTitlesWidget: (value, meta) => _AxisLabel(
+                value: value,
+                color: _axisColor,
+                textStyle: _textStyle,
+              ),
             ),
             axisNameWidget: switch (_xAxis.caption) {
-              String caption => _AxisCaption(caption: caption),
+              String caption => _xAxis.isCaptionVisible
+                  ? _AxisCaption(
+                      caption: caption,
+                      color: _axisColor,
+                      textStyle: _textStyle,
+                    )
+                  : null,
               _ => null,
             },
             axisNameSize: _xAxis.captionSpaceReserved,
           ),
-          rightTitles: const AxisTitles(),
         ),
         borderData: FlBorderData(
           show: true,
-          border: Border.fromBorderSide(
-            BorderSide(color: Theme.of(context).colorScheme.primary),
-          ),
+          border: Border.fromBorderSide(BorderSide(color: _axisColor)),
         ),
         gridData: FlGridData(
           drawHorizontalLine: _yAxis.isGridVisible,
-          getDrawingHorizontalLine: (_) => _line(context),
+          getDrawingHorizontalLine: (_) => _drawGridLine(context),
           horizontalInterval: _yAxis.valueInterval,
           drawVerticalLine: _xAxis.isGridVisible,
-          getDrawingVerticalLine: (_) => _line(context),
+          getDrawingVerticalLine: (_) => _drawGridLine(context),
           verticalInterval: _xAxis.valueInterval,
         ),
         lineBarsData: [
@@ -85,55 +110,55 @@ class ChartLayout extends StatelessWidget {
       ),
     );
   }
-
-  FlLine _line(BuildContext context) {
+  ///
+  FlLine _drawGridLine(BuildContext context) {
     return FlLine(
-      color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+      color: _axisColor.withOpacity(0.5),
       strokeWidth: 0.5,
     );
   }
 }
-
+///
 class _AxisLabel extends StatelessWidget {
-  final double _value;
+  final double value;
+  final Color color;
+  final TextStyle? textStyle;
+  ///
   const _AxisLabel({
-    required double value,
-  }) : _value = value;
-
+    required this.value,
+    required this.color,
+    required this.textStyle,
+  });
+  //
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Text(
-        _value.toStringAsFixed(0),
+        value.toStringAsFixed(0),
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodySmall,
-        // style: TextStyle(
-        //   fontSize: 12.0,
-        //   height: 1.0,
-        //   color: Theme.of(context).colorScheme.onSurface,
-        // ),
+        style: textStyle?.copyWith(color: color),
       ),
     );
   }
 }
-
+///
 class _AxisCaption extends StatelessWidget {
-  final String _caption;
+  final String caption;
+  final Color color;
+  final TextStyle? textStyle;
+  ///
   const _AxisCaption({
-    required String caption,
-  }) : _caption = caption;
-
+    required this.caption,
+    required this.color,
+    required this.textStyle,
+  });
+  //
   @override
   Widget build(BuildContext context) {
     return Text(
-      _caption,
-      style: Theme.of(context).textTheme.bodySmall,
-      // style: TextStyle(
-      //   fontSize: 12.0,
-      //   height: 1.0,
-      //   color: Theme.of(context).colorScheme.onSurface,
-      // ),
+      caption,
+      style: textStyle?.copyWith(color: color),
     );
   }
 }
