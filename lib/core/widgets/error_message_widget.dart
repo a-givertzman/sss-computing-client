@@ -34,7 +34,7 @@ class ErrorMessageWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Tooltip(
-              message: _error?.message,
+              message: _error?.message ?? '',
               child: Icon(
                 Icons.warning_amber_rounded,
                 color: _iconColor ?? theme.stateColors.error,
@@ -47,14 +47,16 @@ class ErrorMessageWidget extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
-          height: padding,
-        ),
-        ElevatedButton.icon(
-          onPressed: _onConfirm,
-          label: Text(const Localized('Retry').v),
-          icon: const Icon(Icons.refresh),
-        ),
+        if (_onConfirm != null) ...[
+          SizedBox(
+            height: padding,
+          ),
+          ElevatedButton.icon(
+            onPressed: _onConfirm,
+            label: Text(const Localized('Retry').v),
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
       ],
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:sss_computing_client/presentation/navigated_page.dart';
 ///
 class AppWidget extends StatefulWidget {
   final AppThemeSwitch _themeSwitch;
@@ -10,19 +11,13 @@ class AppWidget extends StatefulWidget {
     super.key,
     required AppThemeSwitch themeSwitch,
   }) : _themeSwitch = themeSwitch;
-  ///
+  //
   @override
   State<AppWidget> createState() => _AppWidgetState();
 }
 ///
 class _AppWidgetState extends State<AppWidget> {
-  ///
-  @override
-  void dispose() {
-    widget._themeSwitch.removeListener(_themeSwitchListener);
-    super.dispose();
-  }
-  ///
+  //
   @override
   void initState() {
     super.initState();
@@ -40,7 +35,6 @@ class _AppWidgetState extends State<AppWidget> {
             center: true,
             backgroundColor: Colors.transparent,
             skipTaskbar: false,
-            // titleBarStyle: TitleBarStyle.hidden,
           ),
           () async {
             await windowManager.show();
@@ -50,6 +44,12 @@ class _AppWidgetState extends State<AppWidget> {
       },
     );
   }
+  //
+  @override
+  void dispose() {
+    widget._themeSwitch.removeListener(_themeSwitchListener);
+    super.dispose();
+  }
   ///
   void _themeSwitchListener() {
     if (mounted) {
@@ -58,13 +58,13 @@ class _AppWidgetState extends State<AppWidget> {
       });
     }
   }
-  ///
+  //
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: widget._themeSwitch.themeData,
-      home: const Text('Material app'),
+      home: const NavigatedPage(),
     );
   }
 }

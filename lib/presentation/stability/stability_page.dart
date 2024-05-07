@@ -4,6 +4,7 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/presentation/stability/widgets/stability_body.dart';
 ///
 class StabilityPage extends StatefulWidget {
+  static const routeName = '/stability';
   ///
   const StabilityPage({super.key});
   ///
@@ -27,6 +28,11 @@ class _StabilityPageState extends State<StabilityPage> {
   ///
   @override
   Widget build(BuildContext context) {
-    return StabilityBody(dbName: dbName, apiAddress: apiAddress);
+    return Scaffold(
+      body: StabilityBody(
+        dbName: dbName,
+        apiAddress: apiAddress,
+      ),
+    );
   }
 }
