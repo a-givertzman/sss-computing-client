@@ -1,19 +1,16 @@
 ///
-/// Common data for corresponding frame.
+/// Common data for corresponding [Frame].
 abstract interface class Frame {
-  int get id;
-  /// Starting time of the corresponding work cycle.
-  DateTime get start;
-  /// Ending time of the corresponding work cycle.
-  DateTime? get stop;
-  ///
-  Duration get duration;
-  ///
-  int get alarmClass;
-  /// Maximum lifting load value during all operating cycle.
-  double get maxLoad;
-  /// Average lifting load value during all operating cycle.
-  double get averageLoad;
+  /// index of frame
+  int get index;
+  /// id of the ship for corresponding [Frame]
+  int get shipId;
+  /// id of the project for corresponding [Frame]
+  int? get projectId;
+  /// x coord of left side of [Frame]
+  double get start;
+  /// x coord of right side of [Frame]
+  double get end;
 }
 ///
 /// [Frame] that parses itself from json map.
@@ -25,23 +22,17 @@ final class JsonFrame implements Frame {
   }) : _json = json;
   //
   @override
-  int get id => _json['id'];
+  int get index => _json['index'];
   //
   @override
-  DateTime get start => DateTime.parse(_json['timestamp_start']);
+  int get shipId => _json['shipId'];
   //
   @override
-  DateTime? get stop => DateTime.tryParse(_json['timestamp_stop']);
+  int? get projectId => _json['projectId'];
   //
   @override
-  Duration get duration => (stop ?? DateTime.now()).difference(start);
+  double get start => _json['start'];
   //
   @override
-  int get alarmClass => int.parse(_json['alarm_class']);
-  // TODO swap to json field when it'll be ready on backend
-  @override
-  double get averageLoad => 0;
-  // TODO swap to json field when it'll be ready on backend
-  @override
-  double get maxLoad => 0;
+  double get end => _json['end'];
 }
