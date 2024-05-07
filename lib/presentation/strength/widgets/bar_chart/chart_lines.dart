@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core.dart';
 ///
 class ChartLines extends StatelessWidget {
   final double _minX;
