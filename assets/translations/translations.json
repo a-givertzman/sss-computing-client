@@ -27,5 +27,9 @@
     "Stability": ["Stability", "Остойчивость"],
     "deg": ["°", "°"],
     "m": ["m", "м"],
-    "m*rad": ["m•rad", "м•рад"]
+    "m*rad": ["m•rad", "м•рад"],
+    "Error loading data": ["Error loading data", "Ошибка загрузки данных"],
+    "No data": ["No data", "Отсутсвуют данные"],
+    "Retry": ["Retry", "Повторить"],
+    "Page not found": ["Page not found", "Страница не найдена"]
 }

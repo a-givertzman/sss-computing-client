@@ -5,6 +5,7 @@ import 'package:sss_computing_client/presentation/main/main_page.dart';
 import 'package:sss_computing_client/presentation/stability/stability_page.dart';
 ///
 class NavigatedPage extends StatefulWidget {
+  static const routNname = '/';
   ///
   const NavigatedPage({super.key});
   @override
@@ -52,7 +53,10 @@ class _NavigatedPageState extends State<NavigatedPage> {
           }),
         ),
         Expanded(
-          child: _buildPage(selectedIndex),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: _buildPage(selectedIndex),
+          ),
         ),
       ],
     );
@@ -62,8 +66,8 @@ class _NavigatedPageState extends State<NavigatedPage> {
     return switch (pageIndex) {
       0 => const MainPage(),
       1 => const StabilityPage(),
-      _ => Center(
-          child: ErrorMessageWidget(
+      _ => Scaffold(
+          body: ErrorMessageWidget(
             message: const Localized('Page not found').v,
           ),
         ),
