@@ -6,6 +6,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
+import 'package:sss_computing_client/core/models/strength/strength_force.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_bars.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_layout.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_legend.dart';
@@ -23,7 +24,7 @@ class BarChart extends StatelessWidget {
   final String _caption;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
-  final Stream<Map<String, dynamic>> _stream;
+  final Stream<List<StrengthForce>> _stream;
   ///
   const BarChart({
     super.key,
@@ -38,7 +39,7 @@ class BarChart extends StatelessWidget {
     required String caption,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
-    required Stream<Map<String, dynamic>> stream,
+    required Stream<List<StrengthForce>> stream,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
@@ -86,15 +87,19 @@ class BarChart extends StatelessWidget {
               ),
             if (snapshot.hasData)
               ...() {
-                final List<double?> yValues = snapshot.data!['yValues'] ?? [];
-                final List<(double, double)?> xOffsets =
-                    snapshot.data!['xOffsets'] ?? [];
-                final List<String?> barCaptions =
-                    snapshot.data!['barCaptions'] ?? [];
+                final List<double?> yValues =
+                    snapshot.data!.map((force) => force.value).toList();
+                final List<(double, double)?> xOffsets = snapshot.data!
+                    .map((force) =>
+                        (force.frameSpace.start, force.frameSpace.end))
+                    .toList();
+                final List<String?> barCaptions = snapshot.data!
+                    .map((force) => '[${force.frameSpace.index}]')
+                    .toList();
                 final List<double?> lowLimits =
-                    snapshot.data!['lowLimits'] ?? [];
+                    snapshot.data!.map((force) => force.lowLimit).toList();
                 final List<double?> highLimits =
-                    snapshot.data!['highLimits'] ?? [];
+                    snapshot.data!.map((force) => force.highLimit).toList();
                 final minX = _minX ?? _getMinX(xOffsets);
                 final maxX = _maxX ?? _getMaxX(xOffsets);
                 final minY = _minY ?? _getMinY(yValues);

@@ -95,9 +95,9 @@ class TableView<T> extends StatelessWidget {
         scrollbar: TableScrollbarThemeData(
           margin: theme.scrollbarTheme.mainAxisMargin ??
               TableScrollbarThemeDataDefaults.margin,
-          thickness:
-              theme.scrollbarTheme.thickness?.resolve({WidgetState.hovered}) ??
-                  TableScrollbarThemeDataDefaults.thickness,
+          thickness: theme.scrollbarTheme.thickness
+                  ?.resolve({MaterialState.hovered}) ??
+              TableScrollbarThemeDataDefaults.thickness,
           verticalColor: scrollbarBackgroundColor,
           verticalBorderColor: Colors.transparent,
           pinnedHorizontalColor: scrollbarBackgroundColor,

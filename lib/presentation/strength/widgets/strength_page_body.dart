@@ -1,13 +1,59 @@
-import 'dart:math';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:sss_computing_client/core/models/strength/strength_force.dart';
+import 'package:sss_computing_client/core/models/strength/strength_forces.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/bar_chart.dart';
 import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
 ///
-class StrengthPageBody extends StatelessWidget {
+class StrengthPageBody extends StatefulWidget {
   ///
   const StrengthPageBody({super.key});
+  //
+  @override
+  State<StrengthPageBody> createState() => _StrengthPageBodyState();
+}
+class _StrengthPageBodyState extends State<StrengthPageBody> {
+  final _shearForcesController = StreamController<List<StrengthForce>>();
+  final _bendingMomentsController = StreamController<List<StrengthForce>>();
+  //
+  @override
+  void initState() {
+    const FakeStrengthForces(
+      valueRange: 50,
+      nParts: 20,
+      firstLimit: 50,
+      minY: -200,
+      maxY: 200,
+      minX: -100,
+    ).fetchAll().then((result) => switch (result) {
+          Ok(value: final forces) => !_shearForcesController.isClosed
+              ? _shearForcesController.add(forces)
+              : null,
+        });
+    super.initState();
+    const FakeStrengthForces(
+      valueRange: 100,
+      nParts: 20,
+      firstLimit: 150,
+      minY: -500,
+      maxY: 500,
+      minX: -100,
+    ).fetchAll().then((result) => switch (result) {
+          Ok(value: final forces) => !_bendingMomentsController.isClosed
+              ? _bendingMomentsController.add(forces)
+              : null,
+        });
+    super.initState();
+  }
+  //
+  @override
+  void dispose() {
+    _shearForcesController.close();
+    super.dispose();
+  }
   //
   @override
   Widget build(BuildContext context) {
@@ -53,49 +99,7 @@ class StrengthPageBody extends StatelessWidget {
                           isGridVisible: true,
                           caption: '[${const Localized('kN').v}]',
                         ),
-                        stream: Stream<Map<String, dynamic>>.periodic(
-                          const Duration(seconds: 5),
-                          (_) {
-                            const range = 50;
-                            final (minY, maxY) = (-200 + range, 200 - range);
-                            final (minX, _) = (-100, 100);
-                            final firstY =
-                                minY + Random().nextInt(maxY - minY).toDouble();
-                            const firstLimit = 50;
-                            return {
-                              'yValues': List.generate(
-                                20,
-                                (_) =>
-                                    firstY -
-                                    range / 2 +
-                                    Random().nextInt(range).toDouble(),
-                              ),
-                              'xOffsets': List.generate(
-                                20,
-                                (idx) => (
-                                  (minX + 10 * idx).toDouble(),
-                                  (minX + 10 * (idx + 1)).toDouble(),
-                                ),
-                              ),
-                              'lowLimits': List.generate(
-                                20,
-                                (idx) => -(firstLimit.toDouble() +
-                                    (idx < 10 ? idx : 20 - idx) * 10),
-                              ),
-                              'highLimits': List.generate(
-                                20,
-                                (idx) =>
-                                    firstLimit.toDouble() +
-                                    (idx < 10 ? idx : 20 - idx) * 10,
-                              ),
-                              'barCaptions': List.generate(
-                                20,
-                                (idx) => '[${idx + 1}]',
-                                // (idx) => '',
-                              ),
-                            };
-                          },
-                        ),
+                        stream: _shearForcesController.stream,
                       ),
                     ),
                   ),
@@ -129,48 +133,7 @@ class StrengthPageBody extends StatelessWidget {
                           isGridVisible: true,
                           caption: '[${const Localized('kNm').v}]',
                         ),
-                        stream: Stream<Map<String, dynamic>>.periodic(
-                          const Duration(seconds: 5),
-                          (_) {
-                            const range = 100;
-                            final (minY, maxY) = (-500 + range, 500 - range);
-                            final (minX, _) = (-100, 100);
-                            final firstY =
-                                minY + Random().nextInt(maxY - minY).toDouble();
-                            const firstLimit = 150;
-                            return {
-                              'yValues': List.generate(
-                                20,
-                                (_) =>
-                                    firstY -
-                                    range / 2 +
-                                    Random().nextInt(range).toDouble(),
-                              ),
-                              'xOffsets': List.generate(
-                                20,
-                                (idx) => (
-                                  (minX + 10 * idx).toDouble(),
-                                  (minX + 10 * (idx + 1)).toDouble(),
-                                ),
-                              ),
-                              'lowLimits': List.generate(
-                                20,
-                                (idx) => -(firstLimit.toDouble() +
-                                    (idx < 10 ? idx : 20 - idx) * 10),
-                              ),
-                              'highLimits': List.generate(
-                                20,
-                                (idx) =>
-                                    firstLimit.toDouble() +
-                                    (idx < 10 ? idx : 20 - idx) * 10,
-                              ),
-                              'barCaptions': List.generate(
-                                20,
-                                (idx) => '[${idx + 1}]',
-                              ),
-                            };
-                          },
-                        ),
+                        stream: _bendingMomentsController.stream,
                       ),
                     ),
                   ),

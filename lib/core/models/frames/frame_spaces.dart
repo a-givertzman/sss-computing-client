@@ -3,19 +3,19 @@ import 'dart:convert';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:sss_computing_client/core/models/frames/frame.dart';
-/// Interface for controlling collection of [Frames].
-abstract interface class Frames {
-  /// Get all [Frame] in [Frames] collection.
-  Future<ResultF<List<Frame>>> fetchAll();
+import 'package:sss_computing_client/core/models/frames/frame_space.dart';
+/// Interface for controlling collection of [FrameSpaces].
+abstract interface class FrameSpaces {
+  /// Get all [FrameSpace] in [FrameSpaces] collection.
+  Future<ResultF<List<FrameSpace>>> fetchAll();
 }
-/// [Frames] collection stored in DB.
-class DbFrames implements Frames {
+/// [FrameSpaces] collection stored in postgres DB.
+class PgFrameSpaces implements FrameSpaces {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
-  /// Creates [Frames] collection stored in DB.
-  const DbFrames({
+  /// Creates [FrameSpaces] collection stored in DB.
+  const PgFrameSpaces({
     required String dbName,
     required ApiAddress apiAddress,
     String? authToken,
@@ -24,7 +24,7 @@ class DbFrames implements Frames {
         _authToken = authToken;
   //
   @override
-  Future<ResultF<List<Frame>>> fetchAll() async {
+  Future<ResultF<List<FrameSpace>>> fetchAll() async {
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -52,15 +52,15 @@ class DbFrames implements Frames {
     };
   }
   ///
-  ResultF<List<Frame>> _mapReplyToValue(List<Map<String, dynamic>> rows) {
+  ResultF<List<FrameSpace>> _mapReplyToValue(List<Map<String, dynamic>> rows) {
     try {
       return Ok(rows.map((row) {
         final Map<String, dynamic> json = jsonDecode(row['parameters'])
           ..['index'] = row['index']
           ..['ship_id'] = row['ship_id']
           ..['project_id'] = row['project_id'];
-        Log('$runtimeType').debug(JsonFrame(json: json));
-        return JsonFrame(json: json);
+        Log('$runtimeType').debug(JsonFrameSpace(json: json));
+        return JsonFrameSpace(json: json);
       }).toList());
     } catch (err) {
       return Err(Failure(message: err, stackTrace: StackTrace.current));
