@@ -2,11 +2,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_bars.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_layout.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_lines.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/chart_bars.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/chart_layout.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/chart_lines.dart';
 ///
-class BarChart extends StatelessWidget {
+class BarChartWidget extends StatelessWidget {
   final double? _minX;
   final double? _maxX;
   final double? _minY;
@@ -19,7 +19,7 @@ class BarChart extends StatelessWidget {
   final ChartAxis _yAxis;
   final List<StrengthForce> _strengthForces;
   ///
-  const BarChart({
+  const BarChartWidget({
     super.key,
     double? minX,
     double? maxX,

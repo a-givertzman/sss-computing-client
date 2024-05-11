@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
@@ -7,8 +6,8 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/bar_chart.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_legend.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/bar_chart_widget.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/chart_legend.dart';
 ///
 class StrengthForceChart extends StatelessWidget {
   final double? _minX;
@@ -71,7 +70,7 @@ class StrengthForceChart extends StatelessWidget {
               ),
             if (snapshot.hasData)
               Positioned.fill(
-                child: BarChart(
+                child: BarChartWidget(
                   minX: _minX,
                   maxX: _maxX,
                   minY: _minY,
@@ -94,13 +93,11 @@ class StrengthForceChart extends StatelessWidget {
                   const Localized('Limit').v,
                 ],
                 colors: [
-                  _barColor ?? theme.colorScheme.primary,
-                  _limitColor ?? theme.stateColors.alarm,
+                  barColor,
+                  limitColor,
                 ],
-                height: max(
-                      _xAxis.labelsSpaceReserved,
-                      _xAxis.captionSpaceReserved,
-                    ) -
+                height: _xAxis.labelsSpaceReserved +
+                    _xAxis.captionSpaceReserved -
                     const Setting('padding', factor: 0.5).toDouble,
               ),
             ),

@@ -2,61 +2,30 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force.dart';
-import 'package:sss_computing_client/core/models/strength/strength_forces.dart';
 import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_forces_chart.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/strength_forces_table.dart';
 ///
 class StrengthPageBody extends StatefulWidget {
+  final Stream<List<StrengthForce>> _shearForceStream;
+  final Stream<List<StrengthForce>> _bendingMomentStream;
   ///
-  const StrengthPageBody({super.key});
+  const StrengthPageBody({
+    super.key,
+    required Stream<List<StrengthForce>> shearForceStream,
+    required Stream<List<StrengthForce>> bendingMomentStream,
+  })  : _shearForceStream = shearForceStream,
+        _bendingMomentStream = bendingMomentStream;
   //
   @override
   State<StrengthPageBody> createState() => _StrengthPageBodyState();
 }
 class _StrengthPageBodyState extends State<StrengthPageBody> {
-  final _shearForcesController = StreamController<List<StrengthForce>>();
-  final _bendingMomentsController = StreamController<List<StrengthForce>>();
-  //
-  @override
-  void initState() {
-    const FakeStrengthForces(
-      valueRange: 50,
-      nParts: 20,
-      firstLimit: 50,
-      minY: -200,
-      maxY: 200,
-      minX: -100,
-    ).fetchAll().then((result) => switch (result) {
-          Ok(value: final forces) => !_shearForcesController.isClosed
-              ? _shearForcesController.add(forces)
-              : null,
-        });
-    super.initState();
-    const FakeStrengthForces(
-      valueRange: 100,
-      nParts: 20,
-      firstLimit: 150,
-      minY: -500,
-      maxY: 500,
-      minX: -100,
-    ).fetchAll().then((result) => switch (result) {
-          Ok(value: final forces) => !_bendingMomentsController.isClosed
-              ? _bendingMomentsController.add(forces)
-              : null,
-        });
-    super.initState();
-  }
-  //
-  @override
-  void dispose() {
-    _shearForcesController.close();
-    super.dispose();
-  }
   //
   @override
   Widget build(BuildContext context) {
+    final padding = const Setting('padding').toDouble;
     final blockPadding = const Setting('blockPadding').toDouble;
     const barValueColor = Colors.lightGreenAccent;
     return Padding(
@@ -66,19 +35,15 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            flex: 1,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
-                  flex: 1,
                   child: Card(
                     margin: EdgeInsets.zero,
                     child: Padding(
-                      padding: EdgeInsets.all(
-                        const Setting('padding').toDouble,
-                      ),
+                      padding: EdgeInsets.all(padding),
                       child: StrengthForceChart(
                         caption: const Localized('Shear force').v,
                         barColor: barValueColor,
@@ -99,20 +64,17 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                           isGridVisible: true,
                           caption: '[${const Localized('kN').v}]',
                         ),
-                        stream: _shearForcesController.stream,
+                        stream: widget._shearForceStream,
                       ),
                     ),
                   ),
                 ),
                 SizedBox(height: blockPadding),
                 Expanded(
-                  flex: 1,
                   child: Card(
                     margin: EdgeInsets.zero,
                     child: Padding(
-                      padding: EdgeInsets.all(
-                        const Setting('padding').toDouble,
-                      ),
+                      padding: EdgeInsets.all(padding),
                       child: StrengthForceChart(
                         caption: const Localized('Bending moment').v,
                         barColor: barValueColor,
@@ -133,7 +95,7 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                           isGridVisible: true,
                           caption: '[${const Localized('kNm').v}]',
                         ),
-                        stream: _bendingMomentsController.stream,
+                        stream: widget._bendingMomentStream,
                       ),
                     ),
                   ),
@@ -142,11 +104,37 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
             ),
           ),
           SizedBox(width: blockPadding),
-          const Expanded(
-            flex: 1,
-            child: Card(
-              margin: EdgeInsets.zero,
-              child: Text('[Empty]'),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: Card(
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: StrengthForceTable(
+                        valueUnit: const Localized('kN').v,
+                        stream: widget._shearForceStream,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: blockPadding),
+                Expanded(
+                  child: Card(
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: StrengthForceTable(
+                        valueUnit: const Localized('kNm').v,
+                        stream: widget._bendingMomentStream,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

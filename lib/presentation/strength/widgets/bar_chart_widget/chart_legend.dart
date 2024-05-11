@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-
 ///
 class ChartLegend extends StatelessWidget {
   final List<String> _names;
   final List<Color> _colors;
   final double _height;
   final TextAlign? _textAlign;
-
   ///
   const ChartLegend({
     super.key,
