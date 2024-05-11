@@ -53,21 +53,14 @@ class ChartLines extends StatelessWidget {
               (indexedValue) {
                 final index = indexedValue.$1;
                 final value = indexedValue.$2 ?? 0.0;
-                final (offsetL, offsetR) = _xOffsets[index] ?? (0.0, 0.0);
+                final (leftOffset, rightOffset) =
+                    _xOffsets[index] ?? (0.0, 0.0);
                 return LineChartBarData(
-                  dotData: const FlDotData(
-                    show: false,
-                  ),
+                  dotData: const FlDotData(show: false),
                   color: _valueColor,
                   spots: [
-                    FlSpot(
-                      offsetL,
-                      value,
-                    ),
-                    FlSpot(
-                      offsetR,
-                      value,
-                    ),
+                    FlSpot(leftOffset, value),
+                    FlSpot(rightOffset, value),
                   ],
                 );
               },

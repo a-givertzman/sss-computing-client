@@ -1,15 +1,9 @@
-import 'dart:async';
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_bars.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_layout.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_legend.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/chart_lines.dart';
 ///
 class BarChart extends StatelessWidget {
@@ -17,14 +11,13 @@ class BarChart extends StatelessWidget {
   final double? _maxX;
   final double? _minY;
   final double? _maxY;
-  final Color? _barColor;
-  final Color? _axisColor;
-  final Color? _limitColor;
+  final Color _barColor;
+  final Color _axisColor;
+  final Color _limitColor;
   final TextStyle? _textStyle;
-  final String _caption;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
-  final Stream<List<StrengthForce>> _stream;
+  final List<StrengthForce> _strengthForces;
   ///
   const BarChart({
     super.key,
@@ -32,14 +25,13 @@ class BarChart extends StatelessWidget {
     double? maxX,
     double? minY,
     double? maxY,
-    Color? barColor,
-    Color? axisColor,
-    Color? limitColor,
-    TextStyle? textStyle,
-    required String caption,
+    required Color barColor,
+    required Color axisColor,
+    required Color limitColor,
+    required TextStyle? textStyle,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
-    required Stream<List<StrengthForce>> stream,
+    required List<StrengthForce> strengthForces,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
@@ -48,18 +40,12 @@ class BarChart extends StatelessWidget {
         _axisColor = axisColor,
         _limitColor = limitColor,
         _textStyle = textStyle,
-        _caption = caption,
         _xAxis = xAxis,
         _yAxis = yAxis,
-        _stream = stream;
+        _strengthForces = strengthForces;
   //
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final barColor = _barColor ?? theme.colorScheme.primary;
-    final limitColor = _limitColor ?? theme.stateColors.alarm;
-    final axisColor = _axisColor ?? theme.colorScheme.primary;
-    final textStyle = _textStyle ?? theme.textTheme.bodySmall;
     final verticalPad =
         _xAxis.labelsSpaceReserved + _xAxis.captionSpaceReserved;
     final horizontalPad =
@@ -70,147 +56,106 @@ class BarChart extends StatelessWidget {
     final layoutLetfPad = horizontalPad -
         (_yAxis.isLabelsVisible ? _yAxis.labelsSpaceReserved : 0.0) -
         (_yAxis.isCaptionVisible ? _yAxis.captionSpaceReserved : 0.0);
-    return StreamBuilder(
-      stream: _stream,
-      builder: (_, snapshot) {
-        return Stack(
-          children: [
-            if (!snapshot.hasData)
-              const Positioned(
-                left: 0.0,
-                top: 0.0,
-                right: 0.0,
-                bottom: 0.0,
-                child: Center(
-                  child: CupertinoActivityIndicator(),
-                ),
-              ),
-            if (snapshot.hasData)
-              ...() {
-                final List<double?> yValues =
-                    snapshot.data!.map((force) => force.value).toList();
-                final List<(double, double)?> xOffsets = snapshot.data!
-                    .map((force) =>
-                        (force.frameSpace.start, force.frameSpace.end))
-                    .toList();
-                final List<String?> barCaptions = snapshot.data!
-                    .map((force) => '[${force.frameSpace.index}]')
-                    .toList();
-                final List<double?> lowLimits =
-                    snapshot.data!.map((force) => force.lowLimit).toList();
-                final List<double?> highLimits =
-                    snapshot.data!.map((force) => force.highLimit).toList();
-                final minX = _minX ?? _getMinX(xOffsets);
-                final maxX = _maxX ?? _getMaxX(xOffsets);
-                final minY = _minY ?? _getMinY(yValues);
-                final maxY = _maxY ?? _getMaxY(yValues);
-                return [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      layoutLetfPad,
-                      verticalPad,
-                      0.0,
-                      layoutBottomPad,
-                    ),
-                    child: ChartLayout(
-                      minX: minX,
-                      maxX: maxX,
-                      minY: minY,
-                      maxY: maxY,
-                      xAxis: _xAxis,
-                      yAxis: _yAxis,
-                      axisColor: axisColor,
-                      textStyle: textStyle,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      horizontalPad,
-                      0.0,
-                      0.0,
-                      verticalPad,
-                    ),
-                    child: ClipRect(
-                      child: ChartBars(
-                        yValues: yValues,
-                        lowLimits: lowLimits,
-                        highLimits: highLimits,
-                        xOffsets: xOffsets,
-                        minX: minX,
-                        maxX: maxX,
-                        minY: minY,
-                        maxY: maxY,
-                        xAxis: _xAxis,
-                        valueColor: barColor,
-                        limitColor: limitColor,
-                        axisColor: axisColor,
-                        textStyle: textStyle,
-                        barCaptions: barCaptions,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      horizontalPad,
-                      verticalPad,
-                      0.0,
-                      verticalPad,
-                    ),
-                    child: ClipRect(
-                      child: ChartLines(
-                        minX: minX,
-                        maxX: maxX,
-                        minY: minY,
-                        maxY: maxY,
-                        yValues: lowLimits,
-                        xOffsets: xOffsets,
-                        valueColor: _limitColor ?? theme.stateColors.alarm,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      horizontalPad,
-                      verticalPad,
-                      0.0,
-                      verticalPad,
-                    ),
-                    child: ClipRect(
-                      child: ChartLines(
-                        minX: minX,
-                        maxX: maxX,
-                        minY: minY,
-                        maxY: maxY,
-                        yValues: highLimits,
-                        xOffsets: xOffsets,
-                        valueColor: _limitColor ?? theme.stateColors.alarm,
-                      ),
-                    ),
-                  ),
-                ];
-              }(),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: ChartLegend(
-                names: [
-                  _caption,
-                  const Localized('Limit').v,
-                ],
-                colors: [
-                  _barColor ?? theme.colorScheme.primary,
-                  _limitColor ?? theme.stateColors.alarm,
-                ],
-                height: max(
-                      _xAxis.labelsSpaceReserved,
-                      _xAxis.captionSpaceReserved,
-                    ) -
-                    const Setting('padding', factor: 0.25).toDouble,
-              ),
+    final List<double?> yValues =
+        _strengthForces.map((force) => force.value).toList();
+    final List<(double, double)?> xOffsets = _strengthForces
+        .map((force) => (force.frameSpace.start, force.frameSpace.end))
+        .toList();
+    final List<String?> barCaptions =
+        _strengthForces.map((force) => '[${force.frameSpace.index}]').toList();
+    final List<double?> lowLimits =
+        _strengthForces.map((force) => force.lowLimit).toList();
+    final List<double?> highLimits =
+        _strengthForces.map((force) => force.highLimit).toList();
+    final minX = _minX ?? _getMinX(xOffsets);
+    final maxX = _maxX ?? _getMaxX(xOffsets);
+    final minY = _minY ?? _getMinY(yValues);
+    final maxY = _maxY ?? _getMaxY(yValues);
+    return Stack(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            layoutLetfPad,
+            verticalPad,
+            0.0,
+            layoutBottomPad,
+          ),
+          child: ChartLayout(
+            minX: minX,
+            maxX: maxX,
+            minY: minY,
+            maxY: maxY,
+            xAxis: _xAxis,
+            yAxis: _yAxis,
+            axisColor: _axisColor,
+            textStyle: _textStyle,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            horizontalPad,
+            0.0,
+            0.0,
+            verticalPad,
+          ),
+          child: ClipRect(
+            child: ChartBars(
+              yValues: yValues,
+              lowLimits: lowLimits,
+              highLimits: highLimits,
+              xOffsets: xOffsets,
+              minX: minX,
+              maxX: maxX,
+              minY: minY,
+              maxY: maxY,
+              xAxis: _xAxis,
+              valueColor: _barColor,
+              limitColor: _limitColor,
+              axisColor: _axisColor,
+              textStyle: _textStyle,
+              barCaptions: barCaptions,
             ),
-          ],
-        );
-      },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            horizontalPad,
+            verticalPad,
+            0.0,
+            verticalPad,
+          ),
+          child: ClipRect(
+            child: ChartLines(
+              minX: minX,
+              maxX: maxX,
+              minY: minY,
+              maxY: maxY,
+              yValues: lowLimits,
+              xOffsets: xOffsets,
+              valueColor: _limitColor,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            horizontalPad,
+            verticalPad,
+            0.0,
+            verticalPad,
+          ),
+          child: ClipRect(
+            child: ChartLines(
+              minX: minX,
+              maxX: maxX,
+              minY: minY,
+              maxY: maxY,
+              yValues: highLimits,
+              xOffsets: xOffsets,
+              valueColor: _limitColor,
+            ),
+          ),
+        ),
+      ],
     );
   }
   ///

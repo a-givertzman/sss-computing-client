@@ -3,11 +3,13 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/frames/frame_space.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force.dart';
+///
 /// Interface for controlling collection of [StrengthForces].
 abstract interface class StrengthForces {
   /// Get all [StrengthForce] in [StrengthForces] collection.
   Future<ResultF<List<StrengthForce>>> fetchAll();
 }
+///
 /// Fake implementation for [StrengthForces] that generate
 /// collection of [StrengthForce]
 class FakeStrengthForces implements StrengthForces {

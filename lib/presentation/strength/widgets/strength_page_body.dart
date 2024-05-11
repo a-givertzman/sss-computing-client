@@ -5,8 +5,8 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force.dart';
 import 'package:sss_computing_client/core/models/strength/strength_forces.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart/bar_chart.dart';
 import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/strength_forces_chart.dart';
 ///
 class StrengthPageBody extends StatefulWidget {
   ///
@@ -57,8 +57,8 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
   //
   @override
   Widget build(BuildContext context) {
-    const valueBarColor = Colors.lightGreenAccent;
     final blockPadding = const Setting('blockPadding').toDouble;
+    const barValueColor = Colors.lightGreenAccent;
     return Padding(
       padding: EdgeInsets.all(blockPadding),
       child: Row(
@@ -79,9 +79,9 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                       padding: EdgeInsets.all(
                         const Setting('padding').toDouble,
                       ),
-                      child: BarChart(
+                      child: StrengthForceChart(
                         caption: const Localized('Shear force').v,
-                        barColor: valueBarColor,
+                        barColor: barValueColor,
                         minX: -100.0,
                         maxX: 100.0,
                         minY: -200.0,
@@ -113,9 +113,9 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                       padding: EdgeInsets.all(
                         const Setting('padding').toDouble,
                       ),
-                      child: BarChart(
+                      child: StrengthForceChart(
                         caption: const Localized('Bending moment').v,
-                        barColor: valueBarColor,
+                        barColor: barValueColor,
                         minX: -100.0,
                         maxX: 100.0,
                         minY: -500.0,
