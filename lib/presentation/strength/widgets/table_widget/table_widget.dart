@@ -55,7 +55,7 @@ class _TableWidgetState extends State<TableWidget> {
           stringValue: (force) =>
               (_extractGapFromLimits(force) * 100).toStringAsFixed(1),
         ),
-        DaviColumn(
+        DaviColumn<StrengthForce>(
           name: const Localized('Status').v,
           cellBuilder: (_, row) => _PassStatusWidget(force: row.data),
         ),
