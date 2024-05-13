@@ -16,6 +16,12 @@
     "Bending moment": ["Bending moment", "Изгибающий момент"],
     "Frames": ["Frames", "Шпангоуты"],
     "kN": ["kN", "кН"],
-    "kNm": ["kNm", "кНм"],
-    "Limit": ["Limit", "лимит"]
+    "kNm": ["kN·m", "кН·м"],
+    "Limit": ["Limit", "Лимит"],
+    "Frame": ["Frame", "Шпангоут"],
+    "Value": ["Value", "Значение"],
+    "Low limit": ["Low limit", "Ниж. лимит"],
+    "High limit": ["High limit", "Верх. лимит"],
+    "Limits gap": ["Limits gap", "Коэф. запаса"],
+    "Status": ["Status", "Статус"]
 }
