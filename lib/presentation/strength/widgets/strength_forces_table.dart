@@ -42,7 +42,7 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
         DaviColumn<StrengthForce>(
           width: 40,
           name: const Localized('Frame').v,
-          intValue: (force) => force.frameSpace.index,
+          intValue: (force) => force.frameIndex,
           resizable: false,
         ),
         DaviColumn<StrengthForce>(
@@ -101,14 +101,14 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
   }
   //
   double _extractGapFromLimits(StrengthForce force) {
-    final value = force.value ?? 0.0;
+    final value = force.value;
     final valueFraction =
         value >= 0.0 ? (value / force.highLimit) : (value / force.lowLimit);
     return 1.0 - valueFraction;
   }
   //
   bool _extractPassStatus(StrengthForce force) {
-    final value = force.value ?? 0.0;
+    final value = force.value;
     return (value > force.lowLimit && value < force.highLimit);
   }
 }

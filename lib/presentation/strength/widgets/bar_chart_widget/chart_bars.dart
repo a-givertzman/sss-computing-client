@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
+import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/bar_chart_widget.dart';
 ///
 class ChartBars extends StatelessWidget {
   final double _minX;
@@ -9,11 +10,7 @@ class ChartBars extends StatelessWidget {
   final double _minY;
   final double _maxY;
   final ChartAxis _xAxis;
-  final List<double?> _yValues;
-  final List<double?> _lowLimits;
-  final List<double?> _highLimits;
-  final List<(double, double)?> _xOffsets;
-  final List<String?> _barCaptions;
+  final List<BarChartColumn> _columns;
   final Color _valueColor;
   final Color _limitColor;
   final Color _axisColor;
@@ -26,11 +23,7 @@ class ChartBars extends StatelessWidget {
     required double minY,
     required double maxY,
     required ChartAxis xAxis,
-    required List<double?> yValues,
-    required List<double?> lowLimits,
-    required List<double?> highLimits,
-    required List<(double, double)?> xOffsets,
-    required List<String?> barCaptions,
+    required List<BarChartColumn> columns,
     required Color valueColor,
     required Color limitColor,
     required Color axisColor,
@@ -40,11 +33,7 @@ class ChartBars extends StatelessWidget {
         _minY = minY,
         _maxY = maxY,
         _xAxis = xAxis,
-        _yValues = yValues,
-        _lowLimits = lowLimits,
-        _highLimits = highLimits,
-        _xOffsets = xOffsets,
-        _barCaptions = barCaptions,
+        _columns = columns,
         _valueColor = valueColor,
         _limitColor = limitColor,
         _axisColor = axisColor,
@@ -71,7 +60,7 @@ class ChartBars extends StatelessWidget {
                 reservedSize:
                     _xAxis.labelsSpaceReserved + _xAxis.captionSpaceReserved,
                 getTitlesWidget: (value, _) => _AxisLabel(
-                  value: _barCaptions[value.toInt()] ?? '',
+                  value: _columns[value.toInt()].caption ?? '',
                   color: _axisColor,
                   textStyle: _textStyle,
                 ),
@@ -85,13 +74,13 @@ class ChartBars extends StatelessWidget {
             show: false,
           ),
           barGroups: [
-            ..._yValues.indexed.map(
-              (indexedValue) {
-                final index = indexedValue.$1;
-                final value = indexedValue.$2 ?? 0.0;
-                final (offsetL, offsetR) = _xOffsets[index] ?? (0.0, 0.0);
-                final lowLimit = _lowLimits[index] ?? 0.0;
-                final highLimit = _highLimits[index] ?? 0.0;
+            ..._columns.indexed.map(
+              (columnIndexed) {
+                final (index, column) = columnIndexed;
+                final value = column.value;
+                final (offsetL, offsetR) = column.xBoundaries;
+                final lowLimit = column.lowLimit;
+                final highLimit = column.highLimit;
                 return BarChartGroupData(
                   x: index,
                   groupVertically: true,

@@ -27,7 +27,6 @@ class _StrengthPageState extends State<StrengthPage> {
       firstLimit: 50,
       minY: -200,
       maxY: 200,
-      minX: -100,
     ).fetchAll().then((result) => switch (result) {
           Ok(value: final forces) => !_shearForcesController.isClosed
               ? _shearForcesController.add(forces)
@@ -39,7 +38,6 @@ class _StrengthPageState extends State<StrengthPage> {
       firstLimit: 150,
       minY: -500,
       maxY: 500,
-      minX: -100,
     ).fetchAll().then((result) => switch (result) {
           Ok(value: final forces) => !_bendingMomentsController.isClosed
               ? _bendingMomentsController.add(forces)

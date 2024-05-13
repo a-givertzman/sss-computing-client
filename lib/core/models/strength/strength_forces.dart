@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:sss_computing_client/core/models/frames/frame.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force.dart';
 ///
 /// Interface for controlling collection of [StrengthForces].
@@ -18,7 +17,6 @@ class FakeStrengthForces implements StrengthForces {
   final int _firstLimit;
   final int _minY;
   final int _maxY;
-  final int _minX;
   ///
   const FakeStrengthForces({
     required int valueRange,
@@ -26,13 +24,11 @@ class FakeStrengthForces implements StrengthForces {
     required int firstLimit,
     required int minY,
     required int maxY,
-    required int minX,
   })  : _valueRange = valueRange,
         _nParts = nParts,
         _firstLimit = firstLimit,
         _minY = minY,
-        _maxY = maxY,
-        _minX = minX;
+        _maxY = maxY;
   //
   @override
   Future<Ok<List<StrengthForce>, Failure>> fetchAll() {
@@ -50,20 +46,10 @@ class FakeStrengthForces implements StrengthForces {
           -(_firstLimit.toDouble() + (idx < 10 ? idx : 20 - idx) * 10);
       final valueHighLimit =
           _firstLimit.toDouble() + (idx < 10 ? idx : 20 - idx) * 10;
-      final leftFrameOffset = (_minX + 10 * idx).toDouble();
-      final rightFrameOffset = (_minX + 10 * (idx + 1)).toDouble();
       return JsonStrengthForce(json: {
         'shipId': shipId,
         'projectId': projectId,
-        'frameSpace': JsonFrame(
-          json: {
-            'index': idx,
-            'shipId': shipId,
-            'projectId': projectId,
-            'start': leftFrameOffset,
-            'end': rightFrameOffset,
-          },
-        ),
+        'frameIndex': idx,
         'value': value,
         'lowLimit': valueLowLimit,
         'highLimit': valueHighLimit,

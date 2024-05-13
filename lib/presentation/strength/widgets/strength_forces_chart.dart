@@ -81,7 +81,7 @@ class StrengthForceChart extends StatelessWidget {
                   textStyle: textStyle,
                   xAxis: _xAxis,
                   yAxis: _yAxis,
-                  strengthForces: snapshot.data!,
+                  columns: _mapForcesToColumns(snapshot.data),
                 ),
               ),
             Positioned(
@@ -105,5 +105,23 @@ class StrengthForceChart extends StatelessWidget {
         );
       },
     );
+  }
+  ///
+  List<BarChartColumn> _mapForcesToColumns(List<StrengthForce>? forces) {
+    if (forces == null) return [];
+    return forces
+        .map(
+          (force) => BarChartColumn(
+            value: force.value,
+            xBoundaries: (
+              force.frameIndex.toDouble(),
+              (force.frameIndex + 1).toDouble(),
+            ),
+            lowLimit: force.lowLimit,
+            highLimit: force.highLimit,
+            caption: force.frameIndex.toString(),
+          ),
+        )
+        .toList();
   }
 }

@@ -1,10 +1,25 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
-import 'package:sss_computing_client/core/models/strength/strength_force.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/chart_bars.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/chart_layout.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/chart_lines.dart';
+/// Common data for bar of [BarChartWidget]
+class BarChartColumn {
+  final double value;
+  final (double, double) xBoundaries;
+  final double lowLimit;
+  final double highLimit;
+  final String? caption;
+  ///
+  const BarChartColumn({
+    required this.value,
+    required this.xBoundaries,
+    required this.lowLimit,
+    required this.highLimit,
+    this.caption,
+  });
+}
 ///
 class BarChartWidget extends StatelessWidget {
   final double? _minX;
@@ -17,7 +32,7 @@ class BarChartWidget extends StatelessWidget {
   final TextStyle? _textStyle;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
-  final List<StrengthForce> _strengthForces;
+  final List<BarChartColumn> _columns;
   ///
   const BarChartWidget({
     super.key,
@@ -31,7 +46,7 @@ class BarChartWidget extends StatelessWidget {
     required TextStyle? textStyle,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
-    required List<StrengthForce> strengthForces,
+    required List<BarChartColumn> columns,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
@@ -42,7 +57,7 @@ class BarChartWidget extends StatelessWidget {
         _textStyle = textStyle,
         _xAxis = xAxis,
         _yAxis = yAxis,
-        _strengthForces = strengthForces;
+        _columns = columns;
   //
   @override
   Widget build(BuildContext context) {
@@ -56,19 +71,10 @@ class BarChartWidget extends StatelessWidget {
     final layoutLetfPad = horizontalPad -
         (_yAxis.isLabelsVisible ? _yAxis.labelsSpaceReserved : 0.0) -
         (_yAxis.isCaptionVisible ? _yAxis.captionSpaceReserved : 0.0);
-    final List<double?> yValues =
-        _strengthForces.map((force) => force.value).toList();
-    final List<(double, double)?> xOffsets = _strengthForces
-        .map((force) => (force.frameSpace.start, force.frameSpace.end))
-        .toList();
-    final List<String?> barCaptions =
-        _strengthForces.map((force) => '[${force.frameSpace.index}]').toList();
-    final List<double?> lowLimits =
-        _strengthForces.map((force) => force.lowLimit).toList();
-    final List<double?> highLimits =
-        _strengthForces.map((force) => force.highLimit).toList();
-    final minX = _minX ?? _getMinX(xOffsets);
-    final maxX = _maxX ?? _getMaxX(xOffsets);
+    final xBoundaries = _columns.map((col) => col.xBoundaries).toList();
+    final yValues = _columns.map((col) => col.value).toList();
+    final minX = _minX ?? _getMinX(xBoundaries);
+    final maxX = _maxX ?? _getMaxX(xBoundaries);
     final minY = _minY ?? _getMinY(yValues);
     final maxY = _maxY ?? _getMaxY(yValues);
     return Stack(
@@ -100,10 +106,6 @@ class BarChartWidget extends StatelessWidget {
           ),
           child: ClipRect(
             child: ChartBars(
-              yValues: yValues,
-              lowLimits: lowLimits,
-              highLimits: highLimits,
-              xOffsets: xOffsets,
               minX: minX,
               maxX: maxX,
               minY: minY,
@@ -113,7 +115,7 @@ class BarChartWidget extends StatelessWidget {
               limitColor: _limitColor,
               axisColor: _axisColor,
               textStyle: _textStyle,
-              barCaptions: barCaptions,
+              columns: _columns,
             ),
           ),
         ),
@@ -130,27 +132,7 @@ class BarChartWidget extends StatelessWidget {
               maxX: maxX,
               minY: minY,
               maxY: maxY,
-              yValues: lowLimits,
-              xOffsets: xOffsets,
-              valueColor: _limitColor,
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(
-            horizontalPad,
-            verticalPad,
-            0.0,
-            verticalPad,
-          ),
-          child: ClipRect(
-            child: ChartLines(
-              minX: minX,
-              maxX: maxX,
-              minY: minY,
-              maxY: maxY,
-              yValues: highLimits,
-              xOffsets: xOffsets,
+              columns: _columns,
               valueColor: _limitColor,
             ),
           ),
