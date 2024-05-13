@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:davi/davi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -67,8 +66,9 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
         DaviColumn<StrengthForce>(
           grow: 1,
           name: '${const Localized('Limits gap').v} [%]',
-          stringValue: (force) =>
-              (_extractGapFromLimits(force) * 100).toStringAsFixed(1),
+          doubleValue: (force) => double.parse(
+            (_extractGapFromLimits(force) * 100).toStringAsFixed(1),
+          ),
         ),
         DaviColumn<StrengthForce>(
           width: 80,
@@ -102,10 +102,9 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
   //
   double _extractGapFromLimits(StrengthForce force) {
     final value = force.value ?? 0.0;
-    final valueRange = force.highLimit - force.lowLimit;
-    final gapFromHigh = force.highLimit - value;
-    final gapFromLow = value - force.lowLimit;
-    return min(gapFromHigh / valueRange, gapFromLow / valueRange);
+    final valueFraction =
+        value >= 0.0 ? (value / force.highLimit) : (value / force.lowLimit);
+    return 1.0 - valueFraction;
   }
   //
   bool _extractPassStatus(StrengthForce force) {
