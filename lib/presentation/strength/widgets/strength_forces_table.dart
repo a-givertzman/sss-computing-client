@@ -41,7 +41,6 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
       columns: [
         DaviColumn<StrengthForce>(
           width: 40,
-          name: const Localized('Frame').v,
           intValue: (force) => force.frameIndex,
           resizable: false,
         ),
