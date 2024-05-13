@@ -51,13 +51,13 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
-                  child: Card(
-                    margin: EdgeInsets.zero,
-                    child: Padding(
-                      padding: EdgeInsets.all(padding),
-                      child: Row(
-                        children: [
-                          Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Card(
+                          margin: EdgeInsets.zero,
+                          child: Padding(
+                            padding: EdgeInsets.all(padding),
                             child: StrengthForceChart(
                               caption: const Localized('Shear force').v,
                               barColor: barValueColor,
@@ -79,27 +79,33 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                               stream: _shearForceStream,
                             ),
                           ),
-                          SizedBox(width: blockPadding),
-                          Expanded(
+                        ),
+                      ),
+                      SizedBox(width: blockPadding),
+                      Expanded(
+                        child: Card(
+                          margin: EdgeInsets.zero,
+                          child: Padding(
+                            padding: EdgeInsets.all(padding),
                             child: StrengthForceTable(
                               valueUnit: const Localized('kN').v,
                               stream: _shearForceStream,
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
                 SizedBox(height: blockPadding),
                 Expanded(
-                  child: Card(
-                    margin: EdgeInsets.zero,
-                    child: Padding(
-                      padding: EdgeInsets.all(padding),
-                      child: Row(
-                        children: [
-                          Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Card(
+                          margin: EdgeInsets.zero,
+                          child: Padding(
+                            padding: EdgeInsets.all(padding),
                             child: StrengthForceChart(
                               caption: const Localized('Bending moment').v,
                               barColor: barValueColor,
@@ -121,16 +127,22 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                               stream: _bendingMomentStream,
                             ),
                           ),
-                          SizedBox(width: blockPadding),
-                          Expanded(
+                        ),
+                      ),
+                      SizedBox(width: blockPadding),
+                      Expanded(
+                        child: Card(
+                          margin: EdgeInsets.zero,
+                          child: Padding(
+                            padding: EdgeInsets.all(padding),
                             child: StrengthForceTable(
                               valueUnit: const Localized('kNm').v,
                               stream: _bendingMomentStream,
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ],
