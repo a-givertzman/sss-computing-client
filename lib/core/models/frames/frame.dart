@@ -1,23 +1,23 @@
 ///
-/// Common data for corresponding [FrameSpace].
-abstract interface class FrameSpace {
+/// Common data for corresponding [Frame].
+abstract interface class Frame {
   /// index of frame
   int get index;
-  /// id of the ship for corresponding [FrameSpace]
+  /// id of the ship for corresponding [Frame]
   int get shipId;
-  /// id of the project for corresponding [FrameSpace]
+  /// id of the project for corresponding [Frame]
   int? get projectId;
-  /// x coord of left side of [FrameSpace]
+  /// x coord of left side of [Frame]
   double get start;
-  /// x coord of right side of [FrameSpace]
+  /// x coord of right side of [Frame]
   double get end;
 }
 ///
-/// [FrameSpace] that parses itself from json map.
-final class JsonFrameSpace implements FrameSpace {
+/// [Frame] that parses itself from json map.
+final class JsonFrame implements Frame {
   final Map<String, dynamic> _json;
-  /// [FrameSpace] that parses itself from json map.
-  const JsonFrameSpace({
+  /// [Frame] that parses itself from json map.
+  const JsonFrame({
     required Map<String, dynamic> json,
   }) : _json = json;
   //

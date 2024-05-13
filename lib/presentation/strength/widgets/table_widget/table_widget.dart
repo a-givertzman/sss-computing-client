@@ -16,11 +16,24 @@ class TableWidget extends StatefulWidget {
     required List<StrengthForce> strengthForces,
   })  : _valueUnit = valueUnit,
         _strengthForces = strengthForces;
+  //
   @override
-  State<TableWidget> createState() => _TableWidgetState();
+  State<TableWidget> createState() => _TableWidgetState(
+        valueUnit: _valueUnit,
+        strengthForces: _strengthForces,
+      );
 }
+///
 class _TableWidgetState extends State<TableWidget> {
+  final String _valueUnit;
+  final List<StrengthForce> _strengthForces;
   late final DaviModel<StrengthForce> _model;
+  ///
+  _TableWidgetState({
+    required String valueUnit,
+    required List<StrengthForce> strengthForces,
+  })  : _valueUnit = valueUnit,
+        _strengthForces = strengthForces;
   //
   @override
   void initState() {
@@ -33,19 +46,19 @@ class _TableWidgetState extends State<TableWidget> {
         ),
         DaviColumn<StrengthForce>(
           grow: 1,
-          name: '${const Localized('Value').v} [${widget._valueUnit}]',
+          name: '${const Localized('Value').v} [$_valueUnit]',
           doubleValue: (force) => force.value,
           resizable: false,
         ),
         DaviColumn<StrengthForce>(
           grow: 1,
-          name: '${const Localized('Low limit').v} [${widget._valueUnit}]',
+          name: '${const Localized('Low limit').v} [$_valueUnit]',
           doubleValue: (force) => force.lowLimit,
           resizable: false,
         ),
         DaviColumn<StrengthForce>(
           grow: 1,
-          name: '${const Localized('High limit').v} [${widget._valueUnit}]',
+          name: '${const Localized('High limit').v} [$_valueUnit]',
           doubleValue: (force) => force.highLimit,
           resizable: false,
         ),
@@ -60,7 +73,7 @@ class _TableWidgetState extends State<TableWidget> {
           cellBuilder: (_, row) => _PassStatusWidget(force: row.data),
         ),
       ],
-      rows: widget._strengthForces,
+      rows: _strengthForces,
     );
     super.initState();
   }

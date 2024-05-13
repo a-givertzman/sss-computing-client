@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:sss_computing_client/core/models/frames/frame_space.dart';
+import 'package:sss_computing_client/core/models/frames/frame.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force.dart';
 ///
 /// Interface for controlling collection of [StrengthForces].
@@ -55,7 +55,7 @@ class FakeStrengthForces implements StrengthForces {
       return JsonStrengthForce(json: {
         'shipId': shipId,
         'projectId': projectId,
-        'frameSpace': JsonFrameSpace(
+        'frameSpace': JsonFrame(
           json: {
             'index': idx,
             'shipId': shipId,

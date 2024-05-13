@@ -19,9 +19,20 @@ class StrengthPageBody extends StatefulWidget {
         _bendingMomentStream = bendingMomentStream;
   //
   @override
-  State<StrengthPageBody> createState() => _StrengthPageBodyState();
+  State<StrengthPageBody> createState() => _StrengthPageBodyState(
+        shearForceStream: _shearForceStream,
+        bendingMomentStream: _bendingMomentStream,
+      );
 }
 class _StrengthPageBodyState extends State<StrengthPageBody> {
+  final Stream<List<StrengthForce>> _shearForceStream;
+  final Stream<List<StrengthForce>> _bendingMomentStream;
+  ///
+  _StrengthPageBodyState({
+    required Stream<List<StrengthForce>> shearForceStream,
+    required Stream<List<StrengthForce>> bendingMomentStream,
+  })  : _shearForceStream = shearForceStream,
+        _bendingMomentStream = bendingMomentStream;
   //
   @override
   Widget build(BuildContext context) {
@@ -44,27 +55,40 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                     margin: EdgeInsets.zero,
                     child: Padding(
                       padding: EdgeInsets.all(padding),
-                      child: StrengthForceChart(
-                        caption: const Localized('Shear force').v,
-                        barColor: barValueColor,
-                        minX: -100.0,
-                        maxX: 100.0,
-                        minY: -200.0,
-                        maxY: 200.0,
-                        xAxis: const ChartAxis(
-                          labelsSpaceReserved: 25.0,
-                          captionSpaceReserved: 0.0,
-                        ),
-                        yAxis: ChartAxis(
-                          valueInterval: 50,
-                          labelsSpaceReserved: 60.0,
-                          captionSpaceReserved: 15.0,
-                          isCaptionVisible: true,
-                          isLabelsVisible: true,
-                          isGridVisible: true,
-                          caption: '[${const Localized('kN').v}]',
-                        ),
-                        stream: widget._shearForceStream,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: StrengthForceChart(
+                              caption: const Localized('Shear force').v,
+                              barColor: barValueColor,
+                              minX: -100.0,
+                              maxX: 100.0,
+                              minY: -200.0,
+                              maxY: 200.0,
+                              xAxis: const ChartAxis(
+                                labelsSpaceReserved: 25.0,
+                                captionSpaceReserved: 0.0,
+                              ),
+                              yAxis: ChartAxis(
+                                valueInterval: 50,
+                                labelsSpaceReserved: 60.0,
+                                captionSpaceReserved: 15.0,
+                                isCaptionVisible: true,
+                                isLabelsVisible: true,
+                                isGridVisible: true,
+                                caption: '[${const Localized('kN').v}]',
+                              ),
+                              stream: _shearForceStream,
+                            ),
+                          ),
+                          SizedBox(width: blockPadding),
+                          Expanded(
+                            child: StrengthForceTable(
+                              valueUnit: const Localized('kN').v,
+                              stream: _shearForceStream,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -75,61 +99,40 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                     margin: EdgeInsets.zero,
                     child: Padding(
                       padding: EdgeInsets.all(padding),
-                      child: StrengthForceChart(
-                        caption: const Localized('Bending moment').v,
-                        barColor: barValueColor,
-                        minX: -100.0,
-                        maxX: 100.0,
-                        minY: -500.0,
-                        maxY: 500.0,
-                        xAxis: const ChartAxis(
-                          labelsSpaceReserved: 25.0,
-                          captionSpaceReserved: 0.0,
-                        ),
-                        yAxis: ChartAxis(
-                          valueInterval: 100,
-                          labelsSpaceReserved: 60.0,
-                          captionSpaceReserved: 15.0,
-                          isCaptionVisible: true,
-                          isLabelsVisible: true,
-                          isGridVisible: true,
-                          caption: '[${const Localized('kNm').v}]',
-                        ),
-                        stream: widget._bendingMomentStream,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: blockPadding),
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: Card(
-                    margin: EdgeInsets.zero,
-                    child: Padding(
-                      padding: EdgeInsets.all(padding),
-                      child: StrengthForceTable(
-                        valueUnit: const Localized('kN').v,
-                        stream: widget._shearForceStream,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: blockPadding),
-                Expanded(
-                  child: Card(
-                    margin: EdgeInsets.zero,
-                    child: Padding(
-                      padding: EdgeInsets.all(padding),
-                      child: StrengthForceTable(
-                        valueUnit: const Localized('kNm').v,
-                        stream: widget._bendingMomentStream,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: StrengthForceChart(
+                              caption: const Localized('Bending moment').v,
+                              barColor: barValueColor,
+                              minX: -100.0,
+                              maxX: 100.0,
+                              minY: -500.0,
+                              maxY: 500.0,
+                              xAxis: const ChartAxis(
+                                labelsSpaceReserved: 25.0,
+                                captionSpaceReserved: 0.0,
+                              ),
+                              yAxis: ChartAxis(
+                                valueInterval: 100,
+                                labelsSpaceReserved: 60.0,
+                                captionSpaceReserved: 15.0,
+                                isCaptionVisible: true,
+                                isLabelsVisible: true,
+                                isGridVisible: true,
+                                caption: '[${const Localized('kNm').v}]',
+                              ),
+                              stream: _bendingMomentStream,
+                            ),
+                          ),
+                          SizedBox(width: blockPadding),
+                          Expanded(
+                            child: StrengthForceTable(
+                              valueUnit: const Localized('kNm').v,
+                              stream: _bendingMomentStream,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
