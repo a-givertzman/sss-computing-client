@@ -47,26 +47,26 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
         DaviColumn<StrengthForce>(
           grow: 1,
           name: '${const Localized('Value').v} [$_valueUnit]',
-          doubleValue: (force) => force.value,
+          doubleValue: (force) => _formatDoubleFraction(force.value),
           resizable: false,
         ),
         DaviColumn<StrengthForce>(
           grow: 1,
           name: '${const Localized('Low limit').v} [$_valueUnit]',
-          doubleValue: (force) => force.lowLimit,
+          doubleValue: (force) => _formatDoubleFraction(force.lowLimit),
           resizable: false,
         ),
         DaviColumn<StrengthForce>(
           grow: 1,
           name: '${const Localized('High limit').v} [$_valueUnit]',
-          doubleValue: (force) => force.highLimit,
+          doubleValue: (force) => _formatDoubleFraction(force.highLimit),
           resizable: false,
         ),
         DaviColumn<StrengthForce>(
           grow: 1,
           name: '${const Localized('Limits gap').v} [%]',
-          doubleValue: (force) => double.parse(
-            (_extractGapFromLimits(force) * 100).toStringAsFixed(1),
+          doubleValue: (force) => _formatDoubleFraction(
+            _extractGapFromLimits(force) * 100.0,
           ),
         ),
         DaviColumn<StrengthForce>(
@@ -96,6 +96,12 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
       builder: (context, snapshot) => snapshot.hasData
           ? TableView(model: _model..replaceRows(snapshot.data!))
           : const Center(child: CupertinoActivityIndicator()),
+    );
+  }
+  //
+  double _formatDoubleFraction(double value, {int fractionDigits = 3}) {
+    return double.parse(
+      value.toStringAsFixed(fractionDigits),
     );
   }
   //

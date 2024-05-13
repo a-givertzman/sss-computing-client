@@ -35,15 +35,15 @@ class PgShearForces implements StrengthForces {
               project_id AS "projectId",
               ship_id AS "shipId",
               index AS "frameIndex",
-              value_shear_force AS value
+              value_shear_force / 1000.0 AS value
             FROM strength_result
             ORDER BY "frameIndex";
             """,
       ),
       entryBuilder: (row) => JsonStrengthForce(
         json: row
-          ..['lowLimit'] = -1000.0
-          ..['highLimit'] = 1000.0,
+          ..['lowLimit'] = -300.0
+          ..['highLimit'] = 300.0,
       ),
     );
     return switch (await sqlAccess.fetch()) {
@@ -84,7 +84,7 @@ class PgBendingMoments implements StrengthForces {
               project_id AS "projectId",
               ship_id AS "shipId",
               index AS "frameIndex",
-              value_bending_moment AS value
+              value_bending_moment / 1000.0 AS value
             FROM strength_result
             ORDER BY "frameIndex";
             """,

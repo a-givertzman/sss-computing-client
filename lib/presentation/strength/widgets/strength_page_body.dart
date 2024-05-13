@@ -61,20 +61,20 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                             child: StrengthForceChart(
                               caption: const Localized('Shear force').v,
                               barColor: barValueColor,
-                              minY: -200.0,
-                              maxY: 200.0,
+                              minY: -500.0,
+                              maxY: 500.0,
                               xAxis: const ChartAxis(
                                 labelsSpaceReserved: 25.0,
                                 captionSpaceReserved: 0.0,
                               ),
                               yAxis: ChartAxis(
-                                valueInterval: 50,
+                                valueInterval: 100,
                                 labelsSpaceReserved: 60.0,
                                 captionSpaceReserved: 15.0,
                                 isCaptionVisible: true,
                                 isLabelsVisible: true,
                                 isGridVisible: true,
-                                caption: '[${const Localized('kN').v}]',
+                                caption: '[${const Localized('t').v}]',
                               ),
                               stream: _shearForceStream,
                             ),
@@ -88,7 +88,7 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                           child: Padding(
                             padding: EdgeInsets.all(padding),
                             child: StrengthForceTable(
-                              valueUnit: const Localized('kN').v,
+                              valueUnit: const Localized('t').v,
                               stream: _shearForceStream,
                             ),
                           ),
@@ -109,20 +109,20 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                             child: StrengthForceChart(
                               caption: const Localized('Bending moment').v,
                               barColor: barValueColor,
-                              minY: -500.0,
-                              maxY: 500.0,
+                              minY: -1500.0,
+                              maxY: 1500.0,
                               xAxis: const ChartAxis(
                                 labelsSpaceReserved: 25.0,
                                 captionSpaceReserved: 0.0,
                               ),
                               yAxis: ChartAxis(
-                                valueInterval: 100,
+                                valueInterval: 250,
                                 labelsSpaceReserved: 60.0,
                                 captionSpaceReserved: 15.0,
                                 isCaptionVisible: true,
                                 isLabelsVisible: true,
                                 isGridVisible: true,
-                                caption: '[${const Localized('kNm').v}]',
+                                caption: '[${const Localized('t*m').v}]',
                               ),
                               stream: _bendingMomentStream,
                             ),
@@ -136,7 +136,7 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                           child: Padding(
                             padding: EdgeInsets.all(padding),
                             child: StrengthForceTable(
-                              valueUnit: const Localized('kNm').v,
+                              valueUnit: const Localized('t*m').v,
                               stream: _bendingMomentStream,
                             ),
                           ),
