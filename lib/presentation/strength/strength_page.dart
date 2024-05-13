@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force.dart';
 import 'package:sss_computing_client/core/models/strength/strength_forces.dart';
@@ -16,33 +19,22 @@ class StrengthPage extends StatefulWidget {
 class _StrengthPageState extends State<StrengthPage> {
   late final StreamController<List<StrengthForce>> _shearForcesController;
   late final StreamController<List<StrengthForce>> _bendingMomentsController;
+  late final ApiAddress apiAddress;
+  late final String dbName;
+  late final String? authToken;
   //
   @override
   void initState() {
     _shearForcesController = StreamController();
     _bendingMomentsController = StreamController();
-    const FakeStrengthForces(
-      valueRange: 50,
-      nParts: 21,
-      firstLimit: 50,
-      minY: -200,
-      maxY: 200,
-    ).fetchAll().then((result) => switch (result) {
-          Ok(value: final forces) => !_shearForcesController.isClosed
-              ? _shearForcesController.add(forces)
-              : null,
-        });
-    const FakeStrengthForces(
-      valueRange: 100,
-      nParts: 21,
-      firstLimit: 150,
-      minY: -500,
-      maxY: 500,
-    ).fetchAll().then((result) => switch (result) {
-          Ok(value: final forces) => !_bendingMomentsController.isClosed
-              ? _bendingMomentsController.add(forces)
-              : null,
-        });
+    apiAddress = ApiAddress(
+      host: const Setting('api-host').toString(),
+      port: const Setting('api-port').toInt,
+    );
+    dbName = const Setting('api-database').toString();
+    authToken = const Setting('api-auth-token').toString();
+    _fetchShearForces();
+    _fetchBendingMoments();
     super.initState();
   }
   //
@@ -63,5 +55,31 @@ class _StrengthPageState extends State<StrengthPage> {
         bendingMomentStream: bendingMoments,
       ),
     );
+  }
+  ///
+  void _fetchShearForces() {
+    PgShearForces(
+      apiAddress: apiAddress,
+      dbName: dbName,
+      authToken: authToken,
+    ).fetchAll().then((result) => switch (result) {
+          Ok(value: final forces) => !_shearForcesController.isClosed
+              ? _shearForcesController.add(forces)
+              : null,
+          Err(:final error) => Log('$runtimeType').error(error.message),
+        });
+  }
+  ///
+  void _fetchBendingMoments() {
+    PgBendingMoments(
+      apiAddress: apiAddress,
+      dbName: dbName,
+      authToken: authToken,
+    ).fetchAll().then((result) => switch (result) {
+          Ok(value: final forces) => !_shearForcesController.isClosed
+              ? _bendingMomentsController.add(forces)
+              : null,
+          Err(:final error) => Log('$runtimeType').error(error.message),
+        });
   }
 }

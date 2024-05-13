@@ -1,5 +1,5 @@
-import 'dart:math';
-import 'package:hmi_core/hmi_core.dart';
+import 'package:ext_rw/ext_rw.dart';
+import 'package:hmi_core/hmi_core.dart' hide Result;
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force.dart';
 ///
@@ -9,52 +9,100 @@ abstract interface class StrengthForces {
   Future<ResultF<List<StrengthForce>>> fetchAll();
 }
 ///
-/// Fake implementation for [StrengthForces] that generate
-/// collection of [StrengthForce]
-class FakeStrengthForces implements StrengthForces {
-  final int _valueRange;
-  final int _nParts;
-  final int _firstLimit;
-  final int _minY;
-  final int _maxY;
+/// Collection of shear force [StrengthForce] stored in Postgres DB
+class PgShearForces implements StrengthForces {
+  final ApiAddress _apiAddress;
+  final String _dbName;
+  final String? _authToken;
   ///
-  const FakeStrengthForces({
-    required int valueRange,
-    required int nParts,
-    required int firstLimit,
-    required int minY,
-    required int maxY,
-  })  : _valueRange = valueRange,
-        _nParts = nParts,
-        _firstLimit = firstLimit,
-        _minY = minY,
-        _maxY = maxY;
+  const PgShearForces({
+    required ApiAddress apiAddress,
+    required String dbName,
+    String? authToken,
+  })  : _apiAddress = apiAddress,
+        _dbName = dbName,
+        _authToken = authToken;
   //
   @override
-  Future<Ok<List<StrengthForce>, Failure>> fetchAll() {
-    const shipId = 1;
-    const projectId = null;
-    final minYValue = _minY + _valueRange;
-    final maxYValue = _maxY - _valueRange;
-    final firstYValue =
-        minYValue + Random().nextInt(maxYValue - minYValue).toDouble();
-    final forces = List<StrengthForce>.generate(_nParts, (idx) {
-      final value = firstYValue -
-          _valueRange / 2 +
-          Random().nextInt(_valueRange).toDouble();
-      final valueLowLimit =
-          -(_firstLimit.toDouble() + (idx < 10 ? idx : 20 - idx) * 10);
-      final valueHighLimit =
-          _firstLimit.toDouble() + (idx < 10 ? idx : 20 - idx) * 10;
-      return JsonStrengthForce(json: {
-        'shipId': shipId,
-        'projectId': projectId,
-        'frameIndex': idx,
-        'value': value,
-        'lowLimit': valueLowLimit,
-        'highLimit': valueHighLimit,
-      });
-    });
-    return Future.delayed(const Duration(milliseconds: 500), () => Ok(forces));
+  Future<Result<List<StrengthForce>, Failure<String>>> fetchAll() async {
+    final sqlAccess = SqlAccess(
+      address: _apiAddress,
+      authToken: _authToken ?? '',
+      database: _dbName,
+      sqlBuilder: (_, __) => Sql(
+        sql: """
+            SELECT
+              project_id AS "projectId",
+              ship_id AS "shipId",
+              index AS "frameIndex",
+              value_shear_force AS value
+            FROM strength_result
+            ORDER BY "frameIndex";
+            """,
+      ),
+      entryBuilder: (row) => JsonStrengthForce(
+        json: row
+          ..['lowLimit'] = -1000.0
+          ..['highLimit'] = 1000.0,
+      ),
+    );
+    return switch (await sqlAccess.fetch()) {
+      Ok(value: final forces) => Ok(forces),
+      Err(:final error) => Err(
+          Failure<String>(
+            message: '$error',
+            stackTrace: StackTrace.current,
+          ),
+        ),
+    };
+  }
+}
+///
+/// Collection of bending moment [StrengthForce] stored in Postgres DB
+class PgBendingMoments implements StrengthForces {
+  final ApiAddress _apiAddress;
+  final String _dbName;
+  final String? _authToken;
+  ///
+  const PgBendingMoments({
+    required ApiAddress apiAddress,
+    required String dbName,
+    String? authToken,
+  })  : _apiAddress = apiAddress,
+        _dbName = dbName,
+        _authToken = authToken;
+  //
+  @override
+  Future<Result<List<StrengthForce>, Failure<String>>> fetchAll() async {
+    final sqlAccess = SqlAccess(
+      address: _apiAddress,
+      authToken: _authToken ?? '',
+      database: _dbName,
+      sqlBuilder: (_, __) => Sql(
+        sql: """
+            SELECT
+              project_id AS "projectId",
+              ship_id AS "shipId",
+              index AS "frameIndex",
+              value_bending_moment AS value
+            FROM strength_result
+            ORDER BY "frameIndex";
+            """,
+      ),
+      entryBuilder: (row) => JsonStrengthForce(
+        json: row
+          ..['lowLimit'] = -1000.0
+          ..['highLimit'] = 1000.0,
+      ),
+    );
+    return switch (await sqlAccess.fetch()) {
+      Ok(value: final forces) => Ok(forces),
+      Err(:final error) => Err(
+          Failure<String>(
+            message: '$error',
+            stackTrace: StackTrace.current,
+          ),
+        ),
+    };
   }
 }
