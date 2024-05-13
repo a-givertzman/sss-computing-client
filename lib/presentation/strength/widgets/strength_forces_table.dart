@@ -73,7 +73,11 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
         DaviColumn<StrengthForce>(
           width: 80,
           name: const Localized('Status').v,
-          cellBuilder: (_, row) => _PassStatusWidget(force: row.data),
+          intValue: (force) => _extractPassStatus(force) ? 1 : 0,
+          cellBuilder: (_, row) => _PassStatusWidget(
+            force: row.data,
+            isPassed: _extractPassStatus,
+          ),
         ),
       ],
     );
@@ -96,27 +100,35 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
     );
   }
   //
-  double _extractGapFromLimits(StrengthForce forceData) {
-    final value = forceData.value ?? 0.0;
-    final valueRange = forceData.highLimit - forceData.lowLimit;
-    final gapFromHigh = forceData.highLimit - value;
-    final gapFromLow = value - forceData.lowLimit;
+  double _extractGapFromLimits(StrengthForce force) {
+    final value = force.value ?? 0.0;
+    final valueRange = force.highLimit - force.lowLimit;
+    final gapFromHigh = force.highLimit - value;
+    final gapFromLow = value - force.lowLimit;
     return min(gapFromHigh / valueRange, gapFromLow / valueRange);
+  }
+  //
+  bool _extractPassStatus(StrengthForce force) {
+    final value = force.value ?? 0.0;
+    return (value > force.lowLimit && value < force.highLimit);
   }
 }
 ///
 class _PassStatusWidget extends StatelessWidget {
   final StrengthForce force;
+  final bool Function(StrengthForce force) isPassed;
   ///
-  const _PassStatusWidget({required this.force});
+  const _PassStatusWidget({
+    required this.force,
+    required this.isPassed,
+  });
   //
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     const passedColor = Colors.lightGreen;
     final errorColor = theme.alarmColors.class3;
-    final value = force.value ?? 0.0;
-    return (value > force.lowLimit && value < force.highLimit)
+    return isPassed(force)
         ? const Icon(
             Icons.done,
             color: passedColor,
