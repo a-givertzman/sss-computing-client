@@ -87,7 +87,7 @@ class ChartBars extends StatelessWidget {
                   barRods: [
                     BarChartRodData(
                       fromY: 0.0,
-                      toY: value,
+                      toY: value.clamp(_minY, _maxY),
                       width: (offsetR - offsetL) * xAxisScale,
                       color: _valueColor,
                       borderRadius: const BorderRadius.all(Radius.zero),
@@ -108,7 +108,7 @@ class ChartBars extends StatelessWidget {
                     ),
                     BarChartRodData(
                       fromY: lowLimit,
-                      toY: _minY,
+                      toY: _minY.clamp(_minY, _maxY),
                       width: (offsetR - offsetL) * xAxisScale,
                       color: Colors.transparent,
                       gradient: (value > lowLimit)
@@ -122,7 +122,7 @@ class ChartBars extends StatelessWidget {
                     ),
                     BarChartRodData(
                       fromY: 0,
-                      toY: _maxY,
+                      toY: _maxY.clamp(_minY, _maxY),
                       width: (offsetR - offsetL) * xAxisScale,
                       color: Colors.transparent,
                       borderRadius: const BorderRadius.all(Radius.zero),
@@ -131,7 +131,7 @@ class ChartBars extends StatelessWidget {
                       ),
                     ),
                     BarChartRodData(
-                      fromY: _minY,
+                      fromY: _minY.clamp(_minY, _maxY),
                       toY: 0,
                       width: (offsetR - offsetL) * xAxisScale,
                       color: Colors.transparent,
