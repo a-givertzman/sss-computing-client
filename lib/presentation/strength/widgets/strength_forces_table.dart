@@ -41,7 +41,8 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
     _model = DaviModel(
       columns: [
         DaviColumn<StrengthForce>(
-          name: const Localized('Spatium').v,
+          width: 40,
+          name: const Localized('Frame').v,
           intValue: (force) => force.frameSpace.index,
           resizable: false,
         ),
@@ -70,6 +71,7 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
               (_extractGapFromLimits(force) * 100).toStringAsFixed(1),
         ),
         DaviColumn<StrengthForce>(
+          width: 80,
           name: const Localized('Status').v,
           cellBuilder: (_, row) => _PassStatusWidget(force: row.data),
         ),

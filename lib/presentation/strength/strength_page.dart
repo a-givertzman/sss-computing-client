@@ -23,7 +23,7 @@ class _StrengthPageState extends State<StrengthPage> {
     _bendingMomentsController = StreamController();
     const FakeStrengthForces(
       valueRange: 50,
-      nParts: 20,
+      nParts: 21,
       firstLimit: 50,
       minY: -200,
       maxY: 200,
@@ -35,7 +35,7 @@ class _StrengthPageState extends State<StrengthPage> {
         });
     const FakeStrengthForces(
       valueRange: 100,
-      nParts: 20,
+      nParts: 21,
       firstLimit: 150,
       minY: -500,
       maxY: 500,
@@ -57,13 +57,13 @@ class _StrengthPageState extends State<StrengthPage> {
   //
   @override
   Widget build(BuildContext context) {
+    final shearForces = _shearForcesController.stream.asBroadcastStream();
+    final bendingMoments = _bendingMomentsController.stream.asBroadcastStream();
     return Scaffold(
       body: StrengthPageBody(
-        shearForceStream:
-          _shearForcesController.stream.asBroadcastStream(),
-        bendingMomentStream:
-          _bendingMomentsController.stream.asBroadcastStream(),
-    ),
+        shearForceStream: shearForces,
+        bendingMomentStream: bendingMoments,
+      ),
     );
   }
 }
