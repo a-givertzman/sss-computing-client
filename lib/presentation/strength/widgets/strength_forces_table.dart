@@ -40,37 +40,38 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
     _model = DaviModel(
       columns: [
         DaviColumn<StrengthForce>(
-          width: 40,
+          width: 42,
+          name: '#',
           intValue: (force) => force.frameIndex,
           resizable: false,
         ),
         DaviColumn<StrengthForce>(
           grow: 1,
-          name: '${const Localized('Value').v} [$_valueUnit]',
+          name: '${const Localized('Value').v}\n[$_valueUnit]',
           doubleValue: (force) => _formatDoubleFraction(force.value),
           resizable: false,
         ),
         DaviColumn<StrengthForce>(
           grow: 1,
-          name: '${const Localized('Low limit').v} [$_valueUnit]',
+          name: '${const Localized('Low limit').v}\n[$_valueUnit]',
           doubleValue: (force) => _formatDoubleFraction(force.lowLimit),
           resizable: false,
         ),
         DaviColumn<StrengthForce>(
           grow: 1,
-          name: '${const Localized('High limit').v} [$_valueUnit]',
+          name: '${const Localized('High limit').v}\n[$_valueUnit]',
           doubleValue: (force) => _formatDoubleFraction(force.highLimit),
           resizable: false,
         ),
         DaviColumn<StrengthForce>(
           grow: 1,
-          name: '${const Localized('Limits gap').v} [%]',
+          name: '${const Localized('Limits gap').v}\n[%]',
           doubleValue: (force) => _formatDoubleFraction(
             _extractGapFromLimits(force) * 100.0,
           ),
         ),
         DaviColumn<StrengthForce>(
-          width: 80,
+          width: 72,
           name: const Localized('Status').v,
           intValue: (force) => _extractPassStatus(force) ? 1 : 0,
           cellBuilder: (_, row) => _PassStatusWidget(
@@ -94,22 +95,24 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
     return StreamBuilder(
       stream: _stream,
       builder: (context, snapshot) => snapshot.hasData
-          ? TableView(model: _model..replaceRows(snapshot.data!))
+          ? TableView(
+              model: _model..replaceRows(snapshot.data!),
+              headerHeight: 48.0,
+              tableBorderColor: Colors.transparent,
+            )
           : const Center(child: CupertinoActivityIndicator()),
     );
   }
   //
-  double _formatDoubleFraction(double value, {int fractionDigits = 3}) {
-    return double.parse(
-      value.toStringAsFixed(fractionDigits),
-    );
+  double _formatDoubleFraction(double value, {int fractionDigits = 1}) {
+    return double.parse(value.toStringAsFixed(fractionDigits));
   }
   //
   double _extractGapFromLimits(StrengthForce force) {
     final value = force.value;
     final valueFraction =
         value >= 0.0 ? (value / force.highLimit) : (value / force.lowLimit);
-    return 1.0 - valueFraction;
+    return valueFraction;
   }
   //
   bool _extractPassStatus(StrengthForce force) {

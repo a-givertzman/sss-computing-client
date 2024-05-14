@@ -24,6 +24,7 @@ class StrengthPageBody extends StatefulWidget {
         bendingMomentStream: _bendingMomentStream,
       );
 }
+///
 class _StrengthPageBodyState extends State<StrengthPageBody> {
   final Stream<List<StrengthForce>> _shearForceStream;
   final Stream<List<StrengthForce>> _bendingMomentStream;
@@ -74,7 +75,7 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                                 isCaptionVisible: true,
                                 isLabelsVisible: true,
                                 isGridVisible: true,
-                                caption: '[${const Localized('t').v}]',
+                                caption: '[${const Localized('MN').v}]',
                               ),
                               stream: _shearForceStream,
                             ),
@@ -88,7 +89,7 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                           child: Padding(
                             padding: EdgeInsets.all(padding),
                             child: StrengthForceTable(
-                              valueUnit: const Localized('t').v,
+                              valueUnit: const Localized('MN').v,
                               stream: _shearForceStream,
                             ),
                           ),
@@ -122,7 +123,7 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                                 isCaptionVisible: true,
                                 isLabelsVisible: true,
                                 isGridVisible: true,
-                                caption: '[${const Localized('t*m').v}]',
+                                caption: '[${const Localized('MN*m').v}]',
                               ),
                               stream: _bendingMomentStream,
                             ),
@@ -136,7 +137,7 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                           child: Padding(
                             padding: EdgeInsets.all(padding),
                             child: StrengthForceTable(
-                              valueUnit: const Localized('t*m').v,
+                              valueUnit: const Localized('MN*m').v,
                               stream: _bendingMomentStream,
                             ),
                           ),
