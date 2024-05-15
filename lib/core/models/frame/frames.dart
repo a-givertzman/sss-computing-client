@@ -112,3 +112,104 @@ class PgFramesTheoretical implements Frames {
     };
   }
 }
+///
+/// Real [Frames] collection stored in postgres DB.
+class PgFramesReal implements Frames {
+  final String _dbName;
+  final ApiAddress _apiAddress;
+  final String? _authToken;
+  ///
+  /// Creates [Frames] collection stored in DB.
+  const PgFramesReal({
+    required String dbName,
+    required ApiAddress apiAddress,
+    String? authToken,
+  })  : _dbName = dbName,
+        _apiAddress = apiAddress,
+        _authToken = authToken;
+  //
+  @override
+  Future<Result<List<Frame>, Failure<String>>> fetchAll() async {
+    final sqlAccess = SqlAccess(
+      address: _apiAddress,
+      authToken: _authToken ?? '',
+      database: _dbName,
+      sqlBuilder: (_, __) => Sql(
+        sql: """
+            SELECT DISTINCT ON (index) * FROM (
+              SELECT
+                project_id AS "projectId",
+                ship_id AS "shipId",
+                index AS "index",
+                value AS "x"
+              FROM physical_frame
+              WHERE key = 'x'
+              UNION
+              SELECT
+                pfx.project_id AS "projectId",
+                pfx.ship_id AS "shipId",
+                pfx.index + 1 AS "index",
+                pfx.value + pfd.value AS "x"
+              FROM physical_frame AS pfx
+              INNER JOIN physical_frame AS pfd
+              ON pfx.key = 'x' AND pfd.key = 'delta_x' AND pfx.index = pfd.index
+              ORDER BY "index"
+            );
+            """,
+      ),
+      entryBuilder: (row) => JsonFrame(json: row),
+    );
+    return switch (await sqlAccess.fetch()) {
+      Ok(value: final frames) => Ok(frames),
+      Err(:final error) => Err(Failure(
+          message: '$error',
+          stackTrace: StackTrace.current,
+        )),
+    };
+  }
+  //
+  @override
+  Future<Result<Frame, Failure<String>>> fetchByIndex(int index) async {
+    final sqlAccess = SqlAccess(
+      address: _apiAddress,
+      authToken: _authToken ?? '',
+      database: _dbName,
+      sqlBuilder: (_, __) => Sql(
+        sql: """
+              SELECT DISTINCT ON (index) * FROM (
+              SELECT
+                project_id AS "projectId",
+                ship_id AS "shipId",
+                index AS "index",
+                value AS "x"
+              FROM physical_frame
+              WHERE key = 'x'
+              UNION
+              SELECT
+                pfx.project_id AS "projectId",
+                pfx.ship_id AS "shipId",
+                pfx.index + 1 AS "index",
+                pfx.value + pfd.value AS "x"
+              FROM physical_frame AS pfx
+              INNER JOIN physical_frame AS pfd
+              ON pfx.key = 'x' AND pfd.key = 'delta_x' AND pfx.index = pfd.index
+              ORDER BY "index"
+            ) WHERE index = $index;
+            """,
+      ),
+      entryBuilder: (row) => JsonFrame(json: row),
+    );
+    return switch (await sqlAccess.fetch()) {
+      Ok(value: final frames) => frames.isNotEmpty
+          ? Ok(frames.first)
+          : Err(Failure(
+              message: 'Frame not found',
+              stackTrace: StackTrace.current,
+            )),
+      Err(:final error) => Err(Failure(
+          message: '$error',
+          stackTrace: StackTrace.current,
+        )),
+    };
+  }
+}
