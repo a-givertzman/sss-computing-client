@@ -60,54 +60,6 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                           child: Padding(
                             padding: EdgeInsets.all(padding),
                             child: StrengthForceChart(
-                              caption: const Localized('Shear force').v,
-                              barColor: barValueColor,
-                              minY: -500.0,
-                              maxY: 500.0,
-                              xAxis: const ChartAxis(
-                                labelsSpaceReserved: 25.0,
-                                captionSpaceReserved: 0.0,
-                              ),
-                              yAxis: ChartAxis(
-                                valueInterval: 100,
-                                labelsSpaceReserved: 60.0,
-                                captionSpaceReserved: 15.0,
-                                isCaptionVisible: true,
-                                isLabelsVisible: true,
-                                isGridVisible: true,
-                                caption: '[${const Localized('MN').v}]',
-                              ),
-                              stream: _shearForceStream,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: blockPadding),
-                      Expanded(
-                        child: Card(
-                          margin: EdgeInsets.zero,
-                          child: Padding(
-                            padding: EdgeInsets.all(padding),
-                            child: StrengthForceTable(
-                              valueUnit: const Localized('MN').v,
-                              stream: _shearForceStream,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: blockPadding),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Card(
-                          margin: EdgeInsets.zero,
-                          child: Padding(
-                            padding: EdgeInsets.all(padding),
-                            child: StrengthForceChart(
                               caption: const Localized('Bending moment').v,
                               barColor: barValueColor,
                               minY: -1500.0,
@@ -139,6 +91,54 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                             child: StrengthForceTable(
                               valueUnit: const Localized('MN*m').v,
                               stream: _bendingMomentStream,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: blockPadding),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Card(
+                          margin: EdgeInsets.zero,
+                          child: Padding(
+                            padding: EdgeInsets.all(padding),
+                            child: StrengthForceChart(
+                              caption: const Localized('Shear force').v,
+                              barColor: barValueColor,
+                              minY: -500.0,
+                              maxY: 500.0,
+                              xAxis: const ChartAxis(
+                                labelsSpaceReserved: 25.0,
+                                captionSpaceReserved: 0.0,
+                              ),
+                              yAxis: ChartAxis(
+                                valueInterval: 100,
+                                labelsSpaceReserved: 60.0,
+                                captionSpaceReserved: 15.0,
+                                isCaptionVisible: true,
+                                isLabelsVisible: true,
+                                isGridVisible: true,
+                                caption: '[${const Localized('MN').v}]',
+                              ),
+                              stream: _shearForceStream,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: blockPadding),
+                      Expanded(
+                        child: Card(
+                          margin: EdgeInsets.zero,
+                          child: Padding(
+                            padding: EdgeInsets.all(padding),
+                            child: StrengthForceTable(
+                              valueUnit: const Localized('MN').v,
+                              stream: _shearForceStream,
                             ),
                           ),
                         ),
