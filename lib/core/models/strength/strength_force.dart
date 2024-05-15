@@ -1,3 +1,4 @@
+import 'package:sss_computing_client/core/models/frame/frame.dart';
 ///
 /// Common data for corresponding [StrengthForce].
 abstract interface class StrengthForce {
@@ -5,8 +6,8 @@ abstract interface class StrengthForce {
   int get shipId;
   /// id of the project for corresponding [StrengthForce]
   int? get projectId;
-  /// frame index for corresponding [StrengthForce]
-  int get frameIndex;
+  /// [Frame] for corresponding [StrengthForce]
+  Frame get frame;
   /// value of [StrengthForce]
   double get value;
   /// lower limit for value of [StrengthForce]
@@ -30,7 +31,7 @@ final class JsonStrengthForce implements StrengthForce {
   int? get projectId => _json['projectId'];
   //
   @override
-  int get frameIndex => _json['frameIndex'];
+  Frame get frame => _json['frame'];
   //
   @override
   double get value => _json['value'];

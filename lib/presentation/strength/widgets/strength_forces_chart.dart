@@ -114,12 +114,12 @@ class StrengthForceChart extends StatelessWidget {
           (force) => BarChartColumn(
             value: force.value,
             xBoundaries: (
-              force.frameIndex.toDouble(),
-              (force.frameIndex + 1).toDouble(),
+              force.frame.index.toDouble(),
+              (force.frame.index + 1).toDouble(),
             ),
             lowLimit: force.lowLimit,
             highLimit: force.highLimit,
-            caption: force.frameIndex.toString(),
+            caption: force.frame.index.toString(),
           ),
         )
         .toList();

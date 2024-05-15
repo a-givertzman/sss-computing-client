@@ -42,7 +42,7 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
         DaviColumn<StrengthForce>(
           width: 42,
           name: '#',
-          intValue: (force) => force.frameIndex,
+          intValue: (force) => force.frame.index,
           resizable: false,
         ),
         DaviColumn<StrengthForce>(
