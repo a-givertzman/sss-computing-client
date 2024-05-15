@@ -10,10 +10,6 @@ abstract interface class StrengthForce {
   Frame get frame;
   /// value of [StrengthForce]
   double get value;
-  /// lower limit for value of [StrengthForce]
-  double get lowLimit;
-  /// upper limit for value of [StrengthForce]
-  double get highLimit;
 }
 ///
 /// [StrengthForce] that parses itself from json map.
@@ -35,10 +31,4 @@ final class JsonStrengthForce implements StrengthForce {
   //
   @override
   double get value => _json['value'];
-  //
-  @override
-  double get lowLimit => _json['lowLimit'];
-  //
-  @override
-  double get highLimit => _json['highLimit'];
 }

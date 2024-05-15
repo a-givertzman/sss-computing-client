@@ -2,38 +2,38 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/core/models/strength/strength_force.dart';
 import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
+import 'package:sss_computing_client/core/models/strength/strength_force_limited.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_forces_chart.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_forces_table.dart';
 ///
 class StrengthPageBody extends StatefulWidget {
-  final Stream<List<StrengthForce>> _shearForceStream;
-  final Stream<List<StrengthForce>> _bendingMomentStream;
+  final Stream<List<StrengthForceLimited>> _shearForceStream;
+  final Stream<List<StrengthForceLimited>> _bendingMomentStream;
   ///
   const StrengthPageBody({
     super.key,
-    required Stream<List<StrengthForce>> shearForceStream,
-    required Stream<List<StrengthForce>> bendingMomentStream,
-  })  : _shearForceStream = shearForceStream,
-        _bendingMomentStream = bendingMomentStream;
+    required Stream<List<StrengthForceLimited>> shearForces,
+    required Stream<List<StrengthForceLimited>> bendingMoments,
+  })  : _shearForceStream = shearForces,
+        _bendingMomentStream = bendingMoments;
   //
   @override
   State<StrengthPageBody> createState() => _StrengthPageBodyState(
-        shearForceStream: _shearForceStream,
-        bendingMomentStream: _bendingMomentStream,
+        shearForces: _shearForceStream,
+        bendingMoments: _bendingMomentStream,
       );
 }
 ///
 class _StrengthPageBodyState extends State<StrengthPageBody> {
-  final Stream<List<StrengthForce>> _shearForceStream;
-  final Stream<List<StrengthForce>> _bendingMomentStream;
+  final Stream<List<StrengthForceLimited>> _shearForceStream;
+  final Stream<List<StrengthForceLimited>> _bendingMomentStream;
   ///
   _StrengthPageBodyState({
-    required Stream<List<StrengthForce>> shearForceStream,
-    required Stream<List<StrengthForce>> bendingMomentStream,
-  })  : _shearForceStream = shearForceStream,
-        _bendingMomentStream = bendingMomentStream;
+    required Stream<List<StrengthForceLimited>> shearForces,
+    required Stream<List<StrengthForceLimited>> bendingMoments,
+  })  : _shearForceStream = shearForces,
+        _bendingMomentStream = bendingMoments;
   //
   @override
   Widget build(BuildContext context) {

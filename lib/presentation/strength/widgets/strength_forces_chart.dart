@@ -5,7 +5,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
-import 'package:sss_computing_client/core/models/strength/strength_force.dart';
+import 'package:sss_computing_client/core/models/strength/strength_force_limited.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/bar_chart_widget.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/chart_legend.dart';
 ///
@@ -21,7 +21,7 @@ class StrengthForceChart extends StatelessWidget {
   final String _caption;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
-  final Stream<List<StrengthForce>> _stream;
+  final Stream<List<StrengthForceLimited>> _stream;
   ///
   const StrengthForceChart({
     super.key,
@@ -36,7 +36,7 @@ class StrengthForceChart extends StatelessWidget {
     required String caption,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
-    required Stream<List<StrengthForce>> stream,
+    required Stream<List<StrengthForceLimited>> stream,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
@@ -107,19 +107,19 @@ class StrengthForceChart extends StatelessWidget {
     );
   }
   ///
-  List<BarChartColumn> _mapForcesToColumns(List<StrengthForce>? forces) {
+  List<BarChartColumn> _mapForcesToColumns(List<StrengthForceLimited>? forces) {
     if (forces == null) return [];
     return forces
         .map(
-          (force) => BarChartColumn(
-            value: force.value,
+          (data) => BarChartColumn(
+            value: data.force.value,
             xBoundaries: (
-              force.frame.index.toDouble(),
-              (force.frame.index + 1).toDouble(),
+              data.force.frame.index.toDouble(),
+              (data.force.frame.index + 1).toDouble(),
             ),
-            lowLimit: force.lowLimit,
-            highLimit: force.highLimit,
-            caption: force.frame.index.toString(),
+            lowLimit: data.lowLimit.value,
+            highLimit: data.highLimit.value,
+            caption: data.force.frame.index.toString(),
           ),
         )
         .toList();

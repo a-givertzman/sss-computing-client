@@ -3,9 +3,10 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:sss_computing_client/core/models/strength/strength_force.dart';
-import 'package:sss_computing_client/core/models/strength/strength_forces.dart';
+import 'package:sss_computing_client/core/models/strength/strength_force_limited.dart';
+import 'package:sss_computing_client/core/models/strength/strength_forces_limited.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_page_body.dart';
 ///
 class StrengthPage extends StatefulWidget {
@@ -17,22 +18,24 @@ class StrengthPage extends StatefulWidget {
 }
 ///
 class _StrengthPageState extends State<StrengthPage> {
-  late final StreamController<List<StrengthForce>> _shearForcesController;
-  late final StreamController<List<StrengthForce>> _bendingMomentsController;
-  late final ApiAddress apiAddress;
-  late final String dbName;
-  late final String? authToken;
+  late final StreamController<List<StrengthForceLimited>>
+      _shearForcesController;
+  late final StreamController<List<StrengthForceLimited>>
+      _bendingMomentsController;
+  late final ApiAddress _apiAddress;
+  late final String _dbName;
+  late final String? _authToken;
   //
   @override
   void initState() {
     _shearForcesController = StreamController();
     _bendingMomentsController = StreamController();
-    apiAddress = ApiAddress(
+    _apiAddress = ApiAddress(
       host: const Setting('api-host').toString(),
       port: const Setting('api-port').toInt,
     );
-    dbName = const Setting('api-database').toString();
-    authToken = const Setting('api-auth-token').toString();
+    _dbName = const Setting('api-database').toString();
+    _authToken = const Setting('api-auth-token').toString();
     _fetchShearForces();
     _fetchBendingMoments();
     super.initState();
@@ -51,35 +54,43 @@ class _StrengthPageState extends State<StrengthPage> {
     final bendingMoments = _bendingMomentsController.stream.asBroadcastStream();
     return Scaffold(
       body: StrengthPageBody(
-        shearForceStream: shearForces,
-        bendingMomentStream: bendingMoments,
+        shearForces: shearForces,
+        bendingMoments: bendingMoments,
       ),
     );
   }
   ///
+  void _pushResultToStream<T>({
+    required StreamController<T> controller,
+    required ResultF<T> result,
+  }) {
+    switch (result) {
+      case Ok(:final value):
+        !controller.isClosed ? controller.add(value) : null;
+      case Err(:final error):
+        Log('$runtimeType').error(error.message);
+    }
+  }
+  ///
   void _fetchShearForces() {
-    PgShearForces(
-      apiAddress: apiAddress,
-      dbName: dbName,
-      authToken: authToken,
-    ).fetchAll().then((result) => switch (result) {
-          Ok(value: final forces) => !_shearForcesController.isClosed
-              ? _shearForcesController.add(forces)
-              : null,
-          Err(:final error) => Log('$runtimeType').error(error.message),
-        });
+    PgShearForcesLimited(
+      apiAddress: _apiAddress,
+      dbName: _dbName,
+      authToken: _authToken,
+    ).fetchAll().then((result) => _pushResultToStream(
+          controller: _shearForcesController,
+          result: result,
+        ));
   }
   ///
   void _fetchBendingMoments() {
-    PgBendingMoments(
-      apiAddress: apiAddress,
-      dbName: dbName,
-      authToken: authToken,
-    ).fetchAll().then((result) => switch (result) {
-          Ok(value: final forces) => !_shearForcesController.isClosed
-              ? _bendingMomentsController.add(forces)
-              : null,
-          Err(:final error) => Log('$runtimeType').error(error.message),
-        });
+    PgBendingMomentsLimited(
+      apiAddress: _apiAddress,
+      dbName: _dbName,
+      authToken: _authToken,
+    ).fetchAll().then((result) => _pushResultToStream(
+          controller: _bendingMomentsController,
+          result: result,
+        ));
   }
 }

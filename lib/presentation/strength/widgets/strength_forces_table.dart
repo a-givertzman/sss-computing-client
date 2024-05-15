@@ -3,17 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
-import 'package:sss_computing_client/core/models/strength/strength_force.dart';
+import 'package:sss_computing_client/core/models/strength/strength_force_limited.dart';
 import 'package:sss_computing_client/core/widgets/table/table_view.dart';
 ///
 class StrengthForceTable extends StatefulWidget {
   final String _valueUnit;
-  final Stream<List<StrengthForce>> _stream;
+  final Stream<List<StrengthForceLimited>> _stream;
   ///
   const StrengthForceTable({
     super.key,
     required String valueUnit,
-    required Stream<List<StrengthForce>> stream,
+    required Stream<List<StrengthForceLimited>> stream,
   })  : _valueUnit = valueUnit,
         _stream = stream;
   //
@@ -26,12 +26,12 @@ class StrengthForceTable extends StatefulWidget {
 ///
 class _StrengthForceTableState extends State<StrengthForceTable> {
   final String _valueUnit;
-  final Stream<List<StrengthForce>> _stream;
-  late final DaviModel<StrengthForce> _model;
+  final Stream<List<StrengthForceLimited>> _stream;
+  late final DaviModel<StrengthForceLimited> _model;
   ///
   _StrengthForceTableState({
     required String valueUnit,
-    required Stream<List<StrengthForce>> stream,
+    required Stream<List<StrengthForceLimited>> stream,
   })  : _valueUnit = valueUnit,
         _stream = stream;
   //
@@ -39,38 +39,38 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
   void initState() {
     _model = DaviModel(
       columns: [
-        DaviColumn<StrengthForce>(
+        DaviColumn<StrengthForceLimited>(
           width: 42,
           name: '#',
-          intValue: (force) => force.frame.index,
+          intValue: (data) => data.force.frame.index,
           resizable: false,
         ),
-        DaviColumn<StrengthForce>(
+        DaviColumn<StrengthForceLimited>(
           grow: 1,
           name: '${const Localized('Value').v}\n[$_valueUnit]',
-          doubleValue: (force) => _formatDoubleFraction(force.value),
+          doubleValue: (data) => _formatDoubleFraction(data.force.value),
           resizable: false,
         ),
-        DaviColumn<StrengthForce>(
+        DaviColumn<StrengthForceLimited>(
           grow: 1,
           name: '${const Localized('Low limit').v}\n[$_valueUnit]',
-          doubleValue: (force) => _formatDoubleFraction(force.lowLimit),
+          doubleValue: (data) => _formatDoubleFraction(data.lowLimit.value),
           resizable: false,
         ),
-        DaviColumn<StrengthForce>(
+        DaviColumn<StrengthForceLimited>(
           grow: 1,
           name: '${const Localized('High limit').v}\n[$_valueUnit]',
-          doubleValue: (force) => _formatDoubleFraction(force.highLimit),
+          doubleValue: (data) => _formatDoubleFraction(data.highLimit.value),
           resizable: false,
         ),
-        DaviColumn<StrengthForce>(
+        DaviColumn<StrengthForceLimited>(
           grow: 1,
           name: '${const Localized('Limits gap').v}\n[%]',
-          doubleValue: (force) => _formatDoubleFraction(
-            _extractGapFromLimits(force) * 100.0,
+          doubleValue: (data) => _formatDoubleFraction(
+            _extractGapFromLimits(data) * 100.0,
           ),
         ),
-        DaviColumn<StrengthForce>(
+        DaviColumn<StrengthForceLimited>(
           width: 72,
           name: const Localized('Status').v,
           intValue: (force) => _extractPassStatus(force) ? 1 : 0,
@@ -108,22 +108,24 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
     return double.parse(value.toStringAsFixed(fractionDigits));
   }
   //
-  double _extractGapFromLimits(StrengthForce force) {
-    final value = force.value;
-    final valueFraction =
-        value >= 0.0 ? (value / force.highLimit) : (value / force.lowLimit);
+  double _extractGapFromLimits(StrengthForceLimited forceLimited) {
+    final value = forceLimited.force.value;
+    final valueFraction = value >= 0.0
+        ? (value / forceLimited.highLimit.value)
+        : (value / forceLimited.lowLimit.value);
     return valueFraction;
   }
   //
-  bool _extractPassStatus(StrengthForce force) {
-    final value = force.value;
-    return (value > force.lowLimit && value < force.highLimit);
+  bool _extractPassStatus(StrengthForceLimited forceLimited) {
+    final value = forceLimited.force.value;
+    return (value > forceLimited.lowLimit.value &&
+        value < forceLimited.highLimit.value);
   }
 }
 ///
 class _PassStatusWidget extends StatelessWidget {
-  final StrengthForce force;
-  final bool Function(StrengthForce force) isPassed;
+  final StrengthForceLimited force;
+  final bool Function(StrengthForceLimited force) isPassed;
   ///
   const _PassStatusWidget({
     required this.force,
