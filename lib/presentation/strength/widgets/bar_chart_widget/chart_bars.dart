@@ -92,34 +92,36 @@ class ChartBars extends StatelessWidget {
                       color: _valueColor,
                       borderRadius: const BorderRadius.all(Radius.zero),
                     ),
-                    BarChartRodData(
-                      fromY: highLimit,
-                      toY: _maxY,
-                      width: (offsetR - offsetL) * xAxisScale,
-                      color: Colors.transparent,
-                      gradient: (value < highLimit)
-                          ? null
-                          : _getLimitStripsGradient(
-                              rawWidgetHeight: contstraints.maxHeight -
-                                  contstraints.minHeight,
-                              stripedBarHeight: (_maxY - highLimit),
-                            ),
-                      borderRadius: const BorderRadius.all(Radius.zero),
-                    ),
-                    BarChartRodData(
-                      fromY: lowLimit,
-                      toY: _minY.clamp(_minY, _maxY),
-                      width: (offsetR - offsetL) * xAxisScale,
-                      color: Colors.transparent,
-                      gradient: (value > lowLimit)
-                          ? null
-                          : _getLimitStripsGradient(
-                              rawWidgetHeight: contstraints.maxHeight -
-                                  contstraints.minHeight,
-                              stripedBarHeight: (lowLimit - _minY),
-                            ),
-                      borderRadius: const BorderRadius.all(Radius.zero),
-                    ),
+                    if (highLimit != null)
+                      BarChartRodData(
+                        fromY: highLimit,
+                        toY: _maxY,
+                        width: (offsetR - offsetL) * xAxisScale,
+                        color: Colors.transparent,
+                        gradient: (value < highLimit)
+                            ? null
+                            : _getLimitStripsGradient(
+                                rawWidgetHeight: contstraints.maxHeight -
+                                    contstraints.minHeight,
+                                stripedBarHeight: (_maxY - highLimit),
+                              ),
+                        borderRadius: const BorderRadius.all(Radius.zero),
+                      ),
+                    if (lowLimit != null)
+                      BarChartRodData(
+                        fromY: lowLimit,
+                        toY: _minY.clamp(_minY, _maxY),
+                        width: (offsetR - offsetL) * xAxisScale,
+                        color: Colors.transparent,
+                        gradient: (value > lowLimit)
+                            ? null
+                            : _getLimitStripsGradient(
+                                rawWidgetHeight: contstraints.maxHeight -
+                                    contstraints.minHeight,
+                                stripedBarHeight: (lowLimit - _minY),
+                              ),
+                        borderRadius: const BorderRadius.all(Radius.zero),
+                      ),
                     BarChartRodData(
                       fromY: 0,
                       toY: _maxY.clamp(_minY, _maxY),

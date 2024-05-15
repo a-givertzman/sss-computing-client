@@ -8,8 +8,8 @@ import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_wid
 class BarChartColumn {
   final double value;
   final (double, double) xBoundaries;
-  final double lowLimit;
-  final double highLimit;
+  final double? lowLimit;
+  final double? highLimit;
   final String? caption;
   ///
   const BarChartColumn({

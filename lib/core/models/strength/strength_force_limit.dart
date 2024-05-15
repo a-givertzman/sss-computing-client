@@ -12,7 +12,7 @@ abstract interface class StrengthForceLimit {
   /// type of [StrengthForceLimit]
   LimitType get type;
   /// value of [StrengthForceLimit]
-  double get value;
+  double? get value;
 }
 ///
 /// [StrengthForceLimit] that parses itself from json map.
@@ -36,5 +36,5 @@ final class JsonStrengthForceLimit implements StrengthForceLimit {
   LimitType get type => _json['type'];
   //
   @override
-  double get value => _json['value'];
+  double? get value => _json['value'];
 }

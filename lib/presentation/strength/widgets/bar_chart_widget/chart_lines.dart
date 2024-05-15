@@ -50,15 +50,21 @@ class ChartLines extends StatelessWidget {
             ..._columns.map(
               (column) {
                 final (leftOffset, rightOffset) = column.xBoundaries;
+                final lowLimit = column.lowLimit;
+                final highLimit = column.highLimit;
                 return LineChartBarData(
                   dotData: const FlDotData(show: false),
                   color: _valueColor,
                   spots: [
-                    FlSpot(leftOffset, column.lowLimit),
-                    FlSpot(rightOffset, column.lowLimit),
+                    if (lowLimit != null) ...[
+                      FlSpot(leftOffset, lowLimit),
+                      FlSpot(rightOffset, lowLimit),
+                    ],
                     FlSpot.nullSpot,
-                    FlSpot(leftOffset, column.highLimit),
-                    FlSpot(rightOffset, column.highLimit),
+                    if (highLimit != null) ...[
+                      FlSpot(leftOffset, highLimit),
+                      FlSpot(rightOffset, highLimit),
+                    ],
                   ],
                 );
               },

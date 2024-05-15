@@ -174,6 +174,6 @@ StrengthForceLimit _extractLimitForFrame(
     'shipId': frame.shipId,
     'frame': frame,
     'type': limits.first.type,
-    'value': limitOnFrame ?? 0.0,
+    'value': limitOnFrame,
   });
 }

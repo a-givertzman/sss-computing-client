@@ -43,31 +43,34 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
           width: 42,
           name: '#',
           intValue: (data) => data.force.frame.index,
-          resizable: false,
         ),
         DaviColumn<StrengthForceLimited>(
           grow: 1,
           name: '${const Localized('Value').v}\n[$_valueUnit]',
           doubleValue: (data) => _formatDoubleFraction(data.force.value),
-          resizable: false,
         ),
         DaviColumn<StrengthForceLimited>(
           grow: 1,
           name: '${const Localized('Low limit').v}\n[$_valueUnit]',
-          doubleValue: (data) => _formatDoubleFraction(data.lowLimit.value),
-          resizable: false,
+          doubleValue: (data) => data.lowLimit.value,
+          cellBuilder: (_, row) => _NullableCellWidget(
+            value: _formatDoubleFraction(row.data.lowLimit.value),
+          ),
         ),
         DaviColumn<StrengthForceLimited>(
           grow: 1,
           name: '${const Localized('High limit').v}\n[$_valueUnit]',
-          doubleValue: (data) => _formatDoubleFraction(data.highLimit.value),
-          resizable: false,
+          doubleValue: (data) => data.highLimit.value,
+          cellBuilder: (_, row) => _NullableCellWidget(
+            value: _formatDoubleFraction(row.data.highLimit.value),
+          ),
         ),
         DaviColumn<StrengthForceLimited>(
           grow: 1,
           name: '${const Localized('Limits gap').v}\n[%]',
-          doubleValue: (data) => _formatDoubleFraction(
-            _extractGapFromLimits(data) * 100.0,
+          doubleValue: (data) => _extractGapFromLimits(data),
+          cellBuilder: (_, row) => _NullableCellWidget(
+            value: _formatDoubleFraction(_extractGapFromLimits(row.data)),
           ),
         ),
         DaviColumn<StrengthForceLimited>(
@@ -104,22 +107,39 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
     );
   }
   //
-  double _formatDoubleFraction(double value, {int fractionDigits = 1}) {
-    return double.parse(value.toStringAsFixed(fractionDigits));
+  double? _formatDoubleFraction(double? value, {int fractionDigits = 1}) {
+    return value != null
+        ? double.parse(value.toStringAsFixed(fractionDigits))
+        : null;
   }
   //
-  double _extractGapFromLimits(StrengthForceLimited forceLimited) {
+  double? _extractGapFromLimits(StrengthForceLimited forceLimited) {
+    final lowLimit = forceLimited.lowLimit.value;
+    final highLimit = forceLimited.highLimit.value;
+    if (lowLimit == null || highLimit == null) return null;
     final value = forceLimited.force.value;
-    final valueFraction = value >= 0.0
-        ? (value / forceLimited.highLimit.value)
-        : (value / forceLimited.lowLimit.value);
-    return valueFraction;
+    return (value >= 0.0 ? (value / highLimit) : (value / lowLimit)) * 100.0;
   }
   //
   bool _extractPassStatus(StrengthForceLimited forceLimited) {
+    final lowLimit = forceLimited.lowLimit.value;
+    final highLimit = forceLimited.highLimit.value;
+    if (lowLimit == null || highLimit == null) return true;
     final value = forceLimited.force.value;
-    return (value > forceLimited.lowLimit.value &&
-        value < forceLimited.highLimit.value);
+    return (value > lowLimit && value < highLimit);
+  }
+}
+///
+class _NullableCellWidget<T> extends StatelessWidget {
+  final T? value;
+  ///
+  const _NullableCellWidget({
+    this.value,
+  });
+  //
+  @override
+  Widget build(BuildContext context) {
+    return Text('${value ?? '—'}');
   }
 }
 ///
