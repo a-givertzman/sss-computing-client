@@ -108,8 +108,6 @@ StrengthForce _mapDbReplyToValue(Map<String, dynamic> row) {
         'shipId': row['shipId'],
         'index': row['frameIndex'],
         'x': row['frameX'],
-      })
-      ..['lowLimit'] = -400.0
-      ..['highLimit'] = 400.0,
+      }),
   );
 }
