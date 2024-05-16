@@ -1,8 +1,6 @@
-import 'dart:ui';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart' hide Result;
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:sss_computing_client/core/models/frame/frame.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_limit.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_limited.dart';
@@ -31,7 +29,7 @@ class PgShearForcesLimited implements StrengthForcesLimited {
   //
   @override
   Future<Result<List<StrengthForceLimited>, Failure<String>>> fetchAll() async {
-    return _fetchStrengthForceLimited(
+    return _fetchStrengthForcesLimited(
       fetchForces: PgShearForces(
         apiAddress: _apiAddress,
         dbName: _dbName,
@@ -62,7 +60,7 @@ class PgBendingMomentsLimited implements StrengthForcesLimited {
   //
   @override
   Future<Result<List<StrengthForceLimited>, Failure<String>>> fetchAll() async {
-    return _fetchStrengthForceLimited(
+    return _fetchStrengthForcesLimited(
       fetchForces: PgBendingMoments(
         apiAddress: _apiAddress,
         dbName: _dbName,
@@ -78,7 +76,7 @@ class PgBendingMomentsLimited implements StrengthForcesLimited {
 }
 ///
 Future<Result<List<StrengthForceLimited>, Failure<String>>>
-    _fetchStrengthForceLimited({
+    _fetchStrengthForcesLimited({
   required Future<ResultF<List<StrengthForce>>> fetchForces,
   required Future<ResultF<List<StrengthForceLimit>>> fetchLimits,
 }) async {
@@ -114,17 +112,23 @@ Result<List<StrengthForceLimited>, Failure<String>> _extractForcesWithLimit({
       forces
           .map((force) => JsonStrengthForceLimited(json: {
                 'force': force,
-                'lowLimit': _extractLimitForFrame(
-                  force.frame,
-                  limits.where(
-                    (limit) => limit.type == LimitType.low,
-                  ),
+                'lowLimit': LerpStrengthForceLimit(
+                  frame: force.frame,
+                  limits: limits
+                      .where(
+                        (limit) => limit.type == LimitType.low,
+                      )
+                      .toList(),
+                  limitType: LimitType.low,
                 ),
-                'highLimit': _extractLimitForFrame(
-                  force.frame,
-                  limits.where(
-                    (limit) => limit.type == LimitType.high,
-                  ),
+                'highLimit': LerpStrengthForceLimit(
+                  frame: force.frame,
+                  limits: limits
+                      .where(
+                        (limit) => limit.type == LimitType.high,
+                      )
+                      .toList(),
+                  limitType: LimitType.high,
                 ),
               }))
           .toList(),
@@ -135,45 +139,4 @@ Result<List<StrengthForceLimited>, Failure<String>> _extractForcesWithLimit({
       stackTrace: StackTrace.current,
     ));
   }
-}
-///
-StrengthForceLimit _extractLimitForFrame(
-  Frame frame,
-  Iterable<StrengthForceLimit> limits,
-) {
-  final limitsSorted = limits.toList()
-    ..sort(
-      (one, other) => (one.frame.x - other.frame.x) < 0 ? -1 : 1,
-    );
-  final limitsOnLeft = limitsSorted
-      .where(
-        (limit) => limit.frame.x <= frame.x,
-      )
-      .toList();
-  final limitsOnRight = limitsSorted
-      .where(
-        (limit) => limit.frame.x >= frame.x,
-      )
-      .toList();
-  final limitOnLeft = limitsOnLeft.isEmpty ? null : limitsOnLeft.last;
-  final limitOnRight = limitsOnRight.isEmpty ? null : limitsOnRight.first;
-  final limitOnFrame = switch ((limitOnLeft, limitOnRight)) {
-    (
-      StrengthForceLimit left,
-      StrengthForceLimit right,
-    ) =>
-      lerpDouble(
-        left.value,
-        right.value,
-        (frame.x - left.frame.x) / (right.frame.x - left.frame.x),
-      ),
-    _ => null,
-  };
-  return JsonStrengthForceLimit(json: {
-    'projectId': frame.projectId,
-    'shipId': frame.shipId,
-    'frame': frame,
-    'type': limits.first.type,
-    'value': limitOnFrame,
-  });
 }
