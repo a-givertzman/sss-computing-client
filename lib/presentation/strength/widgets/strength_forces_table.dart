@@ -75,11 +75,13 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
         DaviColumn<StrengthForceLimited>(
           width: 72,
           name: const Localized('Status').v,
-          intValue: (force) => _extractPassStatus(force) ? 1 : 0,
-          cellBuilder: (_, row) => _PassStatusWidget(
-            force: row.data,
-            isPassed: _extractPassStatus,
-          ),
+          sortable: false,
+          cellBuilder: (_, row) {
+            final isPassed = _extractPassStatus(row.data);
+            return isPassed != null
+                ? _PassStatusWidget(isPassed: isPassed)
+                : const _NullableCellWidget();
+          },
         ),
       ],
     );
@@ -110,17 +112,23 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
   double? _extractGapFromLimits(StrengthForceLimited forceLimited) {
     final lowLimit = forceLimited.lowLimit.value;
     final highLimit = forceLimited.highLimit.value;
-    if (lowLimit == null || highLimit == null) return null;
     final value = forceLimited.force.value;
-    return (value >= 0.0 ? (value / highLimit) : (value / lowLimit)) * 100.0;
+    return switch (value) {
+      >= 0.0 => highLimit != null ? value / highLimit * 100.0 : null,
+      < 0.0 => lowLimit != null ? value / lowLimit * 100.0 : null,
+      _ => null,
+    };
   }
   //
-  bool _extractPassStatus(StrengthForceLimited forceLimited) {
+  bool? _extractPassStatus(StrengthForceLimited forceLimited) {
     final lowLimit = forceLimited.lowLimit.value;
     final highLimit = forceLimited.highLimit.value;
-    if (lowLimit == null || highLimit == null) return true;
     final value = forceLimited.force.value;
-    return (value > lowLimit && value < highLimit);
+    return switch (value) {
+      >= 0.0 => highLimit != null ? value < highLimit : null,
+      < 0.0 => lowLimit != null ? value > lowLimit : null,
+      _ => null,
+    };
   }
 }
 ///
@@ -133,16 +141,17 @@ class _NullableCellWidget<T> extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
-    return Text('${value ?? '—'}');
+    return Text(
+      '${value ?? '—'}',
+      overflow: TextOverflow.ellipsis,
+    );
   }
 }
 ///
 class _PassStatusWidget extends StatelessWidget {
-  final StrengthForceLimited force;
-  final bool Function(StrengthForceLimited force) isPassed;
+  final bool isPassed;
   ///
   const _PassStatusWidget({
-    required this.force,
     required this.isPassed,
   });
   //
@@ -151,7 +160,7 @@ class _PassStatusWidget extends StatelessWidget {
     final theme = Theme.of(context);
     const passedColor = Colors.lightGreen;
     final errorColor = theme.alarmColors.class3;
-    return isPassed(force)
+    return isPassed
         ? const Icon(
             Icons.done,
             color: passedColor,
