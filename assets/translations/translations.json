@@ -23,5 +23,8 @@
     "Low limit": ["Low limit", "Ниж. предел"],
     "High limit": ["High limit", "Верх. предел"],
     "Limits gap": ["Allow", "Допустимый"],
-    "Status": ["Status", "Статус"]
+    "Status": ["Status", "Статус"],
+    "Retry": ["Retry", "Повторить"],
+    "Data loading error": ["Data loading error", "Ошибка при загрузке данных"],
+    "No data": ["No data", "Отсутствуют данные для загрузки"]
 }

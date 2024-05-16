@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
@@ -21,7 +19,7 @@ class StrengthForceChart extends StatelessWidget {
   final String _caption;
   final ChartAxis _xAxis;
   final ChartAxis _yAxis;
-  final Stream<List<StrengthForceLimited>> _stream;
+  final List<StrengthForceLimited> _forcesLimited;
   ///
   const StrengthForceChart({
     super.key,
@@ -36,7 +34,7 @@ class StrengthForceChart extends StatelessWidget {
     required String caption,
     required ChartAxis xAxis,
     required ChartAxis yAxis,
-    required Stream<List<StrengthForceLimited>> stream,
+    required List<StrengthForceLimited> forcesLimited,
   })  : _minX = minX,
         _maxX = maxX,
         _minY = minY,
@@ -48,7 +46,7 @@ class StrengthForceChart extends StatelessWidget {
         _caption = caption,
         _xAxis = xAxis,
         _yAxis = yAxis,
-        _stream = stream;
+        _forcesLimited = forcesLimited;
   //
   @override
   Widget build(BuildContext context) {
@@ -57,53 +55,41 @@ class StrengthForceChart extends StatelessWidget {
     final limitColor = _limitColor ?? theme.stateColors.alarm;
     final axisColor = _axisColor ?? theme.colorScheme.primary;
     final textStyle = _textStyle ?? theme.textTheme.bodySmall;
-    return StreamBuilder(
-      stream: _stream,
-      builder: (_, snapshot) {
-        return Stack(
-          children: [
-            if (!snapshot.hasData)
-              const Positioned.fill(
-                child: Center(
-                  child: CupertinoActivityIndicator(),
-                ),
-              ),
-            if (snapshot.hasData)
-              Positioned.fill(
-                child: BarChartWidget(
-                  minX: _minX,
-                  maxX: _maxX,
-                  minY: _minY,
-                  maxY: _maxY,
-                  barColor: barColor,
-                  axisColor: axisColor,
-                  limitColor: limitColor,
-                  textStyle: textStyle,
-                  xAxis: _xAxis,
-                  yAxis: _yAxis,
-                  columns: _mapForcesToColumns(snapshot.data),
-                ),
-              ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: ChartLegend(
-                names: [
-                  _caption,
-                  const Localized('Limit').v,
-                ],
-                colors: [
-                  barColor,
-                  limitColor,
-                ],
-                height: _xAxis.labelsSpaceReserved +
-                    _xAxis.captionSpaceReserved -
-                    const Setting('padding', factor: 0.5).toDouble,
-              ),
-            ),
-          ],
-        );
-      },
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: BarChartWidget(
+            minX: _minX,
+            maxX: _maxX,
+            minY: _minY,
+            maxY: _maxY,
+            barColor: barColor,
+            axisColor: axisColor,
+            limitColor: limitColor,
+            textStyle: textStyle,
+            xAxis: _xAxis,
+            yAxis: _yAxis,
+            columns: _mapForcesToColumns(_forcesLimited),
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: ChartLegend(
+            names: [
+              _caption,
+              const Localized('Limit').v,
+            ],
+            colors: [
+              barColor,
+              limitColor,
+            ],
+            height: _xAxis.labelsSpaceReserved +
+                _xAxis.captionSpaceReserved -
+                const Setting('padding', factor: 0.5).toDouble,
+          ),
+        ),
+      ],
     );
   }
   ///

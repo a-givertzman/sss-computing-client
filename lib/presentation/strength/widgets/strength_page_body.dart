@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
@@ -8,32 +7,32 @@ import 'package:sss_computing_client/presentation/strength/widgets/strength_forc
 import 'package:sss_computing_client/presentation/strength/widgets/strength_forces_table.dart';
 ///
 class StrengthPageBody extends StatefulWidget {
-  final Stream<List<StrengthForceLimited>> _shearForceStream;
-  final Stream<List<StrengthForceLimited>> _bendingMomentStream;
+  final List<StrengthForceLimited> _shearForces;
+  final List<StrengthForceLimited> _bendingMoments;
   ///
   const StrengthPageBody({
     super.key,
-    required Stream<List<StrengthForceLimited>> shearForces,
-    required Stream<List<StrengthForceLimited>> bendingMoments,
-  })  : _shearForceStream = shearForces,
-        _bendingMomentStream = bendingMoments;
+    required List<StrengthForceLimited> shearForces,
+    required List<StrengthForceLimited> bendingMoments,
+  })  : _shearForces = shearForces,
+        _bendingMoments = bendingMoments;
   //
   @override
   State<StrengthPageBody> createState() => _StrengthPageBodyState(
-        shearForces: _shearForceStream,
-        bendingMoments: _bendingMomentStream,
+        shearForces: _shearForces,
+        bendingMoments: _bendingMoments,
       );
 }
 ///
 class _StrengthPageBodyState extends State<StrengthPageBody> {
-  final Stream<List<StrengthForceLimited>> _shearForceStream;
-  final Stream<List<StrengthForceLimited>> _bendingMomentStream;
+  final List<StrengthForceLimited> _shearForces;
+  final List<StrengthForceLimited> _bendingMoments;
   ///
   _StrengthPageBodyState({
-    required Stream<List<StrengthForceLimited>> shearForces,
-    required Stream<List<StrengthForceLimited>> bendingMoments,
-  })  : _shearForceStream = shearForces,
-        _bendingMomentStream = bendingMoments;
+    required List<StrengthForceLimited> shearForces,
+    required List<StrengthForceLimited> bendingMoments,
+  })  : _shearForces = shearForces,
+        _bendingMoments = bendingMoments;
   //
   @override
   Widget build(BuildContext context) {
@@ -77,7 +76,7 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                                 isGridVisible: true,
                                 caption: '[${const Localized('MN*m').v}]',
                               ),
-                              stream: _bendingMomentStream,
+                              forcesLimited: _bendingMoments,
                             ),
                           ),
                         ),
@@ -90,7 +89,7 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                             padding: EdgeInsets.all(padding),
                             child: StrengthForceTable(
                               valueUnit: const Localized('MN*m').v,
-                              stream: _bendingMomentStream,
+                              forcesLimited: _bendingMoments,
                             ),
                           ),
                         ),
@@ -125,7 +124,7 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                                 isGridVisible: true,
                                 caption: '[${const Localized('MN').v}]',
                               ),
-                              stream: _shearForceStream,
+                              forcesLimited: _shearForces,
                             ),
                           ),
                         ),
@@ -138,7 +137,7 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                             padding: EdgeInsets.all(padding),
                             child: StrengthForceTable(
                               valueUnit: const Localized('MN').v,
-                              stream: _shearForceStream,
+                              forcesLimited: _shearForces,
                             ),
                           ),
                         ),

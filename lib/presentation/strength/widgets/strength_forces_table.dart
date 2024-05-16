@@ -1,5 +1,4 @@
 import 'package:davi/davi.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
@@ -8,32 +7,32 @@ import 'package:sss_computing_client/core/widgets/table/table_view.dart';
 ///
 class StrengthForceTable extends StatefulWidget {
   final String _valueUnit;
-  final Stream<List<StrengthForceLimited>> _stream;
+  final List<StrengthForceLimited> _forcesLimited;
   ///
   const StrengthForceTable({
     super.key,
     required String valueUnit,
-    required Stream<List<StrengthForceLimited>> stream,
+    required List<StrengthForceLimited> forcesLimited,
   })  : _valueUnit = valueUnit,
-        _stream = stream;
+        _forcesLimited = forcesLimited;
   //
   @override
   State<StrengthForceTable> createState() => _StrengthForceTableState(
         valueUnit: _valueUnit,
-        stream: _stream,
+        forcesLimited: _forcesLimited,
       );
 }
 ///
 class _StrengthForceTableState extends State<StrengthForceTable> {
   final String _valueUnit;
-  final Stream<List<StrengthForceLimited>> _stream;
+  final List<StrengthForceLimited> _forcesLimited;
   late final DaviModel<StrengthForceLimited> _model;
   ///
   _StrengthForceTableState({
     required String valueUnit,
-    required Stream<List<StrengthForceLimited>> stream,
+    required List<StrengthForceLimited> forcesLimited,
   })  : _valueUnit = valueUnit,
-        _stream = stream;
+        _forcesLimited = forcesLimited;
   //
   @override
   void initState() {
@@ -95,15 +94,10 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
   //
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: _stream,
-      builder: (context, snapshot) => snapshot.hasData
-          ? TableView(
-              model: _model..replaceRows(snapshot.data!),
-              headerHeight: 48.0,
-              tableBorderColor: Colors.transparent,
-            )
-          : const Center(child: CupertinoActivityIndicator()),
+    return TableView(
+      model: _model..replaceRows(_forcesLimited),
+      headerHeight: 48.0,
+      tableBorderColor: Colors.transparent,
     );
   }
   //
