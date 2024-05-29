@@ -4,13 +4,15 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
+
 ///
 /// Shows current value and its unit
-class FutureValueIndicatorWidget extends StatelessWidget {
+class FTextValueIndicator extends StatelessWidget {
   final Future<ResultF<num>> future;
   final String caption;
   final String? unit;
   final double width;
+
   ///
   /// Creates widget that indicate current value
   ///
@@ -18,7 +20,7 @@ class FutureValueIndicatorWidget extends StatelessWidget {
   /// - [caption] - name of the value
   /// - [unit] - unit of the value
   /// - [width] - width of the widget
-  const FutureValueIndicatorWidget({
+  const FTextValueIndicator({
     super.key,
     required this.future,
     required this.caption,
@@ -39,7 +41,7 @@ class FutureValueIndicatorWidget extends StatelessWidget {
         style: captionTextStyle,
         textScaleFactor: textScaleFactor,
       ),
-      indicator: _FutureValueIndicator(
+      indicator: _FValueIndicator(
         future: future,
         unit: unit,
         valueTextStyle: valueTextStyle,
@@ -50,16 +52,18 @@ class FutureValueIndicatorWidget extends StatelessWidget {
     );
   }
 }
+
 ///
-class _FutureValueIndicator extends StatelessWidget {
+class _FValueIndicator extends StatelessWidget {
   final Future<ResultF<num>> _future;
   final int _fractionDigits;
   final String? _unit;
   final TextStyle? _valueTextStyle;
   final TextStyle? _unitTextStyle;
   final double _textScaleFactor;
+
   ///
-  const _FutureValueIndicator({
+  const _FValueIndicator({
     required Future<ResultF<num>> future,
     int fractionDigits = 0,
     String? unit,
@@ -111,6 +115,7 @@ class _FutureValueIndicator extends StatelessWidget {
       ),
     );
   }
+
   //
   Widget _buildValueWidget(BuildContext context, num value) {
     return Text(
@@ -121,6 +126,7 @@ class _FutureValueIndicator extends StatelessWidget {
       textScaler: TextScaler.linear(_textScaleFactor),
     );
   }
+
   //
   Widget _buildErrorWidget(BuildContext context, Failure error) {
     final theme = Theme.of(context);
