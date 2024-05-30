@@ -4,7 +4,6 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
-
 ///
 /// Shows current value and its unit
 class FTextValueIndicator extends StatelessWidget {
@@ -12,14 +11,13 @@ class FTextValueIndicator extends StatelessWidget {
   final String caption;
   final String? unit;
   final double width;
-
   ///
   /// Creates widget that indicate current value
   ///
-  /// - [future] - used to get value
-  /// - [caption] - name of the value
-  /// - [unit] - unit of the value
-  /// - [width] - width of the widget
+  /// - `future` - used to get value;
+  /// - `caption` - name of the value;
+  /// - `unit` - unit of the value;
+  /// - `width` - width of the widget.
   const FTextValueIndicator({
     super.key,
     required this.future,
@@ -52,7 +50,6 @@ class FTextValueIndicator extends StatelessWidget {
     );
   }
 }
-
 ///
 class _FValueIndicator extends StatelessWidget {
   final Future<ResultF<num>> _future;
@@ -61,7 +58,6 @@ class _FValueIndicator extends StatelessWidget {
   final TextStyle? _valueTextStyle;
   final TextStyle? _unitTextStyle;
   final double _textScaleFactor;
-
   ///
   const _FValueIndicator({
     required Future<ResultF<num>> future,
@@ -115,7 +111,6 @@ class _FValueIndicator extends StatelessWidget {
       ),
     );
   }
-
   //
   Widget _buildValueWidget(BuildContext context, num value) {
     return Text(
@@ -126,7 +121,6 @@ class _FValueIndicator extends StatelessWidget {
       textScaler: TextScaler.linear(_textScaleFactor),
     );
   }
-
   //
   Widget _buildErrorWidget(BuildContext context, Failure error) {
     final theme = Theme.of(context);
