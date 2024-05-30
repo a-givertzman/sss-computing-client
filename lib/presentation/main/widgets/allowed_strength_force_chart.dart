@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:collection/collection.dart';
+import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
@@ -7,28 +8,24 @@ import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_allow.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_limited.dart';
+import 'package:sss_computing_client/core/models/strength/strength_forces_limited.dart';
 import 'package:sss_computing_client/core/widgets/bar_chart_widget/bar_chart_widget.dart';
 import 'package:sss_computing_client/core/widgets/bar_chart_widget/chart_legend.dart';
+import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 ///
 class AllowedStrengthForceChart extends StatelessWidget {
-  final Color? _axisColor;
-  final Color? _limitColor;
-  final TextStyle? _textStyle;
-  final List<StrengthForceLimited> _strengthForcesLimited;
-  final List<StrengthForceLimited> _bendingMomentsLimited;
+  final ApiAddress _apiAddress;
+  final String _dbName;
+  final String? _authToken;
   ///
   const AllowedStrengthForceChart({
     super.key,
-    Color? axisColor,
-    Color? limitColor,
-    TextStyle? textStyle,
-    required List<StrengthForceLimited> strengthForcesLimited,
-    required List<StrengthForceLimited> bendingMomentsLimited,
-  })  : _axisColor = axisColor,
-        _limitColor = limitColor,
-        _textStyle = textStyle,
-        _strengthForcesLimited = strengthForcesLimited,
-        _bendingMomentsLimited = bendingMomentsLimited;
+    required ApiAddress apiAddress,
+    required String dbName,
+    String? authToken,
+  })  : _apiAddress = apiAddress,
+        _dbName = dbName,
+        _authToken = authToken;
   //
   @override
   Widget build(BuildContext context) {
@@ -47,24 +44,35 @@ class AllowedStrengthForceChart extends StatelessWidget {
       caption: '[%]',
     );
     final theme = Theme.of(context);
-    final limitColor = _limitColor ?? theme.stateColors.alarm;
-    final axisColor = _axisColor ?? theme.colorScheme.primary;
-    final textStyle = _textStyle ?? theme.textTheme.bodySmall;
+    final limitColor = theme.stateColors.alarm;
+    final axisColor = theme.colorScheme.primary;
+    final textStyle = theme.textTheme.bodySmall;
     return Stack(
       children: [
         Positioned.fill(
-          child: BarChartWidget(
-            minY: 0.0,
-            maxY: 125.0,
-            barColor: barColor,
-            axisColor: axisColor,
-            limitColor: limitColor,
-            textStyle: textStyle,
-            xAxis: xAxis,
-            yAxis: yAxis,
-            columns: _mapForcesToColumns(
-              _strengthForcesLimited,
-              _bendingMomentsLimited,
+          child: FutureBuilderWidget(
+            onFuture: () => PgShearForcesLimited(
+              apiAddress: _apiAddress,
+              dbName: _dbName,
+              authToken: _authToken,
+            ).fetchAll(),
+            caseData: (_, shearForces, __) => FutureBuilderWidget(
+              onFuture: () => PgBendingMomentsLimited(
+                apiAddress: _apiAddress,
+                dbName: _dbName,
+                authToken: _authToken,
+              ).fetchAll(),
+              caseData: (_, bendingMoments, __) => BarChartWidget(
+                minY: 0.0,
+                maxY: 125.0,
+                barColor: barColor,
+                axisColor: axisColor,
+                limitColor: limitColor,
+                textStyle: textStyle,
+                xAxis: xAxis,
+                yAxis: yAxis,
+                columns: _mapForcesToColumns(shearForces, bendingMoments),
+              ),
             ),
           ),
         ),
