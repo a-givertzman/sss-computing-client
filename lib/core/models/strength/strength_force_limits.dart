@@ -2,6 +2,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart' hide Result;
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/frame/frame.dart';
+import 'package:sss_computing_client/core/models/limit_type.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_limit.dart';
 ///
 /// Interface for controlling collection of [StrengthForceLimits].
