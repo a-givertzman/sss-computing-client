@@ -1,14 +1,22 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/field_record/field_record.dart';
 import 'package:sss_computing_client/presentation/main/widgets/future_text_value_indicator.dart';
 ///
+/// Widget for indicating ship weights.
 class WeightIndicators extends StatelessWidget {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
   ///
+  /// Creates widget that fetching data about ship weigths
+  /// and displaying its as text value indicator widgets.
+  ///
+  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
+  ///   - `dbName` - name of the database;
+  ///   - `authToken` - string authentication token for accessing server.
   const WeightIndicators({
     super.key,
     required ApiAddress apiAddress,
@@ -39,8 +47,8 @@ class WeightIndicators extends StatelessWidget {
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
                     ).fetch(),
-                    caption: 'Ballast',
-                    unit: 't',
+                    caption: const Localized('Ballast').v,
+                    unit: const Localized('t').v,
                   ),
                   SizedBox(height: padding),
                   FTextValueIndicator(
@@ -52,8 +60,8 @@ class WeightIndicators extends StatelessWidget {
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
                     ).fetch(),
-                    caption: 'Stores',
-                    unit: 't',
+                    caption: const Localized('Stores').v,
+                    unit: const Localized('t').v,
                   ),
                   SizedBox(height: padding),
                   FTextValueIndicator(
@@ -65,8 +73,8 @@ class WeightIndicators extends StatelessWidget {
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
                     ).fetch(),
-                    caption: 'Cargo',
-                    unit: 't',
+                    caption: const Localized('Cargo').v,
+                    unit: const Localized('t').v,
                   ),
                   SizedBox(height: padding),
                   FTextValueIndicator(
@@ -78,8 +86,8 @@ class WeightIndicators extends StatelessWidget {
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
                     ).fetch(),
-                    caption: 'Deadweight',
-                    unit: 't',
+                    caption: const Localized('Deadweight').v,
+                    unit: const Localized('t').v,
                   ),
                 ],
               ),
@@ -96,8 +104,8 @@ class WeightIndicators extends StatelessWidget {
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
                     ).fetch(),
-                    caption: 'Lightship',
-                    unit: 't',
+                    caption: const Localized('Lightship').v,
+                    unit: const Localized('t').v,
                   ),
                 ],
               ),
@@ -114,8 +122,8 @@ class WeightIndicators extends StatelessWidget {
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
                     ).fetch(),
-                    caption: 'Icing',
-                    unit: 't',
+                    caption: const Localized('Icing').v,
+                    unit: const Localized('t').v,
                   ),
                   SizedBox(height: padding),
                   FTextValueIndicator(
@@ -127,8 +135,8 @@ class WeightIndicators extends StatelessWidget {
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
                     ).fetch(),
-                    caption: 'Wetting',
-                    unit: 't',
+                    caption: const Localized('Wetting').v,
+                    unit: const Localized('t').v,
                   ),
                 ],
               ),
@@ -146,8 +154,8 @@ class WeightIndicators extends StatelessWidget {
               authToken: _authToken,
               toValue: (value) => double.parse(value),
             ).fetch(),
-            caption: 'Displacement',
-            unit: 't',
+            caption: const Localized('Displacement').v,
+            unit: const Localized('t').v,
           ),
         ),
       ],

@@ -1,16 +1,24 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/field_record/field_record.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/lerp_metacentric_height_limit.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/pg_metacentric_height_limits.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/main/widgets/future_circular_value_indicator.dart';
 ///
+/// Widget for indicating metacentric height value.
 class MetacentricHeightIndicator extends StatelessWidget {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
   ///
+  /// Creates widget that fetching data about metacentric height
+  /// and displaying it as CircularValueIndicator widget.
+  ///
+  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
+  ///   - `dbName` - name of the database;
+  ///   - `authToken` - string authentication token for accessing server.
   const MetacentricHeightIndicator({
     super.key,
     required ApiAddress apiAddress,
@@ -39,9 +47,9 @@ class MetacentricHeightIndicator extends StatelessWidget {
           toValue: (value) => double.parse(value),
         ).fetch(),
         caseLoading: (context) => _buildCaseLoading(),
-        caseData: (context, displacement, retry) {
+        caseData: (context, displacement, _) {
           final limit = LerpMetacentricHeightLimit(
-            shipId: 1,
+            shipId: limits.first.shipId,
             displacement: displacement,
             limits: limits,
           );
@@ -52,16 +60,16 @@ class MetacentricHeightIndicator extends StatelessWidget {
   }
   //
   Widget _buildCaseLoading() {
-    return const Stack(
+    return Stack(
       children: [
         Positioned.fill(
           child: FCircularValueIndicator(
             future: null,
-            title: 'Metacentric height',
-            valueUnit: 'm',
+            title: const Localized('Metacentric height').v,
+            valueUnit: const Localized('m').v,
           ),
         ),
-        Positioned.fill(
+        const Positioned.fill(
           child: CupertinoActivityIndicator(),
         ),
       ],
@@ -78,13 +86,13 @@ class MetacentricHeightIndicator extends StatelessWidget {
         authToken: _authToken,
         toValue: (value) => double.parse(value),
       ).fetch(filter: {'criterion_id': 12}),
-      title: 'Metacentric height',
-      valueUnit: 'm',
+      title: const Localized('Metacentric height').v,
+      valueUnit: const Localized('m').v,
       fractionDigits: 2,
       low: low,
       high: high,
       minValue: 0,
-      maxValue: (high ?? 0.0) + (low ?? 0.0),
+      maxValue: (high ?? 0.0) + 1.0,
     );
   }
 }

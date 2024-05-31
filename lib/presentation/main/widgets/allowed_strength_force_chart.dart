@@ -13,11 +13,18 @@ import 'package:sss_computing_client/core/widgets/bar_chart_widget/bar_chart_wid
 import 'package:sss_computing_client/core/widgets/bar_chart_widget/chart_legend.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 ///
+/// Widget for displaying bar chart with strength allowance.
 class AllowedStrengthForceChart extends StatelessWidget {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
   ///
+  /// Creates widget that fetching data about strength allowance
+  /// and displaying it as bar chart.
+  ///
+  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
+  ///   - `dbName` - name of the database;
+  ///   - `authToken` - string authentication token for accessing server.
   const AllowedStrengthForceChart({
     super.key,
     required ApiAddress apiAddress,
@@ -81,7 +88,7 @@ class AllowedStrengthForceChart extends StatelessWidget {
           right: 0,
           child: ChartLegend(
             names: [
-              'Strength force, Allow',
+              const Localized('Strength force, Allow').v,
               const Localized('Limit').v,
             ],
             colors: [

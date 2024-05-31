@@ -36,6 +36,10 @@ class FieldRecord<T> {
         _authToken = authToken,
         _toValue = toValue;
   ///
+  /// Returns result of field fetching.
+  ///
+  ///   - `filter` - Map with field name as key and field value as value
+  /// for filtering records of table based on its fields values.
   Future<ResultF<T>> fetch({Map<String, dynamic>? filter}) async {
     final filterQuery = filter?.entries
         .map(

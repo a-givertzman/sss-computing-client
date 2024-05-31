@@ -5,26 +5,29 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 ///
-/// Shows current value and its unit
+/// Widget to showing current value as text.
 class FTextValueIndicator extends StatelessWidget {
-  final Future<ResultF<num>> future;
-  final String caption;
-  final String? unit;
-  final double width;
+  final Future<ResultF<num>> _future;
+  final String _caption;
+  final String? _unit;
+  final double? _width;
   ///
-  /// Creates widget that indicate current value
+  /// Creates widget that indicating current value as text.
   ///
-  /// - `future` - used to get value;
-  /// - `caption` - name of the value;
-  /// - `unit` - unit of the value;
+  /// - `future` - future using to get the value;
+  /// - `caption` - name of the value to show;
+  /// - `unit` - unit of the value to show;
   /// - `width` - width of the widget.
   const FTextValueIndicator({
     super.key,
-    required this.future,
-    required this.caption,
-    this.unit,
-    this.width = 250,
-  });
+    required Future<ResultF<num>> future,
+    required String caption,
+    String? unit,
+    double? width = 250,
+  })  : _future = future,
+        _caption = caption,
+        _unit = unit,
+        _width = width;
   //
   @override
   Widget build(BuildContext context) {
@@ -33,15 +36,15 @@ class FTextValueIndicator extends StatelessWidget {
     final captionTextStyle = textTheme.bodySmall;
     final valueTextStyle = textTheme.bodyLarge;
     return TextIndicatorWidget(
-      width: width,
+      width: _width,
       caption: OverflowableText(
-        caption,
+        _caption,
         style: captionTextStyle,
         textScaleFactor: textScaleFactor,
       ),
       indicator: _FValueIndicator(
-        future: future,
-        unit: unit,
+        future: _future,
+        unit: _unit,
         valueTextStyle: valueTextStyle,
         unitTextStyle: captionTextStyle,
         textScaleFactor: textScaleFactor,
