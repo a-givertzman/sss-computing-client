@@ -42,6 +42,7 @@ class _MainPageBodyState extends State<MainPageBody> {
           SizedBox(height: blockPadding),
           Expanded(
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
                   child: Card(

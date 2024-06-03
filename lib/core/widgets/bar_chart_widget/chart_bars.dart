@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
+import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/widgets/bar_chart_widget/bar_chart_widget.dart';
 ///
 class ChartBars extends StatelessWidget {

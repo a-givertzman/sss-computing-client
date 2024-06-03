@@ -38,14 +38,16 @@ class MetacentricHeightIndicator extends StatelessWidget {
       ).fetchAll(),
       caseLoading: (context) => _buildCaseLoading(),
       caseData: (context, limits, _) => FutureBuilderWidget(
-        onFuture: () => FieldRecord<double>(
-          tableName: 'loads_general',
-          fieldName: 'displacement',
-          dbName: _dbName,
-          apiAddress: _apiAddress,
-          authToken: _authToken,
-          toValue: (value) => double.parse(value),
-        ).fetch(),
+        onFuture: () {
+          return FieldRecord<double>(
+            tableName: 'loads_general',
+            fieldName: 'displacement',
+            dbName: _dbName,
+            apiAddress: _apiAddress,
+            authToken: _authToken,
+            toValue: (value) => double.parse(value),
+          ).fetch();
+        },
         caseLoading: (context) => _buildCaseLoading(),
         caseData: (context, displacement, _) {
           final limit = LerpMetacentricHeightLimit(
@@ -53,7 +55,10 @@ class MetacentricHeightIndicator extends StatelessWidget {
             displacement: displacement,
             limits: limits,
           );
-          return _buildCaseData(low: limit.low, high: limit.high);
+          return _buildCaseData(
+            low: limit.low,
+            high: limit.high,
+          );
         },
       ),
     );

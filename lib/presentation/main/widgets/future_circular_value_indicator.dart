@@ -43,9 +43,9 @@ class FCircularValueIndicator extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(_title),
+        OverflowableText(_title),
         SizedBox(height: padding),
-        Expanded(
+        Flexible(
           child: LayoutBuilder(builder: (context, constraints) {
             return FutureBuilder(
               future: _future,
