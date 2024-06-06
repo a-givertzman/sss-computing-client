@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
+import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 ///
 class ChartLayout extends StatelessWidget {
   final double _minX;

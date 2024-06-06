@@ -2,6 +2,7 @@ import 'package:davi/davi.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/models/strength/strength_force_allow.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_limited.dart';
 import 'package:sss_computing_client/core/widgets/table/table_view.dart';
 ///
@@ -46,14 +47,14 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
         DaviColumn<StrengthForceLimited>(
           grow: 1,
           name: '${const Localized('Value').v}\n[$_valueUnit]',
-          doubleValue: (data) => _formatDoubleFraction(data.force.value),
+          doubleValue: (data) => _formatDouble(data.force.value),
         ),
         DaviColumn<StrengthForceLimited>(
           grow: 1,
           name: '${const Localized('Low limit').v}\n[$_valueUnit]',
           doubleValue: (data) => data.lowLimit.value,
           cellBuilder: (_, row) => _NullableCellWidget(
-            value: _formatDoubleFraction(row.data.lowLimit.value),
+            value: _formatDouble(row.data.lowLimit.value),
           ),
         ),
         DaviColumn<StrengthForceLimited>(
@@ -61,15 +62,15 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
           name: '${const Localized('High limit').v}\n[$_valueUnit]',
           doubleValue: (data) => data.highLimit.value,
           cellBuilder: (_, row) => _NullableCellWidget(
-            value: _formatDoubleFraction(row.data.highLimit.value),
+            value: _formatDouble(row.data.highLimit.value),
           ),
         ),
         DaviColumn<StrengthForceLimited>(
           grow: 1,
           name: '${const Localized('Limits gap').v}\n[%]',
-          doubleValue: (data) => _extractGapFromLimits(data),
+          doubleValue: (data) => StrengthForceAllow(force: data).value(),
           cellBuilder: (_, row) => _NullableCellWidget(
-            value: _formatDoubleFraction(_extractGapFromLimits(row.data)),
+            value: _formatDouble(StrengthForceAllow(force: row.data).value()),
           ),
         ),
         DaviColumn<StrengthForceLimited>(
@@ -103,21 +104,10 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
     );
   }
   //
-  double? _formatDoubleFraction(double? value, {int fractionDigits = 1}) {
+  double? _formatDouble(double? value, {int fractionDigits = 1}) {
     return value != null
         ? double.parse(value.toStringAsFixed(fractionDigits))
         : null;
-  }
-  //
-  double? _extractGapFromLimits(StrengthForceLimited forceLimited) {
-    final lowLimit = forceLimited.lowLimit.value;
-    final highLimit = forceLimited.highLimit.value;
-    final value = forceLimited.force.value;
-    return switch (value) {
-      >= 0.0 => highLimit != null ? value / highLimit * 100.0 : null,
-      < 0.0 => lowLimit != null ? value / lowLimit * 100.0 : null,
-      _ => null,
-    };
   }
   //
   bool? _extractPassStatus(StrengthForceLimited forceLimited) {

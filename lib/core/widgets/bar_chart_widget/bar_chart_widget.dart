@@ -1,9 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/chart_bars.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/chart_layout.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/chart_lines.dart';
+import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
+import 'package:sss_computing_client/core/widgets/bar_chart_widget/chart_bars.dart';
+import 'package:sss_computing_client/core/widgets/bar_chart_widget/chart_layout.dart';
+import 'package:sss_computing_client/core/widgets/bar_chart_widget/chart_lines.dart';
+///
 /// Common data for bar of [BarChartWidget]
 class BarChartColumn {
   final double value;

@@ -41,9 +41,11 @@ class ErrorMessageWidget extends StatelessWidget {
               ),
             ),
             SizedBox(width: padding),
-            Text(
-              _message,
-              style: _style ?? theme.textTheme.titleLarge,
+            Flexible(
+              child: OverflowableText(
+                _message,
+                style: _style ?? theme.textTheme.titleLarge,
+              ),
             ),
           ],
         ),
@@ -53,7 +55,7 @@ class ErrorMessageWidget extends StatelessWidget {
           ),
           ElevatedButton.icon(
             onPressed: _onConfirm,
-            label: Text(const Localized('Retry').v),
+            label: OverflowableText(const Localized('Retry').v),
             icon: const Icon(Icons.refresh),
           ),
         ],

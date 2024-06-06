@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:sss_computing_client/core/models/frame/frame.dart';
-enum LimitType { low, high }
+import 'package:sss_computing_client/core/models/limit_type.dart';
 ///
 /// Common data for corresponding [StrengthForceLimit].
 abstract interface class StrengthForceLimit {

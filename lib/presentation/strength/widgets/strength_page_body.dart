@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
+import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_limited.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_forces_chart.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_forces_table.dart';

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
-import 'package:sss_computing_client/core/models/charts/chart_axis.dart';
+import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_limited.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/bar_chart_widget.dart';
-import 'package:sss_computing_client/presentation/strength/widgets/bar_chart_widget/chart_legend.dart';
+import 'package:sss_computing_client/core/widgets/bar_chart_widget/bar_chart_widget.dart';
+import 'package:sss_computing_client/core/widgets/bar_chart_widget/chart_legend.dart';
 ///
 class StrengthForceChart extends StatelessWidget {
   final double? _minX;

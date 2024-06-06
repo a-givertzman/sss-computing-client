@@ -1,4 +1,5 @@
 import 'package:sss_computing_client/core/models/frame/frame.dart';
+import 'package:sss_computing_client/core/models/limit_type.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_limit.dart';
 import 'package:flutter_test/flutter_test.dart';
 ///
