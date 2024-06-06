@@ -35,24 +35,20 @@ class PgFramesTheoretical implements Frames {
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-            SELECT
-              project_id AS "projectId",
-              ship_id AS "shipId",
-              index AS "index",
-              value AS "x"
-            FROM computed_frame
-            WHERE
-              key = 'start_x'
-            UNION
-            SELECT
-              project_id AS "projectId",
-              ship_id AS "shipId",
-              index + 1 AS "index",
-              value AS "x"
-            FROM computed_frame
-            WHERE
-              key = 'end_x'
-            ORDER BY index;
+              SELECT
+                project_id AS "projectId",
+                ship_id AS "shipId",
+                index AS "index",
+                start_x AS "x"
+              FROM computed_frame_space
+              UNION
+              SELECT
+                project_id AS "projectId",
+                ship_id AS "shipId",
+                index + 1 AS "index",
+                end_x AS "x"
+              FROM computed_frame_space
+              ORDER BY index;
             """,
       ),
       entryBuilder: (row) => JsonFrame(json: row),
@@ -74,26 +70,22 @@ class PgFramesTheoretical implements Frames {
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-            SELECT
-              project_id AS "projectId",
-              ship_id AS "shipId",
-              index AS "index",
-              value AS "x"
-            FROM computed_frame
-            WHERE
-              key = 'start_x'
-              AND index = $index
-            UNION
-            SELECT
-              project_id AS "projectId",
-              ship_id AS "shipId",
-              index + 1 AS "index",
-              value AS "x"
-            FROM computed_frame
-            WHERE
-              key = 'end_x'
-              AND index = ${index - 1}
-            ;
+              SELECT
+                project_id AS "projectId",
+                ship_id AS "shipId",
+                index AS "index",
+                start_x AS "x"
+              FROM computed_frame_space
+              WHERE index = $index
+              UNION
+              SELECT
+                project_id AS "projectId",
+                ship_id AS "shipId",
+                index + 1 AS "index",
+                end_x AS "x"
+              FROM computed_frame_space
+              WHERE index = ${index - 1}
+              ORDER BY index;
             """,
       ),
       entryBuilder: (row) => JsonFrame(json: row),
@@ -136,26 +128,14 @@ class PgFramesReal implements Frames {
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-            SELECT DISTINCT ON (index) * FROM (
-              SELECT
-                project_id AS "projectId",
-                ship_id AS "shipId",
-                index AS "index",
-                value AS "x"
-              FROM physical_frame
-              WHERE key = 'x'
-              UNION
-              SELECT
-                pfx.project_id AS "projectId",
-                pfx.ship_id AS "shipId",
-                pfx.index + 1 AS "index",
-                pfx.value + pfd.value AS "x"
-              FROM physical_frame AS pfx
-              INNER JOIN physical_frame AS pfd
-              ON pfx.key = 'x' AND pfd.key = 'delta_x' AND pfx.index = pfd.index
-              ORDER BY "index"
-            );
-            """,
+            SELECT
+              project_id AS "projectId",
+              ship_id AS "shipId",
+              frame_index AS "index",
+              pos_x AS "x"
+            FROM physical_frame
+            ORDER BY "index";
+         """,
       ),
       entryBuilder: (row) => JsonFrame(json: row),
     );
@@ -176,26 +156,15 @@ class PgFramesReal implements Frames {
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-              SELECT DISTINCT ON (index) * FROM (
-              SELECT
-                project_id AS "projectId",
-                ship_id AS "shipId",
-                index AS "index",
-                value AS "x"
-              FROM physical_frame
-              WHERE key = 'x'
-              UNION
-              SELECT
-                pfx.project_id AS "projectId",
-                pfx.ship_id AS "shipId",
-                pfx.index + 1 AS "index",
-                pfx.value + pfd.value AS "x"
-              FROM physical_frame AS pfx
-              INNER JOIN physical_frame AS pfd
-              ON pfx.key = 'x' AND pfd.key = 'delta_x' AND pfx.index = pfd.index
-              ORDER BY "index"
-            ) WHERE index = $index;
-            """,
+            SELECT
+              project_id AS "projectId",
+              ship_id AS "shipId",
+              frame_index AS "index",
+              pos_x AS "x"
+            FROM physical_frame
+            WHERE frame_index = $index
+            LIMIT 1;
+         """,
       ),
       entryBuilder: (row) => JsonFrame(json: row),
     );

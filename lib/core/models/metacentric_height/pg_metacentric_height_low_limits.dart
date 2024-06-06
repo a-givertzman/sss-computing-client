@@ -2,17 +2,17 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart' hide Result;
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/json_metacentric_height_limit.dart';
-import 'package:sss_computing_client/core/models/metacentric_height/metacentric_height_limit.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/metacentric_height_limits.dart';
+import 'package:sss_computing_client/core/models/metacentric_height/metacentric_height_limit.dart';
 ///
 /// Collection of [MetacentricHeightLimit] stored in Postgres DB
-class PgMetacentricHeightLimits implements MetacentricHeightLimits {
+class PgMetacentricHeightLowLimits implements MetacentricHeightLimits {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
   ///
   /// Creates object with access to [List] of [MetacentricHeightLimit] stored in Postgres DB
-  const PgMetacentricHeightLimits({
+  const PgMetacentricHeightLowLimits({
     required ApiAddress apiAddress,
     required String dbName,
     String? authToken,
@@ -33,8 +33,8 @@ class PgMetacentricHeightLimits implements MetacentricHeightLimits {
           ship_id AS "shipId",
           low_limit AS "low",
           high_limit AS "high",
-          displacement AS "displacement"
-        FROM metacentric_height_limit;
+          draft AS "dependentValue"
+        FROM metacentric_height_low_limit;
       """),
       entryBuilder: (row) => JsonMetacentricHeightLimit(json: row),
     );

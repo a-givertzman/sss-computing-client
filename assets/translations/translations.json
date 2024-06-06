@@ -1,30 +1,114 @@
 {
-    "Save": ["Save", "Сохранить"],
-    "Please, fix all errors before saving!": ["Please, fix all errors before saving!", "Пожалуйста, исправьте все ошибки перед сохранением!"],
-    "Too few characters": ["Too few characters", "Cлишком мало символов"],
-    "Too many characters": ["Too many characters", "Слишком много символов"],
-    "Data saving": ["Data saving", "Сохранение данных"],
-    "Data saved": ["Data saved", "Данные сохранены"],
-    "Data will be persisted on the server. Do you want to proceed?": ["Data will be persisted on the server. Do you want to proceed?", "Данные будут сохранены на сервере. Хотите продолжить?"],
-    "Something went wrong": ["Something went wrong", "Что-то пошло не так"],
-    "Ship parameters": ["Ship parameters", "Параметры корабля"],
-    "Ship length": ["Ship length", "Длина корабля"],
-    "Water density": ["Water density", "Плотность воды"],
-    "g/ml": ["g/ml", "г/мл"],
-    "Number of parts": ["Number of parts", "Число частей"],
-    "Shear force": ["Shear force", "Перерезывающая сила"],
-    "Bending moment": ["Bending moment", "Изгибающий момент"],
-    "Frames": ["Frames", "Шпангоуты"],
-    "MN": ["MN", "МН"],
-    "MN*m": ["MN·m", "МН·м"],
-    "Limit": ["Limit", "Предел"],
-    "Frame": ["Frame", "Шпангоут"],
-    "Value": ["Value", "Значение"],
-    "Low limit": ["Low limit", "Ниж. предел"],
-    "High limit": ["High limit", "Верх. предел"],
-    "Limits gap": ["Allow", "Допустимый"],
-    "Status": ["Status", "Статус"],
-    "Retry": ["Retry", "Повторить"],
-    "Data loading error": ["Data loading error", "Ошибка при загрузке данных"],
-    "No data": ["No data", "Отсутствуют данные для загрузки"]
+    "Save": [
+        "Save",
+        "Сохранить"
+    ],
+    "Please, fix all errors before saving!": [
+        "Please, fix all errors before saving!",
+        "Пожалуйста, исправьте все ошибки перед сохранением!"
+    ],
+    "Too few characters": [
+        "Too few characters",
+        "Cлишком мало символов"
+    ],
+    "Too many characters": [
+        "Too many characters",
+        "Слишком много символов"
+    ],
+    "Data saving": [
+        "Data saving",
+        "Сохранение данных"
+    ],
+    "Data saved": [
+        "Data saved",
+        "Данные сохранены"
+    ],
+    "Data will be persisted on the server. Do you want to proceed?": [
+        "Data will be persisted on the server. Do you want to proceed?",
+        "Данные будут сохранены на сервере. Хотите продолжить?"
+    ],
+    "Something went wrong": [
+        "Something went wrong",
+        "Что-то пошло не так"
+    ],
+    "Ship parameters": [
+        "Ship parameters",
+        "Параметры корабля"
+    ],
+    "Ship length": [
+        "Ship length",
+        "Длина корабля"
+    ],
+    "Water density": [
+        "Water density",
+        "Плотность воды"
+    ],
+    "g/ml": [
+        "g/ml",
+        "г/мл"
+    ],
+    "Number of parts": [
+        "Number of parts",
+        "Число частей"
+    ],
+    "Shear force": [
+        "Shear force",
+        "Перерезывающая сила"
+    ],
+    "Bending moment": [
+        "Bending moment",
+        "Изгибающий момент"
+    ],
+    "Frames": [
+        "Frames",
+        "Шпангоуты"
+    ],
+    "MN": [
+        "MN",
+        "МН"
+    ],
+    "MN*m": [
+        "MN·m",
+        "МН·м"
+    ],
+    "Limit": [
+        "Limit",
+        "Предел"
+    ],
+    "Frame": [
+        "Frame",
+        "Шпангоут"
+    ],
+    "Value": [
+        "Value",
+        "Значение"
+    ],
+    "Low limit": [
+        "Low limit",
+        "Ниж. предел"
+    ],
+    "High limit": [
+        "High limit",
+        "Верх. предел"
+    ],
+    "Limits gap": [
+        "Allow",
+        "Допустимый"
+    ],
+    "Status": [
+        "Status",
+        "Статус"
+    ],
+    "Retry": [
+        "Retry",
+        "Повторить"
+    ],
+    "Data loading error": [
+        "Data loading error",
+        "Ошибка при загрузке данных"
+    ],
+    "No data": [
+        "No data",
+        "Отсутствуют данные для загрузки"
+    ]
 }

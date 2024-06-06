@@ -1,13 +1,18 @@
 import 'package:sss_computing_client/core/models/strength/strength_force_limited.dart';
 ///
-///
+/// Representation of allow values for [StrengthForceLimited].
 class StrengthForceAllow {
   final StrengthForceLimited _force;
   ///
+  /// Creates representation of allow value for [StrengthForceLimited].
+  ///
+  /// `force` - the [StrengthForceLimited] force for which
+  /// allow value is calculated.
   const StrengthForceAllow({
     required StrengthForceLimited force,
   }) : _force = force;
   ///
+  /// Returns value of allow.
   double? value() {
     final lowLimit = _force.lowLimit.value;
     final highLimit = _force.highLimit.value;

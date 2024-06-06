@@ -1,13 +1,23 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/strength/strength_forces_limited.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
+import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
+import 'package:sss_computing_client/core/widgets/run_calculation_button.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_page_body.dart';
 ///
 class StrengthPage extends StatefulWidget {
+  final Stream<DsDataPoint<bool>> _appRefreshStream;
+  final void Function() _fireRefreshEvent;
   ///
-  const StrengthPage({super.key});
+  const StrengthPage({
+    super.key,
+    required Stream<DsDataPoint<bool>> appRefreshStream,
+    required void Function() fireRefreshEvent,
+  })  : _appRefreshStream = appRefreshStream,
+        _fireRefreshEvent = fireRefreshEvent;
   //
   @override
   State<StrengthPage> createState() => _StrengthPageState();
@@ -32,23 +42,39 @@ class _StrengthPageState extends State<StrengthPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilderWidget(
-        onFuture: () => PgShearForcesLimited(
-          apiAddress: _apiAddress,
-          dbName: _dbName,
-          authToken: _authToken,
-        ).fetchAll(),
-        caseData: (_, shearForces, __) => FutureBuilderWidget(
-          onFuture: () => PgBendingMomentsLimited(
-            apiAddress: _apiAddress,
-            dbName: _dbName,
-            authToken: _authToken,
-          ).fetchAll(),
-          caseData: (_, bendingMoments, __) => StrengthPageBody(
-            shearForces: shearForces,
-            bendingMoments: bendingMoments,
+      body: Row(
+        children: [
+          NavigationPanel(
+            selectedPageIndex: 1,
+            appRefreshStream: widget._appRefreshStream,
+            fireRefreshEvent: widget._fireRefreshEvent,
           ),
-        ),
+          Expanded(
+            child: FutureBuilderWidget(
+              refreshStream: widget._appRefreshStream,
+              onFuture: () => PgShearForcesLimited(
+                apiAddress: _apiAddress,
+                dbName: _dbName,
+                authToken: _authToken,
+              ).fetchAll(),
+              caseData: (_, shearForces, __) => FutureBuilderWidget(
+                refreshStream: widget._appRefreshStream,
+                onFuture: () => PgBendingMomentsLimited(
+                  apiAddress: _apiAddress,
+                  dbName: _dbName,
+                  authToken: _authToken,
+                ).fetchAll(),
+                caseData: (_, bendingMoments, __) => StrengthPageBody(
+                  shearForces: shearForces,
+                  bendingMoments: bendingMoments,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: RunCalculationButton(
+        fireRefreshEvent: widget._fireRefreshEvent,
       ),
     );
   }

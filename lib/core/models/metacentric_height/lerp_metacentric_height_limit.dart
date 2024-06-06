@@ -33,18 +33,11 @@ final class LerpMetacentricHeightLimit implements MetacentricHeightLimit {
   int? get projectId => _projectId;
   //
   @override
-  double get displacement => _displacement;
+  double get dependentValue => _displacement;
   //
   @override
-  double? get low => _extractLimitValue(
+  double? get value => _extractLimitValue(
         type: LimitType.low,
-        displacement: _displacement,
-        limits: _limits,
-      );
-  //
-  @override
-  double? get high => _extractLimitValue(
-        type: LimitType.high,
         displacement: _displacement,
         limits: _limits,
       );
@@ -56,41 +49,30 @@ final class LerpMetacentricHeightLimit implements MetacentricHeightLimit {
   }) {
     final limitsSorted = limits.toList()
       ..sort(
-        (one, other) => (one.displacement - other.displacement) < 0 ? -1 : 1,
+        (one, other) =>
+            (one.dependentValue - other.dependentValue) < 0 ? -1 : 1,
       );
     final limitsOnLeft = limitsSorted
         .where(
-          (limit) => limit.displacement <= displacement,
+          (limit) => limit.dependentValue <= displacement,
         )
         .toList();
     final limitsOnRight = limitsSorted
         .where(
-          (limit) => limit.displacement >= displacement,
+          (limit) => limit.dependentValue >= displacement,
         )
         .toList();
     final limitOnLeft = limitsOnLeft.isEmpty ? null : limitsOnLeft.last;
     final limitOnRight = limitsOnRight.isEmpty ? null : limitsOnRight.first;
     return switch ((limitOnLeft, limitOnRight)) {
       (MetacentricHeightLimit left, MetacentricHeightLimit right) => lerpDouble(
-          switch (type) {
-            LimitType.low => left.low,
-            LimitType.high => left.high,
-          },
-          switch (type) {
-            LimitType.low => right.low,
-            LimitType.high => right.high,
-          },
-          (displacement - left.displacement) /
-              (right.displacement - left.displacement),
+          left.value,
+          right.value,
+          (displacement - left.dependentValue) /
+              (right.dependentValue - left.dependentValue),
         ),
-      (MetacentricHeightLimit left, null) => switch (type) {
-          LimitType.low => left.low,
-          LimitType.high => left.high,
-        },
-      (null, MetacentricHeightLimit right) => switch (type) {
-          LimitType.low => right.low,
-          LimitType.high => right.high,
-        },
+      (MetacentricHeightLimit left, null) => left.value,
+      (null, MetacentricHeightLimit right) => right.value,
       (null, null) => null,
     };
   }

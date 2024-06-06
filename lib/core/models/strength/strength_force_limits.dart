@@ -114,23 +114,12 @@ Sql _buildPgFetchAllSql(String forceType) {
           FROM strength_force_limit AS sfl
           INNER JOIN
           (
-            SELECT DISTINCT ON (index) * FROM (
-              SELECT
-                ship_id AS "shipId",
-                value AS "x",
-                index
-              FROM physical_frame
-              WHERE key = 'x'
-              UNION
-              SELECT
-                pfx.ship_id AS "shipId",
-                pfx.index + 1 AS "index",
-                pfx.value + pfd.value AS "x"
-              FROM physical_frame AS pfx
-              INNER JOIN physical_frame AS pfd
-              ON pfx.key = 'x' AND pfd.key = 'delta_x' AND pfx.index = pfd.index
-              ORDER BY "index"
-            )
+            SELECT
+              ship_id AS "shipId",
+              frame_index AS "index",
+              pos_x AS "x"
+            FROM physical_frame
+            ORDER BY "index"
           ) AS pf
           ON sfl.frame_real_index = pf.index AND sfl.force_type = '$forceType';
         """,
