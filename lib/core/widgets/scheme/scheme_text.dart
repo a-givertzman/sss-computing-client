@@ -9,6 +9,7 @@ class SchemeText extends StatelessWidget {
   final TextStyle? _style;
   final Matrix4 _layoutTransform;
   ///
+  /// Display text on [SchemeLayout] content.
   const SchemeText({
     super.key,
     required String text,
@@ -23,6 +24,7 @@ class SchemeText extends StatelessWidget {
         _direction = direction,
         _style = style,
         _layoutTransform = layoutTransform;
+  ///
   @override
   Widget build(BuildContext context) {
     return CustomPaint(

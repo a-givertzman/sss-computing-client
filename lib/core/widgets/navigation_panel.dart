@@ -10,6 +10,7 @@ class NavigationPanel extends StatelessWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
   ///
+  /// Creates app main navigation widget.
   const NavigationPanel({
     super.key,
     required int selectedPageIndex,

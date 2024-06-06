@@ -1,13 +1,20 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 ///
-///
+/// Calculates scaling factor for widget according to its initial size
+/// and desired way to fill the available space.
 class FittedBuilderWidget extends StatelessWidget {
   final Widget Function(BuildContext, double, double) _builder;
   final Size _size;
   final BoxFit _fit;
   ///
+  /// Calculates scaling factor for widget according to its initial size
+  /// and desired way to fill the available space.
+  /// Scaling factors can be used via builder function.
   ///
+  /// `builder` - builder for widget with scaling factors as parameters.
+  /// `size` - initial size of the widget.
+  /// `fit` - specifies how a box should be inscribed into another box.
   const FittedBuilderWidget({
     super.key,
     required Widget Function(
@@ -16,7 +23,6 @@ class FittedBuilderWidget extends StatelessWidget {
       double scaleY,
     ) builder,
     required Size size,
-    Offset offset = Offset.zero,
     BoxFit fit = BoxFit.contain,
   })  : _builder = builder,
         _size = size,

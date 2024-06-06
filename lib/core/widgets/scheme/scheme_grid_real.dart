@@ -11,6 +11,7 @@ class SchemeGridReal extends StatefulWidget {
   final double Function(double) _transformValue;
   final Color _color;
   ///
+  /// Displays real number grid using passed parameters.
   const SchemeGridReal({
     super.key,
     required ChartAxis axis,

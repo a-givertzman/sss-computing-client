@@ -6,9 +6,15 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 ///
+/// Button that sends a request to backend to perform
+/// calculations and triggers update event when calculation is completed.
 class RunCalculationButton extends StatefulWidget {
   final void Function() _fireRefreshEvent;
   ///
+  /// Button that sends a request to backend to perform
+  /// calculations and triggers update event when calculation is completed.
+  ///
+  /// `fireRefreshEvent` - callback for triggering refresh event.
   const RunCalculationButton({
     super.key,
     required void Function() fireRefreshEvent,
@@ -37,8 +43,8 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
       host: const Setting('api-host').toString(),
       port: const Setting('api-port').toInt,
     );
-    _scriptName = 'sss-computing-strength';
     _authToken = const Setting('api-auth-token').toString();
+    _scriptName = 'sss-computing-strength';
     _isLoading = false;
     super.initState();
   }

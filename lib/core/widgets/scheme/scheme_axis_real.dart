@@ -12,6 +12,7 @@ class SchemeAxisReal extends StatefulWidget {
   final TextStyle? _labelStyle;
   final Color _color;
   ///
+  /// Displays real number axis using passed parameters.
   const SchemeAxisReal({
     super.key,
     required ChartAxis axis,

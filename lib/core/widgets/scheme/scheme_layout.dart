@@ -24,6 +24,11 @@ class SchemeLayout extends StatefulWidget {
   final BoxFit _fit;
   final Widget Function(BuildContext, Matrix4) _buildContent;
   ///
+  /// Displays the scheme layout. Includes axes, grid,
+  /// and scheme content if `buildContent` passed.
+  /// Fit scheme in available space based on passed `fit` parameter.
+  /// Transformations for content passed as parameters to
+  /// `buildContent` callback.
   const SchemeLayout({
     super.key,
     required double minX,

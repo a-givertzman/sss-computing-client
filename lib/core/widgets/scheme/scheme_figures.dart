@@ -7,6 +7,7 @@ class SchemeFigures extends StatelessWidget {
   final List<Figure> _figures;
   final Matrix4 _layoutTransform;
   ///
+  /// Display list of [Figure] on [SchemeLayout] content.
   const SchemeFigures({
     super.key,
     required FigurePlane plane,
