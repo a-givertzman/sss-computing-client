@@ -54,30 +54,43 @@ class NavigationPanel extends StatelessWidget {
           ),
         ],
         selectedIndex: _selectedPageIndex,
-        onDestinationSelected: (value) => switch (value) {
-          0 => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => MainPage(
-                  appRefreshStream: _appRefreshStream,
-                  fireRefreshEvent: _fireRefreshEvent,
+        onDestinationSelected: (index) {
+          if (index == _selectedPageIndex) return;
+          switch (index) {
+            case 0:
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => MainPage(
+                    appRefreshStream: _appRefreshStream,
+                    fireRefreshEvent: _fireRefreshEvent,
+                  ),
+                  settings: const RouteSettings(name: '/MainPage'),
                 ),
-                settings: const RouteSettings(name: "/MainPage"),
-              ),
-            ),
-          1 => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => StrengthPage(
-                  appRefreshStream: _appRefreshStream,
-                  fireRefreshEvent: _fireRefreshEvent,
+              );
+              return;
+            case 1:
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => StrengthPage(
+                    appRefreshStream: _appRefreshStream,
+                    fireRefreshEvent: _fireRefreshEvent,
+                  ),
+                  settings: const RouteSettings(name: '/StrengthPage'),
                 ),
-                settings: const RouteSettings(name: "/StrengthPage"),
-              ),
-            ),
-          _ => Scaffold(
-              body: ErrorMessageWidget(
-                message: const Localized('Page not found').v,
-              ),
-            ),
+              );
+              return;
+            default:
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Scaffold(
+                    body: ErrorMessageWidget(
+                      message: const Localized('Page not found').v,
+                    ),
+                  ),
+                  settings: const RouteSettings(name: '/NotFoundPage'),
+                ),
+              );
+          }
         },
       ),
     );
