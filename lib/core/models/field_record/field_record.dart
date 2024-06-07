@@ -48,7 +48,7 @@ class FieldRecord<T> {
             _ => "${entry.key} = '${entry.value}'"
           },
         )
-        .join(' ');
+        .join(' AND');
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -67,6 +67,57 @@ class FieldRecord<T> {
         .then<ResultF<T>>(
           (result) => switch (result) {
             Ok(:final value) => Ok(_toValue(value.first)),
+            Err(:final error) => Err(
+                Failure(
+                  message: '$error',
+                  stackTrace: StackTrace.current,
+                ),
+              ),
+          },
+        )
+        .onError(
+          (error, stackTrace) => Err(Failure(
+            message: '$error',
+            stackTrace: stackTrace,
+          )),
+        );
+  }
+  ///
+  /// Returns result of field persisting.
+  ///
+  ///   - `filter` - Map with field name as key and field value as value
+  /// for filtering records of table based on its fields values.
+  Future<ResultF<String>> persist(
+    String value, {
+    required Map<String, dynamic> filter,
+  }) async {
+    final filterQuery = filter.entries
+        .map(
+          (entry) => switch (entry.value) {
+            num _ => '${entry.key} = ${entry.value}',
+            _ => "${entry.key} = '${entry.value}'"
+          },
+        )
+        .join(' AND');
+    final sqlAccess = SqlAccess(
+      address: _apiAddress,
+      authToken: _authToken ?? '',
+      database: _dbName,
+      sqlBuilder: (_, __) => Sql(
+        sql: """
+          UPDATE "$_tableName"
+          SET "$_fieldName"='$value'
+          WHERE $filterQuery
+          RETURNING "$_fieldName";
+        """,
+      ),
+      entryBuilder: (row) => '${row[_fieldName]}',
+    );
+    return sqlAccess
+        .fetch()
+        .then<ResultF<String>>(
+          (result) => switch (result) {
+            Ok(:final value) => Ok(value.first),
             Err(:final error) => Err(
                 Failure(
                   message: '$error',
