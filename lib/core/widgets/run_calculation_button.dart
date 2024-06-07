@@ -86,16 +86,20 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
         .fetch()
         .then(
           (result) => switch (result) {
-            Ok(value: final reply) =>
-              reply.data.any((data) => data['status'] != 'ok')
-                  ? _showErrorMessage(
-                      context,
-                      '${reply.data.firstWhere((data) => data['status'] != 'ok')['message']}',
-                    )
-                  : _showInfoMessage(
-                      context,
-                      const Localized('Calculation completed.').v,
-                    ),
+            Ok(value: final reply) => reply.data.isEmpty
+                ? _showErrorMessage(
+                    context,
+                    '${reply.data.firstWhere((data) => data['status'] != 'ok')['message']}',
+                  )
+                : reply.data.any((data) => data['status'] != 'ok')
+                    ? _showErrorMessage(
+                        context,
+                        '${reply.data.firstWhere((data) => data['status'] != 'ok')['message']}',
+                      )
+                    : _showInfoMessage(
+                        context,
+                        const Localized('Calculation completed.').v,
+                      ),
             Err(:final error) => _showErrorMessage(context, '$error'),
           },
         )
