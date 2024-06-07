@@ -1,0 +1,334 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:ext_rw/ext_rw.dart';
+import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
+import 'package:sss_computing_client/core/models/field_record/field_record.dart';
+import 'package:sss_computing_client/core/models/figure/box_figure.dart';
+import 'package:sss_computing_client/core/models/figure/figure.dart';
+import 'package:sss_computing_client/core/models/figure/line_figure.dart';
+import 'package:sss_computing_client/core/models/figure/svg_path_figure.dart';
+import 'package:sss_computing_client/core/models/figure/transformed_figure.dart';
+import 'package:sss_computing_client/core/models/heel_trim/pg_heel_trim.dart';
+import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
+import 'package:sss_computing_client/core/widgets/scheme/scheme_figure.dart';
+import 'package:sss_computing_client/core/widgets/scheme/scheme_figures.dart';
+import 'package:sss_computing_client/core/widgets/scheme/scheme_layout.dart';
+import 'package:sss_computing_client/core/widgets/scheme/scheme_text.dart';
+import 'package:vector_math/vector_math_64.dart' hide Colors;
+///
+/// Shows ship hull and its drafts with heel and trim.
+class ShipDraughtsScheme extends StatelessWidget {
+  final Stream<DsDataPoint<bool>> _appRefreshStream;
+  final ApiAddress _apiAddress;
+  final String _dbName;
+  final String? _authToken;
+  ///
+  /// Creates widget that showing ship hull
+  /// and its drafts with heel and trim.
+  const ShipDraughtsScheme({
+    super.key,
+    required Stream<DsDataPoint<bool>> appRefreshStream,
+    required ApiAddress apiAddress,
+    required String dbName,
+    required String? authToken,
+  })  : _appRefreshStream = appRefreshStream,
+        _apiAddress = apiAddress,
+        _dbName = dbName,
+        _authToken = authToken;
+  //
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilderWidget(
+      refreshStream: _appRefreshStream,
+      onFuture: () => FieldRecord<Map<String, dynamic>>(
+        tableName: 'ship_parameters',
+        fieldName: 'value',
+        dbName: _dbName,
+        apiAddress: _apiAddress,
+        authToken: _authToken,
+        toValue: (value) => jsonDecode(value),
+      ).fetch(filter: {'key': 'HullSvg'}),
+      caseData: (context, hullProjections, _) {
+        return FutureBuilderWidget(
+          refreshStream: _appRefreshStream,
+          onFuture: PgHeelTrim(
+            dbName: _dbName,
+            apiAddress: _apiAddress,
+            authToken: _authToken,
+          ).fetch,
+          caseData: (context, heelTrim, _) {
+            final draught = heelTrim.draftAvg.value;
+            final massShiftX = heelTrim.draftAvg.offset;
+            final trimAngle = heelTrim.trim;
+            final heelAngle = heelTrim.heel;
+            final shipBody = SVGPathFigure(
+              paints: [
+                Paint()
+                  ..color = Colors.grey
+                  ..style = PaintingStyle.fill,
+              ],
+              pathProjections: {
+                FigurePlane.xy: hullProjections['xy'],
+                FigurePlane.xz: hullProjections['xz'],
+                FigurePlane.yz: hullProjections['yz'],
+              },
+            );
+            final waterlineFigure = RectangularCuboid(
+              start: Vector3(-140.0, -40.0, -40.0),
+              end: Vector3(140.0, 40.0, 0.0),
+              paints: [
+                Paint()
+                  ..color = Colors.blue.withOpacity(0.25)
+                  ..style = PaintingStyle.fill,
+                Paint()
+                  ..color = Colors.blue
+                  ..style = PaintingStyle.stroke,
+              ],
+            );
+            final trimTransform = Matrix4.identity()
+              ..translate(0.0, -draught)
+              ..translate(massShiftX, draught)
+              ..rotateZ(-degrees2Radians * trimAngle)
+              ..translate(-massShiftX, -draught);
+            final heelTransform = Matrix4.identity()
+              ..translate(0.0, -draught)
+              ..translate(0.0, draught)
+              ..rotateZ(-degrees2Radians * heelAngle)
+              ..translate(0.0, -draught);
+            final theme = Theme.of(context);
+            final labelStyle = theme.textTheme.labelLarge?.copyWith(
+              backgroundColor: theme.colorScheme.primary.withOpacity(0.75),
+            );
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: SchemeLayout(
+                    fit: BoxFit.contain,
+                    minX: -10.0,
+                    maxX: 10.0,
+                    minY: -15.0,
+                    maxY: 15.0,
+                    yAxisReversed: true,
+                    buildContent: (ctx, transform) => Stack(
+                      children: [
+                        SchemeFigures(
+                          plane: FigurePlane.yz,
+                          figures: [
+                            TransformedProjectionFigure(
+                              figure: shipBody,
+                              transform: heelTransform,
+                            ),
+                            waterlineFigure,
+                            TransformedProjectionFigure(
+                              figure: LineSegmentFigure(
+                                start: const Offset(-20.0, 0.0),
+                                end: const Offset(20.0, 0.0),
+                                paints: [
+                                  Paint()
+                                    ..color = Colors.white
+                                    ..style = PaintingStyle.stroke,
+                                ],
+                              ),
+                              transform: heelTransform,
+                            ),
+                          ],
+                          layoutTransform: transform,
+                        ),
+                        SchemeText(
+                          text:
+                              '${const Localized('Heel').v} ${heelAngle.toStringAsFixed(2)}${const Localized('°').v}',
+                          offset: const Offset(0.0, 10.0),
+                          alignment: const Alignment(0.0, 2.0),
+                          style: labelStyle,
+                          layoutTransform: transform,
+                        ),
+                        SchemeText(
+                          text: const Localized('PS').v,
+                          offset: const Offset(-10.0, 0.0),
+                          alignment: const Alignment(2.0, 0.0),
+                          style: labelStyle,
+                          layoutTransform: transform,
+                        ),
+                        SchemeText(
+                          text: const Localized('SB').v,
+                          offset: const Offset(10.0, 0.0),
+                          alignment: const Alignment(-2.0, 0.0),
+                          style: labelStyle,
+                          layoutTransform: transform,
+                        ),
+                        _DraugthLabel(
+                          draught: draught,
+                          draughtShift: 0.0,
+                          massShift: 0.0,
+                          angle: heelAngle,
+                          layoutTransform: transform,
+                          draughtsTransform: heelTransform,
+                          label:
+                              '${heelTrim.draftAvg.value.toStringAsFixed(2)} ${const Localized('m').v}',
+                          labelStyle: labelStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Flexible(
+                  flex: 7,
+                  child: SchemeLayout(
+                    fit: BoxFit.contain,
+                    minX: -70.0,
+                    maxX: 70.0,
+                    minY: -15.0,
+                    maxY: 15.0,
+                    // xAxis: ChartAxis(isLabelsVisible: true, valueInterval: 5.0),
+                    yAxisReversed: true,
+                    buildContent: (ctx, transform) => Stack(
+                      children: [
+                        SchemeFigures(
+                          plane: FigurePlane.xz,
+                          figures: [
+                            TransformedProjectionFigure(
+                              figure: shipBody,
+                              transform: trimTransform,
+                            ),
+                            waterlineFigure,
+                            TransformedProjectionFigure(
+                              figure: LineSegmentFigure(
+                                start: const Offset(-140.0, 0.0),
+                                end: const Offset(140.0, 0.0),
+                                paints: [
+                                  Paint()
+                                    ..color = Colors.white
+                                    ..style = PaintingStyle.stroke,
+                                ],
+                              ),
+                              transform: trimTransform,
+                            ),
+                          ],
+                          layoutTransform: transform,
+                        ),
+                        SchemeText(
+                          text:
+                              '${const Localized('Trim').v} ${trimAngle.toStringAsFixed(2)}${const Localized('°').v}',
+                          alignment: const Alignment(0.0, 2.0),
+                          offset: const Offset(0.0, 10.0),
+                          style: labelStyle,
+                          layoutTransform: transform,
+                        ),
+                        SchemeText(
+                          text: const Localized('AFT').v,
+                          offset: const Offset(-70.0, 0.0),
+                          alignment: const Alignment(2.0, 0.0),
+                          style: labelStyle,
+                          layoutTransform: transform,
+                        ),
+                        SchemeText(
+                          text: const Localized('FWD').v,
+                          offset: const Offset(70.0, 0.0),
+                          alignment: const Alignment(-2.0, 0.0),
+                          style: labelStyle,
+                          layoutTransform: transform,
+                        ),
+                        _DraugthLabel(
+                          draught: draught,
+                          draughtShift: heelTrim.draftAP.offset,
+                          massShift: massShiftX,
+                          angle: trimAngle,
+                          layoutTransform: transform,
+                          draughtsTransform: trimTransform,
+                          label:
+                              'AP ${heelTrim.draftAP.value.toStringAsFixed(2)} ${const Localized('m').v}',
+                          labelStyle: labelStyle,
+                        ),
+                        _DraugthLabel(
+                          draught: draught,
+                          draughtShift: heelTrim.draftAvg.offset,
+                          massShift: massShiftX,
+                          angle: trimAngle,
+                          layoutTransform: transform,
+                          draughtsTransform: trimTransform,
+                          label:
+                              'Avg ${heelTrim.draftAvg.value.toStringAsFixed(2)} ${const Localized('m').v}',
+                          labelStyle: labelStyle,
+                        ),
+                        _DraugthLabel(
+                          draught: draught,
+                          draughtShift: heelTrim.draftFP.offset,
+                          massShift: massShiftX,
+                          angle: trimAngle,
+                          layoutTransform: transform,
+                          draughtsTransform: trimTransform,
+                          label:
+                              'FP ${heelTrim.draftFP.value.toStringAsFixed(2)} ${const Localized('m').v}',
+                          labelStyle: labelStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+}
+///
+class _DraugthLabel extends StatelessWidget {
+  final double draught;
+  final double draughtShift;
+  final double massShift;
+  final double angle;
+  final Matrix4 layoutTransform;
+  final Matrix4 draughtsTransform;
+  final String label;
+  final TextStyle? labelStyle;
+  ///
+  const _DraugthLabel({
+    required this.draught,
+    required this.draughtShift,
+    required this.massShift,
+    required this.angle,
+    required this.layoutTransform,
+    required this.draughtsTransform,
+    required this.label,
+    this.labelStyle,
+  });
+  @override
+  Widget build(BuildContext context) {
+    final radians = -degrees2Radians * angle;
+    final dy = tan(radians) * (draughtShift - massShift);
+    final dx = draughtShift / cos(radians);
+    return Stack(
+      children: [
+        SchemeFigure(
+          plane: FigurePlane.xz,
+          figure: TransformedProjectionFigure(
+            figure: LineSegmentFigure(
+              paints: [
+                Paint()
+                  ..color = Colors.white
+                  ..style = PaintingStyle.stroke,
+              ],
+              start: Offset(dx, 0.0),
+              end: Offset(dx, draught - dy),
+            ),
+            transform: draughtsTransform,
+          ),
+          layoutTransform: layoutTransform,
+        ),
+        SchemeText(
+          text: label,
+          offset: Offset(dx, 0.0),
+          alignment: const Alignment(0.0, -2.0),
+          layoutTransform: layoutTransform,
+          style: labelStyle,
+        ),
+      ],
+    );
+  }
+}

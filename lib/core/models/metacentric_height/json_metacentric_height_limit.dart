@@ -15,11 +15,8 @@ final class JsonMetacentricHeightLimit implements MetacentricHeightLimit {
   int? get projectId => _json['projectId'];
   //
   @override
-  double get displacement => _json['displacement'];
+  double get dependentValue => _json['dependentValue'];
   //
   @override
-  double get low => _json['low'];
-  //
-  @override
-  double get high => _json['high'];
+  double get value => _json['low'];
 }

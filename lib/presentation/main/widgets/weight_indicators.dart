@@ -7,6 +7,7 @@ import 'package:sss_computing_client/presentation/main/widgets/future_text_value
 ///
 /// Widget for indicating ship weights.
 class WeightIndicators extends StatelessWidget {
+  final Stream<DsDataPoint<bool>> _appRefreshStream;
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
@@ -19,10 +20,12 @@ class WeightIndicators extends StatelessWidget {
   ///   - `authToken` - string authentication token for accessing server.
   const WeightIndicators({
     super.key,
+    required Stream<DsDataPoint<bool>> appRefreshStream,
     required ApiAddress apiAddress,
     required String dbName,
     String? authToken,
-  })  : _apiAddress = apiAddress,
+  })  : _appRefreshStream = appRefreshStream,
+        _apiAddress = apiAddress,
         _dbName = dbName,
         _authToken = authToken;
   //
@@ -30,136 +33,143 @@ class WeightIndicators extends StatelessWidget {
   Widget build(BuildContext context) {
     final padding = const Setting('padding').toDouble;
     return Column(
+      mainAxisSize: MainAxisSize.max,
       children: [
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    FTextValueIndicator(
-                      future: FieldRecord<double>(
-                        tableName: 'loads_general',
-                        fieldName: 'ballast',
-                        dbName: _dbName,
-                        apiAddress: _apiAddress,
-                        authToken: _authToken,
-                        toValue: (value) => double.parse(value),
-                      ).fetch(),
-                      caption: const Localized('Ballast').v,
-                      unit: const Localized('t').v,
-                    ),
-                    SizedBox(height: padding),
-                    FTextValueIndicator(
-                      future: FieldRecord<double>(
-                        tableName: 'loads_general',
-                        fieldName: 'store',
-                        dbName: _dbName,
-                        apiAddress: _apiAddress,
-                        authToken: _authToken,
-                        toValue: (value) => double.parse(value),
-                      ).fetch(),
-                      caption: const Localized('Stores').v,
-                      unit: const Localized('t').v,
-                    ),
-                    SizedBox(height: padding),
-                    FTextValueIndicator(
-                      future: FieldRecord<double>(
-                        tableName: 'loads_general',
-                        fieldName: 'cargo',
-                        dbName: _dbName,
-                        apiAddress: _apiAddress,
-                        authToken: _authToken,
-                        toValue: (value) => double.parse(value),
-                      ).fetch(),
-                      caption: const Localized('Cargo').v,
-                      unit: const Localized('t').v,
-                    ),
-                    SizedBox(height: padding),
-                    FTextValueIndicator(
-                      future: FieldRecord<double>(
-                        tableName: 'loads_general',
-                        fieldName: 'deadweight',
-                        dbName: _dbName,
-                        apiAddress: _apiAddress,
-                        authToken: _authToken,
-                        toValue: (value) => double.parse(value),
-                      ).fetch(),
-                      caption: const Localized('Deadweight').v,
-                      unit: const Localized('t').v,
-                    ),
-                  ],
-                ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FTextValueIndicator(
+                    appRefreshStream: _appRefreshStream,
+                    fetch: FieldRecord<double>(
+                      tableName: 'loads_general',
+                      fieldName: 'ballast',
+                      dbName: _dbName,
+                      apiAddress: _apiAddress,
+                      authToken: _authToken,
+                      toValue: (value) => double.parse(value),
+                    ).fetch,
+                    caption: const Localized('Ballast').v,
+                    unit: const Localized('t').v,
+                  ),
+                  SizedBox(height: padding),
+                  FTextValueIndicator(
+                    appRefreshStream: _appRefreshStream,
+                    fetch: FieldRecord<double>(
+                      tableName: 'loads_general',
+                      fieldName: 'store',
+                      dbName: _dbName,
+                      apiAddress: _apiAddress,
+                      authToken: _authToken,
+                      toValue: (value) => double.parse(value),
+                    ).fetch,
+                    caption: const Localized('Stores').v,
+                    unit: const Localized('t').v,
+                  ),
+                  SizedBox(height: padding),
+                  FTextValueIndicator(
+                    appRefreshStream: _appRefreshStream,
+                    fetch: FieldRecord<double>(
+                      tableName: 'loads_general',
+                      fieldName: 'cargo',
+                      dbName: _dbName,
+                      apiAddress: _apiAddress,
+                      authToken: _authToken,
+                      toValue: (value) => double.parse(value),
+                    ).fetch,
+                    caption: const Localized('Cargo').v,
+                    unit: const Localized('t').v,
+                  ),
+                  SizedBox(height: padding),
+                  FTextValueIndicator(
+                    appRefreshStream: _appRefreshStream,
+                    fetch: FieldRecord<double>(
+                      tableName: 'loads_general',
+                      fieldName: 'deadweight',
+                      dbName: _dbName,
+                      apiAddress: _apiAddress,
+                      authToken: _authToken,
+                      toValue: (value) => double.parse(value),
+                    ).fetch,
+                    caption: const Localized('Deadweight').v,
+                    unit: const Localized('t').v,
+                  ),
+                ],
               ),
-              SizedBox(width: padding),
-              Flexible(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    FTextValueIndicator(
-                      future: FieldRecord<double>(
-                        tableName: 'loads_general',
-                        fieldName: 'lightship',
-                        dbName: _dbName,
-                        apiAddress: _apiAddress,
-                        authToken: _authToken,
-                        toValue: (value) => double.parse(value),
-                      ).fetch(),
-                      caption: const Localized('Lightship').v,
-                      unit: const Localized('t').v,
-                    ),
-                  ],
-                ),
+            ),
+            SizedBox(width: padding),
+            Flexible(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FTextValueIndicator(
+                    appRefreshStream: _appRefreshStream,
+                    fetch: FieldRecord<double>(
+                      tableName: 'loads_general',
+                      fieldName: 'lightship',
+                      dbName: _dbName,
+                      apiAddress: _apiAddress,
+                      authToken: _authToken,
+                      toValue: (value) => double.parse(value),
+                    ).fetch,
+                    caption: const Localized('Lightship').v,
+                    unit: const Localized('t').v,
+                  ),
+                ],
               ),
-              SizedBox(width: padding),
-              Flexible(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    FTextValueIndicator(
-                      future: FieldRecord<double>(
-                        tableName: 'loads_general',
-                        fieldName: 'icing',
-                        dbName: _dbName,
-                        apiAddress: _apiAddress,
-                        authToken: _authToken,
-                        toValue: (value) => double.parse(value),
-                      ).fetch(),
-                      caption: const Localized('Icing').v,
-                      unit: const Localized('t').v,
-                    ),
-                    SizedBox(height: padding),
-                    FTextValueIndicator(
-                      future: FieldRecord<double>(
-                        tableName: 'loads_general',
-                        fieldName: 'wetting',
-                        dbName: _dbName,
-                        apiAddress: _apiAddress,
-                        authToken: _authToken,
-                        toValue: (value) => double.parse(value),
-                      ).fetch(),
-                      caption: const Localized('Wetting').v,
-                      unit: const Localized('t').v,
-                    ),
-                  ],
-                ),
+            ),
+            SizedBox(width: padding),
+            Flexible(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FTextValueIndicator(
+                    appRefreshStream: _appRefreshStream,
+                    fetch: FieldRecord<double>(
+                      tableName: 'loads_general',
+                      fieldName: 'icing',
+                      dbName: _dbName,
+                      apiAddress: _apiAddress,
+                      authToken: _authToken,
+                      toValue: (value) => double.parse(value),
+                    ).fetch,
+                    caption: const Localized('Icing').v,
+                    unit: const Localized('t').v,
+                  ),
+                  SizedBox(height: padding),
+                  FTextValueIndicator(
+                    appRefreshStream: _appRefreshStream,
+                    fetch: FieldRecord<double>(
+                      tableName: 'loads_general',
+                      fieldName: 'wetting',
+                      dbName: _dbName,
+                      apiAddress: _apiAddress,
+                      authToken: _authToken,
+                      toValue: (value) => double.parse(value),
+                    ).fetch,
+                    caption: const Localized('Wetting').v,
+                    unit: const Localized('t').v,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        SizedBox(width: padding),
+        SizedBox(height: padding),
         Center(
           child: FTextValueIndicator(
-            future: FieldRecord<double>(
+            appRefreshStream: _appRefreshStream,
+            fetch: FieldRecord<double>(
               tableName: 'loads_general',
               fieldName: 'displacement',
               dbName: _dbName,
               apiAddress: _apiAddress,
               authToken: _authToken,
               toValue: (value) => double.parse(value),
-            ).fetch(),
+            ).fetch,
             caption: const Localized('Displacement').v,
             unit: const Localized('t').v,
           ),

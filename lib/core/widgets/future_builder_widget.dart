@@ -1,7 +1,7 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_core/hmi_core_translate.dart';
 import 'error_message_widget.dart';
 ///
 /// Function called to request data again. Returns Future with value [Ok]
@@ -11,22 +11,17 @@ typedef Retry = Future<ResultF<void>> Function();
 ///
 class FutureBuilderWidget<T> extends StatefulWidget {
   final Widget Function(BuildContext) _caseLoading;
-  final Widget Function(BuildContext, T, Retry) _caseRefreshing;
   final Widget Function(BuildContext, T, Retry) _caseData;
   final Widget Function(BuildContext, Object, Retry) _caseError;
   final Widget Function(BuildContext, Retry) _caseNothing;
   final bool Function(T)? _validateData;
   final Future<ResultF<T>> Function() _onFuture;
+  final Stream<DsDataPoint<bool>>? _refreshStream;
   ///
   const FutureBuilderWidget({
     super.key,
     required Future<ResultF<T>> Function() onFuture,
     Widget Function(BuildContext context) caseLoading = _defaultCaseLoading,
-    Widget Function(
-      BuildContext context,
-      T data,
-      Retry retry,
-    )? caseRefreshing,
     required Widget Function(
       BuildContext context,
       T data,
@@ -42,56 +37,69 @@ class FutureBuilderWidget<T> extends StatefulWidget {
       Retry retry,
     ) caseNothing = _defaultCaseNothing,
     bool Function(T data)? validateData,
+    Stream<DsDataPoint<bool>>? refreshStream,
   })  : _validateData = validateData,
         _caseLoading = caseLoading,
-        _caseRefreshing = caseRefreshing ?? caseData,
         _caseData = caseData,
         _caseError = caseError,
         _caseNothing = caseNothing,
-        _onFuture = onFuture;
+        _onFuture = onFuture,
+        _refreshStream = refreshStream;
   //
   @override
   State<FutureBuilderWidget> createState() => _FutureBuilderWidgetState<T>(
         caseLoading: _caseLoading,
-        caseRefreshing: _caseRefreshing,
         caseData: _caseData,
         caseError: _caseError,
         caseNothing: _caseNothing,
         onFuture: _onFuture,
         validateData: _validateData,
+        refreshStream: _refreshStream,
       );
 }
 ///
 class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
   final Widget Function(BuildContext) _caseLoading;
-  final Widget Function(BuildContext, T, Retry) _caseRefreshing;
   final Widget Function(BuildContext, T, Retry) _caseData;
   final Widget Function(BuildContext, Object, Retry) _caseError;
   final Widget Function(BuildContext, Retry) _caseNothing;
   final bool Function(T)? _validateData;
   final Future<ResultF<T>> Function() _onFuture;
+  final Stream<DsDataPoint<bool>>? _refreshStream;
   late Future<ResultF<T>> _future;
+  late StreamSubscription<DsDataPoint<bool>>? _refreshSubscription;
   ///
   _FutureBuilderWidgetState({
     required Widget Function(BuildContext) caseLoading,
-    required Widget Function(BuildContext, T, Retry) caseRefreshing,
     required Widget Function(BuildContext, T, Retry) caseData,
     required Widget Function(BuildContext, Object, Retry) caseError,
     required Widget Function(BuildContext, Retry) caseNothing,
     required bool Function(T)? validateData,
     required Future<ResultF<T>> Function() onFuture,
+    required Stream<DsDataPoint<bool>>? refreshStream,
   })  : _caseLoading = caseLoading,
-        _caseRefreshing = caseRefreshing,
         _caseData = caseData,
         _caseError = caseError,
         _caseNothing = caseNothing,
         _onFuture = onFuture,
-        _validateData = validateData;
+        _validateData = validateData,
+        _refreshStream = refreshStream;
   //
   @override
   void initState() {
     _future = _onFuture();
+    _refreshSubscription = _refreshStream?.listen(
+      (_) => setState(() {
+        _future = _onFuture();
+      }),
+    );
     super.initState();
+  }
+  //
+  @override
+  void dispose() {
+    _refreshSubscription?.cancel();
+    super.dispose();
   }
   //
   @override
@@ -107,11 +115,6 @@ class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
           _LoadingState() => _caseLoading.call(context),
           _NothingState() => _caseNothing.call(
               context,
-              _retry,
-            ),
-          _RefreshState<T>(:final data) => _caseRefreshing.call(
-              context,
-              data,
               _retry,
             ),
           _DataState<T>(:final data) => _caseData.call(
@@ -159,7 +162,7 @@ Widget _defaultCaseError(BuildContext _, Object error, void Function() retry) =>
     ErrorMessageWidget(
       error: Failure(message: '$error', stackTrace: StackTrace.current),
       message: const Localized('Data loading error').v,
-      onConfirm: retry,
+      // onConfirm: retry,
     );
 ///
 /// Default indicator builder for [FutureBuilderWidget] empty-data state
@@ -171,28 +174,14 @@ Widget _defaultCaseNothing(BuildContext _, void Function() retry) =>
 ///
 sealed class _AsyncSnapshotState<T> {
   factory _AsyncSnapshotState.fromSnapshot(
-      AsyncSnapshot<ResultF<T>> snapshot, bool Function(T)? validateData) {
+    AsyncSnapshot<ResultF<T>> snapshot,
+    bool Function(T)? validateData,
+  ) {
     return switch (snapshot) {
       AsyncSnapshot(
         connectionState: ConnectionState.waiting,
-        hasData: false,
       ) =>
         const _LoadingState(),
-      AsyncSnapshot(
-        connectionState: ConnectionState.waiting,
-        hasData: true,
-        requireData: final result,
-      ) =>
-        switch (result) {
-          Ok(:final value) => switch (validateData?.call(value) ?? true) {
-              true => _RefreshState(value),
-              false => _ErrorState(Failure(
-                  message: 'Invalid data',
-                  stackTrace: StackTrace.current,
-                )) as _AsyncSnapshotState<T>,
-            },
-          Err(:final error) => _ErrorState(error),
-        },
       AsyncSnapshot(
         connectionState: != ConnectionState.waiting,
         hasData: true,
@@ -235,11 +224,6 @@ final class _NothingState implements _AsyncSnapshotState<Never> {
 final class _DataState<T> implements _AsyncSnapshotState<T> {
   final T data;
   const _DataState(this.data);
-}
-///
-final class _RefreshState<T> implements _AsyncSnapshotState<T> {
-  final T data;
-  const _RefreshState(this.data);
 }
 ///
 final class _ErrorState implements _AsyncSnapshotState<Never> {

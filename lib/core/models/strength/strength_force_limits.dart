@@ -107,32 +107,11 @@ Sql _buildPgFetchAllSql(String forceType) {
           SELECT
             sfl.project_id AS "projectId",
             sfl.ship_id AS "shipId",
-            sfl.frame_real_index AS "frameIndex",
-            pf.x AS "frameX",
+            sfl.frame_x AS "frameX",
             sfl.limit_type::TEXT AS "limitType",
             sfl.value / 1000.0 AS value
           FROM strength_force_limit AS sfl
-          INNER JOIN
-          (
-            SELECT DISTINCT ON (index) * FROM (
-              SELECT
-                ship_id AS "shipId",
-                value AS "x",
-                index
-              FROM physical_frame
-              WHERE key = 'x'
-              UNION
-              SELECT
-                pfx.ship_id AS "shipId",
-                pfx.index + 1 AS "index",
-                pfx.value + pfd.value AS "x"
-              FROM physical_frame AS pfx
-              INNER JOIN physical_frame AS pfd
-              ON pfx.key = 'x' AND pfd.key = 'delta_x' AND pfx.index = pfd.index
-              ORDER BY "index"
-            )
-          ) AS pf
-          ON sfl.frame_real_index = pf.index AND sfl.force_type = '$forceType';
+          WHERE sfl.force_type = '$forceType';
         """,
   );
 }
@@ -153,7 +132,7 @@ StrengthForceLimit _mapDbReplyToValue(Map<String, dynamic> row) {
     'frame': JsonFrame(json: {
       'projectId': row['projectId'],
       'shipId': row['shipId'],
-      'index': row['frameIndex'],
+      'index': 0,
       'x': row['frameX'],
     }),
   });

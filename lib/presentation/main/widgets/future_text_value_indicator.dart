@@ -7,24 +7,27 @@ import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 ///
 /// Widget to showing current value as text.
 class FTextValueIndicator extends StatelessWidget {
-  final Future<ResultF<num>> _future;
+  final Stream<DsDataPoint<bool>> _appRefreshStream;
+  final Future<ResultF<num>> Function() _fetch;
   final String _caption;
   final String? _unit;
   final double? _width;
   ///
   /// Creates widget that indicating current value as text.
   ///
-  /// - `future` - future using to get the value;
+  /// - `fetch` - fetching data and returns future;
   /// - `caption` - name of the value to show;
   /// - `unit` - unit of the value to show;
   /// - `width` - width of the widget.
   const FTextValueIndicator({
     super.key,
-    required Future<ResultF<num>> future,
+    required Stream<DsDataPoint<bool>> appRefreshStream,
+    required Future<ResultF<num>> Function() fetch,
     required String caption,
     String? unit,
     double? width = 250,
-  })  : _future = future,
+  })  : _appRefreshStream = appRefreshStream,
+        _fetch = fetch,
         _caption = caption,
         _unit = unit,
         _width = width;
@@ -43,7 +46,8 @@ class FTextValueIndicator extends StatelessWidget {
         textScaleFactor: textScaleFactor,
       ),
       indicator: _FValueIndicator(
-        future: _future,
+        appRefreshStream: _appRefreshStream,
+        fetch: _fetch,
         unit: _unit,
         valueTextStyle: valueTextStyle,
         unitTextStyle: captionTextStyle,
@@ -55,7 +59,8 @@ class FTextValueIndicator extends StatelessWidget {
 }
 ///
 class _FValueIndicator extends StatelessWidget {
-  final Future<ResultF<num>> _future;
+  final Stream<DsDataPoint<bool>> _appRefreshStream;
+  final Future<ResultF<num>> Function() _fetch;
   final int _fractionDigits;
   final String? _unit;
   final TextStyle? _valueTextStyle;
@@ -63,13 +68,15 @@ class _FValueIndicator extends StatelessWidget {
   final double _textScaleFactor;
   ///
   const _FValueIndicator({
-    required Future<ResultF<num>> future,
+    required Stream<DsDataPoint<bool>> appRefreshStream,
+    required Future<ResultF<num>> Function() fetch,
     int fractionDigits = 0,
     String? unit,
     TextStyle? valueTextStyle,
     TextStyle? unitTextStyle,
     double textScaleFactor = 1.0,
-  })  : _future = future,
+  })  : _appRefreshStream = appRefreshStream,
+        _fetch = fetch,
         _fractionDigits = fractionDigits,
         _unit = unit,
         _valueTextStyle = valueTextStyle,
@@ -89,7 +96,8 @@ class _FValueIndicator extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FutureBuilderWidget(
-            onFuture: () => _future,
+            refreshStream: _appRefreshStream,
+            onFuture: _fetch,
             caseData: (context, data, _) => _buildValueWidget(
               context,
               data,
@@ -100,7 +108,7 @@ class _FValueIndicator extends StatelessWidget {
             ),
             caseLoading: (_) => const CupertinoActivityIndicator(),
           ),
-          if (_unit != null) ...[
+          if (_unit != null)
             Padding(
               padding: const EdgeInsets.only(left: 4.0),
               child: Text(
@@ -109,7 +117,6 @@ class _FValueIndicator extends StatelessWidget {
                 textScaler: TextScaler.linear(_textScaleFactor),
               ),
             ),
-          ],
         ],
       ),
     );

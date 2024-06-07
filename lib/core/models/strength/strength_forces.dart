@@ -87,14 +87,27 @@ Sql _buildPgFetchAllSql(String valueType) {
             sr.project_id AS "projectId",
             sr.ship_id AS "shipId",
             sr.index AS "frameIndex",
-            cf.value AS "frameX",
+            cf.x AS "frameX",
             sr.$valueType / 1000.0 AS value
-          FROM strength_result AS sr
-          INNER JOIN computed_frame AS cf
+          FROM result_strength AS sr
+          INNER JOIN
+          (
+            SELECT
+              project_id,
+              ship_id,
+              index AS "index",
+              start_x AS "x"
+            FROM computed_frame_space
+            UNION
+            SELECT
+              project_id AS "projectId",
+              ship_id AS "shipId",
+              index + 1 AS "index",
+              end_x AS "x"
+            FROM computed_frame_space
+          ) AS cf
           ON
-            (sr.index = cf.index AND sr.ship_id = cf.ship_id AND cf.key = 'start_x')
-          OR
-            (sr.index = cf.index + 1 AND sr.ship_id = cf.ship_id AND cf.key = 'end_x')
+            (sr.index = cf.index AND sr.ship_id = cf.ship_id)
           ORDER BY "frameIndex";
         """,
   );

@@ -1,19 +1,16 @@
 import 'package:sss_computing_client/core/models/metacentric_height/lerp_metacentric_height_limit.dart';
-import 'package:sss_computing_client/core/models/metacentric_height/metacentric_height_limit.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sss_computing_client/core/models/metacentric_height/metacentric_height_limit.dart';
 ///
 final class FakeMetacentricHeightLimit implements MetacentricHeightLimit {
   @override
-  final double displacement;
+  final double dependentValue;
   @override
-  final double low;
-  @override
-  final double high;
+  final double value;
   ///
   const FakeMetacentricHeightLimit({
-    required this.displacement,
-    required this.low,
-    required this.high,
+    required this.dependentValue,
+    required this.value,
   });
   @override
   int? get projectId => 0;
@@ -28,118 +25,124 @@ void main() {
         {
           'inputDisplacement': 0.0,
           'inputLimits': const [
-            FakeMetacentricHeightLimit(displacement: 0.0, low: 0.0, high: 0.0),
+            FakeMetacentricHeightLimit(
+              dependentValue: 0.0,
+              value: 0.0,
+            ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: 0.0,
-            low: 0.0,
-            high: 0.0,
+            dependentValue: 0.0,
+            value: 0.0,
           ),
         },
         {
           'inputDisplacement': 0.0,
           'inputLimits': const [
-            FakeMetacentricHeightLimit(displacement: 0.0, low: 0.0, high: 0.0),
+            FakeMetacentricHeightLimit(
+              dependentValue: 0.0,
+              value: 0.0,
+            ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: 10.0,
-            low: 0.0,
-            high: 0.0,
+            dependentValue: 10.0,
+            value: 0.0,
           ),
         },
         {
           'inputDisplacement': 0.0,
           'inputLimits': const [
-            FakeMetacentricHeightLimit(displacement: 0.0, low: 0.0, high: 0.0),
+            FakeMetacentricHeightLimit(
+              dependentValue: 0.0,
+              value: 0.0,
+            ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: -10.0,
-            low: 0.0,
-            high: 0.0,
+            dependentValue: -10.0,
+            value: 0.0,
           ),
         },
         {
           'inputDisplacement': -10.0,
           'inputLimits': const [
             FakeMetacentricHeightLimit(
-              displacement: -10.0,
-              low: -10.0,
-              high: 10.0,
+              dependentValue: -10.0,
+              value: -10.0,
             ),
-            FakeMetacentricHeightLimit(displacement: 0.0, low: 0.0, high: 0.0),
             FakeMetacentricHeightLimit(
-              displacement: 10.0,
-              low: -20.0,
-              high: 20.0,
+              dependentValue: 0.0,
+              value: 0.0,
+            ),
+            FakeMetacentricHeightLimit(
+              dependentValue: 10.0,
+              value: -20.0,
             ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: -20.0,
-            low: -10.0,
-            high: 10.0,
+            dependentValue: -20.0,
+            value: -10.0,
           ),
         },
         {
           'inputDisplacement': 10.0,
           'inputLimits': const [
             FakeMetacentricHeightLimit(
-              displacement: -10.0,
-              low: -10.0,
-              high: 10.0,
+              dependentValue: -10.0,
+              value: -10.0,
             ),
-            FakeMetacentricHeightLimit(displacement: 0.0, low: 0.0, high: 0.0),
             FakeMetacentricHeightLimit(
-              displacement: 10.0,
-              low: -20.0,
-              high: 20.0,
+              dependentValue: 0.0,
+              value: 0.0,
+            ),
+            FakeMetacentricHeightLimit(
+              dependentValue: 10.0,
+              value: -20.0,
             ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: 20.0,
-            low: -20.0,
-            high: 20.0,
+            dependentValue: 20.0,
+            value: -20.0,
           ),
         },
         {
           'inputDisplacement': -20.0,
           'inputLimits': const [
             FakeMetacentricHeightLimit(
-              displacement: -10.0,
-              low: -10.0,
-              high: 10.0,
+              dependentValue: -10.0,
+              value: -10.0,
             ),
-            FakeMetacentricHeightLimit(displacement: 0.0, low: 0.0, high: 0.0),
             FakeMetacentricHeightLimit(
-              displacement: 10.0,
-              low: -20.0,
-              high: 20.0,
+              dependentValue: 0.0,
+              value: 0.0,
+            ),
+            FakeMetacentricHeightLimit(
+              dependentValue: 10.0,
+              value: -20.0,
             ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: -20.0,
-            low: -10.0,
-            high: 10.0,
+            dependentValue: -20.0,
+            value: -10.0,
           ),
         },
         {
           'inputDisplacement': 20.0,
           'inputLimits': const [
             FakeMetacentricHeightLimit(
-              displacement: -10.0,
-              low: -10.0,
-              high: 10.0,
+              dependentValue: -10.0,
+              value: -10.0,
             ),
-            FakeMetacentricHeightLimit(displacement: 0.0, low: 0.0, high: 0.0),
             FakeMetacentricHeightLimit(
-              displacement: 10.0,
-              low: -20.0,
-              high: 20.0,
+              dependentValue: 0.0,
+              value: 0.0,
+            ),
+            FakeMetacentricHeightLimit(
+              dependentValue: 10.0,
+              value: -20.0,
             ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: 20.0,
-            low: -20.0,
-            high: 20.0,
+            dependentValue: 20.0,
+            value: -20.0,
           ),
         },
       ];
@@ -152,20 +155,10 @@ void main() {
             shipId: limits.first.shipId,
             displacement: displacement,
             limits: limits,
-          ).low,
-          output.low,
+          ).value,
+          output.value,
           reason:
-              "limit with correct value on border must be returned for low limit",
-        );
-        expect(
-          LerpMetacentricHeightLimit(
-            shipId: limits.first.shipId,
-            displacement: displacement,
-            limits: limits,
-          ).high,
-          output.high,
-          reason:
-              "limit with correct value on border must be returned for high limit",
+              "limit with correct value on border must be returned for limit",
         );
       }
     });
@@ -175,162 +168,144 @@ void main() {
           'inputDisplacement': 0.0,
           'inputLimits': const [
             FakeMetacentricHeightLimit(
-              displacement: -10.0,
-              low: -10.0,
-              high: 10.0,
+              dependentValue: -10.0,
+              value: -10.0,
             ),
-            FakeMetacentricHeightLimit(displacement: 0.0, low: 0.0, high: 0.0),
             FakeMetacentricHeightLimit(
-              displacement: 10.0,
-              low: -20.0,
-              high: 20.0,
+              dependentValue: 0.0,
+              value: 0.0,
+            ),
+            FakeMetacentricHeightLimit(
+              dependentValue: 10.0,
+              value: -20.0,
             ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: 0.0,
-            low: 0.0,
-            high: 0.0,
+            dependentValue: 0.0,
+            value: 0.0,
           ),
         },
         {
           'inputDisplacement': 0.0,
           'inputLimits': const [
             FakeMetacentricHeightLimit(
-              displacement: -10.0,
-              low: -10.0,
-              high: 10.0,
+              dependentValue: -10.0,
+              value: -10.0,
             ),
-            FakeMetacentricHeightLimit(displacement: 0.0, low: 0.5, high: -0.5),
             FakeMetacentricHeightLimit(
-              displacement: 10.0,
-              low: -20.0,
-              high: 20.0,
+              dependentValue: 0.0,
+              value: 0.5,
+            ),
+            FakeMetacentricHeightLimit(
+              dependentValue: 10.0,
+              value: -20.0,
             ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: 0.0,
-            low: 0.5,
-            high: -0.5,
+            dependentValue: 0.0,
+            value: 0.5,
           ),
         },
         {
           'inputDisplacement': 0.0,
           'inputLimits': const [
             FakeMetacentricHeightLimit(
-              displacement: -10.0,
-              low: -10.0,
-              high: 10.0,
+              dependentValue: -10.0,
+              value: -10.0,
             ),
             FakeMetacentricHeightLimit(
-              displacement: 10.0,
-              low: -20.0,
-              high: 20.0,
+              dependentValue: 10.0,
+              value: -20.0,
             ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: 0.0,
-            low: -15.0,
-            high: 15.0,
+            dependentValue: 0.0,
+            value: -15.0,
           ),
         },
         {
           'inputDisplacement': 0.0,
           'inputLimits': const [
             FakeMetacentricHeightLimit(
-              displacement: 10.0,
-              low: -20.0,
-              high: 20.0,
+              dependentValue: 10.0,
+              value: -20.0,
             ),
             FakeMetacentricHeightLimit(
-              displacement: -10.0,
-              low: -10.0,
-              high: 10.0,
+              dependentValue: -10.0,
+              value: -10.0,
             ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: 0.0,
-            low: -15.0,
-            high: 15.0,
+            dependentValue: 0.0,
+            value: -15.0,
           ),
         },
         {
           'inputDisplacement': 0.0,
           'inputLimits': const [
             FakeMetacentricHeightLimit(
-              displacement: -20.0,
-              low: -20.0,
-              high: 20.0,
+              dependentValue: -20.0,
+              value: -20.0,
             ),
             FakeMetacentricHeightLimit(
-              displacement: 20.0,
-              low: -20.0,
-              high: 20.0,
+              dependentValue: 20.0,
+              value: -20.0,
             ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: 0.0,
-            low: -20.0,
-            high: 20.0,
+            dependentValue: 0.0,
+            value: -20.0,
           ),
         },
         {
           'inputDisplacement': 0.0,
           'inputLimits': const [
             FakeMetacentricHeightLimit(
-              displacement: -20.0,
-              low: -20.0,
-              high: -20.0,
+              dependentValue: -20.0,
+              value: -20.0,
             ),
             FakeMetacentricHeightLimit(
-              displacement: 20.0,
-              low: 20.0,
-              high: 20.0,
+              dependentValue: 20.0,
+              value: 20.0,
             ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: 0.0,
-            low: 0.0,
-            high: 0.0,
+            dependentValue: 0.0,
+            value: 0.0,
           ),
         },
         {
           'inputDisplacement': -10.0,
           'inputLimits': const [
             FakeMetacentricHeightLimit(
-              displacement: -20.0,
-              low: -20.0,
-              high: -20.0,
+              dependentValue: -20.0,
+              value: -20.0,
             ),
             FakeMetacentricHeightLimit(
-              displacement: 20.0,
-              low: 20.0,
-              high: 20.0,
+              dependentValue: 20.0,
+              value: 20.0,
             ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: -10.0,
-            low: -10.0,
-            high: -10.0,
+            dependentValue: -10.0,
+            value: -10.0,
           ),
         },
         {
           'inputDisplacement': 10.0,
           'inputLimits': const [
             FakeMetacentricHeightLimit(
-              displacement: -20.0,
-              low: -20.0,
-              high: -20.0,
+              dependentValue: -20.0,
+              value: -20.0,
             ),
             FakeMetacentricHeightLimit(
-              displacement: 20.0,
-              low: 20.0,
-              high: 20.0,
+              dependentValue: 20.0,
+              value: 20.0,
             ),
           ],
           'output': const FakeMetacentricHeightLimit(
-            displacement: 10.0,
-            low: 10.0,
-            high: 10.0,
+            dependentValue: 10.0,
+            value: 10.0,
           ),
         },
       ];
@@ -343,20 +318,10 @@ void main() {
             shipId: limits.first.shipId,
             displacement: displacement,
             limits: limits,
-          ).low,
-          output.low,
+          ).value,
+          output.value,
           reason:
               "limit with correct value inside interval must be returned for low limit",
-        );
-        expect(
-          LerpMetacentricHeightLimit(
-            shipId: limits.first.shipId,
-            displacement: displacement,
-            limits: limits,
-          ).high,
-          output.high,
-          reason:
-              "limit with correct value inside interval must be returned for high limit",
         );
       }
     });

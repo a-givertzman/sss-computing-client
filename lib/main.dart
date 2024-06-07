@@ -5,7 +5,7 @@ import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.da
 import 'package:sss_computing_client/app_widget.dart';
 ///
 void main() async {
-  Log.initialize(level: LogLevel.all);
+  Log.initialize(level: LogLevel.error);
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();

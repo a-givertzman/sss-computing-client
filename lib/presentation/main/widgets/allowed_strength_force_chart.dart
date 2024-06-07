@@ -15,6 +15,7 @@ import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 ///
 /// Widget for displaying bar chart with strength allowance.
 class AllowedStrengthForceChart extends StatelessWidget {
+  final Stream<DsDataPoint<bool>> _appRefreshStream;
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
@@ -27,10 +28,12 @@ class AllowedStrengthForceChart extends StatelessWidget {
   ///   - `authToken` - string authentication token for accessing server.
   const AllowedStrengthForceChart({
     super.key,
+    required Stream<DsDataPoint<bool>> appRefreshStream,
     required ApiAddress apiAddress,
     required String dbName,
     String? authToken,
-  })  : _apiAddress = apiAddress,
+  })  : _appRefreshStream = appRefreshStream,
+        _apiAddress = apiAddress,
         _dbName = dbName,
         _authToken = authToken;
   //
@@ -58,18 +61,20 @@ class AllowedStrengthForceChart extends StatelessWidget {
       children: [
         Positioned.fill(
           child: FutureBuilderWidget(
-            onFuture: () => PgShearForcesLimited(
+            refreshStream: _appRefreshStream,
+            onFuture: PgShearForcesLimited(
               apiAddress: _apiAddress,
               dbName: _dbName,
               authToken: _authToken,
-            ).fetchAll(),
-            caseData: (_, shearForces, __) => FutureBuilderWidget(
-              onFuture: () => PgBendingMomentsLimited(
+            ).fetchAll,
+            caseData: (context, shearForces, _) => FutureBuilderWidget(
+              refreshStream: _appRefreshStream,
+              onFuture: PgBendingMomentsLimited(
                 apiAddress: _apiAddress,
                 dbName: _dbName,
                 authToken: _authToken,
-              ).fetchAll(),
-              caseData: (_, bendingMoments, __) => BarChartWidget(
+              ).fetchAll,
+              caseData: (context, bendingMoments, _) => BarChartWidget(
                 minY: 0.0,
                 maxY: 125.0,
                 barColor: barColor,
