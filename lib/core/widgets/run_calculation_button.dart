@@ -105,7 +105,11 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
         .whenComplete(
           () => setState(() {
             _isLoading = false;
-            _fireRefreshEvent();
+            // TODO: remove delay (needed for time gap between calculations and data refetching)
+            Future.delayed(
+              const Duration(milliseconds: 150),
+              _fireRefreshEvent,
+            );
           }),
         );
   }
