@@ -57,7 +57,7 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
       backgroundColor: theme.colorScheme.primary,
       foregroundColor: theme.colorScheme.onPrimary,
       tooltip: _isLoading
-          ? const Localized('Calculations in progress').v
+          ? const Localized('Сalculations in progress').v
           : const Localized('Run calculations').v,
       onPressed: _isLoading ? null : _handlePress,
       child: _isLoading

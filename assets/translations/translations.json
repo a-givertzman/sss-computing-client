@@ -198,5 +198,61 @@
     "FP": [
         "FP",
         "НП"
+    ],
+    "Mf.sx": [
+        "Mf.sx",
+        "Mf.sx"
+    ],
+    "Mf.sy": [
+        "Mf.sy",
+        "Mf.sy"
+    ],
+    "VCG": [
+        "VCG",
+        "Zg"
+    ],
+    "LCG": [
+        "VCG",
+        "Xg"
+    ],
+    "TCG": [
+        "VCG",
+        "Yg"
+    ],
+    "t•m": [
+        "t•m",
+        "т•м"
+    ],
+    "Name": [
+        "Name",
+        "Имя"
+    ],
+    "Mass": [
+        "Mass",
+        "Масса"
+    ],
+    "Run calculations": [
+        "Run calculations",
+        "Запустить вычисления"
+    ],
+    "Сalculations in progress": [
+        "Сalculations in progress",
+        "Производятся вычисления"
+    ],
+    "Main": [
+        "Main",
+        "Главная"
+    ],
+    "Strength": [
+        "Strength",
+        "Прочность"
+    ],
+    "Stability": [
+        "Stability",
+        "Остойчивость"
+    ],
+    "Loading": [
+        "Loading",
+        "Загрузка"
     ]
 }

@@ -32,7 +32,6 @@ class LoadingPageBody extends StatelessWidget {
       child: CargoTable(
         columns: [
           CargoColumn(
-            grow: 2,
             width: 200.0,
             key: 'name',
             type: 'text',
@@ -54,7 +53,6 @@ class LoadingPageBody extends StatelessWidget {
             ]),
           ),
           CargoColumn<double>(
-            grow: 2,
             width: 200.0,
             key: 'mass',
             type: 'real',
