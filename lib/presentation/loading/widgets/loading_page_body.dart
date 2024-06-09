@@ -64,7 +64,7 @@ class LoadingPageBody extends StatelessWidget {
                         cargos: cargos,
                         hull: hull,
                         hullBeauty: hullBeauty,
-                        onCargoTap: (cargo) => print(cargo),
+                        onCargoTap: null,
                       ),
                     ),
                     SizedBox(height: blockPadding),

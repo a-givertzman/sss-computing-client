@@ -75,7 +75,7 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
     ApiRequest(
       authToken: _authToken,
       address: _apiAddress,
-      timeout: const Duration(seconds: 10),
+      timeout: const Duration(seconds: 15),
       query: ExecutableQuery(
         script: _scriptName,
         params: {

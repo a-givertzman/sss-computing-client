@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
-import 'package:sss_computing_client/presentation/loading/loading_page.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
 import 'package:window_manager/window_manager.dart';
 ///
@@ -77,7 +76,7 @@ class _AppWidgetState extends State<AppWidget> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _themeSwitch.themeData,
-      home: LoadingPage(
+      home: MainPage(
         appRefreshStream: _appRefreshController.stream,
         fireRefreshEvent: _fireRefreshEvent,
       ),
