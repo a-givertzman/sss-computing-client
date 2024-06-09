@@ -28,20 +28,47 @@ class PgCargos implements Cargos {
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-            SELECT
-              project_id AS "projectId",
-              ship_id AS "shipId",
-              space_id AS "id",
-              name AS "name",
-              mass AS "mass",
-              bound_x1 AS "bound_x1",
-              bound_x2 AS "bound_x2",
-              mass_shift_x AS "vcg",
-              mass_shift_y AS "lcg",
-              mass_shift_z AS "tcg",
-              m_f_s_x AS "mfsx",
-              m_f_s_y AS "mfsy"
-            FROM compartment WHERE ship_id = 1
+            (SELECT
+              c.project_id AS "projectId",
+              c.ship_id AS "shipId",
+              c.space_id AS "id",
+              c.name AS "name",
+              c.mass AS "mass",
+              c.bound_x1 - sp.value::REAL AS "bound_x1",
+              c.bound_x2 - sp.value::REAL AS "bound_x2",
+              c.mass_shift_x - sp.value::REAL AS "lcg",
+              c.mass_shift_y AS "tcg",
+              c.mass_shift_z AS "vcg",
+              c.m_f_s_x AS "mfsx",
+              c.m_f_s_y AS "mfsy",
+              c.svg_paths AS "path"
+            FROM compartment AS c
+            INNER JOIN ship_parameters AS sp
+            ON c.ship_id = sp.ship_id AND sp.key = 'X midship from Fr0'
+            WHERE c.ship_id = 1 AND c.bound_type = 'm')
+            UNION
+            (SELECT
+              c.project_id AS "projectId",
+              c.ship_id AS "shipId",
+              c.space_id AS "id",
+              c.name AS "name",
+              c.mass AS "mass",
+              pf1.pos_x - sp.value::REAL AS "bound_x1",
+              pf2.pos_x - sp.value::REAL AS "bound_x2",
+              c.mass_shift_x - sp.value::REAL AS "lcg",
+              c.mass_shift_y AS "tcg",
+              c.mass_shift_z AS "vcg",
+              c.m_f_s_x AS "mfsx",
+              c.m_f_s_y AS "mfsy",
+              c.svg_paths AS "path"
+            FROM compartment AS c
+            INNER JOIN physical_frame AS pf1
+            ON c.bound_x1 = pf1.frame_index AND c.ship_id = pf1.ship_id
+            INNER JOIN physical_frame AS pf2
+            ON c.bound_x2 = pf2.frame_index AND c.ship_id = pf2.ship_id
+            INNER JOIN ship_parameters AS sp
+            ON c.ship_id = sp.ship_id AND sp.key = 'X midship from Fr0'
+            WHERE c.ship_id = 1 AND c.bound_type = 'frame')
             ORDER BY name;
             """,
       ),
@@ -62,6 +89,7 @@ class PgCargos implements Cargos {
         'tcg': row['tcg'] as double?,
         'm_f_s_x': row['mfsx'] as double?,
         'm_f_s_y': row['mfsy'] as double?,
+        'path': row['path'] as String?,
       }),
     );
     return sqlAccess
