@@ -71,14 +71,37 @@ class SchemeLayout extends StatefulWidget {
   State<SchemeLayout> createState() => _SchemeLayoutState();
 }
 class _SchemeLayoutState extends State<SchemeLayout> {
-  late final double contentWidth;
-  late final double contentHeight;
+  late final double _contentWidth;
+  late final double _contentHeight;
+  late final TransformationController _controller;
+  double _viewerScaleX = 1.0;
+  double _viewerScaleY = 1.0;
+  double _viewerShiftX = 0.0;
+  double _viewerShiftY = 0.0;
   //
   @override
   void initState() {
-    contentWidth = widget._maxX - widget._minX;
-    contentHeight = widget._maxY - widget._minY;
+    _controller = TransformationController()..addListener(_handleTransform);
+    _contentWidth = widget._maxX - widget._minX;
+    _contentHeight = widget._maxY - widget._minY;
     super.initState();
+  }
+  //
+  @override
+  void dispose() {
+    _controller
+      ..removeListener(_handleTransform)
+      ..dispose();
+    super.dispose();
+  }
+  ///
+  void _handleTransform() {
+    setState(() {
+      _viewerScaleX = _controller.value[0];
+      _viewerScaleY = _controller.value[5];
+      _viewerShiftX = _controller.value.getTranslation()[0];
+      _viewerShiftY = _controller.value.getTranslation()[1];
+    });
   }
   //
   @override
@@ -88,7 +111,7 @@ class _SchemeLayoutState extends State<SchemeLayout> {
     final gridColor = axisColor.withOpacity(0.5);
     final labelStyle = widget._labelStyle ?? theme.textTheme.labelSmall;
     return FittedBuilderWidget(
-      size: Size(contentWidth, contentHeight),
+      size: Size(_contentWidth, _contentHeight),
       fit: widget._fit,
       builder: (context, scaleX, scaleY) {
         final xAxisSpace = widget._xAxis.isLabelsVisible
@@ -97,23 +120,23 @@ class _SchemeLayoutState extends State<SchemeLayout> {
         final yAxisSpace = widget._yAxis.isLabelsVisible
             ? widget._yAxis.labelsSpaceReserved
             : 0.0;
-        final contentScaleX = scaleX - (yAxisSpace / contentWidth);
-        final contentScaleY = scaleY - (xAxisSpace / contentHeight);
+        final contentScaleX = scaleX - (yAxisSpace / _contentWidth);
+        final contentScaleY = scaleY - (xAxisSpace / _contentHeight);
         final transform = SchemeLayoutTransform(
           minX: widget._minX,
           maxX: widget._maxX,
           minY: widget._minY,
           maxY: widget._maxY,
-          scaleX: contentScaleX * widget._scaleX,
-          scaleY: contentScaleY * widget._scaleY,
-          shiftX: widget._shiftX,
-          shiftY: widget._shiftY,
+          scaleX: contentScaleX * widget._scaleX * _viewerScaleX,
+          scaleY: contentScaleY * widget._scaleY * _viewerScaleY,
+          shiftX: widget._shiftX + _viewerShiftX,
+          shiftY: widget._shiftY + _viewerShiftY,
           xReversed: widget._xAxisReversed,
           yReversed: widget._yAxisReversed,
         ).transformationMatrix();
         return SizedBox(
-          width: contentWidth * contentScaleX + yAxisSpace,
-          height: contentHeight * contentScaleY + xAxisSpace,
+          width: _contentWidth * contentScaleX + yAxisSpace,
+          height: _contentHeight * contentScaleY + xAxisSpace,
           child: Stack(
             clipBehavior: Clip.hardEdge,
             children: [
@@ -216,10 +239,13 @@ class _SchemeLayoutState extends State<SchemeLayout> {
                 right: 0.0,
                 top: 0.0,
                 bottom: xAxisSpace,
-                child: ClipRect(
-                  child: widget._buildContent(
-                    context,
-                    transform,
+                child: InteractiveViewer(
+                  transformationController: _controller,
+                  child: ClipRect(
+                    child: widget._buildContent(
+                      context,
+                      transform,
+                    ),
                   ),
                 ),
               ),

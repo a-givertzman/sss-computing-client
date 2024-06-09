@@ -6,13 +6,13 @@ import 'package:sss_computing_client/core/models/figure/figure.dart';
 /// treating them as svg path element.
 class SVGPathFigure implements Figure {
   final List<Paint> _paints;
-  final Map<FigurePlane, String> _pathProjections;
+  final Map<FigurePlane, String?> _pathProjections;
   ///
   /// Construct [Figure] of custom form from map of projections,
   /// treating them as svg path element.
   const SVGPathFigure({
     required List<Paint> paints,
-    required Map<FigurePlane, String> pathProjections,
+    required Map<FigurePlane, String?> pathProjections,
   })  : _paints = paints,
         _pathProjections = pathProjections;
   //

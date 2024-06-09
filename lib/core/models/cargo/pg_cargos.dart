@@ -41,7 +41,8 @@ class PgCargos implements Cargos {
               c.mass_shift_z AS "vcg",
               c.m_f_s_x AS "mfsx",
               c.m_f_s_y AS "mfsy",
-              c.svg_paths AS "path"
+              c.svg_paths AS "path",
+              c.cargo_type::TEXT AS "type"
             FROM compartment AS c
             INNER JOIN ship_parameters AS sp
             ON c.ship_id = sp.ship_id AND sp.key = 'X midship from Fr0'
@@ -60,7 +61,8 @@ class PgCargos implements Cargos {
               c.mass_shift_z AS "vcg",
               c.m_f_s_x AS "mfsx",
               c.m_f_s_y AS "mfsy",
-              c.svg_paths AS "path"
+              c.svg_paths AS "path",
+              c.cargo_type::TEXT AS "type"
             FROM compartment AS c
             INNER JOIN physical_frame AS pf1
             ON c.bound_x1 = pf1.frame_index AND c.ship_id = pf1.ship_id
@@ -90,6 +92,7 @@ class PgCargos implements Cargos {
         'm_f_s_x': row['mfsx'] as double?,
         'm_f_s_y': row['mfsy'] as double?,
         'path': row['path'] as String?,
+        'type': row['type'] as String,
       }),
     );
     return sqlAccess

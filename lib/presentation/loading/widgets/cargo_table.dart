@@ -124,6 +124,7 @@ class _CargoTableState extends State<CargoTable> {
             model: _model,
             scrollController: _scrollController,
             cellHeight: 32.0,
+            cellPadding: EdgeInsets.zero,
           ),
         ),
       ],
