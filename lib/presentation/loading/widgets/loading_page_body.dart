@@ -59,6 +59,7 @@ class LoadingPageBody extends StatelessWidget {
             key: 'mass',
             type: 'real',
             name: '${const Localized('Mass').v} [${const Localized('t').v}]',
+            isResizable: true,
             isEditable: true,
             record: FieldRecord(
               fieldName: 'mass',

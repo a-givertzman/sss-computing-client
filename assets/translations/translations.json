@@ -110,5 +110,93 @@
     "No data": [
         "No data",
         "Отсутствуют данные для загрузки"
+    ],
+    "Unknown error, no response from backend": [
+        "Unknown error, no response from backend",
+        "Неизвестная ошибка, нет ответа от бэкенда"
+    ],
+    "Calculation completed.": [
+        "Calculation completed.",
+        "Вычисления закончены"
+    ],
+    "Heel": [
+        "Heel",
+        "Крен"
+    ],
+    "Trim": [
+        "Trim",
+        "Дифферент"
+    ],
+    "Metacentric height": [
+        "Metacentric height",
+        "Метацентрическая высота"
+    ],
+    "Bulk": [
+        "Bulk",
+        "Сыпучий"
+    ],
+    "Ballast": [
+        "Ballast",
+        "Балласт"
+    ],
+    "Stores": [
+        "Stores",
+        "Запасы"
+    ],
+    "Cargo": [
+        "Cargo",
+        "Груз"
+    ],
+    "Deadweight": [
+        "Deadweight",
+        "Дедвейт"
+    ],
+    "Lightship": [
+        "Lightship",
+        "Порожнем"
+    ],
+    "Icing": [
+        "Icing",
+        "Наледь"
+    ],
+    "Wetting": [
+        "Wetting",
+        "Намокание"
+    ],
+    "Displacement": [
+        "Displacement",
+        "Водоизмещение"
+    ],
+    "Strength force, Allow": [
+        "Strength force, Allow",
+        "Прочность, Допустимый"
+    ],
+    "PS": [
+        "PS",
+        "ЛБ"
+    ],
+    "SB": [
+        "SB",
+        "Пр.Б"
+    ],
+    "AFT": [
+        "AFT",
+        "Корма"
+    ],
+    "FWD": [
+        "FWD",
+        "Нос"
+    ],
+    "AP": [
+        "AP",
+        "КП"
+    ],
+    "Avg": [
+        "AFT",
+        "Ср."
+    ],
+    "FP": [
+        "FP",
+        "НП"
     ]
 }

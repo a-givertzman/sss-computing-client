@@ -76,7 +76,7 @@ class _CargoTableState extends State<CargoTable> {
         ...widget._columns.map(
           (column) => DaviColumn(
             sortable: true,
-            resizable: column.isResizable,
+            resizable: true,
             stringValue: column.type == 'text'
                 ? (cargo) => cargo.asMap()[column.key]
                 : null,
@@ -87,7 +87,7 @@ class _CargoTableState extends State<CargoTable> {
                 ? (cargo) => cargo.asMap()[column.key]
                 : null,
             width: column.width ?? 100.0,
-            grow: column.grow,
+            // grow: column.grow,
             name: column.name,
             cellBuilder: (_, row) =>
                 column.buildCell?.call(row.data) ??

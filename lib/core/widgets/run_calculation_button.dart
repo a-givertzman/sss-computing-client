@@ -89,7 +89,8 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
             Ok(value: final reply) => reply.data.isEmpty
                 ? _showErrorMessage(
                     context,
-                    '${reply.data.firstWhere((data) => data['status'] != 'ok')['message']}',
+                    const Localized('Unknown error, no response from backend')
+                        .v,
                   )
                 : reply.data.any((data) => data['status'] != 'ok')
                     ? _showErrorMessage(
