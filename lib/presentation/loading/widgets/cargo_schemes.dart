@@ -1,8 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo_figure.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/figure/combined_figure.dart';
@@ -12,13 +12,18 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_scheme.d
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_scheme_view_options.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_type_dropdown.dart';
 ///
-/// Schemes of ship with cargos with projections on three main planes.
+/// Ship schemes with cargos projections on three main planes.
 class CargoSchemes extends StatefulWidget {
   final List<Cargo> _cargos;
   final Map<String, dynamic> _hull;
   final Map<String, dynamic> _hullBeauty;
   final void Function(Cargo cargo)? _onCargoTap;
   ///
+  /// Creates widget of ship schemes with cargos projections on three main planes.
+  ///
+  /// `cargos` - [List] of ship's [Cargo].
+  /// `hull` and 'hullBeauty' - [Map] with svg path projections of ship's hull.
+  /// `onCargoTap` - called when clicking on visualized cargo.
   const CargoSchemes({
     super.key,
     required List<Cargo> cargos,
@@ -42,7 +47,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
   //
   @override
   void initState() {
-    _viewOptions = {};
+    _viewOptions = {CargoSchemeViewOption.showGrid};
     _cargoType = CargoTypeColorLabel.ballast.label;
     _hullFigure = CombinedFigure(
       paints: [
@@ -68,29 +73,12 @@ class _CargoSchemesState extends State<CargoSchemes> {
         },
       ),
     );
-    _cargoFigures = widget._cargos.map(
-      (cargo) {
-        final color = CargoType(cargo: cargo).color();
-        return (
-          figure: SVGPathFigure(
-            paints: [
-              Paint()
-                ..color = color
-                ..style = PaintingStyle.stroke,
-              Paint()
-                ..color = color.withOpacity(0.25)
-                ..style = PaintingStyle.fill,
-            ],
-            pathProjections: {
-              FigurePlane.xy: jsonDecode(cargo.path ?? '{}')['xy'],
-              FigurePlane.xz: jsonDecode(cargo.path ?? '{}')['xz'],
-              FigurePlane.yz: jsonDecode(cargo.path ?? '{}')['yz'],
-            },
-          ),
-          cargo: cargo,
-        );
-      },
-    ).toList();
+    _cargoFigures = widget._cargos
+        .map((cargo) => (
+              figure: CargoFigure(cargo: cargo).figure(),
+              cargo: cargo,
+            ))
+        .toList();
     super.initState();
   }
   //
@@ -116,6 +104,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
+              flex: 2,
               child: CargoTypeDropdown(
                 width: 250.0,
                 initialValue: _cargoType,
@@ -125,6 +114,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
               ),
             ),
             Expanded(
+              flex: 3,
               child: CargoSchemeViewOptions(
                 initialOptions: _viewOptions,
                 onOptionsChanged: (newOptions) => setState(() {
@@ -132,7 +122,9 @@ class _CargoSchemesState extends State<CargoSchemes> {
                 }),
               ),
             ),
-            const Spacer(),
+            const Spacer(
+              flex: 2,
+            ),
           ],
         ),
         SizedBox(height: blockPadding),
