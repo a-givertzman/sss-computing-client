@@ -42,7 +42,7 @@ class _LoadingPageState extends State<LoadingPage> {
       body: Row(
         children: [
           NavigationPanel(
-            selectedPageIndex: 3,
+            selectedPageIndex: 2,
             appRefreshStream: widget._appRefreshStream,
             fireRefreshEvent: widget._fireRefreshEvent,
           ),

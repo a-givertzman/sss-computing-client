@@ -53,11 +53,11 @@ class NavigationPanel extends StatelessWidget {
             selectedIcon: const Icon(Icons.analytics),
             label: Text(const Localized('Strength').v),
           ),
-          NavigationRailDestination(
-            icon: const Icon(Icons.video_stable_outlined),
-            selectedIcon: const Icon(Icons.video_stable),
-            label: Text(const Localized('Stability').v),
-          ),
+          // NavigationRailDestination(
+          //   icon: const Icon(Icons.video_stable_outlined),
+          //   selectedIcon: const Icon(Icons.video_stable),
+          //   label: Text(const Localized('Stability').v),
+          // ),
           NavigationRailDestination(
             icon: const Icon(Icons.pallet),
             selectedIcon: const Icon(Icons.pallet),
@@ -90,7 +90,7 @@ class NavigationPanel extends StatelessWidget {
                 ),
               );
               return;
-            case 3:
+            case 2:
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => LoadingPage(
