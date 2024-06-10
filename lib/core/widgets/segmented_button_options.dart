@@ -14,7 +14,7 @@ class SegmentedButtonOption {
 }
 ///
 /// [SegmentedButtonOptions] widget that generate itself from
-/// passed [SegmentedButtonOption].
+/// passed map of [Enum] elements as key and [SegmentedButtonOption] as value.
 class SegmentedButtonOptions<T extends Enum> extends StatefulWidget {
   final Set<T> _initialOptions;
   final Map<T, SegmentedButtonOption> _availableOptions;
