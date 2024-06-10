@@ -82,6 +82,7 @@ class PgCargos implements Cargos {
         'mass': row['mass'] as double?,
         'bound_x1': row['bound_x1'] as double?,
         'bound_x2': row['bound_x2'] as double?,
+        // TODO: add y and z bounds to database
         'bound_y1': 0.0,
         'bound_y2': 0.0,
         'bound_z1': 0.0,

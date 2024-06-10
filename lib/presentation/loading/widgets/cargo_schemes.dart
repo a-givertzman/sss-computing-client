@@ -43,7 +43,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
   late final Figure _hullFigure;
   late final List<({Figure figure, Cargo cargo})> _cargoFigures;
   late Set<CargoSchemeViewOption> _viewOptions;
-  late String? _cargoType;
+  late String _cargoType;
   //
   @override
   void initState() {
@@ -105,12 +105,16 @@ class _CargoSchemesState extends State<CargoSchemes> {
           children: [
             Expanded(
               flex: 2,
-              child: CargoTypeDropdown(
-                width: 250.0,
-                initialValue: _cargoType,
-                onTypeChanged: (value) => setState(() {
-                  _cargoType = value;
-                }),
+              child: Center(
+                child: SizedBox(
+                  width: 250.0,
+                  child: CargoTypeDropdown(
+                    initialValue: _cargoType,
+                    onTypeChanged: (newType) => setState(() {
+                      _cargoType = newType;
+                    }),
+                  ),
+                ),
               ),
             ),
             Expanded(
@@ -122,9 +126,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
                 }),
               ),
             ),
-            const Spacer(
-              flex: 2,
-            ),
+            const Spacer(flex: 2),
           ],
         ),
         SizedBox(height: blockPadding),

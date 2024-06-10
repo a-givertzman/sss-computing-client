@@ -4,6 +4,7 @@ import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
 import 'package:sss_computing_client/core/models/figure/svg_path_figure.dart';
+///
 /// Extract [Figure] from [Cargo]
 class CargoFigure {
   final Cargo cargo;
