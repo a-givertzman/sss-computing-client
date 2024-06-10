@@ -301,11 +301,11 @@
     ],
     "Show real frames": [
         "Show real frames",
-        "Показать физические фреймы"
+        "Показать физические шпангоуты"
     ],
     "Show theoretic frames": [
         "Show theoretic frames",
-        "Показать теоретические фреймы"
+        "Показать теоретические шпангоуты"
     ],
     "Only integer numbers allowed": [
         "Only integer numbers allowed",
@@ -322,5 +322,13 @@
     "Page not found": [
         "Page not found",
         "Страница не найдена"
+    ],
+    "ft": [
+        "ft",
+        "т.ш."
+    ],
+    "fr": [
+        "fr",
+        "ф.ш."
     ]
 }

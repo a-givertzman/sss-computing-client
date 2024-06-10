@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
+import 'package:sss_computing_client/core/models/frame/frame.dart';
+import 'package:sss_computing_client/core/widgets/scheme/scheme_axis.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_figure.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_layout.dart';
+import 'package:vector_math/vector_math_64.dart' hide Colors;
+
 ///
 class CargoScheme extends StatelessWidget {
   final FigurePlane projectionPlane;
@@ -18,8 +23,11 @@ class CargoScheme extends StatelessWidget {
   final ChartAxis yAxis;
   final bool xAxisReversed;
   final bool yAxisReversed;
+  final List<Frame>? framesReal;
+  final List<Frame>? framesTheoretical;
   final void Function(Cargo cargo)? onCargoTap;
   final Color selectedCargoColor;
+
   ///
   const CargoScheme({
     super.key,
@@ -35,6 +43,8 @@ class CargoScheme extends StatelessWidget {
     required this.yAxis,
     required this.xAxisReversed,
     required this.yAxisReversed,
+    this.framesReal,
+    this.framesTheoretical,
     this.selectedCargoColor = Colors.amber,
     this.onCargoTap,
   });
@@ -81,6 +91,66 @@ class CargoScheme extends StatelessWidget {
                 ]),
                 layoutTransform: transform,
                 onTap: () => onCargoTap?.call(selectedCargoFigure!.cargo),
+              ),
+            ),
+          if (framesTheoretical != null)
+            Positioned(
+              top: 0.0,
+              left: 0.0,
+              right: 0.0,
+              child: IgnorePointer(
+                child: SchemeAxis(
+                  majorTicks: framesTheoretical
+                      ?.map(
+                        (frame) => (
+                          label: '${frame.index}${const Localized('ft').v}',
+                          offset: frame.x
+                        ),
+                      )
+                      .toList(),
+                  axis: const ChartAxis(
+                    isLabelsVisible: true,
+                    valueInterval: 1.0,
+                    labelsSpaceReserved: 15.0,
+                  ),
+                  labelStyle: Theme.of(context).textTheme.labelSmall,
+                  color: Theme.of(context).colorScheme.primary,
+                  transformValue: (v) =>
+                      transform.transform3(Vector3(v, 0.0, 0.0)).x,
+                ),
+              ),
+            ),
+          if (framesReal != null)
+            Positioned(
+              top: transform.transform3(Vector3(0.0, 0.0, 0.0)).y,
+              left: 0.0,
+              right: 0.0,
+              child: IgnorePointer(
+                child: SchemeAxis(
+                  majorTicks: framesReal
+                      ?.where((frame) => frame.index % 10 == 0)
+                      .map(
+                        (frame) => (
+                          label: '${frame.index}${const Localized('fr').v}',
+                          offset: frame.x
+                        ),
+                      )
+                      .toList(),
+                  minorTicks: framesReal
+                      ?.map(
+                        (frame) => (label: '', offset: frame.x),
+                      )
+                      .toList(),
+                  axis: const ChartAxis(
+                    isLabelsVisible: true,
+                    valueInterval: 1.0,
+                    labelsSpaceReserved: 15.0,
+                  ),
+                  labelStyle: Theme.of(context).textTheme.labelSmall,
+                  color: Theme.of(context).colorScheme.primary,
+                  transformValue: (v) =>
+                      transform.transform3(Vector3(v, 0.0, 0.0)).x,
+                ),
               ),
             ),
         ],

@@ -8,9 +8,11 @@ import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/figure/combined_figure.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
 import 'package:sss_computing_client/core/models/figure/svg_path_figure.dart';
+import 'package:sss_computing_client/core/models/frame/frame.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_scheme.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_scheme_view_options.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_type_dropdown.dart';
+
 ///
 /// Ship schemes with cargos projections on three main planes.
 class CargoSchemes extends StatefulWidget {
@@ -18,7 +20,10 @@ class CargoSchemes extends StatefulWidget {
   final Cargo? _selectedCargo;
   final Map<String, dynamic> _hull;
   final Map<String, dynamic> _hullBeauty;
+  final List<Frame> _framesReal;
+  final List<Frame> _framesTheoretical;
   final void Function(Cargo cargo)? _onCargoTap;
+
   ///
   /// Creates widget of ship schemes with cargos projections on three main planes.
   ///
@@ -31,16 +36,21 @@ class CargoSchemes extends StatefulWidget {
     Cargo? selectedCargo,
     required Map<String, dynamic> hull,
     required Map<String, dynamic> hullBeauty,
+    required List<Frame> framesReal,
+    required List<Frame> framesTheoretical,
     void Function(Cargo)? onCargoTap,
   })  : _cargos = cargos,
         _selectedCargo = selectedCargo,
         _hull = hull,
         _hullBeauty = hullBeauty,
+        _framesReal = framesReal,
+        _framesTheoretical = framesTheoretical,
         _onCargoTap = onCargoTap;
   //
   @override
   State<CargoSchemes> createState() => _CargoSchemesState();
 }
+
 ///
 class _CargoSchemesState extends State<CargoSchemes> {
   late final Figure _hullFigure;
@@ -84,6 +94,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
         .toList();
     super.initState();
   }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -159,6 +170,16 @@ class _CargoSchemesState extends State<CargoSchemes> {
                         maxY: 20.0,
                         xAxis: axis,
                         yAxis: axis,
+                        framesTheoretical: _viewOptions.contains(
+                          CargoSchemeViewOption.showTheoreticFrames,
+                        )
+                            ? widget._framesTheoretical
+                            : null,
+                        framesReal: _viewOptions.contains(
+                          CargoSchemeViewOption.showRealFrames,
+                        )
+                            ? widget._framesReal
+                            : null,
                         xAxisReversed: false,
                         yAxisReversed: true,
                         projectionPlane: FigurePlane.xz,
@@ -181,6 +202,16 @@ class _CargoSchemesState extends State<CargoSchemes> {
                         maxY: 15.0,
                         xAxis: axis,
                         yAxis: axis,
+                        framesTheoretical: _viewOptions.contains(
+                          CargoSchemeViewOption.showTheoreticFrames,
+                        )
+                            ? widget._framesTheoretical
+                            : null,
+                        framesReal: _viewOptions.contains(
+                          CargoSchemeViewOption.showRealFrames,
+                        )
+                            ? widget._framesReal
+                            : null,
                         xAxisReversed: false,
                         yAxisReversed: false,
                         projectionPlane: FigurePlane.xy,
@@ -226,15 +257,18 @@ class _CargoSchemesState extends State<CargoSchemes> {
     );
   }
 }
+
 ///
 /// Axes of planes on which figures can be drawn.
 enum _FigureAxis { x, y, z }
+
 ///
 /// Object for sorting figures along given axis.
 class _SortedFigures {
   final List<({Figure figure, Cargo cargo})> _cargoFigures;
   final _FigureAxis _axis;
   final bool _ascendingOrder;
+
   ///
   /// Create object for sorting figures along given axis.
   ///
@@ -249,11 +283,13 @@ class _SortedFigures {
   })  : _cargoFigures = cargoFigures,
         _axis = axis,
         _ascendingOrder = ascendingOrder;
+
   ///
   List<({Figure figure, Cargo cargo})> sorted() {
     return List.from(_cargoFigures)
       ..sort((one, other) => _compareCargo(one.cargo, other.cargo));
   }
+
   //
   int _compareCargo(Cargo one, Cargo other) => switch (_axis) {
         _FigureAxis.x => _ascendingOrder
