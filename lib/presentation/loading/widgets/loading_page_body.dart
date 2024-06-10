@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_cargos.dart';
 import 'package:sss_computing_client/core/models/field_record/field_record.dart';
@@ -12,7 +13,7 @@ import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_table.dart';
 ///
-class LoadingPageBody extends StatelessWidget {
+class LoadingPageBody extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final ApiAddress _apiAddress;
   final String _dbName;
@@ -28,36 +29,53 @@ class LoadingPageBody extends StatelessWidget {
         _apiAddress = apiAddress,
         _dbName = dbName,
         _authToken = authToken;
+  @override
+  State<LoadingPageBody> createState() => _LoadingPageBodyState();
+}
+class _LoadingPageBodyState extends State<LoadingPageBody> {
+  Cargo? _selectedCargo;
+  //
+  void _toggleCargo(Cargo? cargo) {
+    if (cargo != _selectedCargo) {
+      setState(() {
+        _selectedCargo = cargo;
+      });
+      return;
+    }
+    setState(() {
+      _selectedCargo = null;
+    });
+  }
   //
   @override
   Widget build(BuildContext context) {
     final blockPadding = const Setting('blockPadding').toDouble;
     return FutureBuilderWidget(
-      refreshStream: _appRefreshStream,
+      refreshStream: widget._appRefreshStream,
       onFuture: () => FieldRecord<Map<String, dynamic>>(
-        apiAddress: _apiAddress,
-        dbName: _dbName,
-        authToken: _authToken,
+        apiAddress: widget._apiAddress,
+        dbName: widget._dbName,
+        authToken: widget._authToken,
         tableName: 'ship_parameters',
         fieldName: 'value',
         toValue: (value) => jsonDecode(value),
       ).fetch(filter: {'key': 'hull_svg'}),
       caseData: (context, hull, _) => FutureBuilderWidget(
-        refreshStream: _appRefreshStream,
+        refreshStream: widget._appRefreshStream,
         onFuture: () => FieldRecord<Map<String, dynamic>>(
-          apiAddress: _apiAddress,
-          dbName: _dbName,
-          authToken: _authToken,
+          apiAddress: widget._apiAddress,
+          dbName: widget._dbName,
+          authToken: widget._authToken,
           tableName: 'ship_parameters',
           fieldName: 'value',
           toValue: (value) => jsonDecode(value),
         ).fetch(filter: {'key': 'hull_beauty_svg'}),
         caseData: (context, hullBeauty, _) => FutureBuilderWidget(
-          refreshStream: _appRefreshStream,
+          refreshStream: widget._appRefreshStream,
           onFuture: PgCargos(
-            apiAddress: _apiAddress,
-            dbName: _dbName,
-            authToken: _authToken,
+            apiAddress: widget._apiAddress,
+            dbName: widget._dbName,
+            authToken: widget._authToken,
           ).fetchAll,
           caseData: (context, cargos, _) {
             return Padding(
@@ -69,12 +87,15 @@ class LoadingPageBody extends StatelessWidget {
                       cargos: cargos,
                       hull: hull,
                       hullBeauty: hullBeauty,
-                      onCargoTap: (cargo) => print(cargo),
+                      onCargoTap: _toggleCargo,
+                      selectedCargo: _selectedCargo,
                     ),
                   ),
                   SizedBox(height: blockPadding),
                   Expanded(
                     child: CargoTable(
+                      selected: _selectedCargo,
+                      onRowTap: _toggleCargo,
                       columns: [
                         CargoColumn(
                           type: 'text',
@@ -106,9 +127,9 @@ class LoadingPageBody extends StatelessWidget {
                             fieldName: 'name',
                             tableName: 'compartment',
                             toValue: (value) => value,
-                            apiAddress: _apiAddress,
-                            dbName: _dbName,
-                            authToken: _authToken,
+                            apiAddress: widget._apiAddress,
+                            dbName: widget._dbName,
+                            authToken: widget._authToken,
                           ),
                           defaultValue: '—',
                           parseValue: (value) => value,
@@ -128,9 +149,9 @@ class LoadingPageBody extends StatelessWidget {
                             fieldName: 'mass',
                             tableName: 'compartment',
                             toValue: (value) => value,
-                            apiAddress: _apiAddress,
-                            dbName: _dbName,
-                            authToken: _authToken,
+                            apiAddress: widget._apiAddress,
+                            dbName: widget._dbName,
+                            authToken: widget._authToken,
                           ),
                           defaultValue: '—',
                           parseValue: (value) => double.parse(value),
@@ -150,9 +171,9 @@ class LoadingPageBody extends StatelessWidget {
                             fieldName: 'lcg',
                             tableName: 'compartment',
                             toValue: (value) => value,
-                            apiAddress: _apiAddress,
-                            dbName: _dbName,
-                            authToken: _authToken,
+                            apiAddress: widget._apiAddress,
+                            dbName: widget._dbName,
+                            authToken: widget._authToken,
                           ),
                           defaultValue: '—',
                         ),
@@ -167,9 +188,9 @@ class LoadingPageBody extends StatelessWidget {
                             fieldName: 'tcg',
                             tableName: 'compartment',
                             toValue: (value) => value,
-                            apiAddress: _apiAddress,
-                            dbName: _dbName,
-                            authToken: _authToken,
+                            apiAddress: widget._apiAddress,
+                            dbName: widget._dbName,
+                            authToken: widget._authToken,
                           ),
                           defaultValue: '—',
                         ),
@@ -184,9 +205,9 @@ class LoadingPageBody extends StatelessWidget {
                             fieldName: 'vcg',
                             tableName: 'compartment',
                             toValue: (value) => value,
-                            apiAddress: _apiAddress,
-                            dbName: _dbName,
-                            authToken: _authToken,
+                            apiAddress: widget._apiAddress,
+                            dbName: widget._dbName,
+                            authToken: widget._authToken,
                           ),
                           defaultValue: '—',
                         ),
@@ -201,9 +222,9 @@ class LoadingPageBody extends StatelessWidget {
                             fieldName: 'bound_x1',
                             tableName: 'compartment',
                             toValue: (value) => value,
-                            apiAddress: _apiAddress,
-                            dbName: _dbName,
-                            authToken: _authToken,
+                            apiAddress: widget._apiAddress,
+                            dbName: widget._dbName,
+                            authToken: widget._authToken,
                           ),
                           defaultValue: '—',
                         ),
@@ -218,84 +239,12 @@ class LoadingPageBody extends StatelessWidget {
                             fieldName: 'bound_x2',
                             tableName: 'compartment',
                             toValue: (value) => value,
-                            apiAddress: _apiAddress,
-                            dbName: _dbName,
-                            authToken: _authToken,
+                            apiAddress: widget._apiAddress,
+                            dbName: widget._dbName,
+                            authToken: widget._authToken,
                           ),
                           defaultValue: '—',
                         ),
-                        // CargoColumn<double>(
-                        //   grow: 1,
-                        //   key: 'bound_y1',
-                        //   type: 'real',
-                        //   name:
-                        //       '${const Localized('Y1').v} [${const Localized('m').v}]',
-                        //   isEditable: false,
-                        //   record: FieldRecord<String>(
-                        //     fieldName: 'bound_y1',
-                        //     tableName: 'compartment',
-                        //     toValue: (value) => value,
-                        //     apiAddress: _apiAddress,
-                        //     dbName: _dbName,
-                        //     authToken: _authToken,
-                        //   ),
-                        //   defaultValue: '—',
-                        //   parseValue: (value) => double.parse(value),
-                        // ),
-                        // CargoColumn<double>(
-                        //   grow: 1,
-                        //   key: 'bound_y2',
-                        //   type: 'real',
-                        //   name:
-                        //       '${const Localized('Y2').v} [${const Localized('m').v}]',
-                        //   isEditable: false,
-                        //   record: FieldRecord<String>(
-                        //     fieldName: 'bound_y2',
-                        //     tableName: 'compartment',
-                        //     toValue: (value) => value,
-                        //     apiAddress: _apiAddress,
-                        //     dbName: _dbName,
-                        //     authToken: _authToken,
-                        //   ),
-                        //   defaultValue: '—',
-                        //   parseValue: (value) => double.parse(value),
-                        // ),
-                        // CargoColumn<double>(
-                        //   grow: 1,
-                        //   key: 'bound_z1',
-                        //   type: 'real',
-                        //   name:
-                        //       '${const Localized('Z1').v} [${const Localized('m').v}]',
-                        //   isEditable: false,
-                        //   record: FieldRecord<String>(
-                        //     fieldName: 'bound_z1',
-                        //     tableName: 'compartment',
-                        //     toValue: (value) => value,
-                        //     apiAddress: _apiAddress,
-                        //     dbName: _dbName,
-                        //     authToken: _authToken,
-                        //   ),
-                        //   defaultValue: '—',
-                        //   parseValue: (value) => double.parse(value),
-                        // ),
-                        // CargoColumn<double>(
-                        //   grow: 1,
-                        //   key: 'bound_z2',
-                        //   type: 'real',
-                        //   name:
-                        //       '${const Localized('Z2').v} [${const Localized('m').v}]',
-                        //   isEditable: false,
-                        //   record: FieldRecord<String>(
-                        //     fieldName: 'bound_z2',
-                        //     tableName: 'compartment',
-                        //     toValue: (value) => value,
-                        //     apiAddress: _apiAddress,
-                        //     dbName: _dbName,
-                        //     authToken: _authToken,
-                        //   ),
-                        //   defaultValue: '—',
-                        //   parseValue: (value) => double.parse(value),
-                        // ),
                         CargoColumn<double>(
                           grow: 1,
                           key: 'm_f_s_x',
@@ -307,9 +256,9 @@ class LoadingPageBody extends StatelessWidget {
                             fieldName: 'm_f_s_x',
                             tableName: 'compartment',
                             toValue: (value) => value,
-                            apiAddress: _apiAddress,
-                            dbName: _dbName,
-                            authToken: _authToken,
+                            apiAddress: widget._apiAddress,
+                            dbName: widget._dbName,
+                            authToken: widget._authToken,
                           ),
                           defaultValue: '—',
                         ),
@@ -324,9 +273,9 @@ class LoadingPageBody extends StatelessWidget {
                             fieldName: 'm_f_s_y',
                             tableName: 'compartment',
                             toValue: (value) => value,
-                            apiAddress: _apiAddress,
-                            dbName: _dbName,
-                            authToken: _authToken,
+                            apiAddress: widget._apiAddress,
+                            dbName: widget._dbName,
+                            authToken: widget._authToken,
                           ),
                           defaultValue: '—',
                         ),

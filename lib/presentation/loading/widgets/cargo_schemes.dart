@@ -15,6 +15,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_type_dro
 /// Ship schemes with cargos projections on three main planes.
 class CargoSchemes extends StatefulWidget {
   final List<Cargo> _cargos;
+  final Cargo? _selectedCargo;
   final Map<String, dynamic> _hull;
   final Map<String, dynamic> _hullBeauty;
   final void Function(Cargo cargo)? _onCargoTap;
@@ -27,10 +28,12 @@ class CargoSchemes extends StatefulWidget {
   const CargoSchemes({
     super.key,
     required List<Cargo> cargos,
+    Cargo? selectedCargo,
     required Map<String, dynamic> hull,
     required Map<String, dynamic> hullBeauty,
     void Function(Cargo)? onCargoTap,
   })  : _cargos = cargos,
+        _selectedCargo = selectedCargo,
         _hull = hull,
         _hullBeauty = hullBeauty,
         _onCargoTap = onCargoTap;
@@ -98,6 +101,12 @@ class _CargoSchemesState extends State<CargoSchemes> {
               CargoType(cargo: cargoFigure.cargo).label() == _cargoType,
         )
         .toList();
+    final selectedCargoFigure = widget._selectedCargo != null
+        ? (
+            cargo: widget._selectedCargo!,
+            figure: CargoFigure(cargo: widget._selectedCargo!).figure(),
+          )
+        : null;
     return Column(
       children: [
         Row(
@@ -154,8 +163,12 @@ class _CargoSchemesState extends State<CargoSchemes> {
                         yAxisReversed: true,
                         projectionPlane: FigurePlane.xz,
                         hull: _hullFigure,
-                        cargoFigures: cargoFiguresFiltered,
+                        cargoFigures: _SortedFigures(
+                          cargoFigures: cargoFiguresFiltered,
+                          axis: _FigureAxis.y,
+                        ).sorted(),
                         onCargoTap: widget._onCargoTap,
+                        selectedCargoFigure: selectedCargoFigure,
                       ),
                     ),
                     SizedBox(height: padding),
@@ -169,11 +182,15 @@ class _CargoSchemesState extends State<CargoSchemes> {
                         xAxis: axis,
                         yAxis: axis,
                         xAxisReversed: false,
-                        yAxisReversed: true,
+                        yAxisReversed: false,
                         projectionPlane: FigurePlane.xy,
                         hull: _hullFigure,
-                        cargoFigures: cargoFiguresFiltered,
+                        cargoFigures: _SortedFigures(
+                          cargoFigures: cargoFiguresFiltered,
+                          axis: _FigureAxis.z,
+                        ).sorted(),
                         onCargoTap: widget._onCargoTap,
+                        selectedCargoFigure: selectedCargoFigure,
                       ),
                     ),
                   ],
@@ -193,8 +210,12 @@ class _CargoSchemesState extends State<CargoSchemes> {
                   yAxisReversed: true,
                   projectionPlane: FigurePlane.yz,
                   hull: _hullFigure,
-                  cargoFigures: cargoFiguresFiltered,
+                  cargoFigures: _SortedFigures(
+                    cargoFigures: cargoFiguresFiltered,
+                    axis: _FigureAxis.x,
+                  ).sorted(),
                   onCargoTap: widget._onCargoTap,
+                  selectedCargoFigure: selectedCargoFigure,
                 ),
               ),
             ],
@@ -203,4 +224,45 @@ class _CargoSchemesState extends State<CargoSchemes> {
       ],
     );
   }
+}
+///
+/// Axes of planes on which figures can be drawn.
+enum _FigureAxis { x, y, z }
+///
+/// Object for sorting figures along given axis.
+class _SortedFigures {
+  final List<({Figure figure, Cargo cargo})> _cargoFigures;
+  final _FigureAxis _axis;
+  final bool _ascendingOrder;
+  ///
+  /// Create object for sorting figures along given axis.
+  ///
+  /// `cargoFigures` - [List] of [Cargo] and its [Figure] for sorting.
+  /// `axis` - axis along which figures are sorted
+  /// `ascendingOrder` - if true figures are sorted in ascending order
+  /// along given axis, and in descending order otherwise.
+  const _SortedFigures({
+    required List<({Figure figure, Cargo cargo})> cargoFigures,
+    required _FigureAxis axis,
+    bool ascendingOrder = true,
+  })  : _cargoFigures = cargoFigures,
+        _axis = axis,
+        _ascendingOrder = ascendingOrder;
+  ///
+  List<({Figure figure, Cargo cargo})> sorted() {
+    return List.from(_cargoFigures)
+      ..sort((one, other) => _compareCargo(one.cargo, other.cargo));
+  }
+  //
+  int _compareCargo(Cargo one, Cargo other) => switch (_axis) {
+        _FigureAxis.x => _ascendingOrder
+            ? (one.x2 - other.x2).sign.toInt()
+            : (other.x1 - one.x1).sign.toInt(),
+        _FigureAxis.y => _ascendingOrder
+            ? (one.y2 - other.y2).sign.toInt()
+            : (other.y1 - one.y1).sign.toInt(),
+        _FigureAxis.z => _ascendingOrder
+            ? (one.z2 - other.z2).sign.toInt()
+            : (other.z1 - one.z1).sign.toInt(),
+      };
 }

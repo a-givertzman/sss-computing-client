@@ -4,7 +4,6 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
-import 'package:sss_computing_client/core/models/cargo/cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/field_record/field_record.dart';
 import 'package:sss_computing_client/core/widgets/table/table_view.dart';
@@ -41,18 +40,37 @@ class CargoColumn<T> {
   });
 }
 ///
-/// Table with editable fields representation of provided [Cargos]
+/// Widget that displays [Cargo] list in form of table.
 class CargoTable extends StatefulWidget {
   final List<CargoColumn> _columns;
   final List<Cargo> _cargos;
+  final void Function(Cargo cargo)? _onRowTap;
+  final Cargo? _selectedRow;
+  final Color _selectedRowColor;
+  final double _rowHeight;
   ///
-  /// Creates [CargoTable], table representation of [Cargos]
+  /// Creates widget that displays [Cargo] list in form of table.
+  ///
+  /// `columns` - list of [CargoColumn] to construct table.
+  /// `cargos` - list of cargos to display.
+  /// `onRowTap` - called to handle tap on row.
+  /// `selected` - selected element, visually separated from the rest by a special color.
+  /// `selectedColor` - color of selected item.
+  /// `rowHeight` - table row height.
   const CargoTable({
     super.key,
     required List<CargoColumn> columns,
     required List<Cargo> cargos,
+    void Function(Cargo cargo)? onRowTap,
+    Cargo? selected,
+    Color selectedColor = Colors.amber,
+    double rowHeight = 32.0,
   })  : _columns = columns,
-        _cargos = cargos;
+        _cargos = cargos,
+        _onRowTap = onRowTap,
+        _selectedRow = selected,
+        _selectedRowColor = selectedColor,
+        _rowHeight = rowHeight;
   //
   @override
   State<CargoTable> createState() => _CargoTableState();
@@ -68,8 +86,8 @@ class _CargoTableState extends State<CargoTable> {
   ///
   @override
   void initState() {
-    _cargos = widget._cargos;
     _scrollController = ScrollController();
+    _cargos = widget._cargos;
     _model = DaviModel(
       rows: _cargos,
       columns: [
@@ -88,7 +106,6 @@ class _CargoTableState extends State<CargoTable> {
                 ? (cargo) => cargo.asMap()[column.key]
                 : null,
             width: column.width ?? 100.0,
-            // grow: column.grow,
             name: column.name,
             cellBuilder: (_, row) =>
                 column.buildCell?.call(row.data) ??
@@ -112,6 +129,7 @@ class _CargoTableState extends State<CargoTable> {
   ///
   @override
   Widget build(BuildContext context) {
+    _highlightRow(widget._selectedRow);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -122,9 +140,10 @@ class _CargoTableState extends State<CargoTable> {
           flex: 1,
           child: TableView<Cargo>(
             model: _model,
-            scrollController: _scrollController,
             cellHeight: 32.0,
+            scrollController: _scrollController,
             cellPadding: EdgeInsets.zero,
+            onRowTap: (cargo) => widget._onRowTap?.call(cargo),
           ),
         ),
       ],
@@ -171,6 +190,30 @@ class _CargoTableState extends State<CargoTable> {
   }
   ///
   CellStyle? _buildCellStyle(DaviRow<Cargo> row) {
-    return null;
+    return row.data == widget._selectedRow
+        ? CellStyle(
+            background: widget._selectedRowColor.withOpacity(0.25),
+          )
+        : null;
+  }
+  ///
+  void _highlightRow(Cargo? cargo) {
+    if (cargo == null) return;
+    for (var idx = 0; idx < _model.rowsLength; idx++) {
+      if (_model.rowAt(idx) != cargo) continue;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+            (idx * widget._rowHeight).clamp(
+              _scrollController.position.minScrollExtent,
+              _scrollController.position.maxScrollExtent,
+            ),
+            curve: Curves.easeOut,
+            duration: const Duration(milliseconds: 500),
+          );
+        }
+      });
+      break;
+    }
   }
 }

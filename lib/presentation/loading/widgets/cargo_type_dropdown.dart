@@ -44,13 +44,18 @@ class _CargoTypeDropdownState extends State<CargoTypeDropdown> {
             )),
       ],
       color: Theme.of(context).colorScheme.surface,
-      customButtonBuilder: (onTap) => FilledButton.icon(
+      customButtonBuilder: (onTap) => FilledButton(
         onPressed: onTap,
         iconAlignment: IconAlignment.end,
-        icon: const Icon(
-          Icons.arrow_drop_down_outlined,
+        child: Tooltip(
+          message: const Localized('Select cargo type to display').v,
+          child: Row(
+            children: [
+              Expanded(child: OverflowableText(Localized(_selectedValue).v)),
+              const Icon(Icons.arrow_drop_down_outlined),
+            ],
+          ),
         ),
-        label: OverflowableText(Localized(_selectedValue).v),
       ),
     );
   }

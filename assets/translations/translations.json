@@ -314,5 +314,9 @@
     "Only real numbers allowed": [
         "Only real numbers allowed",
         "Разрешены только действительные числа"
+    ],
+    "Select cargo type to display": [
+        "Select cargo type to display",
+        "Выбрать тип груза для отображения"
     ]
 }

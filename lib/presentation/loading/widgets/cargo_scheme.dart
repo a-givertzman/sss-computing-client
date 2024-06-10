@@ -9,6 +9,7 @@ class CargoScheme extends StatelessWidget {
   final FigurePlane projectionPlane;
   final Figure hull;
   final List<({Figure figure, Cargo cargo})> cargoFigures;
+  final ({Figure figure, Cargo cargo})? selectedCargoFigure;
   final double minX;
   final double maxX;
   final double minY;
@@ -18,12 +19,14 @@ class CargoScheme extends StatelessWidget {
   final bool xAxisReversed;
   final bool yAxisReversed;
   final void Function(Cargo cargo)? onCargoTap;
+  final Color selectedCargoColor;
   ///
   const CargoScheme({
     super.key,
     required this.projectionPlane,
     required this.hull,
     required this.cargoFigures,
+    required this.selectedCargoFigure,
     required this.minX,
     required this.maxX,
     required this.minY,
@@ -32,6 +35,7 @@ class CargoScheme extends StatelessWidget {
     required this.yAxis,
     required this.xAxisReversed,
     required this.yAxisReversed,
+    this.selectedCargoColor = Colors.amber,
     this.onCargoTap,
   });
   //
@@ -65,6 +69,20 @@ class CargoScheme extends StatelessWidget {
               ),
             ),
           ),
+          if (selectedCargoFigure != null)
+            Positioned.fill(
+              child: SchemeFigure(
+                plane: projectionPlane,
+                figure: selectedCargoFigure!.figure.copyWith(paints: [
+                  Paint()
+                    ..color = selectedCargoColor
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 2.0,
+                ]),
+                layoutTransform: transform,
+                onTap: () => onCargoTap?.call(selectedCargoFigure!.cargo),
+              ),
+            ),
         ],
       ),
     );

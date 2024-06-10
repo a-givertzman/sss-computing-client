@@ -73,35 +73,12 @@ class SchemeLayout extends StatefulWidget {
 class _SchemeLayoutState extends State<SchemeLayout> {
   late final double _contentWidth;
   late final double _contentHeight;
-  late final TransformationController _controller;
-  double _viewerScaleX = 1.0;
-  double _viewerScaleY = 1.0;
-  double _viewerShiftX = 0.0;
-  double _viewerShiftY = 0.0;
   //
   @override
   void initState() {
-    _controller = TransformationController()..addListener(_handleTransform);
     _contentWidth = widget._maxX - widget._minX;
     _contentHeight = widget._maxY - widget._minY;
     super.initState();
-  }
-  //
-  @override
-  void dispose() {
-    _controller
-      ..removeListener(_handleTransform)
-      ..dispose();
-    super.dispose();
-  }
-  ///
-  void _handleTransform() {
-    setState(() {
-      _viewerScaleX = _controller.value[0];
-      _viewerScaleY = _controller.value[5];
-      _viewerShiftX = _controller.value.getTranslation()[0];
-      _viewerShiftY = _controller.value.getTranslation()[1];
-    });
   }
   //
   @override
@@ -127,10 +104,10 @@ class _SchemeLayoutState extends State<SchemeLayout> {
           maxX: widget._maxX,
           minY: widget._minY,
           maxY: widget._maxY,
-          scaleX: contentScaleX * widget._scaleX * _viewerScaleX,
-          scaleY: contentScaleY * widget._scaleY * _viewerScaleY,
-          shiftX: widget._shiftX + _viewerShiftX,
-          shiftY: widget._shiftY + _viewerShiftY,
+          scaleX: contentScaleX * widget._scaleX,
+          scaleY: contentScaleY * widget._scaleY,
+          shiftX: widget._shiftX,
+          shiftY: widget._shiftY,
           xReversed: widget._xAxisReversed,
           yReversed: widget._yAxisReversed,
         ).transformationMatrix();
@@ -151,6 +128,22 @@ class _SchemeLayoutState extends State<SchemeLayout> {
                   ),
                 ),
               ),
+              if (widget._xAxis.isGridVisible)
+                Positioned(
+                  left: yAxisSpace,
+                  right: 0.0,
+                  top: 0.0,
+                  bottom: xAxisSpace,
+                  child: SchemeGridReal(
+                    axis: widget._xAxis,
+                    minValue: widget._minX,
+                    maxValue: widget._maxX,
+                    transformValue: (v) =>
+                        transform.transform3(Vector3(v, 0.0, 0.0)).x,
+                    color: gridColor,
+                    thickness: 0.5,
+                  ),
+                ),
               if (widget._yAxis.isGridVisible)
                 Positioned(
                   left: yAxisSpace,
@@ -168,22 +161,6 @@ class _SchemeLayoutState extends State<SchemeLayout> {
                       color: gridColor,
                       thickness: 0.5,
                     ),
-                  ),
-                ),
-              if (widget._xAxis.isGridVisible)
-                Positioned(
-                  left: yAxisSpace,
-                  right: 0.0,
-                  top: 0.0,
-                  bottom: xAxisSpace,
-                  child: SchemeGridReal(
-                    axis: widget._xAxis,
-                    minValue: widget._minX,
-                    maxValue: widget._maxX,
-                    transformValue: (v) =>
-                        transform.transform3(Vector3(v, 0.0, 0.0)).x,
-                    color: gridColor,
-                    thickness: 0.5,
                   ),
                 ),
               if (widget._xAxis.isLabelsVisible)
@@ -219,35 +196,13 @@ class _SchemeLayoutState extends State<SchemeLayout> {
                     ),
                   ),
                 ),
-              if (widget._xAxis.isLabelsVisible)
-                Positioned(
-                  bottom: 0.0,
-                  left: yAxisSpace,
-                  right: 0.0,
-                  child: SchemeAxisReal(
-                    axis: widget._xAxis,
-                    minValue: widget._minX,
-                    maxValue: widget._maxX,
-                    transformValue: (v) =>
-                        transform.transform3(Vector3(v, 0.0, 0.0)).x,
-                    color: axisColor,
-                    labelStyle: labelStyle,
-                  ),
-                ),
               Positioned(
                 left: yAxisSpace,
                 right: 0.0,
                 top: 0.0,
                 bottom: xAxisSpace,
-                child: InteractiveViewer(
-                  // clipBehavior: Clip.hardEdge,
-                  transformationController: _controller,
-                  child: ClipRect(
-                    child: widget._buildContent(
-                      context,
-                      transform,
-                    ),
-                  ),
+                child: ClipRect(
+                  child: widget._buildContent(context, transform),
                 ),
               ),
             ],
