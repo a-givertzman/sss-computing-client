@@ -135,10 +135,6 @@
         "Bulk",
         "Сыпучий"
     ],
-    "Ballast": [
-        "Ballast",
-        "Балласт"
-    ],
     "Stores": [
         "Stores",
         "Запасы"
@@ -255,6 +251,10 @@
         "Loading",
         "Загрузка"
     ],
+    "Ballast": [
+        "Ballast",
+        "Балласт"
+    ],
     "Fresh water": [
         "Fresh water",
         "Пресная вода"
@@ -274,5 +274,45 @@
     "Other": [
         "Other",
         "Другое"
+    ],
+    "Axes": [
+        "Axes",
+        "Оси"
+    ],
+    "Grid": [
+        "Grid",
+        "Сетка"
+    ],
+    "Fr. R.": [
+        "Fr. R.",
+        "Шп. физ."
+    ],
+    "Fr. Th.": [
+        "Fr. Th.",
+        "Шп. теор."
+    ],
+    "Show axes": [
+        "Show axes",
+        "Показать оси"
+    ],
+    "Show grid": [
+        "Show grid",
+        "Показать сетку"
+    ],
+    "Show real frames": [
+        "Show real frames",
+        "Показать физические фреймы"
+    ],
+    "Show theoretic frames": [
+        "Show theoretic frames",
+        "Показать теоретические фреймы"
+    ],
+    "Only integer numbers allowed": [
+        "Only integer numbers allowed",
+        "Разрешены только целые числа"
+    ],
+    "Only real numbers allowed": [
+        "Only real numbers allowed",
+        "Разрешены только действительные числа"
     ]
 }
