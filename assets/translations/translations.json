@@ -318,5 +318,9 @@
     "Select cargo type to display": [
         "Select cargo type to display",
         "Выбрать тип груза для отображения"
+    ],
+    "Page not found": [
+        "Page not found",
+        "Страница не найдена"
     ]
 }

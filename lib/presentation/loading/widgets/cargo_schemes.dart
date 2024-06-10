@@ -213,6 +213,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
                   cargoFigures: _SortedFigures(
                     cargoFigures: cargoFiguresFiltered,
                     axis: _FigureAxis.x,
+                    ascendingOrder: false,
                   ).sorted(),
                   onCargoTap: widget._onCargoTap,
                   selectedCargoFigure: selectedCargoFigure,

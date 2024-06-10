@@ -190,7 +190,7 @@ class _CargoTableState extends State<CargoTable> {
   }
   ///
   CellStyle? _buildCellStyle(DaviRow<Cargo> row) {
-    return row.data == widget._selectedRow
+    return row.data.id == widget._selectedRow?.id
         ? CellStyle(
             background: widget._selectedRowColor.withOpacity(0.25),
           )
@@ -200,7 +200,7 @@ class _CargoTableState extends State<CargoTable> {
   void _highlightRow(Cargo? cargo) {
     if (cargo == null) return;
     for (var idx = 0; idx < _model.rowsLength; idx++) {
-      if (_model.rowAt(idx) != cargo) continue;
+      if (_model.rowAt(idx).id != cargo.id) continue;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController.hasClients) {
           _scrollController.animateTo(
