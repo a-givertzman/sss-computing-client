@@ -13,14 +13,12 @@ import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_table.dart';
-
 ///
 class LoadingPageBody extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
-
   ///
   const LoadingPageBody({
     super.key,
@@ -35,12 +33,11 @@ class LoadingPageBody extends StatefulWidget {
   @override
   State<LoadingPageBody> createState() => _LoadingPageBodyState();
 }
-
 class _LoadingPageBodyState extends State<LoadingPageBody> {
   Cargo? _selectedCargo;
   //
   void _toggleCargo(Cargo? cargo) {
-    if (cargo != _selectedCargo) {
+    if (cargo?.id != _selectedCargo?.id) {
       setState(() {
         _selectedCargo = cargo;
       });
@@ -50,7 +47,6 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
       _selectedCargo = null;
     });
   }
-
   //
   @override
   Widget build(BuildContext context) {
