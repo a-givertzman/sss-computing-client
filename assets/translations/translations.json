@@ -254,5 +254,25 @@
     "Loading": [
         "Loading",
         "Загрузка"
+    ],
+    "Fresh water": [
+        "Fresh water",
+        "Пресная вода"
+    ],
+    "Acids and alkalis": [
+        "Acids and alkalis",
+        "Кислоты щелочи"
+    ],
+    "Polluted liquids": [
+        "Polluted liquids",
+        "Загрязнения и другие жидкости"
+    ],
+    "Oils and fuels": [
+        "Oils and fuels",
+        "Масла и горючие жидкости"
+    ],
+    "Other": [
+        "Other",
+        "Другое"
     ]
 }

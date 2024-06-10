@@ -64,7 +64,7 @@ class LoadingPageBody extends StatelessWidget {
                         cargos: cargos,
                         hull: hull,
                         hullBeauty: hullBeauty,
-                        onCargoTap: null,
+                        onCargoTap: (cargo) => print(cargo),
                       ),
                     ),
                     SizedBox(height: blockPadding),
@@ -78,7 +78,9 @@ class LoadingPageBody extends StatelessWidget {
                             defaultValue: 'other',
                             buildCell: (cargo) {
                               return Tooltip(
-                                message: CargoType(cargo: cargo).label(),
+                                message:
+                                    Localized(CargoType(cargo: cargo).label())
+                                        .v,
                                 child: Container(
                                   margin: const EdgeInsets.symmetric(
                                     vertical: 1.0,
@@ -149,7 +151,6 @@ class LoadingPageBody extends StatelessWidget {
                               authToken: _authToken,
                             ),
                             defaultValue: '—',
-                            parseValue: (value) => double.parse(value),
                           ),
                           CargoColumn<double>(
                             grow: 1,
@@ -167,7 +168,6 @@ class LoadingPageBody extends StatelessWidget {
                               authToken: _authToken,
                             ),
                             defaultValue: '—',
-                            parseValue: (value) => double.parse(value),
                           ),
                           CargoColumn<double>(
                             grow: 1,
@@ -185,7 +185,6 @@ class LoadingPageBody extends StatelessWidget {
                               authToken: _authToken,
                             ),
                             defaultValue: '—',
-                            parseValue: (value) => double.parse(value),
                           ),
                           CargoColumn<double>(
                             grow: 1,
@@ -203,7 +202,6 @@ class LoadingPageBody extends StatelessWidget {
                               authToken: _authToken,
                             ),
                             defaultValue: '—',
-                            parseValue: (value) => double.parse(value),
                           ),
                           CargoColumn<double>(
                             grow: 1,
@@ -221,7 +219,6 @@ class LoadingPageBody extends StatelessWidget {
                               authToken: _authToken,
                             ),
                             defaultValue: '—',
-                            parseValue: (value) => double.parse(value),
                           ),
                           // CargoColumn<double>(
                           //   grow: 1,
@@ -311,7 +308,6 @@ class LoadingPageBody extends StatelessWidget {
                               authToken: _authToken,
                             ),
                             defaultValue: '—',
-                            parseValue: (value) => double.parse(value),
                           ),
                           CargoColumn<double>(
                             grow: 1,
@@ -329,7 +325,6 @@ class LoadingPageBody extends StatelessWidget {
                               authToken: _authToken,
                             ),
                             defaultValue: '—',
-                            parseValue: (value) => double.parse(value),
                           ),
                         ],
                         cargos: cargos,

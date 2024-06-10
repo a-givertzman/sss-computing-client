@@ -116,13 +116,12 @@ class _CargoSchemesState extends State<CargoSchemes> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Center(
-                child: CargoTypeDropdown(
-                  initialValue: _cargoType,
-                  onTypeChanged: (value) => setState(() {
-                    _cargoType = value;
-                  }),
-                ),
+              child: CargoTypeDropdown(
+                width: 250.0,
+                initialValue: _cargoType,
+                onTypeChanged: (value) => setState(() {
+                  _cargoType = value;
+                }),
               ),
             ),
             Expanded(

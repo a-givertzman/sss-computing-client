@@ -240,6 +240,7 @@ class _SchemeLayoutState extends State<SchemeLayout> {
                 top: 0.0,
                 bottom: xAxisSpace,
                 child: InteractiveViewer(
+                  // clipBehavior: Clip.hardEdge,
                   transformationController: _controller,
                   child: ClipRect(
                     child: widget._buildContent(

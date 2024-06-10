@@ -183,7 +183,6 @@ class ShipDraughtsScheme extends StatelessWidget {
                     maxX: 70.0,
                     minY: -15.0,
                     maxY: 15.0,
-                    // xAxis: ChartAxis(isLabelsVisible: true, valueInterval: 5.0),
                     yAxisReversed: true,
                     buildContent: (ctx, transform) => Stack(
                       children: [

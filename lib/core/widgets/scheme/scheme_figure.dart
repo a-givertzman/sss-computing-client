@@ -41,7 +41,7 @@ class SchemeFigure extends StatelessWidget {
             figure: _figure,
             plane: _plane,
             transform: _layoutTransform,
-            onTap: _onTap,
+            isInteractive: _onTap != null,
           ),
           willChange: true,
         ),
@@ -54,13 +54,13 @@ class _SchemeFigurePainter extends CustomPainter {
   final FigurePlane plane;
   final Figure figure;
   final Matrix4 transform;
-  final void Function()? onTap;
+  final bool isInteractive;
   ///
   const _SchemeFigurePainter({
     required this.plane,
     required this.figure,
     required this.transform,
-    required this.onTap,
+    required this.isInteractive,
   });
   //
   @override
@@ -79,13 +79,12 @@ class _SchemeFigurePainter extends CustomPainter {
   //
   @override
   bool? hitTest(Offset position) {
-    return switch (onTap) {
-      null => null,
-      final _ => figure
-          .orthoProjection(plane)
-          .transform(transform.storage)
-          .contains(position),
-    };
+    return isInteractive
+        ? figure
+            .orthoProjection(plane)
+            .transform(transform.storage)
+            .contains(position)
+        : null;
   }
   //
   @override
@@ -93,6 +92,6 @@ class _SchemeFigurePainter extends CustomPainter {
     return plane != oldDelegate.plane ||
         figure != oldDelegate.figure ||
         transform != oldDelegate.transform ||
-        onTap != oldDelegate.onTap;
+        isInteractive != oldDelegate.isInteractive;
   }
 }
