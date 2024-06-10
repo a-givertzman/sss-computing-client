@@ -48,7 +48,7 @@ class ShipDraughtsScheme extends StatelessWidget {
         apiAddress: _apiAddress,
         authToken: _authToken,
         toValue: (value) => jsonDecode(value),
-      ).fetch(filter: {'key': 'HullSvg'}),
+      ).fetch(filter: {'key': 'hull_beauty_svg'}),
       caseData: (context, hullProjections, _) {
         return FutureBuilderWidget(
           refreshStream: _appRefreshStream,
@@ -183,7 +183,6 @@ class ShipDraughtsScheme extends StatelessWidget {
                     maxX: 70.0,
                     minY: -15.0,
                     maxY: 15.0,
-                    // xAxis: ChartAxis(isLabelsVisible: true, valueInterval: 5.0),
                     yAxisReversed: true,
                     buildContent: (ctx, transform) => Stack(
                       children: [
@@ -240,7 +239,7 @@ class ShipDraughtsScheme extends StatelessWidget {
                           layoutTransform: transform,
                           draughtsTransform: trimTransform,
                           label:
-                              'AP ${heelTrim.draftAP.value.toStringAsFixed(2)} ${const Localized('m').v}',
+                              '${const Localized('AP').v} ${heelTrim.draftAP.value.toStringAsFixed(2)} ${const Localized('m').v}',
                           labelStyle: labelStyle,
                         ),
                         _DraugthLabel(
@@ -251,7 +250,7 @@ class ShipDraughtsScheme extends StatelessWidget {
                           layoutTransform: transform,
                           draughtsTransform: trimTransform,
                           label:
-                              'Avg ${heelTrim.draftAvg.value.toStringAsFixed(2)} ${const Localized('m').v}',
+                              '${const Localized('Avg').v} ${heelTrim.draftAvg.value.toStringAsFixed(2)} ${const Localized('m').v}',
                           labelStyle: labelStyle,
                         ),
                         _DraugthLabel(
@@ -262,7 +261,7 @@ class ShipDraughtsScheme extends StatelessWidget {
                           layoutTransform: transform,
                           draughtsTransform: trimTransform,
                           label:
-                              'FP ${heelTrim.draftFP.value.toStringAsFixed(2)} ${const Localized('m').v}',
+                              '${const Localized('FP').v} ${heelTrim.draftFP.value.toStringAsFixed(2)} ${const Localized('m').v}',
                           labelStyle: labelStyle,
                         ),
                       ],

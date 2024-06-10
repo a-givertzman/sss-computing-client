@@ -13,6 +13,7 @@ class SchemeFigures extends StatelessWidget {
     required FigurePlane plane,
     required List<Figure> figures,
     required Matrix4 layoutTransform,
+    void Function()? onTap,
   })  : _plane = plane,
         _figures = figures,
         _layoutTransform = layoutTransform;

@@ -10,7 +10,7 @@ void main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Localizations.initialize(
-        AppLang.en,
+        AppLang.ru,
         jsonMap: JsonMap.fromTextFile(
           const TextFile.asset('assets/translations/translations.json'),
         ),

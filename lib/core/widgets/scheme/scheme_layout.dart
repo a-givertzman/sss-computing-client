@@ -71,13 +71,13 @@ class SchemeLayout extends StatefulWidget {
   State<SchemeLayout> createState() => _SchemeLayoutState();
 }
 class _SchemeLayoutState extends State<SchemeLayout> {
-  late final double contentWidth;
-  late final double contentHeight;
+  late final double _contentWidth;
+  late final double _contentHeight;
   //
   @override
   void initState() {
-    contentWidth = widget._maxX - widget._minX;
-    contentHeight = widget._maxY - widget._minY;
+    _contentWidth = widget._maxX - widget._minX;
+    _contentHeight = widget._maxY - widget._minY;
     super.initState();
   }
   //
@@ -88,7 +88,7 @@ class _SchemeLayoutState extends State<SchemeLayout> {
     final gridColor = axisColor.withOpacity(0.5);
     final labelStyle = widget._labelStyle ?? theme.textTheme.labelSmall;
     return FittedBuilderWidget(
-      size: Size(contentWidth, contentHeight),
+      size: Size(_contentWidth, _contentHeight),
       fit: widget._fit,
       builder: (context, scaleX, scaleY) {
         final xAxisSpace = widget._xAxis.isLabelsVisible
@@ -97,8 +97,8 @@ class _SchemeLayoutState extends State<SchemeLayout> {
         final yAxisSpace = widget._yAxis.isLabelsVisible
             ? widget._yAxis.labelsSpaceReserved
             : 0.0;
-        final contentScaleX = scaleX - (yAxisSpace / contentWidth);
-        final contentScaleY = scaleY - (xAxisSpace / contentHeight);
+        final contentScaleX = scaleX - (yAxisSpace / _contentWidth);
+        final contentScaleY = scaleY - (xAxisSpace / _contentHeight);
         final transform = SchemeLayoutTransform(
           minX: widget._minX,
           maxX: widget._maxX,
@@ -112,8 +112,8 @@ class _SchemeLayoutState extends State<SchemeLayout> {
           yReversed: widget._yAxisReversed,
         ).transformationMatrix();
         return SizedBox(
-          width: contentWidth * contentScaleX + yAxisSpace,
-          height: contentHeight * contentScaleY + xAxisSpace,
+          width: _contentWidth * contentScaleX + yAxisSpace,
+          height: _contentHeight * contentScaleY + xAxisSpace,
           child: Stack(
             clipBehavior: Clip.hardEdge,
             children: [
@@ -128,6 +128,22 @@ class _SchemeLayoutState extends State<SchemeLayout> {
                   ),
                 ),
               ),
+              if (widget._xAxis.isGridVisible)
+                Positioned(
+                  left: yAxisSpace,
+                  right: 0.0,
+                  top: 0.0,
+                  bottom: xAxisSpace,
+                  child: SchemeGridReal(
+                    axis: widget._xAxis,
+                    minValue: widget._minX,
+                    maxValue: widget._maxX,
+                    transformValue: (v) =>
+                        transform.transform3(Vector3(v, 0.0, 0.0)).x,
+                    color: gridColor,
+                    thickness: 0.5,
+                  ),
+                ),
               if (widget._yAxis.isGridVisible)
                 Positioned(
                   left: yAxisSpace,
@@ -145,22 +161,6 @@ class _SchemeLayoutState extends State<SchemeLayout> {
                       color: gridColor,
                       thickness: 0.5,
                     ),
-                  ),
-                ),
-              if (widget._xAxis.isGridVisible)
-                Positioned(
-                  left: yAxisSpace,
-                  right: 0.0,
-                  top: 0.0,
-                  bottom: xAxisSpace,
-                  child: SchemeGridReal(
-                    axis: widget._xAxis,
-                    minValue: widget._minX,
-                    maxValue: widget._maxX,
-                    transformValue: (v) =>
-                        transform.transform3(Vector3(v, 0.0, 0.0)).x,
-                    color: gridColor,
-                    thickness: 0.5,
                   ),
                 ),
               if (widget._xAxis.isLabelsVisible)
@@ -196,31 +196,13 @@ class _SchemeLayoutState extends State<SchemeLayout> {
                     ),
                   ),
                 ),
-              if (widget._xAxis.isLabelsVisible)
-                Positioned(
-                  bottom: 0.0,
-                  left: yAxisSpace,
-                  right: 0.0,
-                  child: SchemeAxisReal(
-                    axis: widget._xAxis,
-                    minValue: widget._minX,
-                    maxValue: widget._maxX,
-                    transformValue: (v) =>
-                        transform.transform3(Vector3(v, 0.0, 0.0)).x,
-                    color: axisColor,
-                    labelStyle: labelStyle,
-                  ),
-                ),
               Positioned(
                 left: yAxisSpace,
                 right: 0.0,
                 top: 0.0,
                 bottom: xAxisSpace,
                 child: ClipRect(
-                  child: widget._buildContent(
-                    context,
-                    transform,
-                  ),
+                  child: widget._buildContent(context, transform),
                 ),
               ),
             ],

@@ -8,8 +8,6 @@ import 'package:sss_computing_client/core/models/frame/frame.dart';
 abstract interface class Frames {
   /// Get all [Frame] in [Frames] collection.
   Future<Result<List<Frame>, Failure<String>>> fetchAll();
-  /// Get [Frame] by it's index;
-  Future<Result<Frame, Failure<String>>> fetchByIndex(int index);
 }
 ///
 /// Theoretical [Frames] collection stored in postgres DB.
@@ -36,67 +34,30 @@ class PgFramesTheoretical implements Frames {
       sqlBuilder: (_, __) => Sql(
         sql: """
               SELECT
-                project_id AS "projectId",
-                ship_id AS "shipId",
-                index AS "index",
-                start_x AS "x"
-              FROM computed_frame_space
+                cfs.project_id AS "projectId",
+                cfs.ship_id AS "shipId",
+                cfs.index AS "index",
+                cfs.start_x - sp.value::REAL AS "x"
+              FROM computed_frame_space AS cfs
+              INNER JOIN ship_parameters AS sp
+              ON cfs.ship_id = sp.ship_id AND sp.key = 'X midship from Fr0'
               UNION
               SELECT
-                project_id AS "projectId",
-                ship_id AS "shipId",
-                index + 1 AS "index",
-                end_x AS "x"
-              FROM computed_frame_space
-              ORDER BY index;
+                cfs.project_id AS "projectId",
+                cfs.ship_id AS "shipId",
+                cfs.index + 1 AS "index",
+                cfs.end_x - sp.value::REAL AS "x"
+              FROM computed_frame_space AS cfs
+              INNER JOIN ship_parameters AS sp
+              ON cfs.ship_id = sp.ship_id AND sp.key = 'X midship from Fr0'
+              WHERE cfs.ship_id = 1
+              ORDER BY "index";
             """,
       ),
       entryBuilder: (row) => JsonFrame(json: row),
     );
     return switch (await sqlAccess.fetch()) {
       Ok(value: final frames) => Ok(frames),
-      Err(:final error) => Err(Failure(
-          message: '$error',
-          stackTrace: StackTrace.current,
-        )),
-    };
-  }
-  //
-  @override
-  Future<Result<Frame, Failure<String>>> fetchByIndex(int index) async {
-    final sqlAccess = SqlAccess(
-      address: _apiAddress,
-      authToken: _authToken ?? '',
-      database: _dbName,
-      sqlBuilder: (_, __) => Sql(
-        sql: """
-              SELECT
-                project_id AS "projectId",
-                ship_id AS "shipId",
-                index AS "index",
-                start_x AS "x"
-              FROM computed_frame_space
-              WHERE index = $index
-              UNION
-              SELECT
-                project_id AS "projectId",
-                ship_id AS "shipId",
-                index + 1 AS "index",
-                end_x AS "x"
-              FROM computed_frame_space
-              WHERE index = ${index - 1}
-              ORDER BY index;
-            """,
-      ),
-      entryBuilder: (row) => JsonFrame(json: row),
-    );
-    return switch (await sqlAccess.fetch()) {
-      Ok(value: final frames) => frames.isNotEmpty
-          ? Ok(frames.first)
-          : Err(Failure(
-              message: 'Frame not found',
-              stackTrace: StackTrace.current,
-            )),
       Err(:final error) => Err(Failure(
           message: '$error',
           stackTrace: StackTrace.current,
@@ -129,11 +90,13 @@ class PgFramesReal implements Frames {
       sqlBuilder: (_, __) => Sql(
         sql: """
             SELECT
-              project_id AS "projectId",
-              ship_id AS "shipId",
-              frame_index AS "index",
-              pos_x AS "x"
-            FROM physical_frame
+              pf.project_id AS "projectId",
+              pf.ship_id AS "shipId",
+              pf.frame_index AS "index",
+              pf.pos_x - sp.value::REAL AS "x"
+            FROM physical_frame AS pf
+            INNER JOIN ship_parameters AS sp
+            ON pf.ship_id = sp.ship_id AND sp.key = 'X midship from Fr0'
             ORDER BY "index";
          """,
       ),
@@ -141,40 +104,6 @@ class PgFramesReal implements Frames {
     );
     return switch (await sqlAccess.fetch()) {
       Ok(value: final frames) => Ok(frames),
-      Err(:final error) => Err(Failure(
-          message: '$error',
-          stackTrace: StackTrace.current,
-        )),
-    };
-  }
-  //
-  @override
-  Future<Result<Frame, Failure<String>>> fetchByIndex(int index) async {
-    final sqlAccess = SqlAccess(
-      address: _apiAddress,
-      authToken: _authToken ?? '',
-      database: _dbName,
-      sqlBuilder: (_, __) => Sql(
-        sql: """
-            SELECT
-              project_id AS "projectId",
-              ship_id AS "shipId",
-              frame_index AS "index",
-              pos_x AS "x"
-            FROM physical_frame
-            WHERE frame_index = $index
-            LIMIT 1;
-         """,
-      ),
-      entryBuilder: (row) => JsonFrame(json: row),
-    );
-    return switch (await sqlAccess.fetch()) {
-      Ok(value: final frames) => frames.isNotEmpty
-          ? Ok(frames.first)
-          : Err(Failure(
-              message: 'Frame not found',
-              stackTrace: StackTrace.current,
-            )),
       Err(:final error) => Err(Failure(
           message: '$error',
           stackTrace: StackTrace.current,

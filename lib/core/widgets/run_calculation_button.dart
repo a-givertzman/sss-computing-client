@@ -57,7 +57,7 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
       backgroundColor: theme.colorScheme.primary,
       foregroundColor: theme.colorScheme.onPrimary,
       tooltip: _isLoading
-          ? const Localized('Calculations in progress').v
+          ? const Localized('Сalculations in progress').v
           : const Localized('Run calculations').v,
       onPressed: _isLoading ? null : _handlePress,
       child: _isLoading
@@ -75,7 +75,7 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
     ApiRequest(
       authToken: _authToken,
       address: _apiAddress,
-      timeout: const Duration(seconds: 10),
+      timeout: const Duration(seconds: 15),
       query: ExecutableQuery(
         script: _scriptName,
         params: {
@@ -89,7 +89,8 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
             Ok(value: final reply) => reply.data.isEmpty
                 ? _showErrorMessage(
                     context,
-                    '${reply.data.firstWhere((data) => data['status'] != 'ok')['message']}',
+                    const Localized('Unknown error, no response from backend')
+                        .v,
                   )
                 : reply.data.any((data) => data['status'] != 'ok')
                     ? _showErrorMessage(

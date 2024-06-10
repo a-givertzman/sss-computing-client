@@ -24,7 +24,7 @@ class SchemeGrid extends StatelessWidget {
         paint: Paint()
           ..color = _color
           ..strokeWidth = _thickness
-          ..isAntiAlias = false,
+          ..isAntiAlias = true,
         offsets: _offsets ?? const [],
         transformValue: _transformValue,
       ),
