@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
@@ -30,6 +31,7 @@ class LoadingPageBody extends StatefulWidget {
         _apiAddress = apiAddress,
         _dbName = dbName,
         _authToken = authToken;
+  //
   @override
   State<LoadingPageBody> createState() => _LoadingPageBodyState();
 }
@@ -126,16 +128,21 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
                                           .v,
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(
-                                      vertical: 1.0,
+                                      vertical: 2.0,
                                     ),
-                                    color: CargoType(cargo: cargo).color(),
+                                    decoration: BoxDecoration(
+                                      color: CargoType(cargo: cargo).color(),
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(2.0),
+                                      ),
+                                    ),
                                   ),
                                 );
                               },
                               width: 10.0,
                             ),
                             CargoColumn(
-                              width: 200.0,
+                              width: 350.0,
                               key: 'name',
                               type: 'text',
                               name: const Localized('Name').v,
@@ -194,6 +201,12 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
                                 authToken: widget._authToken,
                               ),
                               defaultValue: '—',
+                              extractValue: (cargo) =>
+                                  _formatDouble(
+                                    cargo.lcg,
+                                    fractionDigits: 2,
+                                  ) ??
+                                  0.0,
                             ),
                             CargoColumn<double>(
                               grow: 1,
@@ -211,6 +224,12 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
                                 authToken: widget._authToken,
                               ),
                               defaultValue: '—',
+                              extractValue: (cargo) =>
+                                  _formatDouble(
+                                    cargo.tcg,
+                                    fractionDigits: 2,
+                                  ) ??
+                                  0.0,
                             ),
                             CargoColumn<double>(
                               grow: 1,
@@ -228,6 +247,12 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
                                 authToken: widget._authToken,
                               ),
                               defaultValue: '—',
+                              extractValue: (cargo) =>
+                                  _formatDouble(
+                                    cargo.vcg,
+                                    fractionDigits: 2,
+                                  ) ??
+                                  0.0,
                             ),
                             CargoColumn<double>(
                               grow: 1,
@@ -245,6 +270,12 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
                                 authToken: widget._authToken,
                               ),
                               defaultValue: '—',
+                              extractValue: (cargo) =>
+                                  _formatDouble(
+                                    cargo.x1,
+                                    fractionDigits: 2,
+                                  ) ??
+                                  0.0,
                             ),
                             CargoColumn<double>(
                               grow: 1,
@@ -262,6 +293,12 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
                                 authToken: widget._authToken,
                               ),
                               defaultValue: '—',
+                              extractValue: (cargo) =>
+                                  _formatDouble(
+                                    cargo.x2,
+                                    fractionDigits: 2,
+                                  ) ??
+                                  0.0,
                             ),
                             CargoColumn<double>(
                               grow: 1,
@@ -279,10 +316,16 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
                                 authToken: widget._authToken,
                               ),
                               defaultValue: '—',
+                              extractValue: (cargo) =>
+                                  _formatDouble(
+                                    cargo.mfsx,
+                                    fractionDigits: 0,
+                                  ) ??
+                                  0.0,
                             ),
                             CargoColumn<double>(
                               grow: 1,
-                              key: 'm_f_s_x',
+                              key: 'm_f_s_y',
                               type: 'real',
                               name:
                                   '${const Localized('Mf.sy').v} [${const Localized('t•m').v}]',
@@ -296,6 +339,12 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
                                 authToken: widget._authToken,
                               ),
                               defaultValue: '—',
+                              extractValue: (cargo) =>
+                                  _formatDouble(
+                                    cargo.mfsy,
+                                    fractionDigits: 0,
+                                  ) ??
+                                  0.0,
                             ),
                           ],
                           cargos: cargos,
@@ -311,4 +360,7 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
       ),
     );
   }
+  double? _formatDouble(double? value, {int fractionDigits = 1}) =>
+      ((value ?? 0.0) * pow(10, fractionDigits)).round() /
+      pow(10, fractionDigits);
 }

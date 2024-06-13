@@ -133,6 +133,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
                 ),
               ),
             ),
+            SizedBox(width: padding),
             Expanded(
               flex: 3,
               child: CargoSchemeViewOptions(
@@ -142,6 +143,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
                 }),
               ),
             ),
+            SizedBox(width: padding),
             const Spacer(flex: 2),
           ],
         ),
