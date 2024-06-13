@@ -227,7 +227,7 @@ class _SchemeLayoutState extends State<SchemeLayout> {
                       transformValue: (v) =>
                           transform.transform3(Vector3(0.0, v, 0.0)).y *
                               _viewerScaleY +
-                          _viewerScaleY,
+                          _viewerShiftY,
                       color: axisColor,
                       labelStyle: labelStyle,
                     ),
@@ -247,7 +247,7 @@ class _SchemeLayoutState extends State<SchemeLayout> {
               ),
               if (widget._caption != null)
                 Positioned(
-                  bottom: 0.0,
+                  bottom: xAxisSpace,
                   right: 0.0,
                   child: SchemeText(
                     text: widget._caption!,
