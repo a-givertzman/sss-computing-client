@@ -103,6 +103,10 @@
         "Retry",
         "Повторить"
     ],
+    "Error": [
+        "Error",
+        "Ошибка"
+    ],
     "Data loading error": [
         "Data loading error",
         "Ошибка при загрузке данных"
@@ -114,6 +118,10 @@
     "Unknown error, no response from backend": [
         "Unknown error, no response from backend",
         "Неизвестная ошибка, нет ответа от бэкенда"
+    ],
+    "Backend error": [
+        "Backend error",
+        "Ошибка бэкенда"
     ],
     "Calculation completed.": [
         "Calculation completed.",

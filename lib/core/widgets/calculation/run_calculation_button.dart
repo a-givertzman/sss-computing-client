@@ -5,37 +5,48 @@ import 'package:hmi_core/hmi_core.dart' hide Result;
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/models/calculation/calculation.dart';
+import 'package:sss_computing_client/core/widgets/calculation/calculation_status.dart';
 ///
 /// Button that sends a request to backend to perform
 /// calculations and triggers update event when calculation is completed.
 class RunCalculationButton extends StatefulWidget {
   final void Function() _fireRefreshEvent;
+  final CalculationStatus _calculationStatusNotifier;
   ///
   /// Button that sends a request to backend to perform
   /// calculations and triggers update event when calculation is completed.
   ///
-  /// `fireRefreshEvent` - callback for triggering refresh event.
+  /// `fireRefreshEvent` - callback for triggering refresh event, called
+  /// when calculation succeeds or fails;
+  /// `calculationStatusNotifier` - passed to control calculation status
+  /// between many instances of calculation button.
   const RunCalculationButton({
     super.key,
     required void Function() fireRefreshEvent,
-  }) : _fireRefreshEvent = fireRefreshEvent;
+    required CalculationStatus calculationStatusNotifier,
+  })  : _fireRefreshEvent = fireRefreshEvent,
+        _calculationStatusNotifier = calculationStatusNotifier;
   //
   @override
   State<RunCalculationButton> createState() => _RunCalculationButtonState(
         fireRefreshEvent: _fireRefreshEvent,
+        calculationStatusNotifier: _calculationStatusNotifier,
       );
 }
 ///
 class _RunCalculationButtonState extends State<RunCalculationButton> {
   final void Function() _fireRefreshEvent;
+  final CalculationStatus _calculationStatusNotifier;
   late final ApiAddress _apiAddress;
   late final String _authToken;
   late final String _scriptName;
-  late bool _isLoading;
   ///
   _RunCalculationButtonState({
     required void Function() fireRefreshEvent,
-  }) : _fireRefreshEvent = fireRefreshEvent;
+    required CalculationStatus calculationStatusNotifier,
+  })  : _fireRefreshEvent = fireRefreshEvent,
+        _calculationStatusNotifier = calculationStatusNotifier;
   //
   @override
   void initState() {
@@ -45,78 +56,64 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
     );
     _authToken = const Setting('api-auth-token').toString();
     _scriptName = 'sss-computing-strength';
-    _isLoading = false;
     super.initState();
   }
   //
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return FloatingActionButton.small(
-      heroTag: 'fab_calculation',
-      backgroundColor: theme.colorScheme.primary,
-      foregroundColor: theme.colorScheme.onPrimary,
-      tooltip: _isLoading
-          ? const Localized('Сalculations in progress').v
-          : const Localized('Run calculations').v,
-      onPressed: _isLoading ? null : _handlePress,
-      child: _isLoading
-          ? CupertinoActivityIndicator(
-              color: theme.colorScheme.onPrimary,
-            )
-          : const Icon(Icons.calculate),
+    return ListenableBuilder(
+      listenable: _calculationStatusNotifier,
+      builder: (context, _) => FloatingActionButton.small(
+        heroTag: 'fab_calculation',
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
+        tooltip: _calculationStatusNotifier.isInProcess
+            ? const Localized('Сalculations in progress').v
+            : const Localized('Run calculations').v,
+        onPressed: _calculationStatusNotifier.isInProcess ? null : _handlePress,
+        child: _calculationStatusNotifier.isInProcess
+            ? CupertinoActivityIndicator(
+                color: theme.colorScheme.onPrimary,
+              )
+            : const Icon(Icons.calculate),
+      ),
     );
   }
   //
   void _handlePress() {
-    setState(() {
-      _isLoading = true;
-    });
-    ApiRequest(
+    _calculationStatusNotifier.start();
+    Calculation(
+      apiAddress: _apiAddress,
       authToken: _authToken,
-      address: _apiAddress,
-      timeout: const Duration(seconds: 15),
-      query: ExecutableQuery(
-        script: _scriptName,
-        params: {
-          "message": "start",
-        },
-      ),
+      scriptName: _scriptName,
     )
         .fetch()
         .then(
-          (result) => switch (result) {
-            Ok(value: final reply) => reply.data.isEmpty
-                ? _showErrorMessage(
-                    context,
-                    const Localized('Unknown error, no response from backend')
-                        .v,
-                  )
-                : reply.data.any((data) => data['status'] != 'ok')
-                    ? _showErrorMessage(
-                        context,
-                        '${reply.data.firstWhere((data) => data['status'] != 'ok')['message']}',
-                      )
-                    : _showInfoMessage(
-                        context,
-                        const Localized('Calculation completed.').v,
-                      ),
+          (reply) => switch (reply) {
+            Ok() => _showInfoMessage(
+                context,
+                const Localized('Calculation completed.').v,
+              ),
             Err(:final error) => _showErrorMessage(context, '$error'),
           },
         )
         .onError(
-          (error, stackTrace) => _showErrorMessage(context, '$error'),
+          (error, stackTrace) => _showErrorMessage(
+            context,
+            '${const Localized('Error').v}: $error',
+          ),
         )
         .whenComplete(
-          () => setState(() {
-            _isLoading = false;
-            // TODO: remove delay (needed for time gap between calculations and data refetching)
-            Future.delayed(
-              const Duration(milliseconds: 150),
-              _fireRefreshEvent,
-            );
-          }),
+      () {
+        _calculationStatusNotifier.stop();
+        // TODO: remove delay (api-server needs this time gap between calculations and data refetching)
+        Future.delayed(
+          const Duration(milliseconds: 150),
+          _fireRefreshEvent,
         );
+      },
+    );
   }
   //
   void _showInfoMessage(BuildContext context, String message) {
