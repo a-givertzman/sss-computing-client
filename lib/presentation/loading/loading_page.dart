@@ -4,7 +4,6 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/widgets/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
-import 'package:sss_computing_client/core/widgets/calculation/run_calculation_button.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/loading_page_body.dart';
 ///
 class LoadingPage extends StatefulWidget {
@@ -46,7 +45,7 @@ class _LoadingPageState extends State<LoadingPage> {
       body: Row(
         children: [
           NavigationPanel(
-            selectedPageIndex: 2,
+            selectedPageIndex: 3,
             appRefreshStream: widget._appRefreshStream,
             fireRefreshEvent: widget._fireRefreshEvent,
             calculationStatusNotifier: widget._calculationStatusNotifier,
@@ -60,10 +59,6 @@ class _LoadingPageState extends State<LoadingPage> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: RunCalculationButton(
-        fireRefreshEvent: widget._fireRefreshEvent,
-        calculationStatusNotifier: widget._calculationStatusNotifier,
       ),
     );
   }

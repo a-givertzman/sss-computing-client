@@ -64,8 +64,9 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
     final theme = Theme.of(context);
     return ListenableBuilder(
       listenable: _calculationStatusNotifier,
-      builder: (context, _) => FloatingActionButton.small(
-        heroTag: 'fab_calculation',
+      builder: (context, _) => FloatingActionButton(
+        heroTag: null,
+        elevation: 0.0,
         backgroundColor: theme.colorScheme.primary,
         foregroundColor: theme.colorScheme.onPrimary,
         tooltip: _calculationStatusNotifier.isInProcess

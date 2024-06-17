@@ -6,7 +6,6 @@ import 'package:sss_computing_client/core/models/strength/strength_forces_limite
 import 'package:sss_computing_client/core/widgets/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
-import 'package:sss_computing_client/core/widgets/calculation/run_calculation_button.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_page_body.dart';
 ///
 class StrengthPage extends StatefulWidget {
@@ -77,10 +76,6 @@ class _StrengthPageState extends State<StrengthPage> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: RunCalculationButton(
-        fireRefreshEvent: widget._fireRefreshEvent,
-        calculationStatusNotifier: widget._calculationStatusNotifier,
       ),
     );
   }

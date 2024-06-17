@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/widgets/calculation/calculation_status.dart';
+import 'package:sss_computing_client/core/widgets/calculation/run_calculation_button.dart';
 import 'package:sss_computing_client/core/widgets/error_message_widget.dart';
 import 'package:sss_computing_client/presentation/loading/loading_page.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
+import 'package:sss_computing_client/presentation/stability/stability_page.dart';
 import 'package:sss_computing_client/presentation/strength/strength_page.dart';
 ///
 /// App main navigation widget.
@@ -46,6 +49,13 @@ class NavigationPanel extends StatelessWidget {
         unselectedLabelTextStyle: TextStyle(
           color: theme.colorScheme.primary,
         ),
+        leading: Padding(
+          padding: EdgeInsets.all(const Setting('blockPadding').toDouble),
+          child: RunCalculationButton(
+            fireRefreshEvent: _fireRefreshEvent,
+            calculationStatusNotifier: _calculationStatusNotifier,
+          ),
+        ),
         destinations: [
           NavigationRailDestination(
             icon: const Icon(Icons.home_outlined),
@@ -57,11 +67,11 @@ class NavigationPanel extends StatelessWidget {
             selectedIcon: const Icon(Icons.analytics),
             label: Text(const Localized('Strength').v),
           ),
-          // NavigationRailDestination(
-          //   icon: const Icon(Icons.video_stable_outlined),
-          //   selectedIcon: const Icon(Icons.video_stable),
-          //   label: Text(const Localized('Stability').v),
-          // ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.video_stable_outlined),
+            selectedIcon: const Icon(Icons.video_stable),
+            label: Text(const Localized('Stability').v),
+          ),
           NavigationRailDestination(
             icon: const Icon(Icons.pallet),
             selectedIcon: const Icon(Icons.pallet),
@@ -97,6 +107,18 @@ class NavigationPanel extends StatelessWidget {
               );
               return;
             case 2:
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => StabilityPage(
+                    appRefreshStream: _appRefreshStream,
+                    fireRefreshEvent: _fireRefreshEvent,
+                    calculationStatusNotifier: _calculationStatusNotifier,
+                  ),
+                  settings: const RouteSettings(name: '/StabilityPage'),
+                ),
+              );
+              return;
+            case 3:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => LoadingPage(
