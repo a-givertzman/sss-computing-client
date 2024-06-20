@@ -346,5 +346,29 @@
     "Top": [
         "Top",
         "Сверху"
+    ],
+    "Righting lever": [
+        "Righting lever",
+        "Плечо статической остойчивости"
+    ],
+    "Angle of heel": [
+        "Angle of heel",
+        "Угол крена"
+    ],
+    "h": [
+        "GM",
+        "h"
+    ],
+    "radian": [
+        "rad",
+        "рад"
+    ],
+    "dso": [
+        "SSC",
+        "ДСО"
+    ],
+    "ddo": [
+        "DSC",
+        "ДДО"
     ]
 }
