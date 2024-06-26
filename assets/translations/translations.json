@@ -349,7 +349,7 @@
     ],
     "Righting lever": [
         "Righting lever",
-        "Плечо статической остойчивости"
+        "Плечо остойчивости"
     ],
     "Angle of heel": [
         "Angle of heel",
@@ -370,5 +370,9 @@
     "ddo": [
         "DSC",
         "ДДО"
+    ],
+    "Parameter": [
+        "Parameter",
+        "Параметр"
     ]
 }
