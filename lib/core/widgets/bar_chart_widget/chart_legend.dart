@@ -6,18 +6,15 @@ class ChartLegend extends StatelessWidget {
   final List<String> _names;
   final List<Color> _colors;
   final double _height;
-  final TextAlign? _textAlign;
   ///
   const ChartLegend({
     super.key,
     required List<String> names,
     required List<Color> colors,
     required double height,
-    TextAlign? textAlign,
   })  : _names = names,
         _colors = colors,
-        _height = height,
-        _textAlign = textAlign;
+        _height = height;
   //
   @override
   Widget build(BuildContext context) {
@@ -37,7 +34,6 @@ class ChartLegend extends StatelessWidget {
             _names.elementAt(i),
             softWrap: false,
             overflow: TextOverflow.fade,
-            textAlign: _textAlign,
           ),
         ),
         separatorBuilder: (_, __) => SizedBox(width: padding),

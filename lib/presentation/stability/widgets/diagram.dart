@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:sss_computing_client/core/models/stability_curve/metacentric_height_line.dart';
+import 'package:sss_computing_client/core/widgets/bar_chart_widget/chart_legend.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 ///
 class Diagram extends StatefulWidget {
@@ -45,90 +47,116 @@ class _DiagramState extends State<Diagram> {
     final theme = Theme.of(context);
     final labelsColor = widget.labelsColor ?? theme.colorScheme.primary;
     final gridColor = widget.gridColor ?? theme.colorScheme.primary;
-    return LineChart(
-      LineChartData(
-        maxY: _maxY,
-        minX: _minX,
-        maxX: _maxX,
-        titlesData: _titlesData(color: labelsColor),
-        gridData: const FlGridData(show: false),
-        borderData: FlBorderData(
-          border: Border.all(color: gridColor),
-        ),
-        lineTouchData: LineTouchData(
-          touchTooltipData: _tooltipData(),
-        ),
-        lineBarsData: [
-          _lineBarData(
-            spots: _metacentricHeightSpots(),
-            color: Colors.purpleAccent,
-          ),
-          _lineBarData(
-            spots: _curveSpots(widget.staticStabilityCurve),
-            color: Colors.greenAccent,
-          ),
-          _lineBarData(
-            spots: _curveSpots(widget.dynamicStabilityCurve),
-            color: Colors.orangeAccent,
-          ),
-        ],
-        extraLinesData: ExtraLinesData(
-          horizontalLines: [
-            HorizontalLine(
-              y: 0.0,
-              color: gridColor,
+    return Stack(
+      children: [
+        LineChart(
+          LineChartData(
+            maxY: _maxY,
+            minX: _minX,
+            maxX: _maxX,
+            titlesData: _titlesData(color: labelsColor),
+            gridData: const FlGridData(show: false),
+            borderData: FlBorderData(
+              border: Border.all(color: gridColor),
             ),
-            HorizontalLine(
-              y: widget.metacentricHeight,
-              dashArray: [5, 10],
-              color: gridColor,
-              label: HorizontalLineLabel(
-                show: true,
-                alignment: Alignment.topRight,
-                style: theme.textTheme.labelSmall?.copyWith(
+            lineTouchData: LineTouchData(
+              touchTooltipData: _tooltipData(),
+            ),
+            lineBarsData: [
+              _lineBarData(
+                spots: _curveSpots(MetacentricHeightLine(
+                  minX: 0.0,
+                  maxX: 90.0,
+                  theta0: widget.theta0,
+                  h: widget.metacentricHeight,
+                ).points().value),
+                color: Colors.purpleAccent,
+              ),
+              _lineBarData(
+                spots: _curveSpots(widget.staticStabilityCurve),
+                color: Colors.greenAccent,
+              ),
+              _lineBarData(
+                spots: _curveSpots(widget.dynamicStabilityCurve),
+                color: Colors.orangeAccent,
+              ),
+            ],
+            extraLinesData: ExtraLinesData(
+              horizontalLines: [
+                HorizontalLine(
+                  y: 0.0,
                   color: gridColor,
                 ),
-                labelResolver: (line) =>
-                    '${const Localized('h').v}: ${line.y.toStringAsFixed(2)} ${const Localized('m').v}',
-              ),
-            ),
-          ],
-          verticalLines: [
-            VerticalLine(
-              x: 0.0,
-              color: gridColor,
-            ),
-            VerticalLine(
-              x: radians2Degrees + widget.theta0,
-              dashArray: [5, 10],
-              color: gridColor,
-              label: VerticalLineLabel(
-                show: true,
-                alignment: Alignment.topRight,
-                style: theme.textTheme.labelSmall?.copyWith(
+                HorizontalLine(
+                  y: widget.metacentricHeight,
+                  dashArray: [5, 10],
+                  color: gridColor,
+                  label: HorizontalLineLabel(
+                    show: true,
+                    alignment: Alignment.topRight,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: gridColor,
+                    ),
+                    labelResolver: (line) =>
+                        '${const Localized('h').v}: ${line.y.toStringAsFixed(2)} ${const Localized('m').v}',
+                  ),
+                ),
+              ],
+              verticalLines: [
+                VerticalLine(
+                  x: 0.0,
                   color: gridColor,
                 ),
-                labelResolver: (line) =>
-                    'θ₀ + 1 ${const Localized('radian').v} (${line.x.toStringAsFixed(1)}${const Localized('°').v})',
-              ),
-            ),
-            VerticalLine(
-              x: widget.theta0,
-              dashArray: [5, 10],
-              color: gridColor,
-              label: VerticalLineLabel(
-                show: true,
-                alignment: Alignment.topRight,
-                style: theme.textTheme.labelSmall?.copyWith(
+                VerticalLine(
+                  x: radians2Degrees + widget.theta0,
+                  dashArray: [5, 10],
                   color: gridColor,
+                  label: VerticalLineLabel(
+                    show: true,
+                    alignment: Alignment.topRight,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: gridColor,
+                    ),
+                    labelResolver: (line) =>
+                        'θ₀ + 1 ${const Localized('radian').v} (${line.x.toStringAsFixed(1)}${const Localized('°').v})',
+                  ),
                 ),
-                labelResolver: (line) =>
-                    'θ₀ (${line.x.toStringAsFixed(1)}${const Localized('°').v})',
-              ),
+                VerticalLine(
+                  x: widget.theta0,
+                  dashArray: [5, 10],
+                  color: gridColor,
+                  label: VerticalLineLabel(
+                    show: true,
+                    alignment: Alignment.topRight,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: gridColor,
+                    ),
+                    labelResolver: (line) =>
+                        'θ₀ (${line.x.toStringAsFixed(1)}${const Localized('°').v})',
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        Positioned(
+          right: 0.0,
+          bottom: 0.0,
+          child: ChartLegend(
+            names: [
+              const Localized('h').v,
+              const Localized('dso').v,
+              const Localized('ddo').v,
+            ],
+            colors: const [
+              Colors.purpleAccent,
+              Colors.greenAccent,
+              Colors.orangeAccent,
+            ],
+            height: 20.0,
+          ),
+        ),
+      ],
     );
   }
   //
@@ -165,22 +193,6 @@ class _DiagramState extends State<Diagram> {
           ))
       .toList();
   //
-  List<FlSpot> _metacentricHeightSpots() => List.generate(
-        (widget.theta0 + radians2Degrees).floor() + 1,
-        (i) => i,
-      )
-          .map((x) => FlSpot(
-                x.toDouble(),
-                (x - widget.theta0) *
-                    widget.metacentricHeight /
-                    (radians2Degrees),
-              ))
-          .toList()
-        ..add(FlSpot(
-          widget.theta0 + radians2Degrees,
-          widget.metacentricHeight,
-        ));
-  //
   FlTitlesData _titlesData({required Color color}) => FlTitlesData(
         topTitles: _hiddenTitle(),
         rightTitles: _hiddenTitle(),
@@ -210,7 +222,7 @@ class _DiagramState extends State<Diagram> {
           ),
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 24.0,
+            reservedSize: 32.0,
             interval: widget.xInterval,
             getTitlesWidget: (value, meta) => AxisTitle(
               value: value,

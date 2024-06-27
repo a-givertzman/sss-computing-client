@@ -18,7 +18,7 @@ final class PgDynamicStabilityCurve implements Curve {
         _authToken = authToken;
   //
   @override
-  Future<Result<List<Offset>, Failure<String>>> fetch() {
+  Future<Result<List<Offset>, Failure<String>>> points() {
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
