@@ -4,7 +4,6 @@ import 'package:hmi_core/hmi_core.dart' hide Result;
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/stability_curve/curve.dart';
 import 'package:vector_math/vector_math_64.dart';
-
 ///
 /// [Curve] object for metacentric height. Line connecting two point
 /// on plane with righting arm as y-axis and angle of heel as x-axis.
@@ -16,7 +15,6 @@ final class MetacentricHeightLine implements Curve {
   final double _theta0;
   final double _h;
   final double _valueInterval;
-
   ///
   /// Creates a metacentric height [Curve] as maximum possible line segment
   /// with starting point (`theta0`, 0,0) and ending point (`theta0` + 1 radian, `h`),
