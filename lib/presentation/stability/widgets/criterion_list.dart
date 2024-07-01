@@ -98,7 +98,7 @@ class _CriterionListState extends State<CriterionList> {
       Ok(value: final isPassed) => CriterionWidget(
           value: criterion.value,
           limit: criterion.limit,
-          relation: relation.swaped().operator,
+          relation: relation.operator,
           passed: isPassed,
           errorMessage: isPassed
               ? null
