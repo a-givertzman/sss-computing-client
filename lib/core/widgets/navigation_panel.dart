@@ -82,7 +82,7 @@ class NavigationPanel extends StatelessWidget {
           if (index == _selectedPageIndex) return;
           switch (index) {
             case 0:
-              Navigator.of(context).push(
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => MainPage(
                     appRefreshStream: _appRefreshStream,
@@ -94,7 +94,7 @@ class NavigationPanel extends StatelessWidget {
               );
               return;
             case 1:
-              Navigator.of(context).push(
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => StrengthPage(
                     appRefreshStream: _appRefreshStream,
@@ -106,7 +106,7 @@ class NavigationPanel extends StatelessWidget {
               );
               return;
             case 3:
-              Navigator.of(context).push(
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => LoadingPage(
                     appRefreshStream: _appRefreshStream,
