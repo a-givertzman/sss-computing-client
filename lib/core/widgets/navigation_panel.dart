@@ -6,7 +6,9 @@ import 'package:sss_computing_client/core/widgets/calculation/run_calculation_bu
 import 'package:sss_computing_client/core/widgets/error_message_widget.dart';
 import 'package:sss_computing_client/presentation/loading/loading_page.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
+import 'package:sss_computing_client/presentation/stability/stability_page.dart';
 import 'package:sss_computing_client/presentation/strength/strength_page.dart';
+
 ///
 /// App main navigation widget.
 class NavigationPanel extends StatelessWidget {
@@ -14,6 +16,7 @@ class NavigationPanel extends StatelessWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
+
   ///
   /// Creates app main navigation widget.
   const NavigationPanel({
@@ -102,6 +105,18 @@ class NavigationPanel extends StatelessWidget {
                     calculationStatusNotifier: _calculationStatusNotifier,
                   ),
                   settings: const RouteSettings(name: '/StrengthPage'),
+                ),
+              );
+              return;
+            case 2:
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => StabilityPage(
+                    appRefreshStream: _appRefreshStream,
+                    fireRefreshEvent: _fireRefreshEvent,
+                    calculationStatusNotifier: _calculationStatusNotifier,
+                  ),
+                  settings: const RouteSettings(name: '/StabilityPage'),
                 ),
               );
               return;
