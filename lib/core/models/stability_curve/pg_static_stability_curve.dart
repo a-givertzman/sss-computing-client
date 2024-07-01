@@ -4,11 +4,16 @@ import 'package:hmi_core/hmi_core.dart' hide Result;
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/stability_curve/curve.dart';
 ///
+/// Static stabilty [Curve] stored in Postgres DB.
 final class PgStaticStabilityCurve implements Curve {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
   ///
+  /// Creates static stabilty [Curve] that stored in Postgres DB.
+  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
+  ///   - `dbName` - name of the database;
+  ///   - `authToken` - string  authentication token for accessing server;
   const PgStaticStabilityCurve({
     required ApiAddress apiAddress,
     required String dbName,
