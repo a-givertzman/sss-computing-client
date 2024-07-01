@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/core/widgets/calculation/calculation_status.dart';
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
 import 'package:window_manager/window_manager.dart';
@@ -22,6 +23,7 @@ class _AppWidgetState extends State<AppWidget> {
   final AppThemeSwitch _themeSwitch;
   late final StreamController<DsDataPoint<bool>> _appRefreshController;
   late void Function() _fireRefreshEvent;
+  late final CalculationStatus _calculationStatusNotifier;
   ///
   _AppWidgetState({
     required AppThemeSwitch themeSwitch,
@@ -62,6 +64,7 @@ class _AppWidgetState extends State<AppWidget> {
             cot: DsCot.req,
           ),
         );
+    _calculationStatusNotifier = CalculationStatus();
     super.initState();
   }
   //
@@ -79,6 +82,7 @@ class _AppWidgetState extends State<AppWidget> {
       home: MainPage(
         appRefreshStream: _appRefreshController.stream,
         fireRefreshEvent: _fireRefreshEvent,
+        calculationStatusNotifier: _calculationStatusNotifier,
       ),
     );
   }

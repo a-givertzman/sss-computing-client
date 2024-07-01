@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/core/widgets/calculation/calculation_status.dart';
+import 'package:sss_computing_client/core/widgets/calculation/run_calculation_button.dart';
 import 'package:sss_computing_client/core/widgets/error_message_widget.dart';
 import 'package:sss_computing_client/presentation/loading/loading_page.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
@@ -10,6 +13,7 @@ class NavigationPanel extends StatelessWidget {
   final int? _selectedPageIndex;
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
+  final CalculationStatus _calculationStatusNotifier;
   ///
   /// Creates app main navigation widget.
   const NavigationPanel({
@@ -17,9 +21,11 @@ class NavigationPanel extends StatelessWidget {
     required int? selectedPageIndex,
     required Stream<DsDataPoint<bool>> appRefreshStream,
     required void Function() fireRefreshEvent,
+    required CalculationStatus calculationStatusNotifier,
   })  : _selectedPageIndex = selectedPageIndex,
         _appRefreshStream = appRefreshStream,
-        _fireRefreshEvent = fireRefreshEvent;
+        _fireRefreshEvent = fireRefreshEvent,
+        _calculationStatusNotifier = calculationStatusNotifier;
   //
   @override
   Widget build(BuildContext context) {
@@ -41,6 +47,13 @@ class NavigationPanel extends StatelessWidget {
         ),
         unselectedLabelTextStyle: TextStyle(
           color: theme.colorScheme.primary,
+        ),
+        leading: Padding(
+          padding: EdgeInsets.all(const Setting('blockPadding').toDouble),
+          child: RunCalculationButton(
+            fireRefreshEvent: _fireRefreshEvent,
+            calculationStatusNotifier: _calculationStatusNotifier,
+          ),
         ),
         destinations: [
           NavigationRailDestination(
@@ -74,6 +87,7 @@ class NavigationPanel extends StatelessWidget {
                   builder: (context) => MainPage(
                     appRefreshStream: _appRefreshStream,
                     fireRefreshEvent: _fireRefreshEvent,
+                    calculationStatusNotifier: _calculationStatusNotifier,
                   ),
                   settings: const RouteSettings(name: '/MainPage'),
                 ),
@@ -85,6 +99,7 @@ class NavigationPanel extends StatelessWidget {
                   builder: (context) => StrengthPage(
                     appRefreshStream: _appRefreshStream,
                     fireRefreshEvent: _fireRefreshEvent,
+                    calculationStatusNotifier: _calculationStatusNotifier,
                   ),
                   settings: const RouteSettings(name: '/StrengthPage'),
                 ),
@@ -96,13 +111,14 @@ class NavigationPanel extends StatelessWidget {
                   builder: (context) => LoadingPage(
                     appRefreshStream: _appRefreshStream,
                     fireRefreshEvent: _fireRefreshEvent,
+                    calculationStatusNotifier: _calculationStatusNotifier,
                   ),
                   settings: const RouteSettings(name: '/LoadingPage'),
                 ),
               );
               return;
             default:
-              Navigator.of(context).push(
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => Row(
                     children: [
@@ -110,6 +126,7 @@ class NavigationPanel extends StatelessWidget {
                         selectedPageIndex: null,
                         appRefreshStream: _appRefreshStream,
                         fireRefreshEvent: _fireRefreshEvent,
+                        calculationStatusNotifier: _calculationStatusNotifier,
                       ),
                       Expanded(
                         child: Scaffold(
