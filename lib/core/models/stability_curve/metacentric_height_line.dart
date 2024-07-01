@@ -35,9 +35,10 @@ final class MetacentricHeightLine implements Curve {
   //
   @override
   Ok<List<Offset>, Failure<String>> points() {
+    assert(_minX <= _maxX, 'minX should be less than or equal to maxX');
     final minX = min(_minX, _theta0);
     final maxX = min(_maxX, _theta0 + radians2Degrees);
-    final generatingSize = max(maxX - minX, 0) ~/ _valueInterval + 1;
+    final generatingSize = (maxX - minX) ~/ _valueInterval + 1;
     final line = List<Offset>.generate(
       generatingSize,
       (i) => Offset(
