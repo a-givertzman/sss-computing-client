@@ -34,8 +34,8 @@ class PgStabilityCriterions implements Criterions {
         sql: """
             SELECT
               cs.title_rus AS "name",
+              cs.unit_rus::TEXT AS "unit",
               cs.relation::TEXT AS "relation",
-              unit_rus AS "unit",
               rs.result AS "value",
               rs.target AS "limit",
               '' AS "description"
