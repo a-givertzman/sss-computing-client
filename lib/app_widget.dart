@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/widgets/calculation/calculation_status.dart';
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
@@ -37,11 +36,8 @@ class _AppWidgetState extends State<AppWidget> {
       () async {
         await windowManager.ensureInitialized();
         windowManager.waitUntilReadyToShow(
-          WindowOptions(
-            size: Size(
-              const Setting('displaySizeWidth').toDouble,
-              const Setting('displaySizeHeight').toDouble,
-            ),
+          const WindowOptions(
+            // fullScreen: true,
             center: true,
             backgroundColor: Colors.transparent,
             skipTaskbar: false,

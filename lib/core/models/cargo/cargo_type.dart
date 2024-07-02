@@ -8,12 +8,12 @@ class CargoType {
   /// Creates object that extract label and color from [Cargo] type
   const CargoType({required Cargo cargo}) : _cargo = cargo;
   ///
-  /// Extract type's label for of [Cargo]
+  /// Extract type's label for [Cargo]
   String label() {
     return CargoTypeColorLabel.from(_cargo.type).label;
   }
   ///
-  /// Extract type's color of [Cargo]
+  /// Extract type's color for [Cargo]
   Color color() {
     return CargoTypeColorLabel.from(_cargo.type).color;
   }
