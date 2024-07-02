@@ -4,10 +4,10 @@ import 'package:fl_chart/fl_chart.dart';
 /// Object that holds curve data and converts it to
 /// [LineChartBarData] for display on [LineChart].
 class DiagramCurve {
-  final List<Offset> points;
-  final Color color;
-  final String caption;
-  final bool showDots;
+  final List<Offset> _points;
+  final Color _color;
+  final String _caption;
+  final bool _showDots;
   ///
   /// Creates object that holds curve data and converts it to
   /// [LineChartBarData] for display on [LineChart].
@@ -18,22 +18,31 @@ class DiagramCurve {
   /// `color` determines color of drawing line
   /// `showDots` determines wheter to draw points through which curve passes.
   DiagramCurve({
-    required this.points,
-    required this.caption,
-    required this.color,
-    this.showDots = false,
-  });
+    required List<Offset> points,
+    required String caption,
+    required Color color,
+    bool showDots = false,
+  })  : _points = points,
+        _color = color,
+        _caption = caption,
+        _showDots = showDots;
+  ///
+  /// Returns curve color.
+  Color get color => _color;
+  ///
+  /// Returns curve caption.
+  String get caption => _caption;
   ///
   /// Returns [LineChartBarData] that is used to
   /// render curve on [LineChart] diagram.
   LineChartBarData lineBarData() => LineChartBarData(
-        spots: points
+        spots: _points
             .map((point) => FlSpot(
                   point.dx,
                   point.dy,
                 ))
             .toList(),
-        dotData: FlDotData(show: showDots),
-        color: color,
+        dotData: FlDotData(show: _showDots),
+        color: _color,
       );
 }
