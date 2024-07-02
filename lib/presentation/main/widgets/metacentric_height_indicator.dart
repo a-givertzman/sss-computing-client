@@ -122,13 +122,13 @@ class MetacentricHeightIndicator extends StatelessWidget {
           '> ${low?.toStringAsFixed(2) ?? '-inf'} ${const Localized('and').v} < ${high?.toStringAsFixed(2) ?? 'inf'}',
       child: FCircularValueIndicator(
         future: FieldRecord<double>(
-          tableName: 'result_stability',
+          tableName: 'parameter_data',
           fieldName: 'result',
           dbName: _dbName,
           apiAddress: _apiAddress,
           authToken: _authToken,
           toValue: (value) => double.parse(value),
-        ).fetch(filter: {'criterion_id': 12}),
+        ).fetch(filter: {'parameter_id': 18}),
         title: const Localized('Metacentric height').v,
         valueUnit: const Localized('m').v,
         fractionDigits: 2,
