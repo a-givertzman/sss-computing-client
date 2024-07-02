@@ -241,7 +241,10 @@ class _SchemeLayoutState extends State<SchemeLayout> {
                 child: InteractiveViewer(
                   transformationController: _controller,
                   child: ClipRect(
-                    child: widget._buildContent(context, transform),
+                    child: Builder(
+                      builder: (context) =>
+                          widget._buildContent(context, transform),
+                    ),
                   ),
                 ),
               ),
