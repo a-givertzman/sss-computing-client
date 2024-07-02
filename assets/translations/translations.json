@@ -103,6 +103,10 @@
         "Retry",
         "Повторить"
     ],
+    "Error": [
+        "Error",
+        "Ошибка"
+    ],
     "Data loading error": [
         "Data loading error",
         "Ошибка при загрузке данных"
@@ -110,5 +114,273 @@
     "No data": [
         "No data",
         "Отсутствуют данные для загрузки"
+    ],
+    "Unknown error, no response from backend": [
+        "Unknown error, no response from backend",
+        "Неизвестная ошибка, нет ответа от бэкенда"
+    ],
+    "Backend error": [
+        "Backend error",
+        "Ошибка бэкенда"
+    ],
+    "Calculation completed.": [
+        "Calculation completed.",
+        "Вычисления закончены"
+    ],
+    "Heel": [
+        "Heel",
+        "Крен"
+    ],
+    "Trim": [
+        "Trim",
+        "Дифферент"
+    ],
+    "Metacentric height": [
+        "Metacentric height",
+        "Метацентрическая высота"
+    ],
+    "Bulk": [
+        "Bulk",
+        "Сыпучий"
+    ],
+    "Stores": [
+        "Stores",
+        "Запасы"
+    ],
+    "Cargo": [
+        "Cargo",
+        "Груз"
+    ],
+    "Deadweight": [
+        "Deadweight",
+        "Дедвейт"
+    ],
+    "Lightship": [
+        "Lightship",
+        "Порожнем"
+    ],
+    "Icing": [
+        "Icing",
+        "Наледь"
+    ],
+    "Wetting": [
+        "Wetting",
+        "Намокание"
+    ],
+    "Displacement": [
+        "Displacement",
+        "Водоизмещение"
+    ],
+    "Strength force, Allow": [
+        "Strength force, Allow",
+        "Прочность, Допустимый"
+    ],
+    "PS": [
+        "PS",
+        "ЛБ"
+    ],
+    "SB": [
+        "SB",
+        "Пр.Б"
+    ],
+    "AFT": [
+        "AFT",
+        "Корма"
+    ],
+    "FWD": [
+        "FWD",
+        "Нос"
+    ],
+    "AP": [
+        "AP",
+        "КП"
+    ],
+    "Avg": [
+        "AFT",
+        "Ср."
+    ],
+    "FP": [
+        "FP",
+        "НП"
+    ],
+    "Mf.sx": [
+        "Mf.sx",
+        "Mf.sx"
+    ],
+    "Mf.sy": [
+        "Mf.sy",
+        "Mf.sy"
+    ],
+    "VCG": [
+        "VCG",
+        "Zg"
+    ],
+    "LCG": [
+        "VCG",
+        "Xg"
+    ],
+    "TCG": [
+        "VCG",
+        "Yg"
+    ],
+    "t•m": [
+        "t•m",
+        "т•м"
+    ],
+    "Name": [
+        "Name",
+        "Имя"
+    ],
+    "Mass": [
+        "Mass",
+        "Масса"
+    ],
+    "Run calculations": [
+        "Run calculations",
+        "Запустить вычисления"
+    ],
+    "Сalculations in progress": [
+        "Сalculations in progress",
+        "Производятся вычисления"
+    ],
+    "Main": [
+        "Main",
+        "Главная"
+    ],
+    "Strength": [
+        "Strength",
+        "Прочность"
+    ],
+    "Stability": [
+        "Stability",
+        "Остойчивость"
+    ],
+    "Loading": [
+        "Loading",
+        "Загрузка"
+    ],
+    "Ballast": [
+        "Ballast",
+        "Балласт"
+    ],
+    "Fresh water": [
+        "Fresh water",
+        "Пресная вода"
+    ],
+    "Acids and alkalis": [
+        "Acids and alkalis",
+        "Кислоты и щелочи"
+    ],
+    "Polluted liquids": [
+        "Polluted liquids",
+        "Загрязнения и другие жидкости"
+    ],
+    "Oils and fuels": [
+        "Oils and fuels",
+        "Масла и горючие жидкости"
+    ],
+    "Other": [
+        "Other",
+        "Другое"
+    ],
+    "Axes": [
+        "Axes",
+        "Оси"
+    ],
+    "Grid": [
+        "Grid",
+        "Сетка"
+    ],
+    "Fr. R.": [
+        "Fr. R.",
+        "Шп. физ."
+    ],
+    "Fr. Th.": [
+        "Fr. Th.",
+        "Шп. теор."
+    ],
+    "Show axes": [
+        "Show axes",
+        "Показать оси"
+    ],
+    "Show grid": [
+        "Show grid",
+        "Показать сетку"
+    ],
+    "Show real frames": [
+        "Show real frames",
+        "Показать физические шпангоуты"
+    ],
+    "Show theoretic frames": [
+        "Show theoretic frames",
+        "Показать теоретические шпангоуты"
+    ],
+    "Only integer numbers allowed": [
+        "Only integer numbers allowed",
+        "Разрешены только целые числа"
+    ],
+    "Only real numbers allowed": [
+        "Only real numbers allowed",
+        "Разрешены только действительные числа"
+    ],
+    "Select cargo type to display": [
+        "Select cargo type to display",
+        "Выбрать тип груза для отображения"
+    ],
+    "Page not found": [
+        "Page not found",
+        "Страница не найдена"
+    ],
+    "ft": [
+        "t.fr",
+        "т.шп"
+    ],
+    "fr": [
+        "fr",
+        "шп"
+    ],
+    "Side": [
+        "Side",
+        "Сбоку"
+    ],
+    "Top": [
+        "Top",
+        "Сверху"
+    ],
+    "Righting lever": [
+        "Righting lever",
+        "Плечо остойчивости"
+    ],
+    "Angle of heel": [
+        "Angle of heel",
+        "Угол крена"
+    ],
+    "h": [
+        "GM",
+        "h"
+    ],
+    "radian": [
+        "rad",
+        "рад"
+    ],
+    "dso": [
+        "SSC",
+        "ДСО"
+    ],
+    "ddo": [
+        "DSC",
+        "ДДО"
+    ],
+    "Parameter": [
+        "Parameter",
+        "Параметр"
+    ],
+    "to port side": [
+        "to port side",
+        "на левый борт"
+    ],
+    "to starboard": [
+        "to starboard",
+        "на првый борт"
     ]
 }
