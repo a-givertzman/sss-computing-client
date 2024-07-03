@@ -80,7 +80,7 @@ class TableView<T> extends StatelessWidget {
         decoration: BoxDecoration(
           border: outerBorder,
         ),
-        columnDividerColor: tableBorderColor,
+        columnDividerColor: theme.disabledColor.withOpacity(0.01),
         columnDividerThickness: _tableBorderThickness,
         headerCell: HeaderCellThemeData(
           sortIconColors: SortIconColors(
