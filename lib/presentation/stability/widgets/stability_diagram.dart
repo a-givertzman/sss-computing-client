@@ -141,7 +141,7 @@ class StabilityDiagram extends StatelessWidget {
                 ),
                 DiagramXValueLabel(
                   caption:
-                      'θ₀ + 1 ${const Localized('radian').v} (${(theta0.abs() + radians2Degrees).toStringAsFixed(1)}${const Localized('°').v}))',
+                      'θ₀+1 ${const Localized('radian').v} (${(theta0.abs() + radians2Degrees).toStringAsFixed(1)}${const Localized('°').v})',
                   value: theta0.abs() + radians2Degrees,
                   color: labelsColor,
                   style: labelsStyle,
