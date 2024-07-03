@@ -34,23 +34,19 @@ class PgFramesTheoretical implements Frames {
       sqlBuilder: (_, __) => Sql(
         sql: """
               SELECT
-                cfs.project_id AS "projectId",
-                cfs.ship_id AS "shipId",
-                cfs.index AS "index",
-                cfs.start_x - sp.value::REAL AS "x"
+                project_id AS "projectId",
+                ship_id AS "shipId",
+                index AS "index",
+                start_x AS "x"
               FROM computed_frame_space AS cfs
-              INNER JOIN ship_parameters AS sp
-              ON cfs.ship_id = sp.ship_id AND sp.key = 'X midship from Fr0'
               UNION
               SELECT
-                cfs.project_id AS "projectId",
-                cfs.ship_id AS "shipId",
-                cfs.index + 1 AS "index",
-                cfs.end_x - sp.value::REAL AS "x"
-              FROM computed_frame_space AS cfs
-              INNER JOIN ship_parameters AS sp
-              ON cfs.ship_id = sp.ship_id AND sp.key = 'X midship from Fr0'
-              WHERE cfs.ship_id = 1
+                project_id AS "projectId",
+                ship_id AS "shipId",
+                index + 1 AS "index",
+                end_x AS "x"
+              FROM computed_frame_space
+              WHERE ship_id = 1
               ORDER BY "index";
             """,
       ),
@@ -90,13 +86,12 @@ class PgFramesReal implements Frames {
       sqlBuilder: (_, __) => Sql(
         sql: """
             SELECT
-              pf.project_id AS "projectId",
-              pf.ship_id AS "shipId",
-              pf.frame_index AS "index",
-              pf.pos_x - sp.value::REAL AS "x"
-            FROM physical_frame AS pf
-            INNER JOIN ship_parameters AS sp
-            ON pf.ship_id = sp.ship_id AND sp.key = 'X midship from Fr0'
+              project_id AS "projectId",
+              ship_id AS "shipId",
+              frame_index AS "index",
+              pos_x AS "x"
+            FROM physical_frame
+            WHERE ship_id = 1
             ORDER BY "index";
          """,
       ),
