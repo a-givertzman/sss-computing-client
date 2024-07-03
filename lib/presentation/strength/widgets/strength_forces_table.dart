@@ -36,6 +36,7 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
         _forcesLimited = forcesLimited;
   //
   @override
+  // ignore: long-method
   void initState() {
     _model = DaviModel(
       columns: [
@@ -43,6 +44,11 @@ class _StrengthForceTableState extends State<StrengthForceTable> {
           width: 42,
           name: '#',
           intValue: (data) => data.force.frame.index,
+        ),
+        DaviColumn<StrengthForceLimited>(
+          grow: 1,
+          name: '${const Localized('x').v}\n[${const Localized('m').v}]',
+          doubleValue: (data) => _formatDouble(data.force.frame.x),
         ),
         DaviColumn<StrengthForceLimited>(
           grow: 1,
