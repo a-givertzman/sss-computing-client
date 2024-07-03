@@ -173,19 +173,6 @@ class CargoScheme extends StatelessWidget {
                 ),
               ),
             ),
-          // Positioned(
-          //   bottom: 0.0,
-          //   right: 0.0,
-          //   child: SchemeText(
-          //     text: _caption,
-          //     alignment: Alignment.topLeft,
-          //     offset: Offset(-padding, -padding),
-          //     layoutTransform: Matrix4.identity(),
-          //     style: TextStyle(
-          //       background: Paint()..color = axisColor.withOpacity(0.5),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
