@@ -1,45 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:sss_computing_client/core/models/cargo/cargo.dart';
-///
-/// Extract label and color from [Cargo].
-class CargoType {
-  final Cargo _cargo;
-  ///
-  /// Creates object that extract label and color from [Cargo] type
-  const CargoType({required Cargo cargo}) : _cargo = cargo;
-  ///
-  /// Extract type's label for of [Cargo]
-  String label() {
-    return CargoTypeColorLabel.from(_cargo.type).label;
-  }
-  ///
-  /// Extract type's color of [Cargo]
-  Color color() {
-    return CargoTypeColorLabel.from(_cargo.type).color;
-  }
-}
 ///
 /// Enum of cargo types with colors and labels.
-enum CargoTypeColorLabel {
+enum CargoType {
   ballast('Ballast', Colors.green),
   oilsAndFuels('Oils and fuels', Colors.brown),
   freshWater('Fresh water', Colors.blue),
   acidsAndAlkalis('Acids and alkalis', Colors.purple),
   pollutedLiquids('Polluted liquids', Colors.black),
   other('Other', Colors.grey);
-  final String label;
-  final Color color;
-  const CargoTypeColorLabel(this.label, this.color);
   ///
-  /// Creates [CargoTypeColorLabel] from passed string.
-  factory CargoTypeColorLabel.from(String value) {
+  /// Text label for cargo type
+  final String label;
+  ///
+  /// Color of cargo
+  final Color color;
+  ///
+  const CargoType(this.label, this.color);
+  ///
+  /// Creates [CargoType] from passed string representation.
+  factory CargoType.from(String value) {
     return switch (value) {
-      'BALLAST' => CargoTypeColorLabel.ballast,
-      'OILS_AND_FUELS' => CargoTypeColorLabel.oilsAndFuels,
-      'FRESH_WATER' => CargoTypeColorLabel.freshWater,
-      'ACIDS_AND_ALKALIS' => CargoTypeColorLabel.acidsAndAlkalis,
-      'POLLUTED_LIQUIDS' => CargoTypeColorLabel.pollutedLiquids,
-      _ => CargoTypeColorLabel.other,
+      'BALLAST' => CargoType.ballast,
+      'OILS_AND_FUELS' => CargoType.oilsAndFuels,
+      'FRESH_WATER' => CargoType.freshWater,
+      'ACIDS_AND_ALKALIS' => CargoType.acidsAndAlkalis,
+      'POLLUTED_LIQUIDS' => CargoType.pollutedLiquids,
+      _ => CargoType.other,
     };
   }
 }

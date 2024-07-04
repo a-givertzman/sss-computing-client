@@ -5,41 +5,43 @@ import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 ///
 /// Widget for selecting type of [Cargo].
 class CargoTypeDropdown extends StatefulWidget {
-  final String _initialValue;
-  final void Function(String)? _onTypeChanged;
+  final CargoType _initialValue;
+  final void Function(CargoType)? _onTypeChanged;
   ///
-  /// Creates widget for selecting type of [Cargo].
+  /// Creates widget for selecting type of [Cargo] from dropdown menu.
   const CargoTypeDropdown({
     super.key,
-    required String initialValue,
-    void Function(String)? onTypeChanged,
+    required CargoType initialValue,
+    void Function(CargoType)? onTypeChanged,
   })  : _onTypeChanged = onTypeChanged,
         _initialValue = initialValue;
+  //
   @override
   State<CargoTypeDropdown> createState() => _CargoTypeDropdownState();
 }
+///
 class _CargoTypeDropdownState extends State<CargoTypeDropdown> {
-  late String _selectedValue;
+  late CargoType _selected;
   //
   @override
   void initState() {
-    _selectedValue = widget._initialValue;
+    _selected = widget._initialValue;
     super.initState();
   }
   //
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButtonCustom<String>(
+    return PopupMenuButtonCustom<CargoType>(
       onSelected: (value) {
         setState(() {
-          _selectedValue = value;
+          _selected = value;
         });
         widget._onTypeChanged?.call(value);
       },
       initialValue: widget._initialValue,
-      itemBuilder: (context) => <PopupMenuItem<String>>[
-        ...CargoTypeColorLabel.values.map((type) => PopupMenuItem(
-              value: type.label,
+      itemBuilder: (context) => <PopupMenuItem<CargoType>>[
+        ...CargoType.values.map((type) => PopupMenuItem(
+              value: type,
               child: Text(Localized(type.label).v),
             )),
       ],
@@ -51,7 +53,13 @@ class _CargoTypeDropdownState extends State<CargoTypeDropdown> {
           message: const Localized('Select cargo type to display').v,
           child: Row(
             children: [
-              Expanded(child: OverflowableText(Localized(_selectedValue).v)),
+              Expanded(
+                child: Text(
+                  Localized(_selected.label).v,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                ),
+              ),
               const Icon(Icons.arrow_drop_down_outlined),
             ],
           ),

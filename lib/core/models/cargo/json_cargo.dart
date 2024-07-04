@@ -1,4 +1,5 @@
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 ///
 /// [Cargo] that parses itself from json map.
 class JsonCargo implements Cargo {
@@ -43,7 +44,7 @@ class JsonCargo implements Cargo {
   @override
   String? get path => _json['path'];
   @override
-  String get type => _json['type'];
+  CargoType get type => CargoType.from(_json['type']);
   @override
   Map<String, dynamic> asMap() {
     return _json;

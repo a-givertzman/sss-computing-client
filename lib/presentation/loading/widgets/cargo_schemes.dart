@@ -53,12 +53,12 @@ class _CargoSchemesState extends State<CargoSchemes> {
   late final Figure _hullFigure;
   late final List<({Figure figure, Cargo cargo})> _cargoFigures;
   late Set<CargoSchemeViewOption> _viewOptions;
-  late String _cargoType;
+  late CargoType _cargoTypeSelected;
   //
   @override
   void initState() {
     _viewOptions = {CargoSchemeViewOption.showGrid};
-    _cargoType = CargoTypeColorLabel.ballast.label;
+    _cargoTypeSelected = CargoType.values.first;
     _hullFigure = CombinedFigure(
       paints: [
         Paint()
@@ -104,8 +104,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
     );
     final cargoFiguresFiltered = _cargoFigures
         .where(
-          (cargoFigure) =>
-              CargoType(cargo: cargoFigure.cargo).label() == _cargoType,
+          (cargoFigure) => cargoFigure.cargo.type == _cargoTypeSelected,
         )
         .toList();
     final selectedCargoFigure = widget._selectedCargo != null
@@ -125,9 +124,9 @@ class _CargoSchemesState extends State<CargoSchemes> {
                 child: SizedBox(
                   width: 250.0,
                   child: CargoTypeDropdown(
-                    initialValue: _cargoType,
+                    initialValue: _cargoTypeSelected,
                     onTypeChanged: (newType) => setState(() {
-                      _cargoType = newType;
+                      _cargoTypeSelected = newType;
                     }),
                   ),
                 ),

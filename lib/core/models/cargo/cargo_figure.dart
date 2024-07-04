@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/painting.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
-import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
 import 'package:sss_computing_client/core/models/figure/svg_path_figure.dart';
 ///
@@ -14,7 +13,7 @@ class CargoFigure {
   ///
   /// Extract [Cargo] figure
   Figure figure() {
-    final color = CargoType(cargo: cargo).color();
+    final color = cargo.type.color;
     return SVGPathFigure(
       paints: [
         Paint()
