@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
@@ -8,7 +7,6 @@ import 'package:sss_computing_client/core/models/frame/frame.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_axis.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_figure.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_layout.dart';
-import 'package:sss_computing_client/core/widgets/scheme/scheme_text.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 ///
 class CargoScheme extends StatelessWidget {
@@ -72,7 +70,6 @@ class CargoScheme extends StatelessWidget {
     final theme = Theme.of(context);
     final axisColor = theme.colorScheme.primary;
     final axisLabelStyle = theme.textTheme.labelSmall;
-    final padding = const Setting('padding').toDouble;
     return SchemeLayout(
       minX: _minX,
       maxX: _maxX,
@@ -82,6 +79,7 @@ class CargoScheme extends StatelessWidget {
       yAxis: _yAxis,
       xAxisReversed: _xAxisReversed,
       yAxisReversed: _yAxisReversed,
+      caption: _caption,
       buildContent: (context, transform) => Stack(
         children: [
           Positioned.fill(
@@ -175,19 +173,6 @@ class CargoScheme extends StatelessWidget {
                 ),
               ),
             ),
-          Positioned(
-            bottom: 0.0,
-            right: 0.0,
-            child: SchemeText(
-              text: _caption,
-              alignment: Alignment.topLeft,
-              offset: Offset(-padding, -padding),
-              layoutTransform: Matrix4.identity(),
-              style: TextStyle(
-                background: Paint()..color = axisColor.withOpacity(0.5),
-              ),
-            ),
-          ),
         ],
       ),
     );
