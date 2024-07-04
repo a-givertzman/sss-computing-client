@@ -37,9 +37,9 @@ class JsonCargo implements Cargo {
   @override
   double get z2 => _json['bound_z2'] ?? 0.0;
   @override
-  double? get mfsx => _json['mfsx'];
+  double? get mfsx => _json['m_f_s_x'];
   @override
-  double? get mfsy => _json['mfsx'];
+  double? get mfsy => _json['m_f_s_y'];
   @override
   String? get path => _json['path'];
   @override
