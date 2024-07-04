@@ -19,6 +19,7 @@ class CargoColumn<T> {
   final bool isResizable;
   final Validator? validator;
   final T Function(String text)? parseValue;
+  final T Function(Cargo cargo)? extractValue;
   final FieldRecord? record;
   final Widget Function(Cargo cargo)? buildCell;
   final double? grow;
@@ -33,6 +34,7 @@ class CargoColumn<T> {
     this.isResizable = false,
     this.validator,
     this.parseValue,
+    this.extractValue,
     this.record,
     this.buildCell,
     this.grow,
@@ -144,6 +146,7 @@ class _CargoTableState extends State<CargoTable> {
             scrollController: _scrollController,
             cellPadding: EdgeInsets.zero,
             onRowTap: (cargo) => widget._onRowTap?.call(cargo),
+            tableBorderColor: Colors.transparent,
           ),
         ),
       ],
@@ -157,7 +160,8 @@ class _CargoTableState extends State<CargoTable> {
   }) {
     return EditOnTapField(
       key: key,
-      initialValue: '${row.data.asMap()[column.key] ?? column.defaultValue}',
+      initialValue:
+          '${column.extractValue?.call(row.data) ?? row.data.asMap()[column.key] ?? column.defaultValue}',
       textColor: Theme.of(context).colorScheme.onSurface,
       iconColor: Theme.of(context).colorScheme.primary,
       errorColor: Theme.of(context).stateColors.error,
@@ -178,7 +182,7 @@ class _CargoTableState extends State<CargoTable> {
   Widget _buildCell(DaviRow<Cargo> row, CargoColumn column) {
     return !column.isEditable
         ? Text(
-            '${row.data.asMap()[column.key] ?? column.defaultValue}',
+            '${column.extractValue?.call(row.data) ?? row.data.asMap()[column.key] ?? column.defaultValue}',
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           )
