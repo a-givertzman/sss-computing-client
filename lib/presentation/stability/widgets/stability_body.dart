@@ -118,6 +118,7 @@ class _StabilityBodyState extends State<StabilityBody> {
               child: Padding(
                 padding: EdgeInsets.all(padding),
                 child: FutureBuilderWidget(
+                  refreshStream: widget._appRefreshStream,
                   onFuture: PgStabilityParameters(
                     apiAddress: _apiAddress,
                     dbName: _dbName,
