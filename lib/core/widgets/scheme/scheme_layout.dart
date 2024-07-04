@@ -37,6 +37,13 @@ class SchemeLayout extends StatelessWidget {
   /// `xAxis` and `yAxis` contain data about scheme axes and define
   ///  value interval, reserved size from layout border, and options for
   /// labels, captions and grid.
+  ///
+  /// `scaleX`, `scaleY`, `shiftX` and `shiftY` - scales and shifts
+  /// from the top left corner of scheme layout.
+  ///
+  /// `xReversed` and `yReversed` - indicates that corresponding axis
+  /// has opposite direction. By default axes are directed from top to bottom
+  /// and left to right for the vertical and horizontal axis respectively.
   const SchemeLayout({
     super.key,
     required double minX,
@@ -200,7 +207,9 @@ class SchemeLayout extends StatelessWidget {
                 top: 0.0,
                 bottom: xAxisSpace,
                 child: ClipRect(
-                  child: _buildContent(context, transform),
+                  child: Builder(
+                    builder: (context) => _buildContent(context, transform),
+                  ),
                 ),
               ),
               if (_caption != null)
@@ -213,7 +222,7 @@ class SchemeLayout extends StatelessWidget {
                     offset: Offset(-padding, -padding),
                     layoutTransform: Matrix4.identity(),
                     style: TextStyle(
-                      background: Paint()..color = axisColor.withOpacity(0.5),
+                      backgroundColor: axisColor.withOpacity(0.5),
                     ),
                   ),
                 ),
