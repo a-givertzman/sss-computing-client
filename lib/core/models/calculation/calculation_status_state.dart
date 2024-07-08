@@ -25,19 +25,25 @@ sealed class CalculationStatusState {
 /// [CalculationStatusState] for calculation that is not in progress
 /// and compeleted successfully with reply message.
 final class CalculationStatusWithMessage implements CalculationStatusState {
-  final String message;
+  final String _message;
+  ///
+  /// Returns message with info about performed caclculation.
+  String get message => _message;
   ///
   /// Creates [CalculationStatusState] for successfully completed calculations.
-  const CalculationStatusWithMessage(this.message);
+  const CalculationStatusWithMessage(this._message);
 }
 ///
 /// [CalculationStatusState] for calculation that is not in progress
 /// and completed with error.
 final class CalculationStatusWithError implements CalculationStatusState {
-  final String errorMessage;
+  final String _errorMessage;
+  ///
+  /// Returns error of failed calculation.
+  String get errorMessage => _errorMessage;
   ///
   /// Creates [CalculationStatusState] for error case.
-  const CalculationStatusWithError(this.errorMessage);
+  const CalculationStatusWithError(this._errorMessage);
 }
 ///
 /// [CalculationStatusState] for calculation that is in progress.
