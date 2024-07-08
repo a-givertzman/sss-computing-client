@@ -6,16 +6,14 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation.dart';
-import 'package:sss_computing_client/core/widgets/calculation/calculation_status.dart';
-import 'package:sss_computing_client/core/widgets/calculation/calculation_status_state.dart';
-
+import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
+import 'package:sss_computing_client/core/models/calculation/calculation_status_state.dart';
 ///
 /// Button that sends a request to backend to perform
 /// calculations and triggers update event when calculation is completed.
 class RunCalculationButton extends StatefulWidget {
   final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
-
   ///
   /// Button that sends a request to backend to perform
   /// calculations and triggers update event when calculation is completed.
@@ -37,7 +35,6 @@ class RunCalculationButton extends StatefulWidget {
         calculationStatusNotifier: _calculationStatusNotifier,
       );
 }
-
 ///
 class _RunCalculationButtonState extends State<RunCalculationButton> {
   final void Function() _fireRefreshEvent;
@@ -45,7 +42,6 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
   late final ApiAddress _apiAddress;
   late final String _authToken;
   late final String _scriptName;
-
   ///
   _RunCalculationButtonState({
     required void Function() fireRefreshEvent,
@@ -63,7 +59,6 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
     _scriptName = 'sss-computing-strength';
     super.initState();
   }
-
   //
   @override
   Widget build(BuildContext context) {
@@ -83,7 +78,6 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
       },
     );
   }
-
   //
   void _runCalculation() {
     _calculationStatusNotifier.start();
@@ -111,13 +105,11 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
         .whenComplete(_fireRefreshEvent);
   }
 }
-
 ///
 /// Badge indicating status of calculation.
 class _StatusBadge extends StatelessWidget {
   final CalculationStatusState status;
   final Widget child;
-
   ///
   const _StatusBadge({
     required this.status,
@@ -157,13 +149,11 @@ class _StatusBadge extends StatelessWidget {
     );
   }
 }
-
 ///
 /// Button that starts calculation if it is not in progress.
 class _CalculationButton extends StatelessWidget {
   final CalculationStatusState status;
   final void Function() onPressed;
-
   ///
   const _CalculationButton({
     required this.status,

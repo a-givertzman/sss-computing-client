@@ -1,4 +1,4 @@
-import 'package:sss_computing_client/core/widgets/calculation/calculation_status.dart';
+import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 ///
 /// Immutable object that represents state of [CalculationStatus].
 sealed class CalculationStatusState {
