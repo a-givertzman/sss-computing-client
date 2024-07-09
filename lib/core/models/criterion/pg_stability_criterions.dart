@@ -37,7 +37,7 @@ class PgStabilityCriterions implements Criterions {
               cs.unit_rus::TEXT AS "unit",
               cs.relation::TEXT AS "relation",
               rs.result AS "value",
-              rs.target AS "limit",
+              rs.target AS "limit"
             FROM
               criterion_stability AS cs JOIN result_stability AS rs
               ON rs.criterion_id = cs.id
