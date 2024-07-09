@@ -48,7 +48,7 @@ class ShipDraughtsScheme extends StatelessWidget {
         apiAddress: _apiAddress,
         authToken: _authToken,
         toValue: (value) => jsonDecode(value),
-      ).fetch(filter: {'key': 'HullSvg'}),
+      ).fetch(filter: {'key': 'hull_beauty_svg'}),
       caseData: (context, hullProjections, _) {
         return FutureBuilderWidget(
           refreshStream: _appRefreshStream,
@@ -183,7 +183,6 @@ class ShipDraughtsScheme extends StatelessWidget {
                     maxX: 70.0,
                     minY: -15.0,
                     maxY: 15.0,
-                    // xAxis: ChartAxis(isLabelsVisible: true, valueInterval: 5.0),
                     yAxisReversed: true,
                     buildContent: (ctx, transform) => Stack(
                       children: [
