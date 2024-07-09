@@ -2,6 +2,11 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/core/models/criterion/pg_stability_criterions.dart';
+import 'package:sss_computing_client/core/models/stability_parameter/pg_stability_parameters.dart';
+import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
+import 'package:sss_computing_client/presentation/stability/widgets/stability_criterions_list.dart';
+import 'package:sss_computing_client/presentation/stability/widgets/stability_parameters_table.dart';
 import 'package:sss_computing_client/presentation/stability/widgets/stability_diagram.dart';
 ///
 class StabilityBody extends StatefulWidget {
@@ -15,6 +20,7 @@ class StabilityBody extends StatefulWidget {
   @override
   State<StabilityBody> createState() => _StabilityBodyState();
 }
+///
 class _StabilityBodyState extends State<StabilityBody> {
   late final ApiAddress _apiAddress;
   late final String _dbName;
@@ -58,12 +64,49 @@ class _StabilityBodyState extends State<StabilityBody> {
                   ),
                 ),
                 SizedBox(height: padding),
-                const Spacer(),
+                Expanded(
+                  child: FutureBuilderWidget(
+                    refreshStream: widget._appRefreshStream,
+                    onFuture: PgStabilityCriterions(
+                      dbName: _dbName,
+                      apiAddress: _apiAddress,
+                      authToken: _authToken,
+                    ).fetchAll,
+                    caseData: (context, criterions, _) {
+                      return Card(
+                        margin: EdgeInsets.zero,
+                        child: Padding(
+                          padding: EdgeInsets.all(padding),
+                          child:
+                              StabilityCriterionsList(criterions: criterions),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),
           SizedBox(width: padding),
-          const Spacer(),
+          Expanded(
+            child: Card(
+              margin: EdgeInsets.zero,
+              child: Padding(
+                padding: EdgeInsets.all(padding),
+                child: FutureBuilderWidget(
+                  refreshStream: widget._appRefreshStream,
+                  onFuture: PgStabilityParameters(
+                    apiAddress: _apiAddress,
+                    dbName: _dbName,
+                    authToken: _authToken,
+                  ).fetchAll,
+                  caseData: (_, parameters, __) => StabilityParametersTable(
+                    parameters: parameters,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
