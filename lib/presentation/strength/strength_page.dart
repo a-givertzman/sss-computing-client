@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/strength/strength_forces_limited.dart';
-import 'package:sss_computing_client/core/widgets/calculation/calculation_status.dart';
+import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_page_body.dart';
