@@ -8,23 +8,24 @@ import 'package:sss_computing_client/presentation/stability/widgets/criterions_s
 ///
 /// Widget that displays list of criterions
 /// with summary about its pass status.
-class CriterionsList extends StatefulWidget {
+class StabilityCriterionsList extends StatefulWidget {
   final List<Criterion> _criterions;
   ///
   /// Creates widget that displays list of criterions
   /// with summary about its pass status.
   ///
   /// `criterions` - list of criterions that will be displayed.
-  const CriterionsList({
+  const StabilityCriterionsList({
     super.key,
     required List<Criterion> criterions,
   }) : _criterions = criterions;
   ///
   @override
-  State<CriterionsList> createState() => _CriterionsListState();
+  State<StabilityCriterionsList> createState() =>
+      _StabilityCriterionsListState();
 }
 ///
-class _CriterionsListState extends State<CriterionsList> {
+class _StabilityCriterionsListState extends State<StabilityCriterionsList> {
   late final ScrollController scrollController;
   //
   @override
