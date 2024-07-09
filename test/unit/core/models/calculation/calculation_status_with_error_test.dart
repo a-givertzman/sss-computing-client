@@ -18,8 +18,8 @@ void main() {
             ..start()
             ..complete(message: 'some message')
             ..start()
-            ..complete(errorMessage: 'some message'),
-          'expect': 'some message',
+            ..complete(errorMessage: 'some error message'),
+          'expect': 'some error message',
         },
         {
           'input': CalculationStatus()
