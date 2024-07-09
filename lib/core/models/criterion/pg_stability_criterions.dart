@@ -12,6 +12,10 @@ class PgStabilityCriterions implements Criterions {
   final String? _authToken;
   ///
   /// Creates stability [Criterions] collection that stored in postgres DB.
+  ///
+  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
+  ///   - `dbName` - name of the database;
+  ///   - `authToken` - string  authentication token for accessing server;
   const PgStabilityCriterions({
     required String dbName,
     required ApiAddress apiAddress,
