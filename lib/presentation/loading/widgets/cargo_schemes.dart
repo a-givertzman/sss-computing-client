@@ -25,9 +25,15 @@ class CargoSchemes extends StatefulWidget {
   ///
   /// Creates widget of ship schemes with cargos projections on three main planes.
   ///
-  /// `cargos` - [List] of ship's [Cargo].
-  /// `hull` and 'hullBeauty' - [Map] with svg path projections of ship's hull.
-  /// `onCargoTap` - called when clicking on visualized cargo.
+  /// `cargos` - [List] of ship's [Cargo] to be display.
+  ///
+  /// `framesReal` and `framesTheoretical` are displayed as additional axes
+  /// in foreground.
+  ///
+  /// `hull` and 'hullBeauty' - [Map] with svg path projections of ship's hull
+  /// which used to display ship's hull on background.
+  ///
+  /// `onCargoTap` - called when clicking on rendered cargo.
   const CargoSchemes({
     super.key,
     required List<Cargo> cargos,
