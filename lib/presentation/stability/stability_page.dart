@@ -1,16 +1,15 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
-import 'package:sss_computing_client/presentation/main/widgets/main_page_body.dart';
+import 'package:sss_computing_client/presentation/stability/widgets/stability_body.dart';
 ///
-class MainPage extends StatelessWidget {
+class StabilityPage extends StatelessWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
   ///
-  const MainPage({
+  const StabilityPage({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,
     required void Function() fireRefreshEvent,
@@ -25,15 +24,13 @@ class MainPage extends StatelessWidget {
       body: Row(
         children: [
           NavigationPanel(
-            selectedPageIndex: 0,
+            selectedPageIndex: 2,
             appRefreshStream: _appRefreshStream,
             fireRefreshEvent: _fireRefreshEvent,
             calculationStatusNotifier: _calculationStatusNotifier,
           ),
           Expanded(
-            child: MainPageBody(
-              appRefreshStream: _appRefreshStream,
-            ),
+            child: StabilityBody(appRefreshStream: _appRefreshStream),
           ),
         ],
       ),

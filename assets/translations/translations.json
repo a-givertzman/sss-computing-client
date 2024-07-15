@@ -103,6 +103,10 @@
         "Retry",
         "Повторить"
     ],
+    "Error": [
+        "Error",
+        "Ошибка"
+    ],
     "Data loading error": [
         "Data loading error",
         "Ошибка при загрузке данных"
@@ -115,8 +119,12 @@
         "Unknown error, no response from backend",
         "Неизвестная ошибка, нет ответа от бэкенда"
     ],
-    "Calculation completed.": [
-        "Calculation completed.",
+    "Backend error": [
+        "Backend error",
+        "Ошибка бэкенда"
+    ],
+    "Calculation completed": [
+        "Calculation completed",
         "Вычисления закончены"
     ],
     "Heel": [
@@ -338,5 +346,41 @@
     "Top": [
         "Top",
         "Сверху"
+    ],
+    "Righting lever": [
+        "Righting lever",
+        "Плечо остойчивости"
+    ],
+    "Angle of heel": [
+        "Angle of heel",
+        "Угол крена"
+    ],
+    "h": [
+        "GM",
+        "h"
+    ],
+    "radian": [
+        "rad",
+        "рад"
+    ],
+    "dso": [
+        "SSC",
+        "ДСО"
+    ],
+    "ddo": [
+        "DSC",
+        "ДДО"
+    ],
+    "Parameter": [
+        "Parameter",
+        "Параметр"
+    ],
+    "to port side": [
+        "to port side",
+        "на левый борт"
+    ],
+    "to starboard": [
+        "to starboard",
+        "на првый борт"
     ]
 }
