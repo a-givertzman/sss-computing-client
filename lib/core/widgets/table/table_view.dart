@@ -15,6 +15,7 @@ class TableView<T> extends StatelessWidget {
   final Color? _scrollbarBackgroundColor;
   final Color? _controlElementColor;
   final Color? _thumbColor;
+  final EdgeInsets _cellPadding;
   final double _headerHeight;
   final double _cellHeight;
   final ScrollController? _scrollController;
@@ -35,6 +36,7 @@ class TableView<T> extends StatelessWidget {
     Color? scrollbarBackgroundColor,
     Color? controlElementColor,
     Color? thumbColor,
+    EdgeInsets cellPadding = const EdgeInsets.symmetric(horizontal: 8.0),
     double headerHeight = 32.0,
     double cellHeight = 32.0,
     ScrollController? scrollController,
@@ -51,6 +53,7 @@ class TableView<T> extends StatelessWidget {
         _headerBorderThickness = headerBorderThickness,
         _onRowTap = onRowTap,
         _onRowDoubleTap = onRowDoubleTap,
+        _cellPadding = cellPadding,
         _headerHeight = headerHeight,
         _cellHeight = cellHeight,
         _rowCursor = rowCursor,
@@ -102,6 +105,7 @@ class TableView<T> extends StatelessWidget {
         cell: CellThemeData(
           alignment: Alignment.centerLeft,
           contentHeight: _cellHeight,
+          padding: _cellPadding,
         ),
         scrollbar: TableScrollbarThemeData(
           margin: theme.scrollbarTheme.mainAxisMargin ??

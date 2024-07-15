@@ -109,10 +109,10 @@ class _MainPageBodyState extends State<MainPageBody> {
                           margin: EdgeInsets.zero,
                           child: Padding(
                             padding: EdgeInsets.all(padding),
-                            child: const DisabledWidget(
+                            child: DisabledWidget(
                               disabled: true,
                               child: FCircularValueIndicator(
-                                title: 'Bulk',
+                                title: const Localized('Bulk').v,
                                 valueUnit: '°',
                                 minValue: 0,
                                 maxValue: 360,

@@ -49,8 +49,26 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
   String? _validationError;
   bool _isInProcess = false;
   late String _initialValue;
+  //
+  @override
+  void initState() {
+    _initialValue = widget._initialValue;
+    _isInProcess = false;
+    super.initState();
+  }
+  //
+  @override
+  void dispose() {
+    _handleEditingEnd();
+    super.dispose();
+  }
+  //
   void _handleEditingStart() {
     _controller = TextEditingController(text: _initialValue);
+    _controller?.selection = TextSelection(
+      baseOffset: 0,
+      extentOffset: _controller?.text.length ?? 0,
+    );
     _focusNode = FocusNode();
     _focusNode?.requestFocus();
   }
@@ -62,19 +80,6 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
     _focusNode = null;
     _validationError = null;
     _error = null;
-  }
-  ///
-  @override
-  void initState() {
-    _initialValue = widget._initialValue;
-    _isInProcess = false;
-    super.initState();
-  }
-  ///
-  @override
-  void dispose() {
-    _handleEditingEnd();
-    super.dispose();
   }
   ///
   Future<ResultF<void>> _handleValueSave(String value) async {
@@ -198,7 +203,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
             },
           ),
           child: Icon(
-            Icons.done,
+            Icons.save,
             color: widget._iconColor,
           ),
         ),
@@ -215,7 +220,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
             deactivate();
           },
           child: Icon(
-            Icons.close,
+            Icons.edit_off_outlined,
             color: widget._iconColor,
           ),
         ),

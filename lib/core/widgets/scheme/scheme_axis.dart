@@ -38,7 +38,7 @@ class SchemeAxis extends StatelessWidget {
           paint: Paint()
             ..color = _color
             ..strokeWidth = _thickness
-            ..isAntiAlias = false,
+            ..isAntiAlias = true,
           labelStyle: _labelStyle,
           transformValue: _transformValue,
           majorTicks: _majorTicks ?? const [],

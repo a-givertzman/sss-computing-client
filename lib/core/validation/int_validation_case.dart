@@ -16,7 +16,7 @@ class IntValidationCase implements ValidationCase {
     } else {
       return Err(
         Failure(
-          message: const Localized('Only integer number allowed').toString(),
+          message: const Localized('Only integer numbers allowed').toString(),
           stackTrace: StackTrace.current,
         ),
       );

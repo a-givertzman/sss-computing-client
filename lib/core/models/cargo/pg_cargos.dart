@@ -36,12 +36,19 @@ class PgCargos implements Cargos {
               mass AS "mass",
               bound_x1 AS "bound_x1",
               bound_x2 AS "bound_x2",
-              mass_shift_x AS "vcg",
-              mass_shift_y AS "lcg",
-              mass_shift_z AS "tcg",
+              bound_y1 AS "bound_y1",
+              bound_y2 AS "bound_y2",
+              bound_z1 AS "bound_z1",
+              bound_z2 AS "bound_z2",
+              mass_shift_x AS "lcg",
+              mass_shift_y AS "tcg",
+              mass_shift_z AS "vcg",
               m_f_s_x AS "mfsx",
-              m_f_s_y AS "mfsy"
-            FROM compartment WHERE ship_id = 1
+              m_f_s_y AS "mfsy",
+              svg_paths AS "path",
+              cargo_type::TEXT AS "type"
+            FROM compartment
+            WHERE ship_id = 1
             ORDER BY name;
             """,
       ),
@@ -53,15 +60,17 @@ class PgCargos implements Cargos {
         'mass': row['mass'] as double?,
         'bound_x1': row['bound_x1'] as double?,
         'bound_x2': row['bound_x2'] as double?,
-        'bound_y1': 0.0,
-        'bound_y2': 0.0,
-        'bound_z1': 0.0,
-        'bound_z2': 0.0,
+        'bound_y1': row['bound_y1'] as double?,
+        'bound_y2': row['bound_y2'] as double?,
+        'bound_z1': row['bound_z1'] as double?,
+        'bound_z2': row['bound_z2'] as double?,
         'vcg': row['vcg'] as double?,
         'lcg': row['lcg'] as double?,
         'tcg': row['tcg'] as double?,
         'm_f_s_x': row['mfsx'] as double?,
         'm_f_s_y': row['mfsy'] as double?,
+        'path': row['path'] as String?,
+        'type': row['type'] as String,
       }),
     );
     return sqlAccess

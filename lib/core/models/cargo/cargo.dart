@@ -1,3 +1,4 @@
+import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 ///
 /// Common data for corresponding [Cargo].
 abstract interface class Cargo {
@@ -51,7 +52,7 @@ abstract interface class Cargo {
   double? get mfsy;
   ///
   /// type of the cargo
-  String get type;
+  CargoType get type;
   ///
   ///
   String? get path;
