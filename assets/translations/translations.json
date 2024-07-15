@@ -382,5 +382,13 @@
     "to starboard": [
         "to starboard",
         "на првый борт"
+    ],
+    "Stability criterions": [
+        "Stability criterions",
+        "Критерии остойчивости"
+    ],
+    "Actual and limit values did not pass relation test": [
+        "Actual and limit values did not pass relation test",
+        "Актуальное значение не соответствует заданному лимиту"
     ]
 }
