@@ -3,7 +3,6 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo_figure.dart';
-import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/figure/combined_figure.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
@@ -11,7 +10,6 @@ import 'package:sss_computing_client/core/models/figure/svg_path_figure.dart';
 import 'package:sss_computing_client/core/models/frame/frame.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_scheme.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_scheme_view_options.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/cargo_type_dropdown.dart';
 ///
 /// Ship schemes with cargos projections on three main planes.
 class CargoSchemes extends StatefulWidget {
@@ -53,12 +51,10 @@ class _CargoSchemesState extends State<CargoSchemes> {
   late final Figure _hullFigure;
   late final List<({Figure figure, Cargo cargo})> _cargoFigures;
   late Set<CargoSchemeViewOption> _viewOptions;
-  late String _cargoType;
   //
   @override
   void initState() {
     _viewOptions = {CargoSchemeViewOption.showGrid};
-    _cargoType = CargoTypeColorLabel.ballast.label;
     _hullFigure = CombinedFigure(
       paints: [
         Paint()
@@ -102,12 +98,6 @@ class _CargoSchemesState extends State<CargoSchemes> {
       isGridVisible: _viewOptions.contains(CargoSchemeViewOption.showGrid),
       valueUnit: const Localized('m').v,
     );
-    final cargoFiguresFiltered = _cargoFigures
-        .where(
-          (cargoFigure) =>
-              CargoType(cargo: cargoFigure.cargo).label() == _cargoType,
-        )
-        .toList();
     final selectedCargoFigure = widget._selectedCargo != null
         ? (
             cargo: widget._selectedCargo!,
@@ -119,20 +109,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              flex: 2,
-              child: Center(
-                child: SizedBox(
-                  width: 250.0,
-                  child: CargoTypeDropdown(
-                    initialValue: _cargoType,
-                    onTypeChanged: (newType) => setState(() {
-                      _cargoType = newType;
-                    }),
-                  ),
-                ),
-              ),
-            ),
+            const Spacer(flex: 2),
             SizedBox(width: padding),
             Expanded(
               flex: 3,
@@ -184,7 +161,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
                         projectionPlane: FigurePlane.xz,
                         hull: _hullFigure,
                         cargoFigures: _SortedFigures(
-                          cargoFigures: cargoFiguresFiltered,
+                          cargoFigures: _cargoFigures,
                           axis: _FigureAxis.y,
                         ).sorted(),
                         onCargoTap: widget._onCargoTap,
@@ -217,7 +194,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
                         projectionPlane: FigurePlane.xy,
                         hull: _hullFigure,
                         cargoFigures: _SortedFigures(
-                          cargoFigures: cargoFiguresFiltered,
+                          cargoFigures: _cargoFigures,
                           axis: _FigureAxis.z,
                         ).sorted(),
                         onCargoTap: widget._onCargoTap,
@@ -244,7 +221,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
                   projectionPlane: FigurePlane.yz,
                   hull: _hullFigure,
                   cargoFigures: _SortedFigures(
-                    cargoFigures: cargoFiguresFiltered,
+                    cargoFigures: _cargoFigures,
                     axis: _FigureAxis.x,
                     ascendingOrder: false,
                   ).sorted(),

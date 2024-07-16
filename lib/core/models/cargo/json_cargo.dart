@@ -19,6 +19,12 @@ class JsonCargo implements Cargo {
   @override
   double? get weight => _json['mass'];
   @override
+  double? get volume => _json['volume'];
+  @override
+  double? get density => _json['density'];
+  @override
+  double? get level => _json['level'];
+  @override
   double? get vcg => _json['vcg'];
   @override
   double? get lcg => _json['lcg'];

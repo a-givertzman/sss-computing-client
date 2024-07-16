@@ -232,8 +232,16 @@
         "Имя"
     ],
     "Mass": [
-        "Mass",
-        "Масса"
+        "M",
+        "M"
+    ],
+    "Volume": [
+        "V",
+        "V"
+    ],
+    "Density": [
+        "ρ",
+        "ρ"
     ],
     "Run calculations": [
         "Run calculations",
@@ -382,5 +390,13 @@
     "to starboard": [
         "to starboard",
         "на првый борт"
+    ],
+    "m^3": [
+        "m³",
+        "м³"
+    ],
+    "kg/m^3": [
+        "kg/m³",
+        "кг/м³"
     ]
 }

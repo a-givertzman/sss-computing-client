@@ -2,7 +2,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:sss_computing_client/core/models/field_record/field_record.dart';
+import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/lerp_metacentric_height_limit.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/pg_metacentric_height_high_limits.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/pg_metacentric_height_low_limits.dart';
@@ -54,26 +54,26 @@ class MetacentricHeightIndicator extends StatelessWidget {
           caseLoading: (context) => _buildCaseLoading(),
           caseData: (context, highLimits, _) => FutureBuilderWidget(
             refreshStream: _appRefreshStream,
-            onFuture: FieldRecord<double>(
+            onFuture: () => FieldRecord<double>(
               tableName: 'heel_trim_general',
               fieldName: 'draft_avg_value',
               dbName: _dbName,
               apiAddress: _apiAddress,
               authToken: _authToken,
               toValue: (value) => double.parse(value),
-            ).fetch,
+            ).fetch(filter: {'ship_id': 1}),
             caseLoading: (context) => _buildCaseLoading(),
             caseData: (context, draft, _) {
               return FutureBuilderWidget(
                 refreshStream: _appRefreshStream,
-                onFuture: FieldRecord<double>(
+                onFuture: () => FieldRecord<double>(
                   tableName: 'loads_general',
                   fieldName: 'displacement',
                   dbName: _dbName,
                   apiAddress: _apiAddress,
                   authToken: _authToken,
                   toValue: (value) => double.parse(value),
-                ).fetch,
+                ).fetch(filter: {'ship_id': 1}),
                 caseLoading: (context) => _buildCaseLoading(),
                 caseData: (context, displacement, _) {
                   final lowLimit = LerpMetacentricHeightLimit(

@@ -21,7 +21,7 @@ class CargoType {
 ///
 /// Enum of cargo types with colors and labels.
 enum CargoTypeColorLabel {
-  ballast('Ballast', Colors.green),
+  ballast('Ballast tank', Colors.green),
   oilsAndFuels('Oils and fuels', Colors.brown),
   freshWater('Fresh water', Colors.blue),
   acidsAndAlkalis('Acids and alkalis', Colors.purple),
@@ -34,11 +34,12 @@ enum CargoTypeColorLabel {
   /// Creates [CargoTypeColorLabel] from passed string.
   factory CargoTypeColorLabel.from(String value) {
     return switch (value) {
-      'BALLAST' => CargoTypeColorLabel.ballast,
-      'OILS_AND_FUELS' => CargoTypeColorLabel.oilsAndFuels,
-      'FRESH_WATER' => CargoTypeColorLabel.freshWater,
-      'ACIDS_AND_ALKALIS' => CargoTypeColorLabel.acidsAndAlkalis,
-      'POLLUTED_LIQUIDS' => CargoTypeColorLabel.pollutedLiquids,
+      'ballast_tank' => CargoTypeColorLabel.ballast,
+      'fuel_tank' => CargoTypeColorLabel.oilsAndFuels,
+      'lubricating_oil_tank' => CargoTypeColorLabel.oilsAndFuels,
+      'fresh_drinking_water_tank' => CargoTypeColorLabel.freshWater,
+      'urea_tank' => CargoTypeColorLabel.acidsAndAlkalis,
+      'sundry_tank' => CargoTypeColorLabel.pollutedLiquids,
       _ => CargoTypeColorLabel.other,
     };
   }

@@ -5,7 +5,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
-import 'package:sss_computing_client/core/models/field_record/field_record.dart';
+import 'package:sss_computing_client/core/models/record/record.dart';
 import 'package:sss_computing_client/core/widgets/table/table_view.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/edit_on_tap_field.dart';
 ///
@@ -20,7 +20,7 @@ class CargoColumn<T> {
   final Validator? validator;
   final T Function(String text)? parseValue;
   final T Function(Cargo cargo)? extractValue;
-  final FieldRecord? record;
+  final RecordNew? record;
   final Widget Function(Cargo cargo)? buildCell;
   final double? grow;
   final double? width;
@@ -165,16 +165,31 @@ class _CargoTableState extends State<CargoTable> {
       textColor: Theme.of(context).colorScheme.onSurface,
       iconColor: Theme.of(context).colorScheme.primary,
       errorColor: Theme.of(context).stateColors.error,
-      onSubmit: (value) =>
-          column.record?.persist(value, filter: {'space_id': row.data.id}) ??
-          Future.value(Ok(value)),
-      onSubmitted: (value) => setState(() {
+      onSubmit: (value) async {
+        final newValue = await column.record
+                ?.persist(value, filter: {'space_id': row.data.id}) ??
+            Ok(value);
         final idx = _cargos.indexOf(row.data);
-        final newValue = column.parseValue?.call(value) ?? value;
-        final newCargoData = row.data.asMap()..[column.key] = newValue;
-        _cargos[idx] = JsonCargo(json: newCargoData);
+        final newCargoJson = row.data.asMap();
+        for (final column in widget._columns) {
+          final record = column.record;
+          if (record == null) continue;
+          final newColumnValue = await record.fetch(
+            filter: {'space_id': row.data.id},
+          );
+          if (newColumnValue is Ok) {
+            final newValue = (newColumnValue as Ok).value;
+            newCargoJson[column.key] =
+                column.parseValue?.call(newValue) ?? newValue;
+          }
+        }
+        _cargos[idx] = JsonCargo(json: newCargoJson);
         _model.replaceRows(_cargos);
-      }),
+        setState(() {
+          return;
+        });
+        return newValue;
+      },
       validator: column.validator ?? defaultValidator,
     );
   }

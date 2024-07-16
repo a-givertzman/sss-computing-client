@@ -1,9 +1,10 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:sss_computing_client/core/models/record/record.dart';
 ///
 /// Gives access to field of record stored in database.
-class FieldRecord<T> {
+final class FieldRecord<T> implements RecordNew {
   final String _dbName;
   final String _tableName;
   final String _fieldName;
@@ -40,8 +41,9 @@ class FieldRecord<T> {
   ///
   ///   - `filter` - Map with field name as key and field value as value
   /// for filtering records of table based on its fields values.
-  Future<ResultF<T>> fetch({Map<String, dynamic>? filter}) async {
-    final filterQuery = filter?.entries
+  @override
+  Future<ResultF<T>> fetch({required Map<String, dynamic> filter}) async {
+    final filterQuery = filter.entries
         .map(
           (entry) => switch (entry.value) {
             num _ => '${entry.key} = ${entry.value}',
@@ -56,7 +58,7 @@ class FieldRecord<T> {
       sqlBuilder: (_, __) => Sql(
         sql: """
           SELECT "$_fieldName" FROM "$_tableName"
-          ${filterQuery != null ? 'WHERE $filterQuery' : ''}
+          WHERE $filterQuery
           LIMIT 1;
         """,
       ),
@@ -87,6 +89,7 @@ class FieldRecord<T> {
   ///
   ///   - `filter` - Map with field name as key and field value as value
   /// for filtering records of table based on its fields values.
+  @override
   Future<ResultF<String>> persist(
     String value, {
     required Map<String, dynamic> filter,

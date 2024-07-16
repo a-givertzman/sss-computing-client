@@ -6,7 +6,8 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation.dart';
-import 'package:sss_computing_client/core/widgets/calculation/calculation_status.dart';
+import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
+import 'package:sss_computing_client/core/models/calculation/calculation_status_state.dart';
 ///
 /// Button that sends a request to backend to perform
 /// calculations and triggers update event when calculation is completed.
@@ -61,28 +62,24 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
   //
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return ListenableBuilder(
       listenable: _calculationStatusNotifier,
-      builder: (context, _) => FloatingActionButton(
-        heroTag: null,
-        elevation: 0.0,
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
-        tooltip: _calculationStatusNotifier.isInProcess
-            ? const Localized('Сalculations in progress').v
-            : const Localized('Run calculations').v,
-        onPressed: _calculationStatusNotifier.isInProcess ? null : _handlePress,
-        child: _calculationStatusNotifier.isInProcess
-            ? CupertinoActivityIndicator(
-                color: theme.colorScheme.onPrimary,
-              )
-            : const Icon(Icons.calculate),
-      ),
+      builder: (context, _) {
+        final calculationStatus = CalculationStatusState.fromStatus(
+          _calculationStatusNotifier,
+        );
+        return _StatusBadge(
+          status: calculationStatus,
+          child: _CalculationButton(
+            status: calculationStatus,
+            onPressed: _runCalculation,
+          ),
+        );
+      },
     );
   }
   //
-  void _handlePress() {
+  void _runCalculation() {
     _calculationStatusNotifier.start();
     Calculation(
       apiAddress: _apiAddress,
@@ -92,44 +89,99 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
         .fetch()
         .then(
           (reply) => switch (reply) {
-            Ok() => _showInfoMessage(
-                context,
-                const Localized('Calculation completed.').v,
+            Ok() => _calculationStatusNotifier.complete(
+                message: const Localized('Calculation completed').v,
               ),
-            Err(:final error) => _showErrorMessage(context, '$error'),
+            Err(:final error) => _calculationStatusNotifier.complete(
+                errorMessage: error.message,
+              ),
           },
         )
         .onError(
-          (error, stackTrace) => _showErrorMessage(
-            context,
-            '${const Localized('Error').v}: $error',
+          (error, stackTrace) => _calculationStatusNotifier.complete(
+            errorMessage: '$error',
           ),
         )
-        .whenComplete(
-      () {
-        _calculationStatusNotifier.stop();
-        // TODO: remove delay (api-server needs this time gap between calculations and data refetching)
-        Future.delayed(
-          const Duration(milliseconds: 150),
-          _fireRefreshEvent,
-        );
+        .whenComplete(_fireRefreshEvent);
+  }
+}
+///
+/// Badge indicating status of calculation.
+class _StatusBadge extends StatelessWidget {
+  final CalculationStatusState status;
+  final Widget child;
+  ///
+  const _StatusBadge({
+    required this.status,
+    required this.child,
+  });
+  //
+  @override
+  Widget build(BuildContext context) {
+    const iconSize = 16.0;
+    final theme = Theme.of(context);
+    return Badge(
+      padding: EdgeInsets.zero,
+      isLabelVisible: switch (status) {
+        CalculationStatusLoading() => false,
+        _ => true,
       },
+      backgroundColor: switch (status) {
+        CalculationStatusWithMessage() => theme.stateColors.on,
+        CalculationStatusWithError() => theme.stateColors.error,
+        CalculationStatusNothing() => theme.stateColors.obsolete,
+        _ => null,
+      },
+      label: switch (status) {
+        CalculationStatusWithMessage(:final message) => Tooltip(
+            message: message,
+            child: const Icon(Icons.done_rounded, size: iconSize),
+          ),
+        CalculationStatusWithError(:final errorMessage) => Tooltip(
+            message: errorMessage,
+            child: const Icon(Icons.priority_high_rounded, size: iconSize),
+          ),
+        CalculationStatusNothing() =>
+          const Icon(Icons.question_mark_rounded, size: iconSize),
+        _ => null,
+      },
+      child: child,
     );
   }
+}
+///
+/// Button that starts calculation if it is not in progress.
+class _CalculationButton extends StatelessWidget {
+  final CalculationStatusState status;
+  final void Function() onPressed;
+  ///
+  const _CalculationButton({
+    required this.status,
+    required this.onPressed,
+  });
   //
-  void _showInfoMessage(BuildContext context, String message) {
-    if (!context.mounted) return;
-    BottomMessage.info(
-      displayDuration: const Duration(milliseconds: 1500),
-      message: message,
-    ).show(context);
-  }
-  //
-  void _showErrorMessage(BuildContext context, String message) {
-    if (!context.mounted) return;
-    BottomMessage.error(
-      displayDuration: const Duration(milliseconds: 2000),
-      message: message,
-    ).show(context);
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return FloatingActionButton(
+      heroTag: null,
+      elevation: 0.0,
+      backgroundColor: theme.colorScheme.primary,
+      foregroundColor: theme.colorScheme.onPrimary,
+      tooltip: switch (status) {
+        CalculationStatusLoading() =>
+          const Localized('Сalculations in progress').v,
+        _ => const Localized('Run calculations').v
+      },
+      onPressed: switch (status) {
+        CalculationStatusLoading() => null,
+        _ => onPressed,
+      },
+      child: switch (status) {
+        CalculationStatusLoading() =>
+          CupertinoActivityIndicator(color: theme.colorScheme.onPrimary),
+        _ => const Icon(Icons.calculate_rounded),
+      },
+    );
   }
 }
