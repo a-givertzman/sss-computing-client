@@ -67,11 +67,11 @@ class NavigationPanel extends StatelessWidget {
             selectedIcon: const Icon(Icons.analytics),
             label: Text(const Localized('Strength').v),
           ),
-          // NavigationRailDestination(
-          //   icon: const Icon(Icons.video_stable_outlined),
-          //   selectedIcon: const Icon(Icons.video_stable),
-          //   label: Text(const Localized('Stability').v),
-          // ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.video_stable_outlined),
+            selectedIcon: const Icon(Icons.video_stable),
+            label: Text(const Localized('Stability').v),
+          ),
           NavigationRailDestination(
             icon: const Icon(Icons.pallet),
             selectedIcon: const Icon(Icons.pallet),
