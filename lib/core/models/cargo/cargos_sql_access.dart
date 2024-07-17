@@ -1,29 +1,33 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:hmi_core/hmi_core.dart' hide Result;
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
-import 'package:sss_computing_client/core/models/cargo/cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
-///
-/// [Cargos] collection stored in postgres DB.
-class PgCargos implements Cargos {
+class CargosSqlAccess {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
+  final Map<String, dynamic>? _filter;
   ///
-  /// Creates [Cargos] collection stored in DB.
-  const PgCargos({
+  const CargosSqlAccess({
     required String dbName,
     required ApiAddress apiAddress,
     String? authToken,
+    Map<String, dynamic>? filter,
   })  : _dbName = dbName,
         _apiAddress = apiAddress,
-        _authToken = authToken;
-  //
-  @override
-  // ignore: long-method
-  Future<Result<List<Cargo>, Failure<String>>> fetchAll() async {
-    final sqlAccess = SqlAccess(
+        _authToken = authToken,
+        _filter = filter;
+  ///
+  Future<ResultF<List<Cargo>>> fetch() {
+    final filterQuery = _filter?.entries
+        .map(
+          (entry) => switch (entry.value) {
+            num _ => '${entry.key} = ${entry.value}',
+            _ => "${entry.key} = '${entry.value}'"
+          },
+        )
+        .join(' AND ');
+    return SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
       database: _dbName,
@@ -37,7 +41,7 @@ class PgCargos implements Cargos {
               c.mass AS "mass",
               c.volume AS "volume",
               c.density AS "density",
-              (c.volume / c.volume_max)*100.0 AS "level",
+              (c.volume / c.volume_max) * 100.0 AS "level",
               c.bound_x1 AS "bound_x1",
               c.bound_x2 AS "bound_x2",
               c.bound_y1 AS "bound_y1",
@@ -57,6 +61,7 @@ class PgCargos implements Cargos {
               JOIN cargo_general_category AS cgc ON cc.general_category_id = cgc.id
             WHERE
               ship_id = 1
+              ${filterQuery == null ? '' : 'AND ($filterQuery)'}
             ORDER BY
               name;
             """,
@@ -84,25 +89,6 @@ class PgCargos implements Cargos {
         'path': row['path'] as String?,
         'type': row['type'] as String,
       }),
-    );
-    return sqlAccess
-        .fetch()
-        .then<Result<List<Cargo>, Failure<String>>>(
-          (result) => switch (result) {
-            Ok(value: final cargos) => Ok(cargos),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-          },
-        )
-        .onError(
-          (error, stackTrace) => Err(Failure(
-            message: '$error',
-            stackTrace: stackTrace,
-          )),
-        );
+    ).fetch();
   }
 }

@@ -48,7 +48,7 @@ class FieldRecord<T> {
             _ => "${entry.key} = '${entry.value}'"
           },
         )
-        .join(' AND');
+        .join(' AND ');
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -98,7 +98,7 @@ class FieldRecord<T> {
             _ => "${entry.key} = '${entry.value}'"
           },
         )
-        .join(' AND');
+        .join(' AND ');
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',

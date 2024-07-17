@@ -6,7 +6,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
-import 'package:sss_computing_client/core/models/cargo/pg_cargos.dart';
+import 'package:sss_computing_client/core/models/cargo/pg_all_cargos.dart';
 import 'package:sss_computing_client/core/models/field_record/field_record.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
@@ -88,7 +88,7 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
             ).fetch(filter: {'key': 'hull_beauty_svg'}),
             caseData: (context, hullBeauty, _) => FutureBuilderWidget(
               refreshStream: widget._appRefreshStream,
-              onFuture: PgCargos(
+              onFuture: PgAllCargos(
                 apiAddress: widget._apiAddress,
                 dbName: widget._dbName,
                 authToken: widget._authToken,
