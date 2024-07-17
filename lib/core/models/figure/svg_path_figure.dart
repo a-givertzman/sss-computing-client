@@ -11,7 +11,7 @@ class SVGPathFigure implements Figure {
   /// Construct [Figure] of custom form from map of projections,
   /// treating them as svg path element.
   const SVGPathFigure({
-    required List<Paint> paints,
+    List<Paint> paints = const [],
     required Map<FigurePlane, String?> pathProjections,
   })  : _paints = paints,
         _pathProjections = pathProjections;

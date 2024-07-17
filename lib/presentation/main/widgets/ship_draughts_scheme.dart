@@ -4,7 +4,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/field_record/field_record.dart';
-import 'package:sss_computing_client/core/models/figure/box_figure.dart';
+import 'package:sss_computing_client/core/models/figure/rectangular_cuboid_figure.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
 import 'package:sss_computing_client/core/models/figure/line_segment_figure.dart';
 import 'package:sss_computing_client/core/models/figure/svg_path_figure.dart';
@@ -74,7 +74,7 @@ class ShipDraughtsScheme extends StatelessWidget {
                 FigurePlane.yz: hullProjections['yz'],
               },
             );
-            final waterlineFigure = RectangularCuboid(
+            final waterlineFigure = RectangularCuboidFigure(
               start: Vector3(-140.0, -40.0, -40.0),
               end: Vector3(140.0, 40.0, 0.0),
               paints: [
