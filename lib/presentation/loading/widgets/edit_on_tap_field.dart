@@ -48,11 +48,11 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
   Failure<String>? _error;
   String? _validationError;
   bool _isInProcess = false;
-  late String _initialValue;
+  // late String _initialValue;
   //
   @override
   void initState() {
-    _initialValue = widget._initialValue;
+    // _initialValue = widget._initialValue;
     _isInProcess = false;
     super.initState();
   }
@@ -64,7 +64,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
   }
   //
   void _handleEditingStart() {
-    _controller = TextEditingController(text: _initialValue);
+    _controller = TextEditingController(text: widget._initialValue);
     _controller?.selection = TextSelection(
       baseOffset: 0,
       extentOffset: _controller?.text.length ?? 0,
@@ -93,13 +93,13 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
       _isInProcess = true;
       _error = null;
     });
-    final ResultF<String> newValue =
-        value == _initialValue ? Ok(value) : await widget._onSubmit(value);
+    final ResultF<String> newValue = value == widget._initialValue
+        ? Ok(value)
+        : await widget._onSubmit(value);
     switch (newValue) {
       case Ok(:final value):
         setState(() {
           _isInProcess = false;
-          _initialValue = value;
         });
         widget._onSubmitted?.call(value);
         return const Ok(null);
@@ -145,7 +145,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
       },
       builder: ((context, isActivated, deactivate) => !isActivated
           ? Text(
-              _initialValue,
+              widget._initialValue,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
             )
