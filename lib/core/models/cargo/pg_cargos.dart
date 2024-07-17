@@ -21,6 +21,7 @@ class PgCargos implements Cargos {
         _authToken = authToken;
   //
   @override
+  // ignore: long-method
   Future<Result<List<Cargo>, Failure<String>>> fetchAll() async {
     final sqlAccess = SqlAccess(
       address: _apiAddress,
@@ -29,27 +30,35 @@ class PgCargos implements Cargos {
       sqlBuilder: (_, __) => Sql(
         sql: """
             SELECT
-              project_id AS "projectId",
-              ship_id AS "shipId",
-              space_id AS "id",
-              name AS "name",
-              mass AS "mass",
-              bound_x1 AS "bound_x1",
-              bound_x2 AS "bound_x2",
-              bound_y1 AS "bound_y1",
-              bound_y2 AS "bound_y2",
-              bound_z1 AS "bound_z1",
-              bound_z2 AS "bound_z2",
-              mass_shift_x AS "lcg",
-              mass_shift_y AS "tcg",
-              mass_shift_z AS "vcg",
-              m_f_s_x AS "mfsx",
-              m_f_s_y AS "mfsy",
-              svg_paths AS "path",
-              cargo_type::TEXT AS "type"
-            FROM compartment
-            WHERE ship_id = 1
-            ORDER BY name;
+              c.project_id AS "projectId",
+              c.ship_id AS "shipId",
+              c.space_id AS "id",
+              c.name AS "name",
+              c.mass AS "mass",
+              c.volume AS "volume",
+              c.density AS "density",
+              (c.volume / c.volume_max)*100.0 AS "level",
+              c.bound_x1 AS "bound_x1",
+              c.bound_x2 AS "bound_x2",
+              c.bound_y1 AS "bound_y1",
+              c.bound_y2 AS "bound_y2",
+              c.bound_z1 AS "bound_z1",
+              c.bound_z2 AS "bound_z2",
+              c.mass_shift_x AS "lcg",
+              c.mass_shift_y AS "tcg",
+              c.mass_shift_z AS "vcg",
+              c.m_f_s_x AS "mfsx",
+              c.m_f_s_y AS "mfsy",
+              c.svg_paths AS "path",
+              cc.key::TEXT AS "type"
+            FROM
+              compartment AS c
+              JOIN cargo_category AS cc ON c.category_id = cc.id
+              JOIN cargo_general_category AS cgc ON cc.general_category_id = cgc.id
+            WHERE
+              ship_id = 1
+            ORDER BY
+              name;
             """,
       ),
       entryBuilder: (row) => JsonCargo(json: {
@@ -58,6 +67,9 @@ class PgCargos implements Cargos {
         'id': row['id'] as int?,
         'name': row['name'] as String?,
         'mass': row['mass'] as double?,
+        'volume': row['volume'] as double?,
+        'density': row['density'] as double?,
+        'level': row['level'] as double?,
         'bound_x1': row['bound_x1'] as double?,
         'bound_x2': row['bound_x2'] as double?,
         'bound_y1': row['bound_y1'] as double?,
