@@ -2,7 +2,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/core/models/field_record/field_record.dart';
+import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/presentation/main/widgets/future_text_value_indicator.dart';
 ///
 /// Widget for indicating ship weights.
@@ -44,56 +44,56 @@ class WeightIndicators extends StatelessWidget {
                 children: [
                   FTextValueIndicator(
                     appRefreshStream: _appRefreshStream,
-                    fetch: FieldRecord<double>(
+                    fetch: () => FieldRecord<double>(
                       tableName: 'loads_general',
                       fieldName: 'ballast',
                       dbName: _dbName,
                       apiAddress: _apiAddress,
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
-                    ).fetch,
+                    ).fetch(filter: {'ship_id': 1}),
                     caption: const Localized('Ballast').v,
                     unit: const Localized('t').v,
                   ),
                   SizedBox(height: padding),
                   FTextValueIndicator(
                     appRefreshStream: _appRefreshStream,
-                    fetch: FieldRecord<double>(
+                    fetch: () => FieldRecord<double>(
                       tableName: 'loads_general',
                       fieldName: 'store',
                       dbName: _dbName,
                       apiAddress: _apiAddress,
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
-                    ).fetch,
+                    ).fetch(filter: {'ship_id': 1}),
                     caption: const Localized('Stores').v,
                     unit: const Localized('t').v,
                   ),
                   SizedBox(height: padding),
                   FTextValueIndicator(
                     appRefreshStream: _appRefreshStream,
-                    fetch: FieldRecord<double>(
+                    fetch: () => FieldRecord<double>(
                       tableName: 'loads_general',
                       fieldName: 'cargo',
                       dbName: _dbName,
                       apiAddress: _apiAddress,
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
-                    ).fetch,
+                    ).fetch(filter: {'ship_id': 1}),
                     caption: const Localized('Cargo').v,
                     unit: const Localized('t').v,
                   ),
                   SizedBox(height: padding),
                   FTextValueIndicator(
                     appRefreshStream: _appRefreshStream,
-                    fetch: FieldRecord<double>(
+                    fetch: () => FieldRecord<double>(
                       tableName: 'loads_general',
                       fieldName: 'deadweight',
                       dbName: _dbName,
                       apiAddress: _apiAddress,
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
-                    ).fetch,
+                    ).fetch(filter: {'ship_id': 1}),
                     caption: const Localized('Deadweight').v,
                     unit: const Localized('t').v,
                   ),
@@ -107,14 +107,14 @@ class WeightIndicators extends StatelessWidget {
                 children: [
                   FTextValueIndicator(
                     appRefreshStream: _appRefreshStream,
-                    fetch: FieldRecord<double>(
+                    fetch: () => FieldRecord<double>(
                       tableName: 'loads_general',
                       fieldName: 'lightship',
                       dbName: _dbName,
                       apiAddress: _apiAddress,
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
-                    ).fetch,
+                    ).fetch(filter: {'ship_id': 1}),
                     caption: const Localized('Lightship').v,
                     unit: const Localized('t').v,
                   ),
@@ -128,28 +128,28 @@ class WeightIndicators extends StatelessWidget {
                 children: [
                   FTextValueIndicator(
                     appRefreshStream: _appRefreshStream,
-                    fetch: FieldRecord<double>(
+                    fetch: () => FieldRecord<double>(
                       tableName: 'loads_general',
                       fieldName: 'icing',
                       dbName: _dbName,
                       apiAddress: _apiAddress,
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
-                    ).fetch,
+                    ).fetch(filter: {'ship_id': 1}),
                     caption: const Localized('Icing').v,
                     unit: const Localized('t').v,
                   ),
                   SizedBox(height: padding),
                   FTextValueIndicator(
                     appRefreshStream: _appRefreshStream,
-                    fetch: FieldRecord<double>(
+                    fetch: () => FieldRecord<double>(
                       tableName: 'loads_general',
                       fieldName: 'wetting',
                       dbName: _dbName,
                       apiAddress: _apiAddress,
                       authToken: _authToken,
                       toValue: (value) => double.parse(value),
-                    ).fetch,
+                    ).fetch(filter: {'ship_id': 1}),
                     caption: const Localized('Wetting').v,
                     unit: const Localized('t').v,
                   ),
@@ -162,14 +162,14 @@ class WeightIndicators extends StatelessWidget {
         Center(
           child: FTextValueIndicator(
             appRefreshStream: _appRefreshStream,
-            fetch: FieldRecord<double>(
+            fetch: () => FieldRecord<double>(
               tableName: 'loads_general',
               fieldName: 'displacement',
               dbName: _dbName,
               apiAddress: _apiAddress,
               authToken: _authToken,
               toValue: (value) => double.parse(value),
-            ).fetch,
+            ).fetch(filter: {'ship_id': 1}),
             caption: const Localized('Displacement').v,
             unit: const Localized('t').v,
           ),

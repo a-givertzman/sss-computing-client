@@ -3,7 +3,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
-import 'package:sss_computing_client/core/models/field_record/field_record.dart';
+import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/models/stability_curve/metacentric_height_line.dart';
 import 'package:sss_computing_client/core/models/stability_curve/pg_dynamic_stability_curve.dart';
 import 'package:sss_computing_client/core/models/stability_curve/pg_static_stability_curve.dart';

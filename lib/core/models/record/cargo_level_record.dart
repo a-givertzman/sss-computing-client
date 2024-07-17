@@ -1,47 +1,41 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:sss_computing_client/core/models/record/record.dart';
 ///
 /// Gives access to field of record stored in database.
-class FieldRecord<T> {
+final class CargoLevelRecord implements RecordNew<String> {
   final String _dbName;
-  final String _tableName;
-  final String _fieldName;
   final ApiAddress _apiAddress;
   final String? _authToken;
-  final T Function(String) _toValue;
+  final String Function(String) _toValue;
   ///
-  /// Create [FieldRecord] that giving access
+  /// Create [CargoLevelRecord] that giving access
   /// to field of record stored in database.
   ///
   /// Value can be obtained using:
-  ///   - `databaseName` - name of the database;
-  ///   - `tableName` - name of the database table;
-  ///   - `fieldName` - name of the table field (column);
+  ///   - `dbName` - name of the database;
   ///   - `apiAddress` - [ApiAddress] of server that interact with database;
   ///   - `authToken` - string  authentication token for accessing server;
   ///   - `toValue` - function for parsing string representation of
   /// field into value of desired type.
-  const FieldRecord({
+  const CargoLevelRecord({
     required String dbName,
-    required String tableName,
-    required String fieldName,
     required ApiAddress apiAddress,
     String? authToken,
-    required T Function(String value) toValue,
-  })  : _fieldName = fieldName,
-        _tableName = tableName,
-        _dbName = dbName,
+    required String Function(String value) toValue,
+  })  : _dbName = dbName,
         _apiAddress = apiAddress,
         _authToken = authToken,
         _toValue = toValue;
   ///
   /// Returns result of field fetching.
   ///
-  ///   - `filter` - Map with field name as key and field value as value
+  /// `filter` - Map with field name as key and field value as value
   /// for filtering records of table based on its fields values.
-  Future<ResultF<T>> fetch({Map<String, dynamic>? filter}) async {
-    final filterQuery = filter?.entries
+  @override
+  Future<ResultF<String>> fetch({required Map<String, dynamic> filter}) async {
+    final filterQuery = filter.entries
         .map(
           (entry) => switch (entry.value) {
             num _ => '${entry.key} = ${entry.value}',
@@ -55,16 +49,16 @@ class FieldRecord<T> {
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-          SELECT "$_fieldName" FROM "$_tableName"
-          ${filterQuery != null ? 'WHERE $filterQuery' : ''}
+          SELECT (volume / volume_max) * 100.0 AS level FROM compartment
+          WHERE $filterQuery
           LIMIT 1;
         """,
       ),
-      entryBuilder: (row) => '${row[_fieldName]}',
+      entryBuilder: (row) => '${row['level']}',
     );
     return sqlAccess
         .fetch()
-        .then<ResultF<T>>(
+        .then<ResultF<String>>(
           (result) => switch (result) {
             Ok(:final value) => Ok(_toValue(value.first)),
             Err(:final error) => Err(
@@ -85,8 +79,9 @@ class FieldRecord<T> {
   ///
   /// Returns result of field persisting.
   ///
-  ///   - `filter` - Map with field name as key and field value as value
+  /// `filter` - Map with field name as key and field value as value
   /// for filtering records of table based on its fields values.
+  @override
   Future<ResultF<String>> persist(
     String value, {
     required Map<String, dynamic> filter,
@@ -105,13 +100,13 @@ class FieldRecord<T> {
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-          UPDATE "$_tableName"
-          SET "$_fieldName"='$value'
+          UPDATE compartment
+          SET volume=($value * volume_max) / 100.0
           WHERE $filterQuery
-          RETURNING "$_fieldName";
+          RETURNING (volume/volume_max) AS level;
         """,
       ),
-      entryBuilder: (row) => '${row[_fieldName]}',
+      entryBuilder: (row) => '${row['level']}',
     );
     return sqlAccess
         .fetch()
