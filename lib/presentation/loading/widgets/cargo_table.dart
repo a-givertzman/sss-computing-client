@@ -5,7 +5,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
-import 'package:sss_computing_client/core/models/record/record.dart';
+import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/widgets/table/table_view.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/edit_on_tap_field.dart';
 ///
@@ -20,7 +20,7 @@ class CargoColumn<T> {
   final Validator? validator;
   final T Function(String text)? parseValue;
   final T Function(Cargo cargo)? extractValue;
-  final RecordNew? record;
+  final ValueRecord? record;
   final Widget Function(Cargo cargo)? buildCell;
   final double? grow;
   final double? width;
@@ -109,12 +109,10 @@ class _CargoTableState extends State<CargoTable> {
                 : null,
             width: column.width ?? 100.0,
             name: column.name,
-            cellBuilder: (_, row) =>
-                column.buildCell?.call(row.data) ??
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: _buildCell(row, column),
-                ),
+            cellBuilder: (_, row) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: _buildCell(row, column),
+            ),
             cellStyleBuilder: _buildCellStyle,
           ),
         ),
@@ -147,6 +145,7 @@ class _CargoTableState extends State<CargoTable> {
             cellPadding: EdgeInsets.zero,
             onRowTap: (cargo) => widget._onRowTap?.call(cargo),
             tableBorderColor: Colors.transparent,
+            alignment: Alignment.centerRight,
           ),
         ),
       ],
@@ -191,16 +190,18 @@ class _CargoTableState extends State<CargoTable> {
         return newValue;
       },
       validator: column.validator ?? defaultValidator,
+      child: column.buildCell?.call(row.data),
     );
   }
   ///
   Widget _buildCell(DaviRow<Cargo> row, CargoColumn column) {
     return !column.isEditable
-        ? Text(
-            '${column.extractValue?.call(row.data) ?? row.data.asMap()[column.key] ?? column.defaultValue}',
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          )
+        ? column.buildCell?.call(row.data) ??
+            Text(
+              '${column.extractValue?.call(row.data) ?? row.data.asMap()[column.key] ?? column.defaultValue}',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            )
         : _buildEditableCell(
             row,
             column,

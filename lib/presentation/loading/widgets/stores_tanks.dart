@@ -137,7 +137,7 @@ class _StoresTanksState extends State<StoresTanks> {
                                   ),
                                 );
                               },
-                              width: 10.0,
+                              width: 28.0,
                             ),
                             CargoColumn(
                               width: 350.0,
@@ -177,7 +177,18 @@ class _StoresTanksState extends State<StoresTanks> {
                                 authToken: widget._authToken,
                               ),
                               defaultValue: '—',
-                              parseValue: (value) => double.parse(value),
+                              parseValue: (value) =>
+                                  _formatDouble(
+                                    double.parse(value),
+                                    fractionDigits: 1,
+                                  ) ??
+                                  0.0,
+                              extractValue: (cargo) =>
+                                  _formatDouble(
+                                    cargo.weight,
+                                    fractionDigits: 1,
+                                  ) ??
+                                  0.0,
                               validator: const Validator(cases: [
                                 MinLengthValidationCase(1),
                                 RealValidationCase(),
@@ -200,7 +211,18 @@ class _StoresTanksState extends State<StoresTanks> {
                                 authToken: widget._authToken,
                               ),
                               defaultValue: '—',
-                              parseValue: (value) => double.parse(value),
+                              parseValue: (value) =>
+                                  _formatDouble(
+                                    double.parse(value),
+                                    fractionDigits: 1,
+                                  ) ??
+                                  0.0,
+                              extractValue: (cargo) =>
+                                  _formatDouble(
+                                    cargo.volume,
+                                    fractionDigits: 1,
+                                  ) ??
+                                  0.0,
                               validator: const Validator(cases: [
                                 MinLengthValidationCase(1),
                                 RealValidationCase(),
@@ -211,7 +233,7 @@ class _StoresTanksState extends State<StoresTanks> {
                               key: 'density',
                               type: 'real',
                               name:
-                                  '${const Localized('Density').v} [${const Localized('kg/m^3').v}]',
+                                  '${const Localized('Density').v} [${const Localized('t/m^3').v}]',
                               isResizable: true,
                               isEditable: true,
                               record: FieldRecord<String>(
@@ -223,7 +245,18 @@ class _StoresTanksState extends State<StoresTanks> {
                                 authToken: widget._authToken,
                               ),
                               defaultValue: '—',
-                              parseValue: (value) => double.parse(value),
+                              parseValue: (value) =>
+                                  _formatDouble(
+                                    double.parse(value),
+                                    fractionDigits: 3,
+                                  ) ??
+                                  0.0,
+                              extractValue: (cargo) =>
+                                  _formatDouble(
+                                    cargo.density,
+                                    fractionDigits: 3,
+                                  ) ??
+                                  0.0,
                               validator: const Validator(cases: [
                                 MinLengthValidationCase(1),
                                 RealValidationCase(),
@@ -236,6 +269,44 @@ class _StoresTanksState extends State<StoresTanks> {
                               name: const Localized('%').v,
                               isResizable: true,
                               isEditable: true,
+                              buildCell: (cargo) {
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    vertical: 2.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: <Color>[
+                                        Theme.of(context).colorScheme.primary,
+                                        Theme.of(context).colorScheme.primary,
+                                        Colors.transparent,
+                                        Colors.transparent,
+                                      ],
+                                      stops: [
+                                        0.0,
+                                        cargo.level! / 100.0,
+                                        cargo.level! / 100.0,
+                                        1.0,
+                                      ],
+                                      tileMode: TileMode.clamp,
+                                    ),
+                                    border: Border.all(
+                                      width: 1.0,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(2.0),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text('${_formatDouble(
+                                          cargo.level,
+                                          fractionDigits: 1,
+                                        ) ?? 0.0}'),
+                                  ),
+                                );
+                              },
                               record: CargoLevelRecord(
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
@@ -243,7 +314,12 @@ class _StoresTanksState extends State<StoresTanks> {
                                 authToken: widget._authToken,
                               ),
                               defaultValue: '—',
-                              parseValue: (value) => double.parse(value),
+                              parseValue: (value) =>
+                                  _formatDouble(
+                                    double.parse(value),
+                                    fractionDigits: 1,
+                                  ) ??
+                                  0.0,
                               validator: const Validator(cases: [
                                 MinLengthValidationCase(1),
                                 RealValidationCase(),

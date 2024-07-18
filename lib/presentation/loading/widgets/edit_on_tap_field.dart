@@ -16,6 +16,7 @@ class EditOnTapField extends StatefulWidget {
   final void Function(String)? _onSubmitted;
   final void Function(String)? _onCancel;
   final Validator? _validator;
+  final Widget? _child;
   ///
   /// Creates [EditOnTapField] that can be edited
   /// after activation by tap
@@ -29,6 +30,7 @@ class EditOnTapField extends StatefulWidget {
     dynamic Function(String)? onSubmitted,
     dynamic Function(String)? onCancel,
     Validator? validator,
+    Widget? child,
   })  : _validator = validator,
         _onCancel = onCancel,
         _onSubmit = onSubmit,
@@ -36,7 +38,8 @@ class EditOnTapField extends StatefulWidget {
         _errorColor = errorColor,
         _iconColor = iconColor,
         _textColor = textColor,
-        _initialValue = initialValue;
+        _initialValue = initialValue,
+        _child = child;
   ///
   @override
   State<EditOnTapField> createState() => _EditOnTapFieldState();
@@ -144,11 +147,12 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
         return false;
       },
       builder: ((context, isActivated, deactivate) => !isActivated
-          ? Text(
-              widget._initialValue,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            )
+          ? widget._child ??
+              Text(
+                widget._initialValue,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              )
           : Row(
               children: [
                 Flexible(
