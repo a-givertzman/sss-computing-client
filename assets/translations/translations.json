@@ -232,8 +232,16 @@
         "Имя"
     ],
     "Mass": [
-        "Mass",
-        "Масса"
+        "M",
+        "M"
+    ],
+    "Volume": [
+        "V",
+        "V"
+    ],
+    "Density": [
+        "ρ",
+        "ρ"
     ],
     "Run calculations": [
         "Run calculations",
@@ -390,5 +398,21 @@
     "Actual and limit values did not pass relation test": [
         "Actual and limit values did not pass relation test",
         "Актуальное значение не соответствует заданному лимиту"
+    ],
+    "m^3": [
+        "m³",
+        "м³"
+    ],
+    "t/m^3": [
+        "t/m³",
+        "т/м³"
+    ],
+    "Edit": [
+        "Edit",
+        "Редактировать"
+    ],
+    "Cargo parameters": [
+        "Cargo parameters",
+        "Параметры груза"
     ]
 }
