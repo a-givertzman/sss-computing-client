@@ -1,10 +1,10 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:sss_computing_client/core/models/record/record.dart';
+import 'package:sss_computing_client/core/models/record/value_record.dart';
 ///
 /// Gives access to field of record stored in database.
-final class FieldRecord<T> implements RecordNew {
+final class FieldRecord<T> implements ValueRecord<T> {
   final String _dbName;
   final String _tableName;
   final String _fieldName;

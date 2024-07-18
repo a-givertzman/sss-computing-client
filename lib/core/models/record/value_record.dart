@@ -1,6 +1,6 @@
 import 'package:hmi_core/hmi_core_result_new.dart';
 ///
-abstract interface class RecordNew<T> {
+abstract interface class ValueRecord<T> {
   ///
   Future<ResultF<T>> fetch({required Map<String, dynamic> filter});
   ///
