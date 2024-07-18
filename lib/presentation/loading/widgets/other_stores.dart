@@ -1,18 +1,21 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:ext_rw/ext_rw.dart';
+import 'package:ext_rw/ext_rw.dart' hide FieldType;
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_others.dart';
+import 'package:sss_computing_client/core/models/field/field_data.dart';
+import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_table.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/cargo_parameters.dart';
 ///
 class OtherStores extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
@@ -110,6 +113,146 @@ class _OtherStoresState extends State<OtherStores> {
                         ),
                       ),
                       SizedBox(height: blockPadding),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const IconButton.filled(
+                            onPressed: null,
+                            icon: Icon(Icons.add_rounded),
+                          ),
+                          SizedBox(width: blockPadding),
+                          const IconButton.filled(
+                            onPressed: null,
+                            icon: Icon(Icons.remove_rounded),
+                          ),
+                          SizedBox(width: blockPadding),
+                          IconButton.filled(
+                            icon: const Icon(Icons.edit_rounded),
+                            onPressed: switch (_selectedCargo) {
+                              Cargo(:final int id) => () => showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      content: SizedBox(
+                                        height: 500.0,
+                                        width: 500.0,
+                                        child: CargoParametersForm(
+                                          fieldData: [
+                                            FieldData(
+                                              id: '$id',
+                                              label: const Localized('Name').v,
+                                              unit: '',
+                                              type: FieldType.string,
+                                              initialValue: '',
+                                              record: FieldRecord<String>(
+                                                toValue: (text) => text,
+                                                dbName: widget._dbName,
+                                                apiAddress: widget._apiAddress,
+                                                authToken: widget._authToken,
+                                                tableName: 'compartment',
+                                                fieldName: 'name',
+                                              ),
+                                            ),
+                                            FieldData(
+                                              id: '$id',
+                                              label: const Localized('Mass').v,
+                                              unit: const Localized('t').v,
+                                              type: FieldType.real,
+                                              initialValue: '',
+                                              record: FieldRecord<String>(
+                                                toValue: (text) => text,
+                                                dbName: widget._dbName,
+                                                apiAddress: widget._apiAddress,
+                                                authToken: widget._authToken,
+                                                tableName: 'compartment',
+                                                fieldName: 'mass',
+                                              ),
+                                            ),
+                                            FieldData(
+                                              id: '$id',
+                                              label: const Localized('LCG').v,
+                                              unit: const Localized('m').v,
+                                              type: FieldType.string,
+                                              initialValue: '',
+                                              record: FieldRecord<String>(
+                                                toValue: (text) => text,
+                                                dbName: widget._dbName,
+                                                apiAddress: widget._apiAddress,
+                                                authToken: widget._authToken,
+                                                tableName: 'compartment',
+                                                fieldName: 'mass_shift_x',
+                                              ),
+                                            ),
+                                            FieldData(
+                                              id: '$id',
+                                              label: const Localized('TCG').v,
+                                              unit: const Localized('m').v,
+                                              type: FieldType.string,
+                                              initialValue: '',
+                                              record: FieldRecord<String>(
+                                                toValue: (text) => text,
+                                                dbName: widget._dbName,
+                                                apiAddress: widget._apiAddress,
+                                                authToken: widget._authToken,
+                                                tableName: 'compartment',
+                                                fieldName: 'mass_shift_y',
+                                              ),
+                                            ),
+                                            FieldData(
+                                              id: '$id',
+                                              label: const Localized('VCG').v,
+                                              unit: const Localized('m').v,
+                                              type: FieldType.string,
+                                              initialValue: '',
+                                              record: FieldRecord<String>(
+                                                toValue: (text) => text,
+                                                dbName: widget._dbName,
+                                                apiAddress: widget._apiAddress,
+                                                authToken: widget._authToken,
+                                                tableName: 'compartment',
+                                                fieldName: 'mass_shift_z',
+                                              ),
+                                            ),
+                                            FieldData(
+                                              id: '$id',
+                                              label: const Localized('X1').v,
+                                              unit: const Localized('m').v,
+                                              type: FieldType.string,
+                                              initialValue: '',
+                                              record: FieldRecord<String>(
+                                                toValue: (text) => text,
+                                                dbName: widget._dbName,
+                                                apiAddress: widget._apiAddress,
+                                                authToken: widget._authToken,
+                                                tableName: 'compartment',
+                                                fieldName: 'bound_x1',
+                                              ),
+                                            ),
+                                            FieldData(
+                                              id: '$id',
+                                              label: const Localized('X2').v,
+                                              unit: const Localized('m').v,
+                                              type: FieldType.string,
+                                              initialValue: '',
+                                              record: FieldRecord<String>(
+                                                toValue: (text) => text,
+                                                dbName: widget._dbName,
+                                                apiAddress: widget._apiAddress,
+                                                authToken: widget._authToken,
+                                                tableName: 'compartment',
+                                                fieldName: 'bound_x2',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              _ => null,
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: blockPadding),
                       Expanded(
                         child: CargoTable(
                           selected: _selectedCargo,
@@ -136,7 +279,7 @@ class _OtherStoresState extends State<OtherStores> {
                                   ),
                                 );
                               },
-                              width: 10.0,
+                              width: 28.0,
                             ),
                             CargoColumn(
                               width: 350.0,
@@ -176,7 +319,18 @@ class _OtherStoresState extends State<OtherStores> {
                                 authToken: widget._authToken,
                               ),
                               defaultValue: '—',
-                              parseValue: (value) => double.parse(value),
+                              parseValue: (value) =>
+                                  _formatDouble(
+                                    double.parse(value),
+                                    fractionDigits: 1,
+                                  ) ??
+                                  0.0,
+                              extractValue: (cargo) =>
+                                  _formatDouble(
+                                    cargo.weight,
+                                    fractionDigits: 1,
+                                  ) ??
+                                  0.0,
                               validator: const Validator(cases: [
                                 MinLengthValidationCase(1),
                                 RealValidationCase(),
