@@ -20,6 +20,7 @@ class TableView<T> extends StatelessWidget {
   final double _cellHeight;
   final ScrollController? _scrollController;
   final ColumnWidthBehavior _columnWidthBehavior;
+  final Alignment? _alignment;
   ///
   const TableView({
     super.key,
@@ -42,7 +43,8 @@ class TableView<T> extends StatelessWidget {
     ScrollController? scrollController,
     Color? selectedRowColor,
     ColumnWidthBehavior columnWidthBehavior = ColumnWidthBehavior.scrollable,
-  })  : _rowColor = rowColor,
+    Alignment? alignment,
+  })  : _alignment = alignment, _rowColor = rowColor,
         _columnWidthBehavior = columnWidthBehavior,
         _thumbColor = thumbColor,
         _controlElementColor = controlElementColor,
@@ -88,6 +90,7 @@ class TableView<T> extends StatelessWidget {
             descending: controlElementColor,
           ),
           height: _headerHeight,
+          alignment: _alignment ?? Alignment.centerLeft,
         ),
         header: HeaderThemeData(
           bottomBorderColor: headerBorderColor,
@@ -103,7 +106,7 @@ class TableView<T> extends StatelessWidget {
           ),
         ),
         cell: CellThemeData(
-          alignment: Alignment.centerLeft,
+          alignment: _alignment ?? Alignment.centerLeft,
           contentHeight: _cellHeight,
           padding: _cellPadding,
         ),
