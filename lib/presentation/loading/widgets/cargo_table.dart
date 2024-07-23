@@ -15,12 +15,14 @@ class CargoColumn<T> {
   final String key;
   final String name;
   final String defaultValue;
+  final Alignment headerAlignment;
+  final Alignment cellAlignment;
   final bool isEditable;
   final bool isResizable;
   final Validator? validator;
   final T Function(String text)? parseValue;
   final T Function(Cargo cargo)? extractValue;
-  final ValueRecord? record;
+  final ValueRecord Function(Cargo cargo)? buildRecord;
   final Widget Function(Cargo cargo)? buildCell;
   final double? grow;
   final double? width;
@@ -30,12 +32,14 @@ class CargoColumn<T> {
     required this.key,
     required this.name,
     required this.defaultValue,
+    this.headerAlignment = Alignment.centerLeft,
+    this.cellAlignment = Alignment.centerLeft,
     this.isEditable = false,
     this.isResizable = false,
     this.validator,
     this.parseValue,
     this.extractValue,
-    this.record,
+    this.buildRecord,
     this.buildCell,
     this.grow,
     this.width,
@@ -95,6 +99,8 @@ class _CargoTableState extends State<CargoTable> {
       columns: [
         ...widget._columns.map(
           (column) => DaviColumn(
+            headerAlignment: column.headerAlignment,
+            cellAlignment: column.cellAlignment,
             grow: column.grow,
             sortable: true,
             resizable: column.isResizable,
@@ -145,7 +151,6 @@ class _CargoTableState extends State<CargoTable> {
             cellPadding: EdgeInsets.zero,
             onRowTap: (cargo) => widget._onRowTap?.call(cargo),
             tableBorderColor: Colors.transparent,
-            alignment: Alignment.centerRight,
           ),
         ),
       ],
@@ -165,17 +170,15 @@ class _CargoTableState extends State<CargoTable> {
       iconColor: Theme.of(context).colorScheme.primary,
       errorColor: Theme.of(context).stateColors.error,
       onSubmit: (value) async {
-        final newValue = await column.record
-                ?.persist(value, filter: {'space_id': row.data.id}) ??
-            Ok(value);
+        final newValue =
+            await column.buildRecord?.call(row.data).persist(value) ??
+                Ok(value);
         final idx = _cargos.indexOf(row.data);
         final newCargoJson = row.data.asMap();
         for (final column in widget._columns) {
-          final record = column.record;
+          final record = column.buildRecord?.call(row.data);
           if (record == null) continue;
-          final newColumnValue = await record.fetch(
-            filter: {'space_id': row.data.id},
-          );
+          final newColumnValue = await record.fetch();
           if (newColumnValue is Ok) {
             final newValue = (newColumnValue as Ok).value;
             newCargoJson[column.key] =

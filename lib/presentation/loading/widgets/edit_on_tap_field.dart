@@ -51,11 +51,9 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
   Failure<String>? _error;
   String? _validationError;
   bool _isInProcess = false;
-  // late String _initialValue;
   //
   @override
   void initState() {
-    // _initialValue = widget._initialValue;
     _isInProcess = false;
     super.initState();
   }
@@ -64,6 +62,52 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
   void dispose() {
     _handleEditingEnd();
     super.dispose();
+  }
+  ///
+  @override
+  Widget build(BuildContext context) {
+    final iconSize = IconTheme.of(context).size ?? 10.0;
+    return ActivateOnTapBuilderWidget(
+      cursor: SystemMouseCursors.text,
+      onActivate: () {
+        _handleEditingStart();
+        return;
+      },
+      onDeactivate: () {
+        if (_isInProcess) return true;
+        _handleEditingEnd();
+        return false;
+      },
+      builder: ((context, isActivated, deactivate) => !isActivated
+          ? widget._child ??
+              Text(
+                widget._initialValue,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              )
+          : Row(
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: TextField(
+                    readOnly: _isInProcess,
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    onChanged: _handleValueChange,
+                    onSubmitted: (value) => _handleValueSave(value).then(
+                      (value) {
+                        if (value is Ok) deactivate();
+                      },
+                    ),
+                    style: TextStyle(
+                      color: widget._textColor,
+                    ),
+                  ),
+                ),
+                ..._buildActions(iconSize, deactivate),
+              ],
+            )),
+    );
   }
   //
   void _handleEditingStart() {
@@ -130,52 +174,6 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
         _validationError = validationError;
       });
     }
-  }
-  ///
-  @override
-  Widget build(BuildContext context) {
-    final iconSize = IconTheme.of(context).size ?? 10.0;
-    return ActivateOnTapBuilderWidget(
-      cursor: SystemMouseCursors.text,
-      onActivate: () {
-        _handleEditingStart();
-        return;
-      },
-      onDeactivate: () {
-        if (_isInProcess) return true;
-        _handleEditingEnd();
-        return false;
-      },
-      builder: ((context, isActivated, deactivate) => !isActivated
-          ? widget._child ??
-              Text(
-                widget._initialValue,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              )
-          : Row(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: TextField(
-                    readOnly: _isInProcess,
-                    controller: _controller,
-                    focusNode: _focusNode,
-                    onChanged: _handleValueChange,
-                    onSubmitted: (value) => _handleValueSave(value).then(
-                      (value) {
-                        if (value is Ok) deactivate();
-                      },
-                    ),
-                    style: TextStyle(
-                      color: widget._textColor,
-                    ),
-                  ),
-                ),
-                ..._buildActions(iconSize, deactivate),
-              ],
-            )),
-    );
   }
   //
   List<Widget> _buildActions(double iconSize, void Function() deactivate) {

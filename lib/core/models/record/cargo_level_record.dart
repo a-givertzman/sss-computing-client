@@ -2,6 +2,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
+/// TODO: rewrite doc
 ///
 /// Gives access to field of record stored in database.
 final class CargoLevelRecord implements ValueRecord<String> {
@@ -9,6 +10,7 @@ final class CargoLevelRecord implements ValueRecord<String> {
   final ApiAddress _apiAddress;
   final String? _authToken;
   final String Function(String) _toValue;
+  final Map<String, dynamic> _filter;
   ///
   /// Create [CargoLevelRecord] that giving access
   /// to field of record stored in database.
@@ -24,18 +26,20 @@ final class CargoLevelRecord implements ValueRecord<String> {
     required ApiAddress apiAddress,
     String? authToken,
     required String Function(String value) toValue,
+    required Map<String, dynamic> filter,
   })  : _dbName = dbName,
         _apiAddress = apiAddress,
         _authToken = authToken,
-        _toValue = toValue;
+        _toValue = toValue,
+        _filter = filter;
   ///
   /// Returns result of field fetching.
   ///
   /// `filter` - Map with field name as key and field value as value
   /// for filtering records of table based on its fields values.
   @override
-  Future<ResultF<String>> fetch({required Map<String, dynamic> filter}) async {
-    final filterQuery = filter.entries
+  Future<ResultF<String>> fetch() async {
+    final filterQuery = _filter.entries
         .map(
           (entry) => switch (entry.value) {
             num _ => '${entry.key} = ${entry.value}',
@@ -82,11 +86,8 @@ final class CargoLevelRecord implements ValueRecord<String> {
   /// `filter` - Map with field name as key and field value as value
   /// for filtering records of table based on its fields values.
   @override
-  Future<ResultF<String>> persist(
-    String value, {
-    required Map<String, dynamic> filter,
-  }) async {
-    final filterQuery = filter.entries
+  Future<ResultF<String>> persist(String value) async {
+    final filterQuery = _filter.entries
         .map(
           (entry) => switch (entry.value) {
             num _ => '${entry.key} = ${entry.value}',
@@ -103,7 +104,7 @@ final class CargoLevelRecord implements ValueRecord<String> {
           UPDATE compartment
           SET volume=($value * volume_max) / 100.0
           WHERE $filterQuery
-          RETURNING (volume/volume_max) AS level;
+          RETURNING (volume / volume_max) * 100.0 AS level;
         """,
       ),
       entryBuilder: (row) => '${row['level']}',

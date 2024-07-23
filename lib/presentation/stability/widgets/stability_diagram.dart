@@ -48,24 +48,26 @@ class StabilityDiagram extends StatelessWidget {
     final labelsStyle = theme.textTheme.labelSmall ?? const TextStyle();
     return FutureBuilderWidget(
       refreshStream: _appRefreshStream,
-      onFuture: () => FieldRecord<double>(
+      onFuture: FieldRecord<double>(
         tableName: 'parameter_data',
         fieldName: 'result',
         dbName: _dbName,
         apiAddress: _apiAddress,
         authToken: _authToken,
         toValue: (value) => double.parse(value),
-      ).fetch(filter: {'parameter_id': 18}),
+        filter: {'parameter_id': 18},
+      ).fetch,
       caseData: (context, h, _) => FutureBuilderWidget(
         refreshStream: _appRefreshStream,
-        onFuture: () => FieldRecord<double>(
+        onFuture: FieldRecord<double>(
           tableName: 'parameter_data',
           fieldName: 'result',
           dbName: _dbName,
           apiAddress: _apiAddress,
           authToken: _authToken,
           toValue: (value) => double.parse(value),
-        ).fetch(filter: {'parameter_id': 7}),
+          filter: {'parameter_id': 7},
+        ).fetch,
         caseData: (context, theta0, _) => FutureBuilderWidget(
           refreshStream: _appRefreshStream,
           onFuture: PgStaticStabilityCurve(

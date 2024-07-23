@@ -69,24 +69,26 @@ class _BallastsTanksState extends State<BallastsTanks> {
         ).fetchAll,
         caseData: (context, framesTheoretical, _) => FutureBuilderWidget(
           refreshStream: widget._appRefreshStream,
-          onFuture: () => FieldRecord<Map<String, dynamic>>(
+          onFuture: FieldRecord<Map<String, dynamic>>(
             apiAddress: widget._apiAddress,
             dbName: widget._dbName,
             authToken: widget._authToken,
             tableName: 'ship_parameters',
             fieldName: 'value',
             toValue: (value) => jsonDecode(value),
-          ).fetch(filter: {'key': 'hull_svg'}),
+            filter: {'key': 'hull_svg'},
+          ).fetch,
           caseData: (context, hull, _) => FutureBuilderWidget(
             refreshStream: widget._appRefreshStream,
-            onFuture: () => FieldRecord<Map<String, dynamic>>(
+            onFuture: FieldRecord<Map<String, dynamic>>(
               apiAddress: widget._apiAddress,
               dbName: widget._dbName,
               authToken: widget._authToken,
               tableName: 'ship_parameters',
               fieldName: 'value',
               toValue: (value) => jsonDecode(value),
-            ).fetch(filter: {'key': 'hull_beauty_svg'}),
+              filter: {'key': 'hull_beauty_svg'},
+            ).fetch,
             caseData: (context, hullBeauty, _) => FutureBuilderWidget(
               refreshStream: widget._appRefreshStream,
               onFuture: PgBallastTanks(
@@ -146,13 +148,14 @@ class _BallastsTanksState extends State<BallastsTanks> {
                               name: const Localized('Name').v,
                               isEditable: true,
                               isResizable: true,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'name',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               parseValue: (value) => value,
@@ -161,6 +164,8 @@ class _BallastsTanksState extends State<BallastsTanks> {
                               ]),
                             ),
                             CargoColumn<double>(
+                              headerAlignment: Alignment.centerRight,
+                              cellAlignment: Alignment.centerRight,
                               width: 150.0,
                               key: 'mass',
                               type: 'real',
@@ -168,13 +173,14 @@ class _BallastsTanksState extends State<BallastsTanks> {
                                   '${const Localized('Mass').v} [${const Localized('t').v}]',
                               isResizable: true,
                               isEditable: true,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'mass',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               parseValue: (value) =>
@@ -195,6 +201,8 @@ class _BallastsTanksState extends State<BallastsTanks> {
                               ]),
                             ),
                             CargoColumn<double>(
+                              headerAlignment: Alignment.centerRight,
+                              cellAlignment: Alignment.centerRight,
                               width: 150.0,
                               key: 'volume',
                               type: 'real',
@@ -202,13 +210,14 @@ class _BallastsTanksState extends State<BallastsTanks> {
                                   '${const Localized('Volume').v} [${const Localized('m^3').v}]',
                               isResizable: true,
                               isEditable: true,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'volume',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               parseValue: (value) =>
@@ -229,6 +238,8 @@ class _BallastsTanksState extends State<BallastsTanks> {
                               ]),
                             ),
                             CargoColumn<double>(
+                              headerAlignment: Alignment.centerRight,
+                              cellAlignment: Alignment.centerRight,
                               width: 150.0,
                               key: 'density',
                               type: 'real',
@@ -236,13 +247,14 @@ class _BallastsTanksState extends State<BallastsTanks> {
                                   '${const Localized('Density').v} [${const Localized('t/m^3').v}]',
                               isResizable: true,
                               isEditable: true,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'density',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               parseValue: (value) =>
@@ -263,6 +275,8 @@ class _BallastsTanksState extends State<BallastsTanks> {
                               ]),
                             ),
                             CargoColumn<double>(
+                              headerAlignment: Alignment.centerRight,
+                              cellAlignment: Alignment.centerRight,
                               width: 150.0,
                               key: 'level',
                               type: 'real',
@@ -307,11 +321,12 @@ class _BallastsTanksState extends State<BallastsTanks> {
                                   ),
                                 );
                               },
-                              record: CargoLevelRecord(
+                              buildRecord: (cargo) => CargoLevelRecord(
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               parseValue: (value) =>
@@ -326,19 +341,22 @@ class _BallastsTanksState extends State<BallastsTanks> {
                               ]),
                             ),
                             CargoColumn<double>(
+                              headerAlignment: Alignment.centerRight,
+                              cellAlignment: Alignment.centerRight,
                               grow: 1,
                               key: 'lcg',
                               type: 'real',
                               name:
                                   '${const Localized('LCG').v} [${const Localized('m').v}]',
                               isEditable: false,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'lcg',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               extractValue: (cargo) =>
@@ -349,19 +367,22 @@ class _BallastsTanksState extends State<BallastsTanks> {
                                   0.0,
                             ),
                             CargoColumn<double>(
+                              headerAlignment: Alignment.centerRight,
+                              cellAlignment: Alignment.centerRight,
                               grow: 1,
                               key: 'tcg',
                               type: 'real',
                               name:
                                   '${const Localized('TCG').v} [${const Localized('m').v}]',
                               isEditable: false,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'tcg',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               extractValue: (cargo) =>
@@ -372,19 +393,22 @@ class _BallastsTanksState extends State<BallastsTanks> {
                                   0.0,
                             ),
                             CargoColumn<double>(
+                              headerAlignment: Alignment.centerRight,
+                              cellAlignment: Alignment.centerRight,
                               grow: 1,
                               key: 'vcg',
                               type: 'real',
                               name:
                                   '${const Localized('VCG').v} [${const Localized('m').v}]',
                               isEditable: false,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'vcg',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               extractValue: (cargo) =>
@@ -395,19 +419,22 @@ class _BallastsTanksState extends State<BallastsTanks> {
                                   0.0,
                             ),
                             CargoColumn<double?>(
+                              headerAlignment: Alignment.centerRight,
+                              cellAlignment: Alignment.centerRight,
                               grow: 1,
                               key: 'm_f_s_x',
                               type: 'real',
                               name:
                                   '${const Localized('Mf.sx').v} [${const Localized('t•m').v}]',
                               isEditable: false,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'm_f_s_x',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               parseValue: (value) => double.tryParse(value),
                               defaultValue: '—',

@@ -54,26 +54,28 @@ class MetacentricHeightIndicator extends StatelessWidget {
           caseLoading: (context) => _buildCaseLoading(),
           caseData: (context, highLimits, _) => FutureBuilderWidget(
             refreshStream: _appRefreshStream,
-            onFuture: () => FieldRecord<double>(
+            onFuture: FieldRecord<double>(
               tableName: 'heel_trim_general',
               fieldName: 'draft_avg_value',
               dbName: _dbName,
               apiAddress: _apiAddress,
               authToken: _authToken,
               toValue: (value) => double.parse(value),
-            ).fetch(filter: {'ship_id': 1}),
+              filter: {'ship_id': 1},
+            ).fetch,
             caseLoading: (context) => _buildCaseLoading(),
             caseData: (context, draft, _) {
               return FutureBuilderWidget(
                 refreshStream: _appRefreshStream,
-                onFuture: () => FieldRecord<double>(
+                onFuture: FieldRecord<double>(
                   tableName: 'loads_general',
                   fieldName: 'displacement',
                   dbName: _dbName,
                   apiAddress: _apiAddress,
                   authToken: _authToken,
                   toValue: (value) => double.parse(value),
-                ).fetch(filter: {'ship_id': 1}),
+                  filter: {'ship_id': 1},
+                ).fetch,
                 caseLoading: (context) => _buildCaseLoading(),
                 caseData: (context, displacement, _) {
                   final lowLimit = LerpMetacentricHeightLimit(
@@ -128,7 +130,8 @@ class MetacentricHeightIndicator extends StatelessWidget {
           apiAddress: _apiAddress,
           authToken: _authToken,
           toValue: (value) => double.parse(value),
-        ).fetch(filter: {'parameter_id': 18}),
+          filter: {'parameter_id': 18},
+        ).fetch(),
         title: const Localized('Metacentric height').v,
         valueUnit: const Localized('m').v,
         fractionDigits: 2,

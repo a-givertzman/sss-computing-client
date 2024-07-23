@@ -6,20 +6,24 @@ import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/async_action_button.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/cancellation_button.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/confirmation_dialog.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/field_group.dart';
+///
 class CargoParametersForm extends StatefulWidget {
   final List<FieldData> _fieldsData;
   final Future<ResultF<List<FieldData>>> Function(List<FieldData>)? _onSave;
+  final void Function()? _onClose;
   const CargoParametersForm({
     super.key,
     required List<FieldData> fieldData,
     Future<ResultF<List<FieldData>>> Function(List<FieldData>)? onSave,
-  })  : _onSave = onSave,
-        _fieldsData = fieldData;
+    void Function()? onClose,
+  })  : _fieldsData = fieldData,
+        _onSave = onSave,
+        _onClose = onClose;
   @override
   State<CargoParametersForm> createState() => _CargoParametersFormState();
 }
+///
 class _CargoParametersFormState extends State<CargoParametersForm> {
   final _formKey = GlobalKey<FormState>();
   late List<FieldData> _fieldsData;
@@ -71,41 +75,20 @@ class _CargoParametersFormState extends State<CargoParametersForm> {
             children: [
               CancellationButton(
                 height: buttonHeight,
-                onPressed: isAnyFieldChanged && !_isSaving
-                    ? _cancelEditedFields
-                    : null,
+                onPressed: widget._onClose,
+                label: const Localized('Закрыть').v,
               ),
               SizedBox(width: blockPadding),
               AsyncActionButton(
                 height: buttonHeight,
                 label: const Localized('Save').v,
-                onPressed: isAnyFieldChanged
+                onPressed: isAnyFieldChanged && _isFormValid()
                     ? () async => _trySaveData(context)
                     : null,
               ),
             ],
           ),
         ],
-      ),
-    );
-  }
-  ///
-  void _cancelEditedFields() {
-    setState(() {
-      for (final data in _fieldsData) {
-        data.cancel();
-      }
-    });
-  }
-  ///
-  /// Show message with info icon
-  void _showInfoMessage(BuildContext context, String message) {
-    _showSnackBarMessage(
-      context,
-      message,
-      Icon(
-        Icons.info_outline_rounded,
-        color: Theme.of(context).colorScheme.primary,
       ),
     );
   }
@@ -134,7 +117,7 @@ class _CargoParametersFormState extends State<CargoParametersForm> {
             Text(
               message,
               style: TextStyle(
-                color: theme.colorScheme.onBackground,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ],
@@ -160,41 +143,17 @@ class _CargoParametersFormState extends State<CargoParametersForm> {
     setState(() {
       _isSaving = true;
     });
-    if (_isFormValid()) {
-      final isSaveSubmitted = await showDialog<bool>(
-        context: context,
-        builder: (_) => ConfirmationDialog(
-          title: Text(const Localized('Data saving').v),
-          content: Text(
-            const Localized(
-              'Data will be persisted on the server. Do you want to proceed?',
-            ).v,
-          ),
-          confirmationButtonLabel: const Localized('Save').v,
-        ),
-      );
-      if (isSaveSubmitted ?? false) {
-        final onSave = widget._onSave;
-        if (onSave != null) {
-          switch (await onSave(_fieldsData)) {
-            case Ok(value: final newFields):
-              _updateFieldsWithNewData(newFields);
-              _formKey.currentState?.save();
-              if (context.mounted) {
-                _showInfoMessage(context, const Localized('Data saved').v);
-              }
-            case Err(:final error):
-              if (context.mounted) {
-                _showErrorMessage(context, error.message);
-              }
+    final onSave = widget._onSave;
+    if (onSave != null) {
+      switch (await onSave(_fieldsData)) {
+        case Ok(value: final newFields):
+          _updateFieldsWithNewData(newFields);
+          _formKey.currentState?.save();
+        case Err(:final error):
+          if (context.mounted) {
+            _showErrorMessage(context, error.message);
           }
-        }
       }
-    } else {
-      _showErrorMessage(
-        context,
-        const Localized('Please, fix all errors before saving!').v,
-      );
     }
     setState(() {
       _isSaving = false;

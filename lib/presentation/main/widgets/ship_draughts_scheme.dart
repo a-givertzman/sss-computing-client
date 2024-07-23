@@ -41,14 +41,15 @@ class ShipDraughtsScheme extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilderWidget(
       refreshStream: _appRefreshStream,
-      onFuture: () => FieldRecord<Map<String, dynamic>>(
+      onFuture: FieldRecord<Map<String, dynamic>>(
         tableName: 'ship_parameters',
         fieldName: 'value',
         dbName: _dbName,
         apiAddress: _apiAddress,
         authToken: _authToken,
         toValue: (value) => jsonDecode(value),
-      ).fetch(filter: {'key': 'hull_beauty_svg'}),
+        filter: {'key': 'hull_beauty_svg'},
+      ).fetch,
       caseData: (context, hullProjections, _) {
         return FutureBuilderWidget(
           refreshStream: _appRefreshStream,

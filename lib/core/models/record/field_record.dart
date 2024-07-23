@@ -2,6 +2,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
+/// TODO: rewrite doc
 ///
 /// Gives access to field of record stored in database.
 final class FieldRecord<T> implements ValueRecord<T> {
@@ -11,6 +12,7 @@ final class FieldRecord<T> implements ValueRecord<T> {
   final ApiAddress _apiAddress;
   final String? _authToken;
   final T Function(String) _toValue;
+  final Map<String, dynamic> _filter;
   ///
   /// Create [FieldRecord] that giving access
   /// to field of record stored in database.
@@ -30,20 +32,22 @@ final class FieldRecord<T> implements ValueRecord<T> {
     required ApiAddress apiAddress,
     String? authToken,
     required T Function(String value) toValue,
+    required Map<String, dynamic> filter,
   })  : _fieldName = fieldName,
         _tableName = tableName,
         _dbName = dbName,
         _apiAddress = apiAddress,
         _authToken = authToken,
-        _toValue = toValue;
+        _toValue = toValue,
+        _filter = filter;
   ///
   /// Returns result of field fetching.
   ///
   ///   - `filter` - Map with field name as key and field value as value
   /// for filtering records of table based on its fields values.
   @override
-  Future<ResultF<T>> fetch({required Map<String, dynamic> filter}) async {
-    final filterQuery = filter.entries
+  Future<ResultF<T>> fetch() async {
+    final filterQuery = _filter.entries
         .map(
           (entry) => switch (entry.value) {
             num _ => '${entry.key} = ${entry.value}',
@@ -90,11 +94,8 @@ final class FieldRecord<T> implements ValueRecord<T> {
   ///   - `filter` - Map with field name as key and field value as value
   /// for filtering records of table based on its fields values.
   @override
-  Future<ResultF<String>> persist(
-    String value, {
-    required Map<String, dynamic> filter,
-  }) async {
-    final filterQuery = filter.entries
+  Future<ResultF<String>> persist(String value) async {
+    final filterQuery = _filter.entries
         .map(
           (entry) => switch (entry.value) {
             num _ => '${entry.key} = ${entry.value}',

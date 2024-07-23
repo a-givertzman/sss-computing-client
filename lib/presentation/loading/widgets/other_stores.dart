@@ -4,8 +4,10 @@ import 'package:ext_rw/ext_rw.dart' hide FieldType;
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_others.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
@@ -15,10 +17,11 @@ import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_table.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/cargo_parameters.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/cargo_parameters_form.dart';
 ///
 class OtherStores extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
+  final void Function() _fireRefreshEvent;
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
@@ -26,10 +29,12 @@ class OtherStores extends StatefulWidget {
   const OtherStores({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,
+    required void Function() fireRefreshEvent,
     required ApiAddress apiAddress,
     required String dbName,
     required String? authToken,
   })  : _appRefreshStream = appRefreshStream,
+        _fireRefreshEvent = fireRefreshEvent,
         _apiAddress = apiAddress,
         _dbName = dbName,
         _authToken = authToken;
@@ -71,24 +76,26 @@ class _OtherStoresState extends State<OtherStores> {
         ).fetchAll,
         caseData: (context, framesTheoretical, _) => FutureBuilderWidget(
           refreshStream: widget._appRefreshStream,
-          onFuture: () => FieldRecord<Map<String, dynamic>>(
+          onFuture: FieldRecord<Map<String, dynamic>>(
             apiAddress: widget._apiAddress,
             dbName: widget._dbName,
             authToken: widget._authToken,
             tableName: 'ship_parameters',
             fieldName: 'value',
             toValue: (value) => jsonDecode(value),
-          ).fetch(filter: {'key': 'hull_svg'}),
+            filter: {'key': 'hull_svg'},
+          ).fetch,
           caseData: (context, hull, _) => FutureBuilderWidget(
             refreshStream: widget._appRefreshStream,
-            onFuture: () => FieldRecord<Map<String, dynamic>>(
+            onFuture: FieldRecord<Map<String, dynamic>>(
               apiAddress: widget._apiAddress,
               dbName: widget._dbName,
               authToken: widget._authToken,
               tableName: 'ship_parameters',
               fieldName: 'value',
               toValue: (value) => jsonDecode(value),
-            ).fetch(filter: {'key': 'hull_beauty_svg'}),
+              filter: {'key': 'hull_beauty_svg'},
+            ).fetch,
             caseData: (context, hullBeauty, _) => FutureBuilderWidget(
               refreshStream: widget._appRefreshStream,
               onFuture: PgStoresOthers(
@@ -116,137 +123,379 @@ class _OtherStoresState extends State<OtherStores> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          const IconButton.filled(
-                            onPressed: null,
-                            icon: Icon(Icons.add_rounded),
+                          IconButton.filled(
+                            onPressed: () => showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: SizedBox(
+                                  height: 500.0,
+                                  width: 500.0,
+                                  child: CargoParametersForm(
+                                    onClose: () {
+                                      Navigator.of(context).pop();
+                                      _toggleCargo(null);
+                                      widget._fireRefreshEvent();
+                                    },
+                                    onSave: (fieldDatas) async {
+                                      final cargo = JsonCargo(json: {
+                                        for (final field in fieldDatas)
+                                          field.id: switch (field.type) {
+                                            FieldType.string =>
+                                              field.controller.text,
+                                            FieldType.real => double.tryParse(
+                                                field.controller.text,
+                                              ),
+                                            FieldType.int => int.tryParse(
+                                                field.controller.text,
+                                              ),
+                                            _ => field.controller.text,
+                                          },
+                                      });
+                                      switch (await PgStoresOthers(
+                                        apiAddress: widget._apiAddress,
+                                        dbName: widget._dbName,
+                                        authToken: widget._authToken,
+                                      ).add(cargo)) {
+                                        case Ok():
+                                          Navigator.of(context).pop(context);
+                                          widget._fireRefreshEvent();
+                                          return const Ok([]);
+                                        case Err(:final error):
+                                          return Err(error);
+                                      }
+                                    },
+                                    fieldData: [
+                                      FieldData(
+                                        id: 'name',
+                                        label: const Localized('Name').v,
+                                        unit: '',
+                                        type: FieldType.string,
+                                        initialValue: '',
+                                        isPersisted: true,
+                                        record: FieldRecord<String>(
+                                          toValue: (text) => text,
+                                          dbName: widget._dbName,
+                                          apiAddress: widget._apiAddress,
+                                          authToken: widget._authToken,
+                                          tableName: 'compartment',
+                                          fieldName: 'name',
+                                          filter: {'space_id': null},
+                                        ),
+                                      ),
+                                      FieldData(
+                                        id: 'mass',
+                                        label: const Localized('Mass').v,
+                                        unit: const Localized('t').v,
+                                        type: FieldType.real,
+                                        initialValue: '0.0',
+                                        isPersisted: true,
+                                        record: FieldRecord<String>(
+                                          toValue: (text) => text,
+                                          dbName: widget._dbName,
+                                          apiAddress: widget._apiAddress,
+                                          authToken: widget._authToken,
+                                          tableName: 'compartment',
+                                          fieldName: 'mass',
+                                          filter: {'space_id': null},
+                                        ),
+                                      ),
+                                      FieldData(
+                                        id: 'lcg',
+                                        label: const Localized('LCG').v,
+                                        unit: const Localized('m').v,
+                                        type: FieldType.real,
+                                        initialValue: '0.0',
+                                        isPersisted: true,
+                                        record: FieldRecord<String>(
+                                          toValue: (text) => text,
+                                          dbName: widget._dbName,
+                                          apiAddress: widget._apiAddress,
+                                          authToken: widget._authToken,
+                                          tableName: 'compartment',
+                                          fieldName: 'mass_shift_x',
+                                          filter: {'space_id': null},
+                                        ),
+                                      ),
+                                      FieldData(
+                                        id: 'tcg',
+                                        label: const Localized('TCG').v,
+                                        unit: const Localized('m').v,
+                                        type: FieldType.real,
+                                        initialValue: '0.0',
+                                        isPersisted: true,
+                                        record: FieldRecord<String>(
+                                          toValue: (text) => text,
+                                          dbName: widget._dbName,
+                                          apiAddress: widget._apiAddress,
+                                          authToken: widget._authToken,
+                                          tableName: 'compartment',
+                                          fieldName: 'mass_shift_y',
+                                          filter: {'space_id': null},
+                                        ),
+                                      ),
+                                      FieldData(
+                                        id: 'vcg',
+                                        label: const Localized('VCG').v,
+                                        unit: const Localized('m').v,
+                                        type: FieldType.real,
+                                        initialValue: '0.0',
+                                        isPersisted: true,
+                                        record: FieldRecord<String>(
+                                          toValue: (text) => text,
+                                          dbName: widget._dbName,
+                                          apiAddress: widget._apiAddress,
+                                          authToken: widget._authToken,
+                                          tableName: 'compartment',
+                                          fieldName: 'mass_shift_z',
+                                          filter: {'space_id': null},
+                                        ),
+                                      ),
+                                      FieldData(
+                                        id: 'bound_x1',
+                                        label: const Localized('X1').v,
+                                        unit: const Localized('m').v,
+                                        type: FieldType.real,
+                                        initialValue: '0.0',
+                                        isPersisted: true,
+                                        record: FieldRecord<String>(
+                                          toValue: (text) => text,
+                                          dbName: widget._dbName,
+                                          apiAddress: widget._apiAddress,
+                                          authToken: widget._authToken,
+                                          tableName: 'compartment',
+                                          fieldName: 'bound_x1',
+                                          filter: {'space_id': null},
+                                        ),
+                                      ),
+                                      FieldData(
+                                        id: 'bound_x2',
+                                        label: const Localized('X2').v,
+                                        unit: const Localized('m').v,
+                                        type: FieldType.real,
+                                        initialValue: '0.0',
+                                        isPersisted: true,
+                                        record: FieldRecord<String>(
+                                          toValue: (text) => text,
+                                          dbName: widget._dbName,
+                                          apiAddress: widget._apiAddress,
+                                          authToken: widget._authToken,
+                                          tableName: 'compartment',
+                                          fieldName: 'bound_x2',
+                                          filter: {'space_id': null},
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            icon: const Icon(Icons.add_rounded),
                           ),
                           SizedBox(width: blockPadding),
-                          const IconButton.filled(
-                            onPressed: null,
-                            icon: Icon(Icons.remove_rounded),
+                          IconButton.filled(
+                            onPressed: switch (_selectedCargo) {
+                              // ignore: unused_local_variable
+                              Cargo(:final int id) => () async {
+                                  switch (await PgStoresOthers(
+                                    apiAddress: widget._apiAddress,
+                                    dbName: widget._dbName,
+                                    authToken: widget._authToken,
+                                  ).remove(_selectedCargo!)) {
+                                    case Ok():
+                                      _toggleCargo(null);
+                                      widget._fireRefreshEvent();
+                                    case Err(:final error):
+                                      const Log('Remove cargo').error(error);
+                                  }
+                                },
+                              _ => null,
+                            },
+                            icon: const Icon(Icons.remove_rounded),
                           ),
                           SizedBox(width: blockPadding),
                           IconButton.filled(
                             icon: const Icon(Icons.edit_rounded),
                             onPressed: switch (_selectedCargo) {
-                              Cargo(:final int id) => () => showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      content: SizedBox(
-                                        height: 500.0,
-                                        width: 500.0,
-                                        child: CargoParametersForm(
-                                          fieldData: [
-                                            FieldData(
-                                              id: '$id',
-                                              label: const Localized('Name').v,
-                                              unit: '',
-                                              type: FieldType.string,
-                                              initialValue: '',
-                                              record: FieldRecord<String>(
-                                                toValue: (text) => text,
-                                                dbName: widget._dbName,
-                                                apiAddress: widget._apiAddress,
-                                                authToken: widget._authToken,
-                                                tableName: 'compartment',
-                                                fieldName: 'name',
+                              Cargo(
+                                :final int id,
+                                :final name,
+                                :final weight,
+                                :final lcg,
+                                :final tcg,
+                                :final vcg,
+                                :final x1,
+                                :final x2,
+                              ) =>
+                                () => showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        content: SizedBox(
+                                          height: 500.0,
+                                          width: 500.0,
+                                          child: CargoParametersForm(
+                                            onClose: () {
+                                              Navigator.of(context).pop();
+                                              _toggleCargo(null);
+                                              widget._fireRefreshEvent();
+                                            },
+                                            onSave: (fieldDatas) async {
+                                              try {
+                                                final fieldsPersisted =
+                                                    await Future.wait(
+                                                  fieldDatas.map(
+                                                    (field) async {
+                                                      switch (
+                                                          await field.save()) {
+                                                        case Ok(:final value):
+                                                          return field.copyWith(
+                                                            initialValue: value,
+                                                          );
+                                                        case Err(:final error):
+                                                          Log('$runtimeType | _persistAll')
+                                                              .error(error);
+                                                          throw error;
+                                                      }
+                                                    },
+                                                  ),
+                                                );
+                                                return Ok(fieldsPersisted);
+                                              } on Err<
+                                                  List<FieldData>,
+                                                  Failure<
+                                                      List<
+                                                          FieldData>>> catch (err) {
+                                                return err;
+                                              }
+                                            },
+                                            fieldData: [
+                                              FieldData(
+                                                id: 'name',
+                                                label:
+                                                    const Localized('Name').v,
+                                                unit: '',
+                                                type: FieldType.string,
+                                                initialValue: '$name',
+                                                record: FieldRecord<String>(
+                                                  toValue: (text) => text,
+                                                  dbName: widget._dbName,
+                                                  apiAddress:
+                                                      widget._apiAddress,
+                                                  authToken: widget._authToken,
+                                                  tableName: 'compartment',
+                                                  fieldName: 'name',
+                                                  filter: {'space_id': id},
+                                                ),
                                               ),
-                                            ),
-                                            FieldData(
-                                              id: '$id',
-                                              label: const Localized('Mass').v,
-                                              unit: const Localized('t').v,
-                                              type: FieldType.real,
-                                              initialValue: '',
-                                              record: FieldRecord<String>(
-                                                toValue: (text) => text,
-                                                dbName: widget._dbName,
-                                                apiAddress: widget._apiAddress,
-                                                authToken: widget._authToken,
-                                                tableName: 'compartment',
-                                                fieldName: 'mass',
+                                              FieldData(
+                                                id: 'mass',
+                                                label:
+                                                    const Localized('Mass').v,
+                                                unit: const Localized('t').v,
+                                                type: FieldType.real,
+                                                initialValue: '$weight',
+                                                record: FieldRecord<String>(
+                                                  toValue: (text) => text,
+                                                  dbName: widget._dbName,
+                                                  apiAddress:
+                                                      widget._apiAddress,
+                                                  authToken: widget._authToken,
+                                                  tableName: 'compartment',
+                                                  fieldName: 'mass',
+                                                  filter: {'space_id': id},
+                                                ),
                                               ),
-                                            ),
-                                            FieldData(
-                                              id: '$id',
-                                              label: const Localized('LCG').v,
-                                              unit: const Localized('m').v,
-                                              type: FieldType.string,
-                                              initialValue: '',
-                                              record: FieldRecord<String>(
-                                                toValue: (text) => text,
-                                                dbName: widget._dbName,
-                                                apiAddress: widget._apiAddress,
-                                                authToken: widget._authToken,
-                                                tableName: 'compartment',
-                                                fieldName: 'mass_shift_x',
+                                              FieldData(
+                                                id: 'mass_shift_x',
+                                                label: const Localized('LCG').v,
+                                                unit: const Localized('m').v,
+                                                type: FieldType.real,
+                                                initialValue: '$lcg',
+                                                record: FieldRecord<String>(
+                                                  toValue: (text) => text,
+                                                  dbName: widget._dbName,
+                                                  apiAddress:
+                                                      widget._apiAddress,
+                                                  authToken: widget._authToken,
+                                                  tableName: 'compartment',
+                                                  fieldName: 'mass_shift_x',
+                                                  filter: {'space_id': id},
+                                                ),
                                               ),
-                                            ),
-                                            FieldData(
-                                              id: '$id',
-                                              label: const Localized('TCG').v,
-                                              unit: const Localized('m').v,
-                                              type: FieldType.string,
-                                              initialValue: '',
-                                              record: FieldRecord<String>(
-                                                toValue: (text) => text,
-                                                dbName: widget._dbName,
-                                                apiAddress: widget._apiAddress,
-                                                authToken: widget._authToken,
-                                                tableName: 'compartment',
-                                                fieldName: 'mass_shift_y',
+                                              FieldData(
+                                                id: 'mass_shift_y',
+                                                label: const Localized('TCG').v,
+                                                unit: const Localized('m').v,
+                                                type: FieldType.real,
+                                                initialValue: '$tcg',
+                                                record: FieldRecord<String>(
+                                                  toValue: (text) => text,
+                                                  dbName: widget._dbName,
+                                                  apiAddress:
+                                                      widget._apiAddress,
+                                                  authToken: widget._authToken,
+                                                  tableName: 'compartment',
+                                                  fieldName: 'mass_shift_y',
+                                                  filter: {'space_id': id},
+                                                ),
                                               ),
-                                            ),
-                                            FieldData(
-                                              id: '$id',
-                                              label: const Localized('VCG').v,
-                                              unit: const Localized('m').v,
-                                              type: FieldType.string,
-                                              initialValue: '',
-                                              record: FieldRecord<String>(
-                                                toValue: (text) => text,
-                                                dbName: widget._dbName,
-                                                apiAddress: widget._apiAddress,
-                                                authToken: widget._authToken,
-                                                tableName: 'compartment',
-                                                fieldName: 'mass_shift_z',
+                                              FieldData(
+                                                id: 'mass_shift_z',
+                                                label: const Localized('VCG').v,
+                                                unit: const Localized('m').v,
+                                                type: FieldType.real,
+                                                initialValue: '$vcg',
+                                                record: FieldRecord<String>(
+                                                  toValue: (text) => text,
+                                                  dbName: widget._dbName,
+                                                  apiAddress:
+                                                      widget._apiAddress,
+                                                  authToken: widget._authToken,
+                                                  tableName: 'compartment',
+                                                  fieldName: 'mass_shift_z',
+                                                  filter: {'space_id': id},
+                                                ),
                                               ),
-                                            ),
-                                            FieldData(
-                                              id: '$id',
-                                              label: const Localized('X1').v,
-                                              unit: const Localized('m').v,
-                                              type: FieldType.string,
-                                              initialValue: '',
-                                              record: FieldRecord<String>(
-                                                toValue: (text) => text,
-                                                dbName: widget._dbName,
-                                                apiAddress: widget._apiAddress,
-                                                authToken: widget._authToken,
-                                                tableName: 'compartment',
-                                                fieldName: 'bound_x1',
+                                              FieldData(
+                                                id: 'bound_x1',
+                                                label: const Localized('X1').v,
+                                                unit: const Localized('m').v,
+                                                type: FieldType.real,
+                                                initialValue: '$x1',
+                                                record: FieldRecord<String>(
+                                                  toValue: (text) => text,
+                                                  dbName: widget._dbName,
+                                                  apiAddress:
+                                                      widget._apiAddress,
+                                                  authToken: widget._authToken,
+                                                  tableName: 'compartment',
+                                                  fieldName: 'bound_x1',
+                                                  filter: {'space_id': id},
+                                                ),
                                               ),
-                                            ),
-                                            FieldData(
-                                              id: '$id',
-                                              label: const Localized('X2').v,
-                                              unit: const Localized('m').v,
-                                              type: FieldType.string,
-                                              initialValue: '',
-                                              record: FieldRecord<String>(
-                                                toValue: (text) => text,
-                                                dbName: widget._dbName,
-                                                apiAddress: widget._apiAddress,
-                                                authToken: widget._authToken,
-                                                tableName: 'compartment',
-                                                fieldName: 'bound_x2',
+                                              FieldData(
+                                                id: 'bound_x2',
+                                                label: const Localized('X2').v,
+                                                unit: const Localized('m').v,
+                                                type: FieldType.real,
+                                                initialValue: '$x2',
+                                                record: FieldRecord<String>(
+                                                  toValue: (text) => text,
+                                                  dbName: widget._dbName,
+                                                  apiAddress:
+                                                      widget._apiAddress,
+                                                  authToken: widget._authToken,
+                                                  tableName: 'compartment',
+                                                  fieldName: 'bound_x2',
+                                                  filter: {'space_id': id},
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
                               _ => null,
                             },
                           ),
@@ -288,13 +537,14 @@ class _OtherStoresState extends State<OtherStores> {
                               name: const Localized('Name').v,
                               isEditable: true,
                               isResizable: true,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'name',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               parseValue: (value) => value,
@@ -303,6 +553,8 @@ class _OtherStoresState extends State<OtherStores> {
                               ]),
                             ),
                             CargoColumn<double>(
+                              headerAlignment: Alignment.centerRight,
+                              cellAlignment: Alignment.centerRight,
                               width: 150.0,
                               key: 'mass',
                               type: 'real',
@@ -310,13 +562,14 @@ class _OtherStoresState extends State<OtherStores> {
                                   '${const Localized('Mass').v} [${const Localized('t').v}]',
                               isResizable: true,
                               isEditable: true,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'mass',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               parseValue: (value) =>
@@ -337,19 +590,22 @@ class _OtherStoresState extends State<OtherStores> {
                               ]),
                             ),
                             CargoColumn<double>(
+                              headerAlignment: Alignment.centerRight,
+                              cellAlignment: Alignment.centerRight,
                               grow: 1,
                               key: 'lcg',
                               type: 'real',
                               name:
                                   '${const Localized('LCG').v} [${const Localized('m').v}]',
                               isEditable: false,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'lcg',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               extractValue: (cargo) =>
@@ -360,19 +616,22 @@ class _OtherStoresState extends State<OtherStores> {
                                   0.0,
                             ),
                             CargoColumn<double>(
+                              headerAlignment: Alignment.centerRight,
+                              cellAlignment: Alignment.centerRight,
                               grow: 1,
                               key: 'tcg',
                               type: 'real',
                               name:
                                   '${const Localized('TCG').v} [${const Localized('m').v}]',
                               isEditable: false,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'tcg',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               extractValue: (cargo) =>
@@ -383,19 +642,22 @@ class _OtherStoresState extends State<OtherStores> {
                                   0.0,
                             ),
                             CargoColumn<double>(
+                              headerAlignment: Alignment.centerRight,
+                              cellAlignment: Alignment.centerRight,
                               grow: 1,
                               key: 'vcg',
                               type: 'real',
                               name:
                                   '${const Localized('VCG').v} [${const Localized('m').v}]',
                               isEditable: false,
-                              record: FieldRecord<String>(
+                              buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'vcg',
                                 tableName: 'compartment',
                                 toValue: (value) => value,
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
                                 authToken: widget._authToken,
+                                filter: {'space_id': cargo.id},
                               ),
                               defaultValue: '—',
                               extractValue: (cargo) =>

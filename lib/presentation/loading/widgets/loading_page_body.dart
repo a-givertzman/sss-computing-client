@@ -9,6 +9,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/stores_tanks.d
 ///
 class LoadingPageBody extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
+  final void Function() _fireRefreshEvent;
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
@@ -16,10 +17,12 @@ class LoadingPageBody extends StatefulWidget {
   const LoadingPageBody({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,
+    required void Function() fireRefreshEvent,
     required ApiAddress apiAddress,
     required String dbName,
     required String? authToken,
   })  : _appRefreshStream = appRefreshStream,
+        _fireRefreshEvent = fireRefreshEvent,
         _apiAddress = apiAddress,
         _dbName = dbName,
         _authToken = authToken;
@@ -57,6 +60,7 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
           label: const Localized('Прочие запасы').v,
           content: OtherStores(
             appRefreshStream: widget._appRefreshStream,
+            fireRefreshEvent: widget._fireRefreshEvent,
             apiAddress: widget._apiAddress,
             dbName: widget._dbName,
             authToken: widget._authToken,

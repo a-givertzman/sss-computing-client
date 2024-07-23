@@ -50,4 +50,69 @@ class PgStoresOthers implements Cargos {
           )),
         );
   }
+  ///
+  Future<Result<void, Failure<String>>> add(Cargo cargo) async {
+    return SqlAccess(
+      address: _apiAddress,
+      authToken: _authToken ?? '',
+      database: _dbName,
+      sqlBuilder: (_, __) => Sql(
+        sql: """
+              INSERT INTO compartment
+                (ship_id, space_id, active, category_id, name, mass, mass_shift_x, mass_shift_y, mass_shift_z, bound_x1, bound_x2)
+              VALUES
+                (1, (SELECT MAX(space_id) + 1 FROM compartment), TRUE, 9, '${cargo.name}', ${cargo.weight}, ${cargo.lcg}, ${cargo.tcg}, ${cargo.vcg}, ${cargo.x1}, ${cargo.x2});
+            """,
+      ),
+    )
+        .fetch()
+        .then<Result<void, Failure<String>>>(
+          (result) => switch (result) {
+            Ok() => const Ok(null),
+            Err(:final error) => Err(
+                Failure(
+                  message: '$error',
+                  stackTrace: StackTrace.current,
+                ),
+              ),
+          },
+        )
+        .onError(
+          (error, stackTrace) => Err(Failure(
+            message: '$error',
+            stackTrace: stackTrace,
+          )),
+        );
+  }
+  ///
+  Future<Result<void, Failure<String>>> remove(Cargo cargo) async {
+    return SqlAccess(
+      address: _apiAddress,
+      authToken: _authToken ?? '',
+      database: _dbName,
+      sqlBuilder: (_, __) => Sql(
+        sql: """
+              DELETE FROM compartment WHERE space_id = ${cargo.id};
+            """,
+      ),
+    )
+        .fetch()
+        .then<Result<void, Failure<String>>>(
+          (result) => switch (result) {
+            Ok() => const Ok(null),
+            Err(:final error) => Err(
+                Failure(
+                  message: '$error',
+                  stackTrace: StackTrace.current,
+                ),
+              ),
+          },
+        )
+        .onError(
+          (error, stackTrace) => Err(Failure(
+            message: '$error',
+            stackTrace: stackTrace,
+          )),
+        );
+  }
 }

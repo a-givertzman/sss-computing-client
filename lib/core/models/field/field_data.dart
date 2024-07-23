@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 ///
@@ -12,6 +13,7 @@ class FieldData {
   final String unit;
   final ValueRecord<String> _record;
   final TextEditingController _controller;
+  final Validator? _validator;
   bool _isPersisted;
   String _initialValue;
   ///
@@ -27,11 +29,14 @@ class FieldData {
     required this.type,
     required String initialValue,
     required ValueRecord<String> record,
+    Validator? validator,
     bool isPersisted = false,
   })  : _record = record,
         _initialValue = initialValue,
         _controller = TextEditingController(text: initialValue),
+        _validator = validator,
         _isPersisted = isPersisted;
+  ///
   FieldData._({
     required this.id,
     required this.label,
@@ -40,10 +45,12 @@ class FieldData {
     required String initialValue,
     required ValueRecord<String> record,
     required TextEditingController controller,
+    required Validator? validator,
     required bool isPersisted,
   })  : _record = record,
         _initialValue = initialValue,
         _controller = controller,
+        _validator = validator,
         _isPersisted = isPersisted;
   ///
   /// Initial content of the target field.
@@ -58,9 +65,11 @@ class FieldData {
   /// Whether content of the target synced with source or not
   bool get isSynced => _isPersisted;
   ///
+  Validator? get validator => _validator;
+  ///
   /// Pull data from the database through provided [record].
   Future<ResultF<String>> fetch() async {
-    switch (await _record.fetch(filter: {'space_id': id})) {
+    switch (await _record.fetch()) {
       case Ok(:final value):
         refreshWith(value);
         _isPersisted = true;
@@ -74,7 +83,7 @@ class FieldData {
   /// Persist data to the database through provided [record].
   Future<ResultF<String>> save() async {
     final value = controller.text;
-    switch (await _record.persist(value, filter: {'id': id})) {
+    switch (await _record.persist(value)) {
       case Ok():
         refreshWith(value);
         _isPersisted = true;
@@ -96,11 +105,6 @@ class FieldData {
     _controller.text = _initialValue;
   }
   ///
-  /// Set current [value] with provided [newValue].
-  // void update(String newValue) {
-  //   _controller.text = newValue;
-  // }
-  ///
   FieldData copyWith({
     String? id,
     String? label,
@@ -108,6 +112,7 @@ class FieldData {
     FieldType? type,
     String? initialValue,
     ValueRecord<String>? record,
+    Validator? validator,
   }) {
     return FieldData._(
       id: id ?? this.id,
@@ -118,6 +123,7 @@ class FieldData {
       record: record ?? _record,
       controller: _controller,
       isPersisted: _isPersisted,
+      validator: validator ?? _validator,
     );
   }
 }
