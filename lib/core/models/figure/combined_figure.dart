@@ -9,7 +9,7 @@ class CombinedFigure implements Figure {
   ///
   /// Construct [Figure] as combined paths of figure 1 and 2.
   const CombinedFigure({
-    required List<Paint> paints,
+    List<Paint> paints = const [],
     required Figure figureOne,
     required Figure figureTwo,
   })  : _paints = paints,

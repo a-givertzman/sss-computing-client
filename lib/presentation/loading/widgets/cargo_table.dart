@@ -5,7 +5,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
-import 'package:sss_computing_client/core/models/field_record/field_record.dart';
+import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/widgets/table/table_view.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/edit_on_tap_field.dart';
 ///
@@ -15,12 +15,14 @@ class CargoColumn<T> {
   final String key;
   final String name;
   final String defaultValue;
+  final Alignment headerAlignment;
+  final Alignment cellAlignment;
   final bool isEditable;
   final bool isResizable;
   final Validator? validator;
   final T Function(String text)? parseValue;
   final T Function(Cargo cargo)? extractValue;
-  final FieldRecord? record;
+  final ValueRecord Function(Cargo cargo)? buildRecord;
   final Widget Function(Cargo cargo)? buildCell;
   final double? grow;
   final double? width;
@@ -30,12 +32,14 @@ class CargoColumn<T> {
     required this.key,
     required this.name,
     required this.defaultValue,
+    this.headerAlignment = Alignment.centerLeft,
+    this.cellAlignment = Alignment.centerLeft,
     this.isEditable = false,
     this.isResizable = false,
     this.validator,
     this.parseValue,
     this.extractValue,
-    this.record,
+    this.buildRecord,
     this.buildCell,
     this.grow,
     this.width,
@@ -95,6 +99,8 @@ class _CargoTableState extends State<CargoTable> {
       columns: [
         ...widget._columns.map(
           (column) => DaviColumn(
+            headerAlignment: column.headerAlignment,
+            cellAlignment: column.cellAlignment,
             grow: column.grow,
             sortable: true,
             resizable: column.isResizable,
@@ -109,12 +115,10 @@ class _CargoTableState extends State<CargoTable> {
                 : null,
             width: column.width ?? 100.0,
             name: column.name,
-            cellBuilder: (_, row) =>
-                column.buildCell?.call(row.data) ??
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: _buildCell(row, column),
-                ),
+            cellBuilder: (_, row) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: _buildCell(row, column),
+            ),
             cellStyleBuilder: _buildCellStyle,
           ),
         ),
@@ -165,27 +169,42 @@ class _CargoTableState extends State<CargoTable> {
       textColor: Theme.of(context).colorScheme.onSurface,
       iconColor: Theme.of(context).colorScheme.primary,
       errorColor: Theme.of(context).stateColors.error,
-      onSubmit: (value) =>
-          column.record?.persist(value, filter: {'space_id': row.data.id}) ??
-          Future.value(Ok(value)),
-      onSubmitted: (value) => setState(() {
+      onSubmit: (value) async {
+        final newValue =
+            await column.buildRecord?.call(row.data).persist(value) ??
+                Ok(value);
         final idx = _cargos.indexOf(row.data);
-        final newValue = column.parseValue?.call(value) ?? value;
-        final newCargoData = row.data.asMap()..[column.key] = newValue;
-        _cargos[idx] = JsonCargo(json: newCargoData);
+        final newCargoJson = row.data.asMap();
+        for (final column in widget._columns) {
+          final record = column.buildRecord?.call(row.data);
+          if (record == null) continue;
+          final newColumnValue = await record.fetch();
+          if (newColumnValue is Ok) {
+            final newValue = (newColumnValue as Ok).value;
+            newCargoJson[column.key] =
+                column.parseValue?.call(newValue) ?? newValue;
+          }
+        }
+        _cargos[idx] = JsonCargo(json: newCargoJson);
         _model.replaceRows(_cargos);
-      }),
+        setState(() {
+          return;
+        });
+        return newValue;
+      },
       validator: column.validator ?? defaultValidator,
+      child: column.buildCell?.call(row.data),
     );
   }
   ///
   Widget _buildCell(DaviRow<Cargo> row, CargoColumn column) {
     return !column.isEditable
-        ? Text(
-            '${column.extractValue?.call(row.data) ?? row.data.asMap()[column.key] ?? column.defaultValue}',
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          )
+        ? column.buildCell?.call(row.data) ??
+            Text(
+              '${column.extractValue?.call(row.data) ?? row.data.asMap()[column.key] ?? column.defaultValue}',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            )
         : _buildEditableCell(
             row,
             column,

@@ -11,7 +11,7 @@ class LineSegmentFigure implements Figure {
   /// Construct [Figure] of line segment between points,
   /// treating them as vectors from the origin.
   const LineSegmentFigure({
-    required List<Paint> paints,
+    List<Paint> paints = const [],
     required Offset start,
     required Offset end,
   })  : _paints = paints,

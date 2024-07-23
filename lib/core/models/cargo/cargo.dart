@@ -18,6 +18,15 @@ abstract interface class Cargo {
   /// Weight of the cargo
   double? get weight;
   ///
+  /// Volume of the cargo
+  double? get volume;
+  ///
+  /// Density of the cargo
+  double? get density;
+  ///
+  /// Level of the cargo
+  double? get level;
+  ///
   /// Vertital Center of Gravity of the [Cargo]
   double? get vcg;
   ///

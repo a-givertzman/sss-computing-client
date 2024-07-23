@@ -103,7 +103,6 @@ class TableView<T> extends StatelessWidget {
           ),
         ),
         cell: CellThemeData(
-          alignment: Alignment.centerLeft,
           contentHeight: _cellHeight,
           padding: _cellPadding,
         ),
