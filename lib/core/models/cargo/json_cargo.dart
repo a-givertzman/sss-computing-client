@@ -18,7 +18,7 @@ class JsonCargo implements Cargo {
   @override
   String? get name => _json['name'];
   @override
-  double? get weight => _json['mass'];
+  double? get weight => _json['weight'];
   @override
   double? get volume => _json['volume'];
   @override
@@ -32,21 +32,21 @@ class JsonCargo implements Cargo {
   @override
   double? get tcg => _json['tcg'];
   @override
-  double get x1 => _json['bound_x1'];
+  double get x1 => _json['x1'];
   @override
-  double get x2 => _json['bound_x2'];
+  double get x2 => _json['x2'];
   @override
-  double get y1 => _json['bound_y1'] ?? 0.0;
+  double get y1 => _json['y1'] ?? 0.0;
   @override
-  double get y2 => _json['bound_y2'] ?? 0.0;
+  double get y2 => _json['y2'] ?? 0.0;
   @override
-  double get z1 => _json['bound_z1'] ?? 0.0;
+  double get z1 => _json['z1'] ?? 0.0;
   @override
-  double get z2 => _json['bound_z2'] ?? 0.0;
+  double get z2 => _json['z2'] ?? 0.0;
   @override
-  double? get mfsx => _json['m_f_s_x'];
+  double? get mfsx => _json['mfsx'];
   @override
-  double? get mfsy => _json['m_f_s_y'];
+  double? get mfsy => _json['mfsy'];
   @override
   String? get path => _json['path'];
   @override

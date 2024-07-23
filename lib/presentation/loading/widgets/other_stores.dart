@@ -7,6 +7,7 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_others.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
@@ -508,11 +509,13 @@ class _OtherStoresState extends State<OtherStores> {
                           selected: _selectedCargo,
                           onRowTap: _toggleCargo,
                           columns: [
-                            CargoColumn(
+                            CargoColumn<String>(
                               type: 'text',
                               key: 'type',
                               name: '',
                               defaultValue: 'other',
+                              extractValue: (cargo) => cargo.type.label,
+                              parseValue: (text) => CargoType.from(text).key,
                               buildCell: (cargo) {
                                 return Tooltip(
                                   message: Localized(cargo.type.label).v,
@@ -531,13 +534,14 @@ class _OtherStoresState extends State<OtherStores> {
                               },
                               width: 28.0,
                             ),
-                            CargoColumn(
+                            CargoColumn<String?>(
                               width: 350.0,
                               key: 'name',
                               type: 'text',
                               name: const Localized('Name').v,
                               isEditable: true,
                               isResizable: true,
+                              extractValue: (cargo) => cargo.name,
                               buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'name',
                                 tableName: 'compartment',
@@ -557,7 +561,7 @@ class _OtherStoresState extends State<OtherStores> {
                               headerAlignment: Alignment.centerRight,
                               cellAlignment: Alignment.centerRight,
                               width: 150.0,
-                              key: 'mass',
+                              key: 'weight',
                               type: 'real',
                               name:
                                   '${const Localized('Mass').v} [${const Localized('t').v}]',
@@ -615,6 +619,12 @@ class _OtherStoresState extends State<OtherStores> {
                                     fractionDigits: 2,
                                   ) ??
                                   0.0,
+                              parseValue: (text) =>
+                                  _formatDouble(
+                                    double.tryParse(text),
+                                    fractionDigits: 2,
+                                  ) ??
+                                  0.0,
                             ),
                             CargoColumn<double>(
                               headerAlignment: Alignment.centerRight,
@@ -641,6 +651,12 @@ class _OtherStoresState extends State<OtherStores> {
                                     fractionDigits: 2,
                                   ) ??
                                   0.0,
+                              parseValue: (text) =>
+                                  _formatDouble(
+                                    double.tryParse(text),
+                                    fractionDigits: 2,
+                                  ) ??
+                                  0.0,
                             ),
                             CargoColumn<double>(
                               headerAlignment: Alignment.centerRight,
@@ -664,6 +680,12 @@ class _OtherStoresState extends State<OtherStores> {
                               extractValue: (cargo) =>
                                   _formatDouble(
                                     cargo.vcg,
+                                    fractionDigits: 2,
+                                  ) ??
+                                  0.0,
+                              parseValue: (text) =>
+                                  _formatDouble(
+                                    double.tryParse(text),
                                     fractionDigits: 2,
                                   ) ??
                                   0.0,

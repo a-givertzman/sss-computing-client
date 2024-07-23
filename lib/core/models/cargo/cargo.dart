@@ -63,7 +63,7 @@ abstract interface class Cargo {
   /// type of the cargo
   CargoType get type;
   ///
-  ///
+  /// TODO: update doc
   String? get path;
   ///
   /// Returns [Map] representation of the [Cargo]

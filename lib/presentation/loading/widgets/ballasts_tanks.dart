@@ -6,6 +6,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_ballast_tanks.dart';
 import 'package:sss_computing_client/core/models/record/cargo_level_record.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
@@ -118,11 +119,15 @@ class _BallastsTanksState extends State<BallastsTanks> {
                           selected: _selectedCargo,
                           onRowTap: _toggleCargo,
                           columns: [
-                            CargoColumn(
+                            CargoColumn<String>(
                               type: 'text',
                               key: 'type',
                               name: '',
                               defaultValue: 'other',
+                              extractValue: (cargo) => cargo.type.label,
+                              parseValue: (text) => CargoType.from(text).key,
+                              // copyRowWith: (cargo, value) =>
+                              //     JsonCargo(json: cargo.asMap()['type']),
                               buildCell: (cargo) {
                                 return Tooltip(
                                   message: Localized(cargo.type.label).v,
@@ -141,13 +146,14 @@ class _BallastsTanksState extends State<BallastsTanks> {
                               },
                               width: 28.0,
                             ),
-                            CargoColumn(
+                            CargoColumn<String?>(
                               width: 350.0,
                               key: 'name',
                               type: 'text',
                               name: const Localized('Name').v,
                               isEditable: true,
                               isResizable: true,
+                              extractValue: (cargo) => cargo.name,
                               buildRecord: (cargo) => FieldRecord<String>(
                                 fieldName: 'name',
                                 tableName: 'compartment',
@@ -167,7 +173,7 @@ class _BallastsTanksState extends State<BallastsTanks> {
                               headerAlignment: Alignment.centerRight,
                               cellAlignment: Alignment.centerRight,
                               width: 150.0,
-                              key: 'mass',
+                              key: 'weight',
                               type: 'real',
                               name:
                                   '${const Localized('Mass').v} [${const Localized('t').v}]',
@@ -274,7 +280,7 @@ class _BallastsTanksState extends State<BallastsTanks> {
                                 RealValidationCase(),
                               ]),
                             ),
-                            CargoColumn<double>(
+                            CargoColumn<double?>(
                               headerAlignment: Alignment.centerRight,
                               cellAlignment: Alignment.centerRight,
                               width: 150.0,
@@ -283,6 +289,7 @@ class _BallastsTanksState extends State<BallastsTanks> {
                               name: const Localized('%').v,
                               isResizable: true,
                               isEditable: true,
+                              extractValue: (cargo) => cargo.level,
                               buildCell: (cargo) {
                                 return Container(
                                   margin: const EdgeInsets.symmetric(
@@ -365,6 +372,12 @@ class _BallastsTanksState extends State<BallastsTanks> {
                                     fractionDigits: 2,
                                   ) ??
                                   0.0,
+                              parseValue: (text) =>
+                                  _formatDouble(
+                                    double.tryParse(text),
+                                    fractionDigits: 2,
+                                  ) ??
+                                  0.0,
                             ),
                             CargoColumn<double>(
                               headerAlignment: Alignment.centerRight,
@@ -388,6 +401,12 @@ class _BallastsTanksState extends State<BallastsTanks> {
                               extractValue: (cargo) =>
                                   _formatDouble(
                                     cargo.tcg,
+                                    fractionDigits: 2,
+                                  ) ??
+                                  0.0,
+                              parseValue: (text) =>
+                                  _formatDouble(
+                                    double.tryParse(text),
                                     fractionDigits: 2,
                                   ) ??
                                   0.0,
@@ -417,12 +436,18 @@ class _BallastsTanksState extends State<BallastsTanks> {
                                     fractionDigits: 2,
                                   ) ??
                                   0.0,
+                              parseValue: (text) =>
+                                  _formatDouble(
+                                    double.tryParse(text),
+                                    fractionDigits: 2,
+                                  ) ??
+                                  0.0,
                             ),
                             CargoColumn<double?>(
                               headerAlignment: Alignment.centerRight,
                               cellAlignment: Alignment.centerRight,
                               grow: 1,
-                              key: 'm_f_s_x',
+                              key: 'mfsx',
                               type: 'real',
                               name:
                                   '${const Localized('Mf.sx').v} [${const Localized('t•m').v}]',
@@ -436,11 +461,16 @@ class _BallastsTanksState extends State<BallastsTanks> {
                                 authToken: widget._authToken,
                                 filter: {'space_id': cargo.id},
                               ),
-                              parseValue: (value) => double.tryParse(value),
                               defaultValue: '—',
                               extractValue: (cargo) =>
                                   _formatDouble(
                                     cargo.mfsx,
+                                    fractionDigits: 0,
+                                  ) ??
+                                  0.0,
+                              parseValue: (text) =>
+                                  _formatDouble(
+                                    double.tryParse(text),
                                     fractionDigits: 0,
                                   ) ??
                                   0.0,
