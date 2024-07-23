@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 ///
 /// Enum of cargo types with colors and labels.
 enum CargoType {
-  ballast('Ballast tank', Colors.green),
-  oilsAndFuels('Oils and fuels', Colors.brown),
-  freshWater('Fresh water', Colors.blue),
-  acidsAndAlkalis('Acids and alkalis', Colors.purple),
-  pollutedLiquids('Polluted liquids', Colors.black),
-  other('Other', Colors.grey);
+  ballast('Ballast tank', Colors.green, 'ballast_tank'),
+  oilsAndFuels('Oils and fuels', Colors.brown, 'fuel_tank'),
+  freshWater('Fresh water', Colors.blue, 'fresh_drinking_water_tank'),
+  acidsAndAlkalis('Acids and alkalis', Colors.purple, 'urea_tank'),
+  pollutedLiquids('Polluted liquids', Colors.black, 'sundry_tank'),
+  other('Other', Colors.grey, 'other');
   ///
   /// Text label for cargo type
   final String label;
@@ -15,18 +15,16 @@ enum CargoType {
   /// Color of cargo
   final Color color;
   ///
-  const CargoType(this.label, this.color);
+  /// Unique String key for cargo type
+  final String key;
+  ///
+  const CargoType(this.label, this.color, this.key);
   ///
   /// Creates [CargoType] from passed string representation.
   factory CargoType.from(String value) {
-    return switch (value) {
-      'ballast_tank' => CargoType.ballast,
-      'fuel_tank' => CargoType.oilsAndFuels,
-      'lubricating_oil_tank' => CargoType.oilsAndFuels,
-      'fresh_drinking_water_tank' => CargoType.freshWater,
-      'urea_tank' => CargoType.acidsAndAlkalis,
-      'sundry_tank' => CargoType.pollutedLiquids,
-      _ => CargoType.other,
-    };
+    return CargoType.values.firstWhere(
+      (type) => type.key == value,
+      orElse: () => CargoType.other,
+    );
   }
 }
