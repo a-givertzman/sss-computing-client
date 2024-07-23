@@ -355,17 +355,18 @@ class _OtherStoresState extends State<OtherStores> {
                                                         case Err(:final error):
                                                           Log('$runtimeType | _persistAll')
                                                               .error(error);
-                                                          throw error;
+                                                          throw Err<
+                                                              List<FieldData>,
+                                                              Failure>(
+                                                            error,
+                                                          );
                                                       }
                                                     },
                                                   ),
                                                 );
                                                 return Ok(fieldsPersisted);
-                                              } on Err<
-                                                  List<FieldData>,
-                                                  Failure<
-                                                      List<
-                                                          FieldData>>> catch (err) {
+                                              } on Err<List<FieldData>,
+                                                  Failure> catch (err) {
                                                 return err;
                                               }
                                             },
