@@ -5,11 +5,11 @@ import 'package:sss_computing_client/core/models/record/value_record.dart';
 /// TODO: rewrite doc
 ///
 /// Gives access to field of record stored in database.
-final class CargoLevelRecord implements ValueRecord<String> {
+final class CargoLevelRecord implements ValueRecord<double?> {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
-  final String Function(String) _toValue;
+  final double? Function(String) _toValue;
   final Map<String, dynamic> _filter;
   ///
   /// Create [CargoLevelRecord] that giving access
@@ -25,7 +25,7 @@ final class CargoLevelRecord implements ValueRecord<String> {
     required String dbName,
     required ApiAddress apiAddress,
     String? authToken,
-    required String Function(String value) toValue,
+    required double? Function(String value) toValue,
     required Map<String, dynamic> filter,
   })  : _dbName = dbName,
         _apiAddress = apiAddress,
@@ -38,7 +38,7 @@ final class CargoLevelRecord implements ValueRecord<String> {
   /// `filter` - Map with field name as key and field value as value
   /// for filtering records of table based on its fields values.
   @override
-  Future<ResultF<String>> fetch() async {
+  Future<ResultF<double?>> fetch() async {
     final filterQuery = _filter.entries
         .map(
           (entry) => switch (entry.value) {
@@ -62,7 +62,7 @@ final class CargoLevelRecord implements ValueRecord<String> {
     );
     return sqlAccess
         .fetch()
-        .then<ResultF<String>>(
+        .then<ResultF<double?>>(
           (result) => switch (result) {
             Ok(:final value) => Ok(_toValue(value.first)),
             Err(:final error) => Err(
@@ -86,7 +86,7 @@ final class CargoLevelRecord implements ValueRecord<String> {
   /// `filter` - Map with field name as key and field value as value
   /// for filtering records of table based on its fields values.
   @override
-  Future<ResultF<String>> persist(String value) async {
+  Future<ResultF<double?>> persist(String value) async {
     final filterQuery = _filter.entries
         .map(
           (entry) => switch (entry.value) {
@@ -111,9 +111,9 @@ final class CargoLevelRecord implements ValueRecord<String> {
     );
     return sqlAccess
         .fetch()
-        .then<ResultF<String>>(
+        .then<ResultF<double?>>(
           (result) => switch (result) {
-            Ok(:final value) => Ok(value.first),
+            Ok(:final value) => Ok(_toValue(value.first)),
             Err(:final error) => Err(
                 Failure(
                   message: '$error',

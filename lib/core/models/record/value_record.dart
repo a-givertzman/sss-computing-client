@@ -4,5 +4,5 @@ abstract interface class ValueRecord<T> {
   ///
   Future<ResultF<T>> fetch();
   ///
-  Future<ResultF<String>> persist(String value);
+  Future<ResultF<T>> persist(String value);
 }

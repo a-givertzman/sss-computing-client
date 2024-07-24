@@ -94,7 +94,7 @@ final class FieldRecord<T> implements ValueRecord<T> {
   ///   - `filter` - Map with field name as key and field value as value
   /// for filtering records of table based on its fields values.
   @override
-  Future<ResultF<String>> persist(String value) async {
+  Future<ResultF<T>> persist(String value) async {
     final filterQuery = _filter.entries
         .map(
           (entry) => switch (entry.value) {
@@ -119,9 +119,9 @@ final class FieldRecord<T> implements ValueRecord<T> {
     );
     return sqlAccess
         .fetch()
-        .then<ResultF<String>>(
+        .then<ResultF<T>>(
           (result) => switch (result) {
-            Ok(:final value) => Ok(value.first),
+            Ok(:final value) => Ok(_toValue(value.first)),
             Err(:final error) => Err(
                 Failure(
                   message: '$error',
