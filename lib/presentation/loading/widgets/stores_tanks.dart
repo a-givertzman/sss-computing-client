@@ -1,22 +1,31 @@
 import 'dart:convert';
-import 'dart:math';
+import 'package:collection/collection.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
-import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
-import 'package:sss_computing_client/core/models/cargo/pg_stores_tanks.dart';
-import 'package:sss_computing_client/core/models/record/cargo_level_record.dart';
-import 'package:sss_computing_client/core/models/record/field_record.dart';
+import 'package:sss_computing_client/core/models/cargo/pg_all_cargos.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
-import 'package:sss_computing_client/core/validation/real_validation_case.dart';
+import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_density_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_lcg_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_level_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_mfsx_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_name_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_tcg_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_type_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_vcg_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_volume_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/cargo_table.dart';
+import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
 ///
 class StoresTanks extends StatefulWidget {
+  final List<Cargo> _cargos;
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final ApiAddress _apiAddress;
   final String _dbName;
@@ -24,11 +33,13 @@ class StoresTanks extends StatefulWidget {
   ///
   const StoresTanks({
     super.key,
+    required List<Cargo> cargos,
     required Stream<DsDataPoint<bool>> appRefreshStream,
     required ApiAddress apiAddress,
     required String dbName,
     required String? authToken,
-  })  : _appRefreshStream = appRefreshStream,
+  })  : _cargos = cargos,
+        _appRefreshStream = appRefreshStream,
         _apiAddress = apiAddress,
         _dbName = dbName,
         _authToken = authToken;
@@ -37,7 +48,139 @@ class StoresTanks extends StatefulWidget {
   State<StoresTanks> createState() => _StoresTanksState();
 }
 class _StoresTanksState extends State<StoresTanks> {
+  late List<Cargo> _cargos;
   Cargo? _selectedCargo;
+  @override
+  void initState() {
+    _cargos = widget._cargos;
+    super.initState();
+  }
+  //
+  @override
+  Widget build(BuildContext context) {
+    final blockPadding = const Setting('blockPadding').toDouble;
+    return Padding(
+      padding: EdgeInsets.all(blockPadding),
+      child: Column(
+        children: [
+          Expanded(
+            child: FutureBuilderWidget(
+              refreshStream: widget._appRefreshStream,
+              onFuture: PgFramesReal(
+                apiAddress: widget._apiAddress,
+                dbName: widget._dbName,
+                authToken: widget._authToken,
+              ).fetchAll,
+              caseData: (context, framesReal, _) => FutureBuilderWidget(
+                refreshStream: widget._appRefreshStream,
+                onFuture: PgFramesTheoretical(
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  authToken: widget._authToken,
+                ).fetchAll,
+                caseData: (context, framesTheoretical, _) =>
+                    FutureBuilderWidget(
+                  refreshStream: widget._appRefreshStream,
+                  onFuture: FieldRecord<Map<String, dynamic>>(
+                    apiAddress: widget._apiAddress,
+                    dbName: widget._dbName,
+                    authToken: widget._authToken,
+                    tableName: 'ship_parameters',
+                    fieldName: 'value',
+                    toValue: (value) => jsonDecode(value),
+                    filter: {'key': 'hull_svg'},
+                  ).fetch,
+                  caseData: (context, hull, _) => FutureBuilderWidget(
+                    refreshStream: widget._appRefreshStream,
+                    onFuture: FieldRecord<Map<String, dynamic>>(
+                      apiAddress: widget._apiAddress,
+                      dbName: widget._dbName,
+                      authToken: widget._authToken,
+                      tableName: 'ship_parameters',
+                      fieldName: 'value',
+                      toValue: (value) => jsonDecode(value),
+                      filter: {'key': 'hull_beauty_svg'},
+                    ).fetch,
+                    caseData: (context, hullBeauty, _) => CargoSchemes(
+                      cargos: _cargos,
+                      hull: hull,
+                      hullBeauty: hullBeauty,
+                      framesReal: framesReal,
+                      framesTheoretical: framesTheoretical,
+                      onCargoTap: _toggleCargo,
+                      selectedCargo: _selectedCargo,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: blockPadding),
+          Expanded(
+            child: EditingTable(
+              selectedRow: _selectedCargo,
+              onRowTap: _toggleCargo,
+              onRowUpdate: _refetchCargo,
+              columns: [
+                const CargoTypeColumn(),
+                CargoNameColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  authToken: widget._authToken,
+                ),
+                CargoWeightColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  authToken: widget._authToken,
+                ),
+                CargoVolumeColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  authToken: widget._authToken,
+                ),
+                CargoDensityColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  authToken: widget._authToken,
+                ),
+                CargoLevelColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  authToken: widget._authToken,
+                ),
+                CargoLCGColumn(
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  authToken: widget._authToken,
+                ),
+                CargoTCGColumn(
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  authToken: widget._authToken,
+                ),
+                CargoVCGColumn(
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  authToken: widget._authToken,
+                ),
+                CargoMFSXColumn(
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  authToken: widget._authToken,
+                ),
+              ],
+              rows: _cargos,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   //
   void _toggleCargo(Cargo? cargo) {
     if (cargo?.id != _selectedCargo?.id) {
@@ -51,444 +194,43 @@ class _StoresTanksState extends State<StoresTanks> {
     });
   }
   //
-  @override
-  Widget build(BuildContext context) {
-    final blockPadding = const Setting('blockPadding').toDouble;
-    return FutureBuilderWidget(
-      refreshStream: widget._appRefreshStream,
-      onFuture: PgFramesReal(
-        apiAddress: widget._apiAddress,
-        dbName: widget._dbName,
-        authToken: widget._authToken,
-      ).fetchAll,
-      caseData: (context, framesReal, _) => FutureBuilderWidget(
-        refreshStream: widget._appRefreshStream,
-        onFuture: PgFramesTheoretical(
-          apiAddress: widget._apiAddress,
-          dbName: widget._dbName,
-          authToken: widget._authToken,
-        ).fetchAll,
-        caseData: (context, framesTheoretical, _) => FutureBuilderWidget(
-          refreshStream: widget._appRefreshStream,
-          onFuture: FieldRecord<Map<String, dynamic>>(
-            apiAddress: widget._apiAddress,
-            dbName: widget._dbName,
-            authToken: widget._authToken,
-            tableName: 'ship_parameters',
-            fieldName: 'value',
-            toValue: (value) => jsonDecode(value),
-            filter: {'key': 'hull_svg'},
-          ).fetch,
-          caseData: (context, hull, _) => FutureBuilderWidget(
-            refreshStream: widget._appRefreshStream,
-            onFuture: FieldRecord<Map<String, dynamic>>(
-              apiAddress: widget._apiAddress,
-              dbName: widget._dbName,
-              authToken: widget._authToken,
-              tableName: 'ship_parameters',
-              fieldName: 'value',
-              toValue: (value) => jsonDecode(value),
-              filter: {'key': 'hull_beauty_svg'},
-            ).fetch,
-            caseData: (context, hullBeauty, _) => FutureBuilderWidget(
-              refreshStream: widget._appRefreshStream,
-              onFuture: PgStoresTanks(
-                apiAddress: widget._apiAddress,
-                dbName: widget._dbName,
-                authToken: widget._authToken,
-              ).fetchAll,
-              caseData: (context, cargos, _) {
-                return Padding(
-                  padding: EdgeInsets.all(blockPadding),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: CargoSchemes(
-                          cargos: cargos,
-                          hull: hull,
-                          hullBeauty: hullBeauty,
-                          framesReal: framesReal,
-                          framesTheoretical: framesTheoretical,
-                          onCargoTap: _toggleCargo,
-                          selectedCargo: _selectedCargo,
-                        ),
-                      ),
-                      SizedBox(height: blockPadding),
-                      Expanded(
-                        child: CargoTable(
-                          selected: _selectedCargo,
-                          onRowTap: _toggleCargo,
-                          columns: [
-                            CargoColumn<String>(
-                              type: 'text',
-                              key: 'type',
-                              name: '',
-                              defaultValue: 'other',
-                              extractValue: (cargo) => cargo.type.label,
-                              parseValue: (text) => CargoType.from(text).key,
-                              buildCell: (cargo) {
-                                return Tooltip(
-                                  message: Localized(cargo.type.label).v,
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(
-                                      vertical: 2.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: cargo.type.color,
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(2.0),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              width: 28.0,
-                            ),
-                            CargoColumn<String?>(
-                              width: 350.0,
-                              key: 'name',
-                              type: 'text',
-                              name: const Localized('Name').v,
-                              isEditable: true,
-                              isResizable: true,
-                              extractValue: (cargo) => cargo.name,
-                              buildRecord: (cargo) => FieldRecord<String>(
-                                fieldName: 'name',
-                                tableName: 'compartment',
-                                toValue: (value) => value,
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                authToken: widget._authToken,
-                                filter: {'space_id': cargo.id},
-                              ),
-                              defaultValue: '—',
-                              parseValue: (value) => value,
-                              validator: const Validator(cases: [
-                                MinLengthValidationCase(1),
-                              ]),
-                            ),
-                            CargoColumn<double>(
-                              headerAlignment: Alignment.centerRight,
-                              cellAlignment: Alignment.centerRight,
-                              width: 150.0,
-                              key: 'weight',
-                              type: 'real',
-                              name:
-                                  '${const Localized('Mass').v} [${const Localized('t').v}]',
-                              isResizable: true,
-                              isEditable: true,
-                              buildRecord: (cargo) => FieldRecord<String>(
-                                fieldName: 'mass',
-                                tableName: 'compartment',
-                                toValue: (value) => value,
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                authToken: widget._authToken,
-                                filter: {'space_id': cargo.id},
-                              ),
-                              defaultValue: '—',
-                              parseValue: (value) =>
-                                  _formatDouble(
-                                    double.parse(value),
-                                    fractionDigits: 1,
-                                  ) ??
-                                  0.0,
-                              extractValue: (cargo) =>
-                                  _formatDouble(
-                                    cargo.weight,
-                                    fractionDigits: 1,
-                                  ) ??
-                                  0.0,
-                              validator: const Validator(cases: [
-                                MinLengthValidationCase(1),
-                                RealValidationCase(),
-                              ]),
-                            ),
-                            CargoColumn<double>(
-                              headerAlignment: Alignment.centerRight,
-                              cellAlignment: Alignment.centerRight,
-                              width: 150.0,
-                              key: 'volume',
-                              type: 'real',
-                              name:
-                                  '${const Localized('Volume').v} [${const Localized('m^3').v}]',
-                              isResizable: true,
-                              isEditable: true,
-                              buildRecord: (cargo) => FieldRecord<String>(
-                                fieldName: 'volume',
-                                tableName: 'compartment',
-                                toValue: (value) => value,
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                authToken: widget._authToken,
-                                filter: {'space_id': cargo.id},
-                              ),
-                              defaultValue: '—',
-                              parseValue: (value) =>
-                                  _formatDouble(
-                                    double.parse(value),
-                                    fractionDigits: 1,
-                                  ) ??
-                                  0.0,
-                              extractValue: (cargo) =>
-                                  _formatDouble(
-                                    cargo.volume,
-                                    fractionDigits: 1,
-                                  ) ??
-                                  0.0,
-                              validator: const Validator(cases: [
-                                MinLengthValidationCase(1),
-                                RealValidationCase(),
-                              ]),
-                            ),
-                            CargoColumn<double>(
-                              headerAlignment: Alignment.centerRight,
-                              cellAlignment: Alignment.centerRight,
-                              width: 150.0,
-                              key: 'density',
-                              type: 'real',
-                              name:
-                                  '${const Localized('Density').v} [${const Localized('t/m^3').v}]',
-                              isResizable: true,
-                              isEditable: true,
-                              buildRecord: (cargo) => FieldRecord<String>(
-                                fieldName: 'density',
-                                tableName: 'compartment',
-                                toValue: (value) => value,
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                authToken: widget._authToken,
-                                filter: {'space_id': cargo.id},
-                              ),
-                              defaultValue: '—',
-                              parseValue: (value) =>
-                                  _formatDouble(
-                                    double.parse(value),
-                                    fractionDigits: 3,
-                                  ) ??
-                                  0.0,
-                              extractValue: (cargo) =>
-                                  _formatDouble(
-                                    cargo.density,
-                                    fractionDigits: 3,
-                                  ) ??
-                                  0.0,
-                              validator: const Validator(cases: [
-                                MinLengthValidationCase(1),
-                                RealValidationCase(),
-                              ]),
-                            ),
-                            CargoColumn<double?>(
-                              headerAlignment: Alignment.centerRight,
-                              cellAlignment: Alignment.centerRight,
-                              width: 150.0,
-                              key: 'level',
-                              type: 'real',
-                              name: const Localized('%').v,
-                              isResizable: true,
-                              isEditable: true,
-                              extractValue: (cargo) => cargo.level,
-                              buildCell: (cargo) {
-                                return Container(
-                                  margin: const EdgeInsets.symmetric(
-                                    vertical: 2.0,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: <Color>[
-                                        Theme.of(context).colorScheme.primary,
-                                        Theme.of(context).colorScheme.primary,
-                                        Colors.transparent,
-                                        Colors.transparent,
-                                      ],
-                                      stops: [
-                                        0.0,
-                                        cargo.level! / 100.0,
-                                        cargo.level! / 100.0,
-                                        1.0,
-                                      ],
-                                      tileMode: TileMode.clamp,
-                                    ),
-                                    border: Border.all(
-                                      width: 1.0,
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                    ),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(2.0),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text('${_formatDouble(
-                                          cargo.level,
-                                          fractionDigits: 1,
-                                        ) ?? 0.0}'),
-                                  ),
-                                );
-                              },
-                              buildRecord: (cargo) => CargoLevelRecord(
-                                toValue: (value) => value,
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                authToken: widget._authToken,
-                                filter: {'space_id': cargo.id},
-                              ),
-                              defaultValue: '—',
-                              parseValue: (value) =>
-                                  _formatDouble(
-                                    double.parse(value),
-                                    fractionDigits: 1,
-                                  ) ??
-                                  0.0,
-                              validator: const Validator(cases: [
-                                MinLengthValidationCase(1),
-                                RealValidationCase(),
-                              ]),
-                            ),
-                            CargoColumn<double>(
-                              headerAlignment: Alignment.centerRight,
-                              cellAlignment: Alignment.centerRight,
-                              grow: 1,
-                              key: 'lcg',
-                              type: 'real',
-                              name:
-                                  '${const Localized('LCG').v} [${const Localized('m').v}]',
-                              isEditable: false,
-                              buildRecord: (cargo) => FieldRecord<String>(
-                                fieldName: 'lcg',
-                                tableName: 'compartment',
-                                toValue: (value) => value,
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                authToken: widget._authToken,
-                                filter: {'space_id': cargo.id},
-                              ),
-                              defaultValue: '—',
-                              extractValue: (cargo) =>
-                                  _formatDouble(
-                                    cargo.lcg,
-                                    fractionDigits: 2,
-                                  ) ??
-                                  0.0,
-                              parseValue: (text) =>
-                                  _formatDouble(
-                                    double.tryParse(text),
-                                    fractionDigits: 2,
-                                  ) ??
-                                  0.0,
-                            ),
-                            CargoColumn<double>(
-                              headerAlignment: Alignment.centerRight,
-                              cellAlignment: Alignment.centerRight,
-                              grow: 1,
-                              key: 'tcg',
-                              type: 'real',
-                              name:
-                                  '${const Localized('TCG').v} [${const Localized('m').v}]',
-                              isEditable: false,
-                              buildRecord: (cargo) => FieldRecord<String>(
-                                fieldName: 'tcg',
-                                tableName: 'compartment',
-                                toValue: (value) => value,
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                authToken: widget._authToken,
-                                filter: {'space_id': cargo.id},
-                              ),
-                              defaultValue: '—',
-                              extractValue: (cargo) =>
-                                  _formatDouble(
-                                    cargo.tcg,
-                                    fractionDigits: 2,
-                                  ) ??
-                                  0.0,
-                              parseValue: (text) =>
-                                  _formatDouble(
-                                    double.tryParse(text),
-                                    fractionDigits: 2,
-                                  ) ??
-                                  0.0,
-                            ),
-                            CargoColumn<double>(
-                              headerAlignment: Alignment.centerRight,
-                              cellAlignment: Alignment.centerRight,
-                              grow: 1,
-                              key: 'vcg',
-                              type: 'real',
-                              name:
-                                  '${const Localized('VCG').v} [${const Localized('m').v}]',
-                              isEditable: false,
-                              buildRecord: (cargo) => FieldRecord<String>(
-                                fieldName: 'vcg',
-                                tableName: 'compartment',
-                                toValue: (value) => value,
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                authToken: widget._authToken,
-                                filter: {'space_id': cargo.id},
-                              ),
-                              defaultValue: '—',
-                              extractValue: (cargo) =>
-                                  _formatDouble(
-                                    cargo.vcg,
-                                    fractionDigits: 2,
-                                  ) ??
-                                  0.0,
-                              parseValue: (text) =>
-                                  _formatDouble(
-                                    double.tryParse(text),
-                                    fractionDigits: 2,
-                                  ) ??
-                                  0.0,
-                            ),
-                            CargoColumn<double?>(
-                              headerAlignment: Alignment.centerRight,
-                              cellAlignment: Alignment.centerRight,
-                              grow: 1,
-                              key: 'mfsx',
-                              type: 'real',
-                              name:
-                                  '${const Localized('Mf.sx').v} [${const Localized('t•m').v}]',
-                              isEditable: false,
-                              buildRecord: (cargo) => FieldRecord<String>(
-                                fieldName: 'm_f_s_x',
-                                tableName: 'compartment',
-                                toValue: (value) => value,
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                authToken: widget._authToken,
-                                filter: {'space_id': cargo.id},
-                              ),
-                              defaultValue: '—',
-                              extractValue: (cargo) =>
-                                  _formatDouble(
-                                    cargo.mfsx,
-                                    fractionDigits: 0,
-                                  ) ??
-                                  0.0,
-                              parseValue: (text) =>
-                                  _formatDouble(
-                                    double.tryParse(text),
-                                    fractionDigits: 0,
-                                  ) ??
-                                  0.0,
-                            ),
-                          ],
-                          cargos: cargos,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
+  void _refetchCargo(Cargo oldCargo) {
+    final id = oldCargo.id;
+    if (id == null) return;
+    PgAllCargos(
+      dbName: widget._dbName,
+      apiAddress: widget._apiAddress,
+      authToken: widget._authToken,
+    )
+        .fetchById(id)
+        .then(
+          (result) => switch (result) {
+            Ok(value: final newCargo) => _updateCargo(newCargo),
+            Err(:final error) => _showErrorMessage(error.message),
+          },
+        )
+        .onError(
+          (_, __) => _showErrorMessage(const Localized('Unknown error').v),
+        );
   }
   //
-  double? _formatDouble(double? value, {int fractionDigits = 1}) =>
-      ((value ?? 0.0) * pow(10, fractionDigits)).round() /
-      pow(10, fractionDigits);
+  void _updateCargo(Cargo newCargo) {
+    final idx = _cargos.indexWhere((cargo) => cargo.id == newCargo.id);
+    if (idx < 0 || !mounted) return;
+    setState(() {
+      if (newCargo.id == _selectedCargo?.id) {
+        _selectedCargo = newCargo;
+      }
+      _cargos = [
+        ..._cargos.slice(0, idx),
+        newCargo,
+        ..._cargos.slice(idx + 1),
+      ];
+    });
+  }
+  //
+  void _showErrorMessage(String message) {
+    if (!mounted) return;
+    BottomMessage.error(message: message).show(context);
+  }
 }
