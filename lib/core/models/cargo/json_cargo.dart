@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 ///
@@ -53,7 +54,7 @@ class JsonCargo implements Cargo {
   CargoType get type => CargoType.from(_json['type']);
   @override
   Map<String, dynamic> asMap() {
-    return _json;
+    return json.decode(json.encode(_json));
   }
   @override
   String toString() => _json.toString();
