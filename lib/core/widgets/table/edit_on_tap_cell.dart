@@ -7,7 +7,7 @@ import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/widgets/activate_on_tap_builder_widget.dart';
 ///
 /// Field that can be edited after activation by tap
-class EditOnTapField extends StatefulWidget {
+class EditOnTapCell extends StatefulWidget {
   final String _initialValue;
   final Color _textColor;
   final Color _iconColor;
@@ -16,11 +16,11 @@ class EditOnTapField extends StatefulWidget {
   final void Function(String)? _onSubmitted;
   final void Function(String)? _onCancel;
   final Validator? _validator;
-  final Widget? _child;
+  final Widget _child;
   ///
-  /// Creates [EditOnTapField] that can be edited
+  /// Creates [EditOnTapCell] that can be edited
   /// after activation by tap
-  const EditOnTapField({
+  const EditOnTapCell({
     super.key,
     required String initialValue,
     required Color textColor,
@@ -30,7 +30,7 @@ class EditOnTapField extends StatefulWidget {
     void Function(String)? onSubmitted,
     void Function(String)? onCancel,
     Validator? validator,
-    Widget? child,
+    required Widget child,
   })  : _validator = validator,
         _onCancel = onCancel,
         _onSubmit = onSubmit,
@@ -42,10 +42,10 @@ class EditOnTapField extends StatefulWidget {
         _child = child;
   ///
   @override
-  State<EditOnTapField> createState() => _EditOnTapFieldState();
+  State<EditOnTapCell> createState() => _EditOnTapCellState();
 }
 ///
-class _EditOnTapFieldState extends State<EditOnTapField> {
+class _EditOnTapCellState extends State<EditOnTapCell> {
   TextEditingController? _controller;
   FocusNode? _focusNode;
   Failure<String>? _error;
@@ -79,12 +79,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
         return false;
       },
       builder: ((context, isActivated, deactivate) => !isActivated
-          ? widget._child ??
-              Text(
-                widget._initialValue,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              )
+          ? widget._child
           : Row(
               children: [
                 Flexible(
