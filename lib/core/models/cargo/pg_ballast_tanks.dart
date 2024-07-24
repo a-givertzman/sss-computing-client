@@ -49,4 +49,32 @@ class PgBallastTanks implements Cargos {
           )),
         );
   }
+  //
+  @override
+  Future<Result<Cargo, Failure<String>>> fetchById(int id) async {
+    return CargosSqlAccess(
+      dbName: _dbName,
+      apiAddress: _apiAddress,
+      authToken: _authToken,
+      filter: {'space_id': id},
+    )
+        .fetch()
+        .then<Result<Cargo, Failure<String>>>(
+          (result) => switch (result) {
+            Ok(value: final cargos) => Ok(cargos.first),
+            Err(:final error) => Err(
+                Failure(
+                  message: '$error',
+                  stackTrace: StackTrace.current,
+                ),
+              ),
+          },
+        )
+        .onError(
+          (error, stackTrace) => Err(Failure(
+            message: '$error',
+            stackTrace: stackTrace,
+          )),
+        );
+  }
 }
