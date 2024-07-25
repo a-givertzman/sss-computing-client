@@ -24,14 +24,14 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
 ///
-class BallastsTanks extends StatefulWidget {
+class TanksConfigurator extends StatefulWidget {
   final List<Cargo> _cargos;
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
   ///
-  const BallastsTanks({
+  const TanksConfigurator({
     super.key,
     required List<Cargo> cargos,
     required Stream<DsDataPoint<bool>> appRefreshStream,
@@ -45,9 +45,9 @@ class BallastsTanks extends StatefulWidget {
         _authToken = authToken;
   //
   @override
-  State<BallastsTanks> createState() => _BallastsTanksState();
+  State<TanksConfigurator> createState() => _TanksConfiguratorState();
 }
-class _BallastsTanksState extends State<BallastsTanks> {
+class _TanksConfiguratorState extends State<TanksConfigurator> {
   late List<Cargo> _cargos;
   Cargo? _selectedCargo;
   @override
@@ -218,6 +218,7 @@ class _BallastsTanksState extends State<BallastsTanks> {
     final idx = _cargos.indexWhere((cargo) => cargo.id == newCargo.id);
     if (idx < 0 || !mounted) return;
     setState(() {
+      if (_selectedCargo?.id == newCargo.id) _selectedCargo = newCargo;
       _cargos = [
         ..._cargos.slice(0, idx),
         newCargo,
