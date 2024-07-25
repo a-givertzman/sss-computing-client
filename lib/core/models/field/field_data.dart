@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
-import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 ///
 /// Model that holds data for [TextFormField] or [TextField].
-class FieldData {
+class FieldData<T> {
   final String id;
-  final FieldType type;
   final String label;
-  final String unit;
-  final ValueRecord<String> _record;
+  T _initialValue;
+  final T Function(String text) toValue;
+  final String Function(T value) toText;
+  final ValueRecord<T> _record;
   final TextEditingController _controller;
   final Validator? _validator;
   bool _isPersisted;
-  String _initialValue;
   ///
   /// Model that holds data for [TextFormField] or [TextField].
   ///
@@ -25,25 +24,25 @@ class FieldData {
   FieldData({
     required this.id,
     required this.label,
-    required this.unit,
-    required this.type,
-    required String initialValue,
-    required ValueRecord<String> record,
+    required this.toValue,
+    required this.toText,
+    required T initialValue,
+    required ValueRecord<T> record,
     Validator? validator,
     bool isPersisted = false,
-  })  : _record = record,
-        _initialValue = initialValue,
-        _controller = TextEditingController(text: initialValue),
+  })  : _initialValue = initialValue,
+        _record = record,
         _validator = validator,
-        _isPersisted = isPersisted;
+        _isPersisted = isPersisted,
+        _controller = TextEditingController(text: toText(initialValue));
   ///
   FieldData._({
     required this.id,
     required this.label,
-    required this.unit,
-    required this.type,
-    required String initialValue,
-    required ValueRecord<String> record,
+    required this.toValue,
+    required this.toText,
+    required T initialValue,
+    required ValueRecord<T> record,
     required TextEditingController controller,
     required Validator? validator,
     required bool isPersisted,
@@ -54,7 +53,7 @@ class FieldData {
         _isPersisted = isPersisted;
   ///
   /// Initial content of the target field.
-  String get initialValue => _initialValue;
+  T get initialValue => _initialValue;
   ///
   /// Controller for FormField's.
   TextEditingController get controller => _controller;
@@ -68,62 +67,52 @@ class FieldData {
   Validator? get validator => _validator;
   ///
   /// Pull data from the database through provided [record].
-  Future<ResultF<String>> fetch() async {
+  Future<ResultF<T>> fetch() async {
     switch (await _record.fetch()) {
       case Ok(:final value):
-        refreshWith(value);
+        refreshWith(toText(value));
         _isPersisted = true;
         return Ok(value);
-      case final Err<String, Failure> err:
+      case final Err<T, Failure> err:
         Log('$runtimeType | fetch').error(err.error);
         return err;
     }
   }
   ///
   /// Persist data to the database through provided [record].
-  Future<ResultF<String>> save() async {
-    final value = controller.text;
-    switch (await _record.persist(value)) {
+  Future<ResultF<T>> save() async {
+    final text = controller.text;
+    switch (await _record.persist(text)) {
       case Ok():
-        refreshWith(value);
+        refreshWith(text);
         _isPersisted = true;
-        return Ok(value);
+        return Ok(toValue(text));
       case final Err<void, Failure> err:
         Log('$runtimeType | fetch').error(err.error);
-        return Err<String, Failure>(err.error);
+        return Err<T, Failure>(err.error);
     }
   }
   ///
   /// Sets initialaValue and controller value to provided one.
   void refreshWith(String text) {
-    controller.text = text;
-    _initialValue = text;
+    _controller.text = text;
+    _initialValue = toValue(text);
   }
   ///
   /// Set current [value] to its [initialState].
   void cancel() {
-    _controller.text = _initialValue;
+    _controller.text = toText(_initialValue);
   }
   ///
-  FieldData copyWith({
-    String? id,
-    String? label,
-    String? unit,
-    FieldType? type,
-    String? initialValue,
-    ValueRecord<String>? record,
-    Validator? validator,
-  }) {
-    return FieldData._(
-      id: id ?? this.id,
-      type: type ?? this.type,
-      label: label ?? this.label,
-      unit: unit ?? this.unit,
-      initialValue: initialValue ?? _initialValue,
-      record: record ?? _record,
-      controller: _controller,
-      isPersisted: _isPersisted,
-      validator: validator ?? _validator,
-    );
-  }
+  FieldData<T> copyWithValue(T value) => FieldData<T>._(
+        id: id,
+        label: label,
+        toValue: toValue,
+        toText: toText,
+        initialValue: _initialValue,
+        record: _record,
+        controller: controller..text = toText(value),
+        validator: _validator,
+        isPersisted: _isPersisted,
+      );
 }

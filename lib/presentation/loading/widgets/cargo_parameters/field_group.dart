@@ -4,7 +4,6 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
-import 'package:sss_computing_client/core/widgets/scrollable_builder_widget.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/cancelable_field.dart';
 ///
 class FieldGroup extends StatefulWidget {
@@ -26,9 +25,11 @@ class FieldGroup extends StatefulWidget {
         _onChanged = onChanged,
         _onSaved = onSaved,
         _fieldsData = fieldsData;
+  //
   @override
   State<FieldGroup> createState() => _FieldGroupState();
 }
+///
 class _FieldGroupState extends State<FieldGroup> {
   late final ScrollController _scrollController;
   //
@@ -37,19 +38,20 @@ class _FieldGroupState extends State<FieldGroup> {
     _scrollController = ScrollController();
     super.initState();
   }
+  //
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+  //
   CancelableField _mapDataToField(FieldData data, {Failure? err}) =>
       CancelableField(
         label: data.label,
-        suffixText: data.unit,
-        initialValue: data.initialValue,
-        fieldType: data.type,
+        initialValue: data.toText(data.initialValue),
         controller: data.controller,
         sendError: err != null ? '${err.message}' : null,
+        validator: data.validator,
         onChanged: (value) {
           data.controller.value = TextEditingValue(
             text: value,
@@ -68,6 +70,7 @@ class _FieldGroupState extends State<FieldGroup> {
           return Future.value(const Ok(""));
         },
       );
+  //
   @override
   Widget build(BuildContext context) {
     final padding = const Setting('padding').toDouble;
@@ -87,43 +90,23 @@ class _FieldGroupState extends State<FieldGroup> {
                   : field.fetch(),
             )),
             builder: (_, result) => result.hasData
-                ? Scrollbar(
-                    thumbVisibility: true,
+                ? SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
                     controller: _scrollController,
-                    child: ScrollConfiguration(
-                      behavior: ScrollConfiguration.of(context)
-                          .copyWith(scrollbars: false),
-                      child: ScrollableBuilderWidget(
-                        controller: _scrollController,
-                        builder: (_, isScrollEnabled) => SingleChildScrollView(
-                          controller: _scrollController,
-                          child: Column(
-                            children: [
-                              for (int i = 0;
-                                  i < widget._fieldsData.length;
-                                  i++) ...[
-                                AnimatedPadding(
-                                  duration: const Duration(milliseconds: 150),
-                                  curve: Curves.easeInOut,
-                                  padding: EdgeInsets.only(
-                                    right: isScrollEnabled ? padding * 2 : 0.0,
-                                  ),
-                                  child: switch (result.data![i]) {
-                                    Ok() =>
-                                      _mapDataToField(widget._fieldsData[i]),
-                                    Err(:final error) => _mapDataToField(
-                                        widget._fieldsData[i],
-                                        err: error,
-                                      ),
-                                  },
-                                ),
-                                if (i == widget._fieldsData.length - 1)
-                                  SizedBox(height: padding),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ),
+                    child: Column(
+                      children: [
+                        for (int i = 0; i < widget._fieldsData.length; i++) ...[
+                          switch (result.data![i]) {
+                            Ok() => _mapDataToField(widget._fieldsData[i]),
+                            Err(:final error) => _mapDataToField(
+                                widget._fieldsData[i],
+                                err: error,
+                              ),
+                          },
+                          if (i == widget._fieldsData.length - 1)
+                            SizedBox(height: padding),
+                        ],
+                      ],
                     ),
                   )
                 : const CupertinoActivityIndicator(),

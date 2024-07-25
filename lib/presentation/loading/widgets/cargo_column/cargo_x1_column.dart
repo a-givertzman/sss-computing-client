@@ -1,22 +1,22 @@
 import 'package:ext_rw/ext_rw.dart' hide FieldType;
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
-import 'package:sss_computing_client/core/models/record/cargo_level_record.dart';
+import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
-class CargoLevelColumn implements TableColumn<Cargo, double?> {
+class CargoX1Column implements TableColumn<Cargo, double?> {
   final bool _isEditable;
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
   ///
-  const CargoLevelColumn({
+  const CargoX1Column({
     bool isEditable = false,
     required ApiAddress apiAddress,
     required String dbName,
@@ -27,13 +27,13 @@ class CargoLevelColumn implements TableColumn<Cargo, double?> {
         _authToken = authToken;
   //
   @override
-  String get key => 'level';
+  String get key => 'x1';
   //
   @override
   FieldType get type => FieldType.real;
   //
   @override
-  String get name => const Localized('%').v;
+  String get name => '${const Localized('X1').v} [${const Localized('m').v}]';
   //
   @override
   String get nullValue => '—';
@@ -48,10 +48,10 @@ class CargoLevelColumn implements TableColumn<Cargo, double?> {
   Alignment get cellAlignment => Alignment.centerRight;
   //
   @override
-  double? get grow => null;
+  double? get grow => 1;
   //
   @override
-  double? get width => 150.0;
+  double? get width => null;
   //
   @override
   bool get isEditable => _isEditable;
@@ -68,23 +68,25 @@ class CargoLevelColumn implements TableColumn<Cargo, double?> {
       );
   //
   @override
-  double? extractValue(Cargo cargo) => cargo.level;
+  double? extractValue(Cargo cargo) => cargo.lcg;
   //
   @override
   double? parseToValue(String text) => double.tryParse(text);
   //
   @override
   String parseToString(double? value) {
-    return (value ?? 0.0).toStringAsFixed(0);
+    return (value ?? 0.0).toStringAsFixed(2);
   }
   //
   @override
   Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['level'] = parseToValue(text),
+        json: cargo.asMap()..['x1'] = parseToValue(text),
       );
   //
   @override
-  ValueRecord? buildRecord(Cargo cargo) => CargoLevelRecord(
+  ValueRecord? buildRecord(Cargo cargo) => FieldRecord<double?>(
+        fieldName: 'bound_x1',
+        tableName: 'compartment',
         toValue: (text) => parseToValue(text),
         apiAddress: _apiAddress,
         dbName: _dbName,
@@ -93,59 +95,5 @@ class CargoLevelColumn implements TableColumn<Cargo, double?> {
       );
   //
   @override
-  Widget? buildCell(BuildContext context, Cargo cargo) => _CargoLevelWidget(
-        level: cargo.level ?? 0.0,
-        label: parseToString(cargo.level),
-        color: Theme.of(context).colorScheme.primary,
-      );
-}
-///
-class _CargoLevelWidget extends StatelessWidget {
-  final double _level;
-  final String _label;
-  final Color _color;
-  ///
-  const _CargoLevelWidget({
-    required double level,
-    required String label,
-    required Color color,
-  })  : _level = level,
-        _label = label,
-        _color = color;
-  //
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        vertical: 2.0,
-      ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: <Color>[
-            _color,
-            _color,
-            _color.withOpacity(0.25),
-            _color.withOpacity(0.25),
-          ],
-          stops: [
-            0.0,
-            _level / 100.0,
-            _level / 100.0,
-            1.0,
-          ],
-          tileMode: TileMode.clamp,
-        ),
-        border: Border.all(
-          width: 1.0,
-          color: _color,
-        ),
-        borderRadius: const BorderRadius.all(
-          Radius.circular(2.0),
-        ),
-      ),
-      child: Center(
-        child: Text(_label),
-      ),
-    );
-  }
+  Widget? buildCell(BuildContext context, Cargo cargo) => null;
 }

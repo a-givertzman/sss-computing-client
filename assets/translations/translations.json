@@ -276,8 +276,12 @@
         "Балластные цистерны"
     ],
     "Stores tank": [
-        "Stores tanks",
+        "Storage tanks",
         "Цистерны запаса"
+    ],
+    "Other stores": [
+        "Other stores",
+        "Прочие запасы"
     ],
     "Fresh water": [
         "Fresh water",

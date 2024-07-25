@@ -12,6 +12,7 @@ class CargoParametersForm extends StatefulWidget {
   final List<FieldData> _fieldsData;
   final Future<ResultF<List<FieldData>>> Function(List<FieldData>)? _onSave;
   final void Function()? _onClose;
+  ///
   const CargoParametersForm({
     super.key,
     required List<FieldData> fieldData,
@@ -20,6 +21,7 @@ class CargoParametersForm extends StatefulWidget {
   })  : _fieldsData = fieldData,
         _onSave = onSave,
         _onClose = onClose;
+  //
   @override
   State<CargoParametersForm> createState() => _CargoParametersFormState();
 }
@@ -28,12 +30,14 @@ class _CargoParametersFormState extends State<CargoParametersForm> {
   final _formKey = GlobalKey<FormState>();
   late List<FieldData> _fieldsData;
   late bool _isSaving;
+  //
   @override
   void initState() {
     _fieldsData = widget._fieldsData;
     _isSaving = false;
     super.initState();
   }
+  //
   @override
   Widget build(BuildContext context) {
     final isAnyFieldChanged =
