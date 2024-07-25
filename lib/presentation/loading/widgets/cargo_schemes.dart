@@ -55,7 +55,7 @@ class CargoSchemes extends StatefulWidget {
 ///
 class _CargoSchemesState extends State<CargoSchemes> {
   late final Figure _hullFigure;
-  late final List<({Figure figure, Cargo cargo})> _cargoFigures;
+  late List<({Figure figure, Cargo cargo})> _cargoFigures;
   late Set<CargoSchemeViewOption> _viewOptions;
   //
   @override
@@ -92,6 +92,19 @@ class _CargoSchemesState extends State<CargoSchemes> {
             ))
         .toList();
     super.initState();
+  }
+  //
+  @override
+  void didUpdateWidget(covariant CargoSchemes oldWidget) {
+    if (oldWidget._cargos != widget._cargos) {
+      _cargoFigures = widget._cargos
+          .map((cargo) => (
+                figure: CargoFigure(cargo: cargo).figure(),
+                cargo: cargo,
+              ))
+          .toList();
+    }
+    super.didUpdateWidget(oldWidget);
   }
   //
   @override
