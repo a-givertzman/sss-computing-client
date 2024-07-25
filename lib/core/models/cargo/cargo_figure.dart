@@ -49,8 +49,11 @@ class CargoFigure {
             end: Vector3(cargo.x2, cargo.tcg ?? 0.0, cargo.vcg ?? 0.0),
           ),
           figureTwo: RectangularCuboidFigure.fromCenter(
-            center:
-                Vector3(cargo.lcg ?? 0.0, cargo.tcg ?? 0.0, cargo.vcg ?? 0.0),
+            center: Vector3(
+              cargo.lcg ?? 0.0,
+              cargo.tcg ?? 0.0,
+              cargo.vcg ?? 0.0,
+            ),
             length: 1.0,
             width: 1.0,
             height: 1.0,
