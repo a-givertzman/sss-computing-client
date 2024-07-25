@@ -85,7 +85,7 @@ class CargoLCGColumn implements TableColumn<Cargo, double?> {
   //
   @override
   ValueRecord? buildRecord(Cargo cargo) => FieldRecord<double?>(
-        fieldName: 'lcg',
+        fieldName: 'mass_shift_x',
         tableName: 'compartment',
         toValue: (text) => parseToValue(text),
         apiAddress: _apiAddress,
