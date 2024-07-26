@@ -136,7 +136,7 @@ class _CancelableFieldState extends State<CancelableField> {
           },
         _ => null,
       },
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: AutovalidateMode.always,
       validator: (string) {
         final message = validator.editFieldValidator(string);
         return message != null ? Localized(message).v : null;
