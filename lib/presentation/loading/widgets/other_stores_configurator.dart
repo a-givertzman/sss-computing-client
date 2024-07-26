@@ -28,6 +28,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/cargo_parameters_form.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
+
 ///
 class OtherStoresConfigurator extends StatefulWidget {
   final List<Cargo> _cargos;
@@ -36,6 +37,7 @@ class OtherStoresConfigurator extends StatefulWidget {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
+
   ///
   const OtherStoresConfigurator({
     super.key,
@@ -56,6 +58,7 @@ class OtherStoresConfigurator extends StatefulWidget {
   State<OtherStoresConfigurator> createState() =>
       _OtherStoresConfiguratorState();
 }
+
 class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
   late List<Cargo> _cargos;
   Cargo? _selectedCargo;
@@ -64,6 +67,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
     _cargos = widget._cargos;
     super.initState();
   }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -178,12 +182,42 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                           ),
                           CompoundFormFieldValidationCase(
                             oneId: 'lcg',
+                            otherId: 'x1',
+                            compareValues: (lcg, x1) => switch (
+                                const LessThanOrEqualTo().swaped().process(
+                                      double.tryParse(lcg) ?? 0.0,
+                                      double.tryParse(x1) ?? 0.0,
+                                    )) {
+                              Ok(value: true) => const Ok(null),
+                              Ok(value: false) => Err(Failure(
+                                  message: 'X1 ≰ Xg',
+                                  stackTrace: StackTrace.current,
+                                )),
+                            },
+                          ),
+                          CompoundFormFieldValidationCase(
+                            oneId: 'lcg',
                             otherId: 'x2',
                             compareValues: (lcg, x2) =>
                                 switch (const LessThanOrEqualTo().process(
                               double.tryParse(lcg) ?? 0.0,
                               double.tryParse(x2) ?? 0.0,
                             )) {
+                              Ok(value: true) => const Ok(null),
+                              Ok(value: false) => Err(Failure(
+                                  message: 'Xg ≰ X2',
+                                  stackTrace: StackTrace.current,
+                                )),
+                            },
+                          ),
+                          CompoundFormFieldValidationCase(
+                            oneId: 'x2',
+                            otherId: 'lcg',
+                            compareValues: (x2, lcg) => switch (
+                                const LessThanOrEqualTo().swaped().process(
+                                      double.tryParse(x2) ?? 0.0,
+                                      double.tryParse(lcg) ?? 0.0,
+                                    )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
                                   message: 'Xg ≰ X2',
@@ -202,37 +236,6 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
                                   message: 'X1 ≮ X2',
-                                  stackTrace: StackTrace.current,
-                                )),
-                            },
-                          ),
-                          //
-                          CompoundFormFieldValidationCase(
-                            oneId: 'lcg',
-                            otherId: 'x1',
-                            compareValues: (lcg, x1) => switch (
-                                const LessThanOrEqualTo().swaped().process(
-                                      double.tryParse(lcg) ?? 0.0,
-                                      double.tryParse(x1) ?? 0.0,
-                                    )) {
-                              Ok(value: true) => const Ok(null),
-                              Ok(value: false) => Err(Failure(
-                                  message: 'X1 ≰ Xg',
-                                  stackTrace: StackTrace.current,
-                                )),
-                            },
-                          ),
-                          CompoundFormFieldValidationCase(
-                            oneId: 'x2',
-                            otherId: 'lcg',
-                            compareValues: (x2, lcg) => switch (
-                                const LessThanOrEqualTo().swaped().process(
-                                      double.tryParse(x2) ?? 0.0,
-                                      double.tryParse(lcg) ?? 0.0,
-                                    )) {
-                              Ok(value: true) => const Ok(null),
-                              Ok(value: false) => Err(Failure(
-                                  message: 'Xg ≰ X2',
                                   stackTrace: StackTrace.current,
                                 )),
                             },
@@ -379,12 +382,46 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                 ),
                                 CompoundFormFieldValidationCase(
                                   oneId: 'lcg',
+                                  otherId: 'x1',
+                                  compareValues: (lcg, x1) => switch (
+                                      const LessThanOrEqualTo()
+                                          .swaped()
+                                          .process(
+                                            double.tryParse(lcg) ?? 0.0,
+                                            double.tryParse(x1) ?? 0.0,
+                                          )) {
+                                    Ok(value: true) => const Ok(null),
+                                    Ok(value: false) => Err(Failure(
+                                        message: 'X1 ≰ Xg',
+                                        stackTrace: StackTrace.current,
+                                      )),
+                                  },
+                                ),
+                                CompoundFormFieldValidationCase(
+                                  oneId: 'lcg',
                                   otherId: 'x2',
                                   compareValues: (lcg, x2) =>
                                       switch (const LessThanOrEqualTo().process(
                                     double.tryParse(lcg) ?? 0.0,
                                     double.tryParse(x2) ?? 0.0,
                                   )) {
+                                    Ok(value: true) => const Ok(null),
+                                    Ok(value: false) => Err(Failure(
+                                        message: 'Xg ≰ X2',
+                                        stackTrace: StackTrace.current,
+                                      )),
+                                  },
+                                ),
+                                CompoundFormFieldValidationCase(
+                                  oneId: 'x2',
+                                  otherId: 'lcg',
+                                  compareValues: (x2, lcg) => switch (
+                                      const LessThanOrEqualTo()
+                                          .swaped()
+                                          .process(
+                                            double.tryParse(x2) ?? 0.0,
+                                            double.tryParse(lcg) ?? 0.0,
+                                          )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
                                         message: 'Xg ≰ X2',
@@ -403,41 +440,6 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
                                         message: 'X1 ≮ X2',
-                                        stackTrace: StackTrace.current,
-                                      )),
-                                  },
-                                ),
-                                //
-                                CompoundFormFieldValidationCase(
-                                  oneId: 'lcg',
-                                  otherId: 'x1',
-                                  compareValues: (lcg, x1) => switch (
-                                      const LessThanOrEqualTo()
-                                          .swaped()
-                                          .process(
-                                            double.tryParse(lcg) ?? 0.0,
-                                            double.tryParse(x1) ?? 0.0,
-                                          )) {
-                                    Ok(value: true) => const Ok(null),
-                                    Ok(value: false) => Err(Failure(
-                                        message: 'X1 ≰ Xg',
-                                        stackTrace: StackTrace.current,
-                                      )),
-                                  },
-                                ),
-                                CompoundFormFieldValidationCase(
-                                  oneId: 'x2',
-                                  otherId: 'lcg',
-                                  compareValues: (x2, lcg) => switch (
-                                      const LessThanOrEqualTo()
-                                          .swaped()
-                                          .process(
-                                            double.tryParse(x2) ?? 0.0,
-                                            double.tryParse(lcg) ?? 0.0,
-                                          )) {
-                                    Ok(value: true) => const Ok(null),
-                                    Ok(value: false) => Err(Failure(
-                                        message: 'Xg ≰ X2',
                                         stackTrace: StackTrace.current,
                                       )),
                                   },
@@ -556,6 +558,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
       ),
     );
   }
+
   //
   void _toggleCargo(Cargo? cargo) {
     if (cargo?.id != _selectedCargo?.id) {
@@ -568,6 +571,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
       _selectedCargo = null;
     });
   }
+
   //
   void _refetchCargo(Cargo oldCargo) {
     final id = oldCargo.id;
@@ -588,6 +592,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
           (_, __) => _showErrorMessage(const Localized('Unknown error').v),
         );
   }
+
   //
   void _updateCargo(Cargo newCargo) {
     final idx = _cargos.indexWhere((cargo) => cargo.id == newCargo.id);
@@ -601,6 +606,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
       ];
     });
   }
+
   //
   void _removeCargo(Cargo oldCargo) {
     final idx = _cargos.indexWhere((cargo) => cargo.id == oldCargo.id);
@@ -613,11 +619,13 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
       ];
     });
   }
+
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
     BottomMessage.error(message: message).show(context);
   }
+
   //
   List<FieldData> _mapColumnsToFields({
     required List<TableColumn<Cargo, dynamic>> columns,
