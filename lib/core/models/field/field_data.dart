@@ -104,15 +104,21 @@ class FieldData<T> {
     _controller.text = toText(_initialValue);
   }
   ///
-  FieldData<T> copyWithValue(T value) => FieldData<T>._(
+  FieldData<T> copyWith({
+    T? initialValue,
+    ValueRecord<T>? record,
+    Validator? validator,
+    bool? isPersisted,
+  }) =>
+      FieldData<T>._(
         id: id,
         label: label,
         toValue: toValue,
         toText: toText,
-        initialValue: _initialValue,
-        record: _record,
-        controller: controller..text = toText(value),
-        validator: _validator,
-        isPersisted: _isPersisted,
+        initialValue: initialValue ?? _initialValue,
+        record: record ?? _record,
+        controller: controller..text = toText(initialValue ?? _initialValue),
+        validator: validator ?? _validator,
+        isPersisted: isPersisted ?? _isPersisted,
       );
 }

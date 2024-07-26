@@ -1,9 +1,12 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
+import 'package:sss_computing_client/core/validation/text_editing_controller_validation_case.dart';
+import 'package:sss_computing_client/core/validation/validator_validation_case.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/async_action_button.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/cancellation_button.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/field_group.dart';
@@ -11,14 +14,17 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_paramete
 class CargoParametersForm extends StatefulWidget {
   final List<FieldData> _fieldsData;
   final Future<ResultF<List<FieldData>>> Function(List<FieldData>)? _onSave;
+  final List<CompoundFormFieldValidationCase> _compundValidationCases;
   final void Function()? _onClose;
   ///
   const CargoParametersForm({
     super.key,
     required List<FieldData> fieldData,
+    required List<CompoundFormFieldValidationCase> compundValidationCases,
     Future<ResultF<List<FieldData>>> Function(List<FieldData>)? onSave,
     void Function()? onClose,
   })  : _fieldsData = fieldData,
+        _compundValidationCases = compundValidationCases,
         _onSave = onSave,
         _onClose = onClose;
   //
@@ -33,9 +39,32 @@ class _CargoParametersFormState extends State<CargoParametersForm> {
   //
   @override
   void initState() {
-    _fieldsData = widget._fieldsData;
     _isSaving = false;
+    _fieldsData = _constructFieldsData();
     super.initState();
+  }
+  //
+  List<FieldData> _constructFieldsData() {
+    return widget._fieldsData.map((data) {
+      final compounds = widget._compundValidationCases.where(
+        (compound) => compound.oneId == data.id,
+      );
+      final cases = compounds.map((compound) {
+        final other = widget._fieldsData.firstWhereOrNull(
+          (data) => data.id == compound.otherId,
+        );
+        if (other == null) return null;
+        return compound.validationCase(widget._fieldsData);
+      });
+      return data.copyWith(
+        validator: Validator(
+          cases: [
+            ValidatorValidationCase(validator: data.validator),
+            ...cases.whereNotNull(),
+          ],
+        ),
+      );
+    }).toList();
   }
   //
   @override
@@ -165,4 +194,36 @@ class _CargoParametersFormState extends State<CargoParametersForm> {
   }
   ///
   bool _isFormValid() => _formKey.currentState?.validate() ?? false;
+}
+///
+class CompoundFormFieldValidationCase {
+  final String _oneId;
+  final String _otherId;
+  final ResultF<void> Function(
+    String oneValue,
+    String otherValue,
+  ) _compareValues;
+  ///
+  const CompoundFormFieldValidationCase({
+    required String oneId,
+    required String otherId,
+    required ResultF<void> Function(String, String) compareValues,
+  })  : _oneId = oneId,
+        _otherId = otherId,
+        _compareValues = compareValues;
+  //
+  String get oneId => _oneId;
+  //
+  String get otherId => _otherId;
+  ///
+  ValidationCase validationCase(List<FieldData> fieldsData) {
+    return TECValidationCase(
+      controller: fieldsData
+          .firstWhere(
+            (field) => field.id == _otherId,
+          )
+          .controller,
+      compareValues: _compareValues,
+    );
+  }
 }

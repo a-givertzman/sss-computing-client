@@ -12,6 +12,8 @@ import 'package:sss_computing_client/core/models/cargo/pg_all_cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_others.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
+import 'package:sss_computing_client/core/models/number_math_relation/less_than.dart';
+import 'package:sss_computing_client/core/models/number_math_relation/less_than_or_equal_to.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
@@ -127,12 +129,12 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton.filled(
+                icon: const Icon(Icons.add_rounded),
                 onPressed: () => showDialog(
                   barrierDismissible: false,
                   context: context,
                   builder: (context) => AlertDialog(
                     content: SizedBox(
-                      height: 500.0,
                       width: 500.0,
                       child: CargoParametersForm(
                         onClose: () {
@@ -140,9 +142,9 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                           _toggleCargo(null);
                           widget._fireRefreshEvent();
                         },
-                        onSave: (fieldDatas) async {
+                        onSave: (fieldsData) async {
                           final cargo = JsonCargo(json: {
-                            for (final field in fieldDatas)
+                            for (final field in fieldsData)
                               field.id: field.toValue(field.controller.text),
                           });
                           switch (await PgStoresOthers(
@@ -158,6 +160,99 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                               return Err(error);
                           }
                         },
+                        compundValidationCases: [
+                          CompoundFormFieldValidationCase(
+                            oneId: 'x1',
+                            otherId: 'lcg',
+                            compareValues: (x1, lcg) =>
+                                switch (const LessThanOrEqualTo().process(
+                              double.tryParse(x1) ?? 0.0,
+                              double.tryParse(lcg) ?? 0.0,
+                            )) {
+                              Ok(value: true) => const Ok(null),
+                              Ok(value: false) => Err(Failure(
+                                  message: 'X1 ≰ Xg',
+                                  stackTrace: StackTrace.current,
+                                )),
+                            },
+                          ),
+                          CompoundFormFieldValidationCase(
+                            oneId: 'lcg',
+                            otherId: 'x2',
+                            compareValues: (lcg, x2) =>
+                                switch (const LessThanOrEqualTo().process(
+                              double.tryParse(lcg) ?? 0.0,
+                              double.tryParse(x2) ?? 0.0,
+                            )) {
+                              Ok(value: true) => const Ok(null),
+                              Ok(value: false) => Err(Failure(
+                                  message: 'Xg ≰ X2',
+                                  stackTrace: StackTrace.current,
+                                )),
+                            },
+                          ),
+                          CompoundFormFieldValidationCase(
+                            oneId: 'x1',
+                            otherId: 'x2',
+                            compareValues: (x1, x2) =>
+                                switch (const LessThan().process(
+                              double.tryParse(x1) ?? 0.0,
+                              double.tryParse(x2) ?? 0.0,
+                            )) {
+                              Ok(value: true) => const Ok(null),
+                              Ok(value: false) => Err(Failure(
+                                  message: 'X1 ≮ X2',
+                                  stackTrace: StackTrace.current,
+                                )),
+                            },
+                          ),
+                          //
+                          CompoundFormFieldValidationCase(
+                            oneId: 'lcg',
+                            otherId: 'x1',
+                            compareValues: (lcg, x1) => switch (
+                                const LessThanOrEqualTo().swaped().process(
+                                      double.tryParse(lcg) ?? 0.0,
+                                      double.tryParse(x1) ?? 0.0,
+                                    )) {
+                              Ok(value: true) => const Ok(null),
+                              Ok(value: false) => Err(Failure(
+                                  message: 'X1 ≰ Xg',
+                                  stackTrace: StackTrace.current,
+                                )),
+                            },
+                          ),
+                          CompoundFormFieldValidationCase(
+                            oneId: 'x2',
+                            otherId: 'lcg',
+                            compareValues: (x2, lcg) => switch (
+                                const LessThanOrEqualTo().swaped().process(
+                                      double.tryParse(x2) ?? 0.0,
+                                      double.tryParse(lcg) ?? 0.0,
+                                    )) {
+                              Ok(value: true) => const Ok(null),
+                              Ok(value: false) => Err(Failure(
+                                  message: 'Xg ≰ X2',
+                                  stackTrace: StackTrace.current,
+                                )),
+                            },
+                          ),
+                          CompoundFormFieldValidationCase(
+                            oneId: 'x2',
+                            otherId: 'x1',
+                            compareValues: (x2, x1) =>
+                                switch (const LessThan().swaped().process(
+                                      double.tryParse(x2) ?? 0.0,
+                                      double.tryParse(x1) ?? 0.0,
+                                    )) {
+                              Ok(value: true) => const Ok(null),
+                              Ok(value: false) => Err(Failure(
+                                  message: 'X1 ≮ X2',
+                                  stackTrace: StackTrace.current,
+                                )),
+                            },
+                          ),
+                        ],
                         fieldData: [
                           ..._mapColumnsToFields(
                             fetch: false,
@@ -204,28 +299,25 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                     ),
                   ),
                 ),
-                icon: const Icon(Icons.add_rounded),
               ),
               SizedBox(width: blockPadding),
               IconButton.filled(
+                icon: const Icon(Icons.remove_rounded),
                 onPressed: switch (_selectedCargo) {
-                  // ignore: unused_local_variable
-                  Cargo(:final int id) => () async {
+                  final Cargo cargo => () async {
                       switch (await PgStoresOthers(
                         apiAddress: widget._apiAddress,
                         dbName: widget._dbName,
                         authToken: widget._authToken,
-                      ).remove(_selectedCargo!)) {
+                      ).remove(cargo)) {
                         case Ok():
-                          _toggleCargo(null);
-                          widget._fireRefreshEvent();
+                          _removeCargo(cargo);
                         case Err(:final error):
                           const Log('Remove cargo').error(error);
                       }
                     },
                   _ => null,
                 },
-                icon: const Icon(Icons.remove_rounded),
               ),
               SizedBox(width: blockPadding),
               IconButton.filled(
@@ -244,15 +336,15 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                 _toggleCargo(null);
                                 widget._fireRefreshEvent();
                               },
-                              onSave: (fieldDatas) async {
+                              onSave: (fieldsData) async {
                                 try {
                                   final fieldsPersisted = await Future.wait(
-                                    fieldDatas.map(
+                                    fieldsData.map(
                                       (field) async {
                                         switch (await field.save()) {
                                           case Ok(:final value):
-                                            return field.copyWithValue(
-                                              value,
+                                            return field.copyWith(
+                                              initialValue: value,
                                             );
                                           case Err(:final error):
                                             Log('$runtimeType | _persistAll')
@@ -269,6 +361,103 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                   return err;
                                 }
                               },
+                              compundValidationCases: [
+                                CompoundFormFieldValidationCase(
+                                  oneId: 'x1',
+                                  otherId: 'lcg',
+                                  compareValues: (x1, lcg) =>
+                                      switch (const LessThanOrEqualTo().process(
+                                    double.tryParse(x1) ?? 0.0,
+                                    double.tryParse(lcg) ?? 0.0,
+                                  )) {
+                                    Ok(value: true) => const Ok(null),
+                                    Ok(value: false) => Err(Failure(
+                                        message: 'X1 ≰ Xg',
+                                        stackTrace: StackTrace.current,
+                                      )),
+                                  },
+                                ),
+                                CompoundFormFieldValidationCase(
+                                  oneId: 'lcg',
+                                  otherId: 'x2',
+                                  compareValues: (lcg, x2) =>
+                                      switch (const LessThanOrEqualTo().process(
+                                    double.tryParse(lcg) ?? 0.0,
+                                    double.tryParse(x2) ?? 0.0,
+                                  )) {
+                                    Ok(value: true) => const Ok(null),
+                                    Ok(value: false) => Err(Failure(
+                                        message: 'Xg ≰ X2',
+                                        stackTrace: StackTrace.current,
+                                      )),
+                                  },
+                                ),
+                                CompoundFormFieldValidationCase(
+                                  oneId: 'x1',
+                                  otherId: 'x2',
+                                  compareValues: (x1, x2) =>
+                                      switch (const LessThan().process(
+                                    double.tryParse(x1) ?? 0.0,
+                                    double.tryParse(x2) ?? 0.0,
+                                  )) {
+                                    Ok(value: true) => const Ok(null),
+                                    Ok(value: false) => Err(Failure(
+                                        message: 'X1 ≮ X2',
+                                        stackTrace: StackTrace.current,
+                                      )),
+                                  },
+                                ),
+                                //
+                                CompoundFormFieldValidationCase(
+                                  oneId: 'lcg',
+                                  otherId: 'x1',
+                                  compareValues: (lcg, x1) => switch (
+                                      const LessThanOrEqualTo()
+                                          .swaped()
+                                          .process(
+                                            double.tryParse(lcg) ?? 0.0,
+                                            double.tryParse(x1) ?? 0.0,
+                                          )) {
+                                    Ok(value: true) => const Ok(null),
+                                    Ok(value: false) => Err(Failure(
+                                        message: 'X1 ≰ Xg',
+                                        stackTrace: StackTrace.current,
+                                      )),
+                                  },
+                                ),
+                                CompoundFormFieldValidationCase(
+                                  oneId: 'x2',
+                                  otherId: 'lcg',
+                                  compareValues: (x2, lcg) => switch (
+                                      const LessThanOrEqualTo()
+                                          .swaped()
+                                          .process(
+                                            double.tryParse(x2) ?? 0.0,
+                                            double.tryParse(lcg) ?? 0.0,
+                                          )) {
+                                    Ok(value: true) => const Ok(null),
+                                    Ok(value: false) => Err(Failure(
+                                        message: 'Xg ≰ X2',
+                                        stackTrace: StackTrace.current,
+                                      )),
+                                  },
+                                ),
+                                CompoundFormFieldValidationCase(
+                                  oneId: 'x2',
+                                  otherId: 'x1',
+                                  compareValues: (x2, x1) =>
+                                      switch (const LessThan().swaped().process(
+                                            double.tryParse(x2) ?? 0.0,
+                                            double.tryParse(x1) ?? 0.0,
+                                          )) {
+                                    Ok(value: true) => const Ok(null),
+                                    Ok(value: false) => Err(Failure(
+                                        message: 'X1 ≮ X2',
+                                        stackTrace: StackTrace.current,
+                                      )),
+                                  },
+                                ),
+                              ],
                               fieldData: [
                                 ..._mapColumnsToFields(
                                   fetch: true,
@@ -408,6 +597,18 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
       _cargos = [
         ..._cargos.slice(0, idx),
         newCargo,
+        ..._cargos.slice(idx + 1),
+      ];
+    });
+  }
+  //
+  void _removeCargo(Cargo oldCargo) {
+    final idx = _cargos.indexWhere((cargo) => cargo.id == oldCargo.id);
+    if (idx < 0 || !mounted) return;
+    setState(() {
+      if (_selectedCargo?.id == oldCargo.id) _selectedCargo = null;
+      _cargos = [
+        ..._cargos.slice(0, idx),
         ..._cargos.slice(idx + 1),
       ];
     });
