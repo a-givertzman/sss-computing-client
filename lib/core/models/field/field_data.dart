@@ -59,7 +59,7 @@ class FieldData<T> {
   TextEditingController get controller => _controller;
   ///
   /// Whether content of the target changed or not.
-  bool get isChanged => _initialValue != _controller.text;
+  bool get isChanged => toText(_initialValue) != _controller.text;
   ///
   /// Whether content of the target synced with source or not
   bool get isSynced => _isPersisted;
