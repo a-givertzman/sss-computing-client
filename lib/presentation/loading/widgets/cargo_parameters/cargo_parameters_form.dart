@@ -202,16 +202,16 @@ class CompoundFormFieldValidationCase {
   final ResultF<void> Function(
     String oneValue,
     String otherValue,
-  ) _compareValues;
+  ) _validateValues;
   ///
   const CompoundFormFieldValidationCase({
     required String oneId,
     required String otherId,
-    required ResultF<void> Function(String, String) compareValues,
+    required ResultF<void> Function(String, String) validateValues,
   })  : _oneId = oneId,
         _otherId = otherId,
-        _compareValues = compareValues;
-  //
+        _validateValues = validateValues;
+  //s
   String get oneId => _oneId;
   //
   String get otherId => _otherId;
@@ -223,7 +223,7 @@ class CompoundFormFieldValidationCase {
             (field) => field.id == _otherId,
           )
           .controller,
-      compareValues: _compareValues,
+      compareValues: _validateValues,
     );
   }
 }
