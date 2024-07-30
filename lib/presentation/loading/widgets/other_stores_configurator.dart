@@ -166,8 +166,8 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                             otherId: 'lcg',
                             validateValues: (x1, lcg) =>
                                 switch (const LessThanOrEqualTo().process(
-                              double.tryParse(x1) ?? 0.0,
-                              double.tryParse(lcg) ?? 0.0,
+                              double.tryParse(x1) ?? double.nan,
+                              double.tryParse(lcg) ?? double.nan,
                             )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
@@ -181,8 +181,8 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                             otherId: 'x1',
                             validateValues: (lcg, x1) => switch (
                                 const LessThanOrEqualTo().swaped().process(
-                                      double.tryParse(lcg) ?? 0.0,
-                                      double.tryParse(x1) ?? 0.0,
+                                      double.tryParse(lcg) ?? double.nan,
+                                      double.tryParse(x1) ?? double.nan,
                                     )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
@@ -196,8 +196,8 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                             otherId: 'x2',
                             validateValues: (lcg, x2) =>
                                 switch (const LessThanOrEqualTo().process(
-                              double.tryParse(lcg) ?? 0.0,
-                              double.tryParse(x2) ?? 0.0,
+                              double.tryParse(lcg) ?? double.nan,
+                              double.tryParse(x2) ?? double.nan,
                             )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
@@ -211,8 +211,8 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                             otherId: 'lcg',
                             validateValues: (x2, lcg) => switch (
                                 const LessThanOrEqualTo().swaped().process(
-                                      double.tryParse(x2) ?? 0.0,
-                                      double.tryParse(lcg) ?? 0.0,
+                                      double.tryParse(x2) ?? double.nan,
+                                      double.tryParse(lcg) ?? double.nan,
                                     )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
@@ -226,8 +226,8 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                             otherId: 'x2',
                             validateValues: (x1, x2) =>
                                 switch (const LessThan().process(
-                              double.tryParse(x1) ?? 0.0,
-                              double.tryParse(x2) ?? 0.0,
+                              double.tryParse(x1) ?? double.nan,
+                              double.tryParse(x2) ?? double.nan,
                             )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
@@ -241,8 +241,8 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                             otherId: 'x1',
                             validateValues: (x2, x1) =>
                                 switch (const LessThan().swaped().process(
-                                      double.tryParse(x2) ?? 0.0,
-                                      double.tryParse(x1) ?? 0.0,
+                                      double.tryParse(x2) ?? double.nan,
+                                      double.tryParse(x1) ?? double.nan,
                                     )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
@@ -366,8 +366,8 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                   otherId: 'lcg',
                                   validateValues: (x1, lcg) =>
                                       switch (const LessThanOrEqualTo().process(
-                                    double.tryParse(x1) ?? 0.0,
-                                    double.tryParse(lcg) ?? 0.0,
+                                    double.tryParse(x1) ?? double.nan,
+                                    double.tryParse(lcg) ?? double.nan,
                                   )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
@@ -383,8 +383,8 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                       const LessThanOrEqualTo()
                                           .swaped()
                                           .process(
-                                            double.tryParse(lcg) ?? 0.0,
-                                            double.tryParse(x1) ?? 0.0,
+                                            double.tryParse(lcg) ?? double.nan,
+                                            double.tryParse(x1) ?? double.nan,
                                           )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
@@ -398,8 +398,8 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                   otherId: 'x2',
                                   validateValues: (lcg, x2) =>
                                       switch (const LessThanOrEqualTo().process(
-                                    double.tryParse(lcg) ?? 0.0,
-                                    double.tryParse(x2) ?? 0.0,
+                                    double.tryParse(lcg) ?? double.nan,
+                                    double.tryParse(x2) ?? double.nan,
                                   )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
@@ -415,8 +415,8 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                       const LessThanOrEqualTo()
                                           .swaped()
                                           .process(
-                                            double.tryParse(x2) ?? 0.0,
-                                            double.tryParse(lcg) ?? 0.0,
+                                            double.tryParse(x2) ?? double.nan,
+                                            double.tryParse(lcg) ?? double.nan,
                                           )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
@@ -430,8 +430,8 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                   otherId: 'x2',
                                   validateValues: (x1, x2) =>
                                       switch (const LessThan().process(
-                                    double.tryParse(x1) ?? 0.0,
-                                    double.tryParse(x2) ?? 0.0,
+                                    double.tryParse(x1) ?? double.nan,
+                                    double.tryParse(x2) ?? double.nan,
                                   )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
@@ -445,8 +445,8 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                   otherId: 'x1',
                                   validateValues: (x2, x1) =>
                                       switch (const LessThan().swaped().process(
-                                            double.tryParse(x2) ?? 0.0,
-                                            double.tryParse(x1) ?? 0.0,
+                                            double.tryParse(x2) ?? double.nan,
+                                            double.tryParse(x1) ?? double.nan,
                                           )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
