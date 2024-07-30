@@ -4,14 +4,14 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/loading_page_body.dart';
+import 'package:sss_computing_client/presentation/drafts/widgets/drafts_page_body.dart';
 ///
-class LoadingPage extends StatefulWidget {
+class DraftsPage extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
   ///
-  const LoadingPage({
+  const DraftsPage({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,
     required void Function() fireRefreshEvent,
@@ -21,9 +21,9 @@ class LoadingPage extends StatefulWidget {
         _calculationStatusNotifier = calculationStatusNotifier;
   //
   @override
-  State<LoadingPage> createState() => _LoadingPageState();
+  State<DraftsPage> createState() => _DraftsPageState();
 }
-class _LoadingPageState extends State<LoadingPage> {
+class _DraftsPageState extends State<DraftsPage> {
   late final ApiAddress _apiAddress;
   late final String _dbName;
   late final String? _authToken;
@@ -45,13 +45,13 @@ class _LoadingPageState extends State<LoadingPage> {
       body: Row(
         children: [
           NavigationPanel(
-            selectedPageIndex: 4,
+            selectedPageIndex: 3,
             appRefreshStream: widget._appRefreshStream,
             fireRefreshEvent: widget._fireRefreshEvent,
             calculationStatusNotifier: widget._calculationStatusNotifier,
           ),
           Expanded(
-            child: LoadingPageBody(
+            child: DraftsPageBody(
               appRefreshStream: widget._appRefreshStream,
               apiAddress: _apiAddress,
               dbName: _dbName,
