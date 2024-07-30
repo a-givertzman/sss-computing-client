@@ -109,7 +109,7 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
                             maxX: 65.0,
                             minY: -15.0,
                             maxY: 15.0,
-                            yAxisReversed: true,
+                            yAxisReversed: false,
                             buildContent: (context, transform) => Stack(
                               children: [
                                 SchemeFigures(
@@ -194,18 +194,12 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
                                     layoutTransform: transform,
                                   ),
                                 ],
-                                if (_draftTypeIndex == 1) ...[
-                                  ..._buildDraftLabelsPS(
+                                if (_draftTypeIndex == 1)
+                                  ..._buildDraftLabels(
                                     drafts: drafts,
                                     style: labelStyle,
                                     layoutTransform: transform,
                                   ),
-                                  ..._buildDraftLabelsSB(
-                                    drafts: drafts,
-                                    style: labelStyle,
-                                    layoutTransform: transform,
-                                  ),
-                                ],
                               ],
                             ),
                           ),
@@ -223,7 +217,7 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
     );
   }
   //
-  List<SchemeText> _buildDraftLabelsPS({
+  List<SchemeText> _buildDraftLabels({
     required List<Draft> drafts,
     required TextStyle? style,
     required Matrix4 layoutTransform,
@@ -235,25 +229,10 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
                   '${draft.label} ${draft.value.toStringAsFixed(2)} ${const Localized('m').v}',
               style: style,
               offset: Offset(draft.x, draft.y),
-              alignment: const Alignment(0.0, -2.0),
-              layoutTransform: layoutTransform,
-            ),
-          )
-          .toList();
-  //
-  List<SchemeText> _buildDraftLabelsSB({
-    required List<Draft> drafts,
-    required TextStyle? style,
-    required Matrix4 layoutTransform,
-  }) =>
-      drafts
-          .map(
-            (draft) => SchemeText(
-              text:
-                  '${draft.label} ${draft.value.toStringAsFixed(2)} ${const Localized('m').v}',
-              style: style,
-              offset: Offset(draft.x, -draft.y),
-              alignment: const Alignment(0.0, 2.0),
+              alignment: Alignment(
+                0.0,
+                draft.y < 0.0 ? -2.0 : 2.0,
+              ),
               layoutTransform: layoutTransform,
             ),
           )
