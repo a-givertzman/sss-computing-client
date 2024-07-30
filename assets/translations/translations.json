@@ -283,6 +283,10 @@
         "Other stores",
         "Прочие запасы"
     ],
+    "Hold": [
+        "Hold",
+        "Трюм"
+    ],
     "Fresh water": [
         "Fresh water",
         "Пресная вода"
