@@ -4,6 +4,7 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/calculation/run_calculation_button.dart';
 import 'package:sss_computing_client/core/widgets/error_message_widget.dart';
+import 'package:sss_computing_client/presentation/drafts/drafts_page.dart';
 import 'package:sss_computing_client/presentation/loading/loading_page.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
 import 'package:sss_computing_client/presentation/stability/stability_page.dart';
@@ -73,6 +74,17 @@ class NavigationPanel extends StatelessWidget {
             label: Text(const Localized('Stability').v),
           ),
           NavigationRailDestination(
+            icon: const RotatedBox(
+              quarterTurns: 1,
+              child: Icon(Icons.straighten_outlined),
+            ),
+            selectedIcon: const RotatedBox(
+              quarterTurns: 1,
+              child: Icon(Icons.straighten_outlined),
+            ),
+            label: Text(const Localized('Drafts').v),
+          ),
+          NavigationRailDestination(
             icon: const Icon(Icons.pallet),
             selectedIcon: const Icon(Icons.pallet),
             label: Text(const Localized('Loading').v),
@@ -119,6 +131,18 @@ class NavigationPanel extends StatelessWidget {
               );
               return;
             case 3:
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => DraftsPage(
+                    appRefreshStream: _appRefreshStream,
+                    fireRefreshEvent: _fireRefreshEvent,
+                    calculationStatusNotifier: _calculationStatusNotifier,
+                  ),
+                  settings: const RouteSettings(name: '/DraftsPage'),
+                ),
+              );
+              return;
+            case 4:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => LoadingPage(
