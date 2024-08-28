@@ -7,8 +7,8 @@ import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/bulkheads/bulkheads.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
-import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
 ///
 class HoldConfigurator extends StatefulWidget {
   final List<Cargo> _cargos;
@@ -101,12 +101,8 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
             ),
           ),
           SizedBox(height: blockPadding),
-          Expanded(
-            child: EditingTable(
-              selectedRow: _selectedCargo,
-              columns: const [],
-              rows: _cargos,
-            ),
+          const Expanded(
+            child: Bulkheads(),
           ),
         ],
       ),
