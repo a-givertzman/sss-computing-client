@@ -60,9 +60,9 @@ class RectangularCuboidFigure implements Figure {
   @override
   Figure copyWith({List<Paint>? paints}) {
     return RectangularCuboidFigure(
-      start: _start,
-      end: _end,
-      paints: paints ?? _paints,
+      paints: paints ?? List.from(_paints),
+      start: _start.clone(),
+      end: _end.clone(),
     );
   }
 }

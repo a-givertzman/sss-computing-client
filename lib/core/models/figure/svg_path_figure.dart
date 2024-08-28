@@ -27,8 +27,8 @@ class SVGPathFigure implements Figure {
   @override
   SVGPathFigure copyWith({List<Paint>? paints}) {
     return SVGPathFigure(
-      paints: paints ?? _paints,
-      pathProjections: _pathProjections,
+      paints: paints ?? List.from(_paints),
+      pathProjections: Map.from(_pathProjections),
     );
   }
 }

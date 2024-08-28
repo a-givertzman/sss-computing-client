@@ -31,9 +31,9 @@ class LineSegmentFigure implements Figure {
   @override
   Figure copyWith({List<Paint>? paints}) {
     return LineSegmentFigure(
-      paints: paints ?? _paints,
-      start: _start,
-      end: _end,
+      paints: paints ?? List.from(_paints),
+      start: Offset(_start.dx, _start.dy),
+      end: Offset(_end.dx, _end.dy),
     );
   }
 }

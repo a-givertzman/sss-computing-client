@@ -40,9 +40,9 @@ class LineSegment3DFigure implements Figure {
   @override
   Figure copyWith({List<Paint>? paints}) {
     return LineSegment3DFigure(
-      paints: paints ?? _paints,
-      start: _start,
-      end: _end,
+      paints: paints ?? List.from(_paints),
+      start: _start.clone(),
+      end: _end.clone(),
     );
   }
 }

@@ -28,7 +28,7 @@ class TransformedProjectionFigure implements Figure {
   Figure copyWith({List<Paint>? paints}) {
     return TransformedProjectionFigure(
       figure: _figure.copyWith(paints: paints),
-      transform: _transform,
+      transform: _transform.clone(),
     );
   }
 }

@@ -29,9 +29,9 @@ class CombinedFigure implements Figure {
   @override
   Figure copyWith({List<Paint>? paints}) {
     return CombinedFigure(
-      paints: paints ?? _paints,
-      figureOne: _figureOne,
-      figureTwo: _figureTwo,
+      paints: paints ?? List.from(_paints),
+      figureOne: _figureOne.copyWith(),
+      figureTwo: _figureTwo.copyWith(),
     );
   }
 }
