@@ -3,16 +3,16 @@ import 'package:hmi_core/hmi_core.dart' hide Result;
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargos.dart';
-import 'package:sss_computing_client/core/models/cargo/compartment_cargos_sql_access.dart';
+import 'package:sss_computing_client/core/models/cargo/hold_cargos_sql_access.dart';
 ///
-/// Stores tanks [Cargos] collection stored in postgres DB.
-class PgStoresTanks implements Cargos {
+/// Hold [Cargos] collection stored in postgres DB.
+class PgBallastTanks implements Cargos {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
   ///
-  /// Creates stores tanks [Cargos] collection stored in DB.
-  const PgStoresTanks({
+  /// Creates hold [Cargos] collection stored in DB.
+  const PgBallastTanks({
     required String dbName,
     required ApiAddress apiAddress,
     String? authToken,
@@ -22,14 +22,10 @@ class PgStoresTanks implements Cargos {
   //
   @override
   Future<Result<List<Cargo>, Failure<String>>> fetchAll() async {
-    return CompartmentCargosSqlAccess(
+    return HoldCargosSqlAccess(
       dbName: _dbName,
       apiAddress: _apiAddress,
       authToken: _authToken,
-      filter: {
-        'cgc.key': 'stores',
-        'cc.matter_type': 'liquid',
-      },
     )
         .fetch()
         .then<Result<List<Cargo>, Failure<String>>>(
@@ -53,11 +49,11 @@ class PgStoresTanks implements Cargos {
   //
   @override
   Future<Result<Cargo, Failure<String>>> fetchById(int id) async {
-    return CompartmentCargosSqlAccess(
+    return HoldCargosSqlAccess(
       dbName: _dbName,
       apiAddress: _apiAddress,
       authToken: _authToken,
-      filter: {'space_id': id},
+      filter: {'id': id},
     )
         .fetch()
         .then<Result<Cargo, Failure<String>>>(

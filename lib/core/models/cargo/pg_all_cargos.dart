@@ -3,7 +3,7 @@ import 'package:hmi_core/hmi_core.dart' hide Result;
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargos.dart';
-import 'package:sss_computing_client/core/models/cargo/cargos_sql_access.dart';
+import 'package:sss_computing_client/core/models/cargo/compartment_cargos_sql_access.dart';
 ///
 /// [Cargos] collection stored in postgres DB.
 class PgAllCargos implements Cargos {
@@ -22,7 +22,7 @@ class PgAllCargos implements Cargos {
   //
   @override
   Future<Result<List<Cargo>, Failure<String>>> fetchAll() async {
-    return CargosSqlAccess(
+    return CompartmentCargosSqlAccess(
       dbName: _dbName,
       apiAddress: _apiAddress,
       authToken: _authToken,
@@ -49,7 +49,7 @@ class PgAllCargos implements Cargos {
   //
   @override
   Future<Result<Cargo, Failure<String>>> fetchById(int id) async {
-    return CargosSqlAccess(
+    return CompartmentCargosSqlAccess(
       dbName: _dbName,
       apiAddress: _apiAddress,
       authToken: _authToken,
