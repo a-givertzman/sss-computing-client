@@ -25,6 +25,8 @@ class JsonCargo implements Cargo {
   @override
   double? get density => _json['density'];
   @override
+  double? get stowageFactor => _json['stowageFactor'];
+  @override
   double? get level => _json['level'];
   @override
   double? get vcg => _json['vcg'];
@@ -53,9 +55,7 @@ class JsonCargo implements Cargo {
   @override
   CargoType get type => CargoType.from(_json['type']);
   @override
-  Map<String, dynamic> asMap() {
-    return json.decode(json.encode(_json));
-  }
+  Map<String, dynamic> asMap() => json.decode(json.encode(_json));
   @override
   String toString() => _json.toString();
 }

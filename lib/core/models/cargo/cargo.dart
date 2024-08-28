@@ -24,6 +24,9 @@ abstract interface class Cargo {
   /// Density of the cargo
   double? get density;
   ///
+  /// Stowage factor of the cargo
+  double? get stowageFactor;
+  ///
   /// Level of the cargo
   double? get level;
   ///
