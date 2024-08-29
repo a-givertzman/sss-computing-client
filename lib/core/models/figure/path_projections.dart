@@ -5,5 +5,5 @@ abstract interface class PathProjections {
   ///
   Map<FigurePlane, Path> toPathMap();
   ///
-  String toJson();
+  Map<String, dynamic> toJson();
 }

@@ -54,13 +54,15 @@ class JsonCargo implements Cargo {
   double? get mfsy => _json['mfsy'];
   @override
   PathProjections? get paths => switch (_json['path']) {
-        String json => JsonSvgPathProjections(json: json),
+        String jsonString => JsonSvgPathProjections(
+            json: json.decode(jsonString),
+          ),
         _ => null,
       };
   @override
   CargoType get type => CargoType.from(_json['type']);
   @override
-  Map<String, dynamic> asMap() => json.decode(json.encode(_json));
+  Map<String, dynamic> asMap() => Map.from(_json);
   @override
   String toString() => _json.toString();
 }

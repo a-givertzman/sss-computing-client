@@ -6,13 +6,13 @@ import 'package:sss_computing_client/core/models/cargo/cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/hold_cargos_sql_access.dart';
 ///
 /// Hold [Cargos] collection stored in postgres DB.
-class PgBallastTanks implements Cargos {
+class PgHoldCargos implements Cargos {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
   ///
   /// Creates hold [Cargos] collection stored in DB.
-  const PgBallastTanks({
+  const PgHoldCargos({
     required String dbName,
     required ApiAddress apiAddress,
     String? authToken,

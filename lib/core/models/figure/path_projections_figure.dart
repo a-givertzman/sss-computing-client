@@ -29,7 +29,7 @@ class PathProjectionsFigure implements Figure {
     return PathProjectionsFigure(
       paints: paints ?? List.from(_paints),
       pathProjections: JsonSvgPathProjections(
-        json: _pathProjections.toString(),
+        json: _pathProjections.toJson(),
       ),
     );
   }

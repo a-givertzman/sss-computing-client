@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,9 @@ class ShipDraughtsScheme extends StatelessWidget {
         dbName: _dbName,
         apiAddress: _apiAddress,
         authToken: _authToken,
-        toValue: (value) => JsonSvgPathProjections(json: value),
+        toValue: (value) => JsonSvgPathProjections(
+          json: json.decode(value),
+        ),
         filter: {'key': 'hull_beauty_svg'},
       ).fetch,
       caseData: (context, hullProjections, _) {

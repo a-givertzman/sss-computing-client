@@ -2,6 +2,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_ballast_tanks.dart';
+import 'package:sss_computing_client/core/models/cargo/pg_hold_cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_others.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_tanks.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
@@ -99,12 +100,20 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
         ),
         TabSetting(
           label: const Localized('Hold').v,
-          content: HoldConfigurator(
-            cargos: const [],
-            appRefreshStream: widget._appRefreshStream,
-            apiAddress: widget._apiAddress,
-            dbName: widget._dbName,
-            authToken: widget._authToken,
+          content: FutureBuilderWidget(
+            refreshStream: widget._appRefreshStream,
+            onFuture: PgHoldCargos(
+              apiAddress: widget._apiAddress,
+              dbName: widget._dbName,
+              authToken: widget._authToken,
+            ).fetchAll,
+            caseData: (context, cargos, _) => HoldConfigurator(
+              cargos: cargos,
+              appRefreshStream: widget._appRefreshStream,
+              apiAddress: widget._apiAddress,
+              dbName: widget._dbName,
+              authToken: widget._authToken,
+            ),
           ),
         ),
       ],

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
@@ -74,7 +75,9 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                     authToken: widget._authToken,
                     tableName: 'ship_parameters',
                     fieldName: 'value',
-                    toValue: (value) => JsonSvgPathProjections(json: value),
+                    toValue: (value) => JsonSvgPathProjections(
+                      json: json.decode(value),
+                    ),
                     filter: {'key': 'hull_svg'},
                   ).fetch,
                   caseData: (context, hull, _) => FutureBuilderWidget(
@@ -85,7 +88,9 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                       authToken: widget._authToken,
                       tableName: 'ship_parameters',
                       fieldName: 'value',
-                      toValue: (value) => JsonSvgPathProjections(json: value),
+                      toValue: (value) => JsonSvgPathProjections(
+                        json: json.decode(value),
+                      ),
                       filter: {'key': 'hull_beauty_svg'},
                     ).fetch,
                     caseData: (context, hullBeauty, _) => CargoSchemes(

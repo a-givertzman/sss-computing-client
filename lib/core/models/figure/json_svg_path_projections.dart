@@ -5,15 +5,15 @@ import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 ///
 class JsonSvgPathProjections implements PathProjections {
-  final String _json;
+  final Map<String, dynamic> _json;
   ///
   const JsonSvgPathProjections({
-    required String json,
+    required Map<String, dynamic> json,
   }) : _json = json;
   //
   @override
   Map<FigurePlane, Path> toPathMap() {
-    return switch (json.decode(_json)) {
+    return switch (_json) {
       {
         'xy': String xySvg,
         'yz': String yzSvg,
@@ -24,13 +24,17 @@ class JsonSvgPathProjections implements PathProjections {
           FigurePlane.yz: parseSvgPathData(yzSvg),
           FigurePlane.xz: parseSvgPathData(xzSvg),
         },
-      _ => throw const FormatException(),
+      _ => {
+          FigurePlane.xy: Path(),
+          FigurePlane.yz: Path(),
+          FigurePlane.xz: Path(),
+        },
     };
   }
   //
   @override
-  String toJson() => _json;
+  Map<String, dynamic> toJson() => _json;
   //
   @override
-  String toString() => _json;
+  String toString() => json.encode(_json);
 }

@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
+import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
 ///
 class HoldCargosSqlAccess {
   final String _dbName;
@@ -64,7 +66,7 @@ class HoldCargosSqlAccess {
                 hc.mass_shift_y AS "tcg",
                 hc.mass_shift_z AS "vcg",
                 cc.key AS "type",
-                hsp.svg_paths AS "path"
+                hsp.svg_paths::TEXT AS "path"
             FROM hold_compartment AS hc
             JOIN hold_svg_paths AS hsp ON
                 hc.id = hsp.hold_compartment_id
@@ -97,7 +99,22 @@ class HoldCargosSqlAccess {
         'lcg': row['lcg'] as double?,
         'tcg': row['tcg'] as double?,
         'type': row['type'] as String,
+        'path': switch (row['path']) {
+          String pathList => _formatPathList(pathList),
+          _ => null,
+        },
       }),
     ).fetch();
   }
+  String _formatPathList(String pathList) => json
+      .decode(pathList)
+      .map(
+        (path) => JsonSvgPathProjections(json: json.decode(path)),
+      )
+      .reduce((prev, value) => JsonSvgPathProjections(json: {
+            'xy': '${prev.toJson()['xy']} ${value.toJson()['xy']}',
+            'yz': '${prev.toJson()['yz']} ${value.toJson()['yz']}',
+            'xz': '${prev.toJson()['xz']} ${value.toJson()['xz']}',
+          }))
+      .toString();
 }
