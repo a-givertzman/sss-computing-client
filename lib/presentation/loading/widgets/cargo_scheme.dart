@@ -3,6 +3,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
+import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 import 'package:sss_computing_client/core/models/frame/frame.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_axis.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_figure.dart';

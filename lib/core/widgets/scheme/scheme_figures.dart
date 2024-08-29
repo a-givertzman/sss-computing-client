@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
+import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_figure.dart';
 ///
 class SchemeFigures extends StatelessWidget {

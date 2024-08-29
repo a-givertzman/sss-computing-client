@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
+import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 ///
 /// [Cargo] that parses itself from json map.
 class JsonCargo implements Cargo {
@@ -51,7 +53,10 @@ class JsonCargo implements Cargo {
   @override
   double? get mfsy => _json['mfsy'];
   @override
-  String? get path => _json['path'];
+  PathProjections? get paths => switch (_json['path']) {
+        String json => JsonSvgPathProjections(json: json),
+        _ => null,
+      };
   @override
   CargoType get type => CargoType.from(_json['type']);
   @override

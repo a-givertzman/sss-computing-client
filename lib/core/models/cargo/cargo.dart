@@ -1,4 +1,5 @@
 import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 ///
 /// Common data for corresponding [Cargo].
 abstract interface class Cargo {
@@ -67,7 +68,7 @@ abstract interface class Cargo {
   CargoType get type;
   ///
   /// TODO: update doc
-  String? get path;
+  PathProjections? get paths;
   ///
   /// Returns [Map] representation of the [Cargo]
   Map<String, dynamic> asMap();

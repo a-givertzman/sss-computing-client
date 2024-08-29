@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
+import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 ///
 /// Render figure on scheme. Can handle figure tap
 /// if corresponding callback has passed.

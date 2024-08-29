@@ -6,8 +6,10 @@ import 'package:sss_computing_client/core/models/cargo/cargo_figure.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/figure/combined_figure.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
-import 'package:sss_computing_client/core/models/figure/svg_path_figure.dart';
+import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections_figure.dart';
 import 'package:sss_computing_client/core/models/frame/frame.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_scheme.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_scheme_view_options.dart';
 ///
@@ -15,8 +17,8 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_scheme_v
 class CargoSchemes extends StatefulWidget {
   final List<Cargo> _cargos;
   final Cargo? _selectedCargo;
-  final Map<String, dynamic> _hull;
-  final Map<String, dynamic> _hullBeauty;
+  final PathProjections _hull;
+  final PathProjections _hullBeauty;
   final List<Frame> _framesReal;
   final List<Frame> _framesTheoretical;
   final void Function(Cargo cargo)? _onCargoTap;
@@ -36,8 +38,8 @@ class CargoSchemes extends StatefulWidget {
     super.key,
     required List<Cargo> cargos,
     Cargo? selectedCargo,
-    required Map<String, dynamic> hull,
-    required Map<String, dynamic> hullBeauty,
+    required PathProjections hull,
+    required PathProjections hullBeauty,
     required List<Frame> framesReal,
     required List<Frame> framesTheoretical,
     void Function(Cargo)? onCargoTap,
@@ -68,22 +70,8 @@ class _CargoSchemesState extends State<CargoSchemes> {
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2.0,
       ],
-      figureOne: SVGPathFigure(
-        paints: [],
-        pathProjections: {
-          FigurePlane.xy: widget._hull['xy'],
-          FigurePlane.xz: widget._hull['xz'],
-          FigurePlane.yz: widget._hull['yz'],
-        },
-      ),
-      figureTwo: SVGPathFigure(
-        paints: [],
-        pathProjections: {
-          FigurePlane.xy: widget._hullBeauty['xy'],
-          FigurePlane.xz: widget._hullBeauty['xz'],
-          FigurePlane.yz: widget._hullBeauty['yz'],
-        },
-      ),
+      figureOne: PathProjectionsFigure(pathProjections: widget._hull),
+      figureTwo: PathProjectionsFigure(pathProjections: widget._hullBeauty),
     );
     _cargoFigures = widget._cargos
         .map((cargo) => (

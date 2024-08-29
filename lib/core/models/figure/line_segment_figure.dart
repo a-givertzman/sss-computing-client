@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
+import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 ///
 /// Construct [Figure] of line segment between points,
 /// treating them as vectors from the origin.

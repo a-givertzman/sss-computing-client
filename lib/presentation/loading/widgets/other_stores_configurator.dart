@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:ext_rw/ext_rw.dart' hide FieldType;
 import 'package:flutter/material.dart';
@@ -14,6 +13,8 @@ import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/less_than.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/less_than_or_equal_to.dart';
+import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
@@ -90,24 +91,24 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                 caseData: (context, framesTheoretical, _) =>
                     FutureBuilderWidget(
                   refreshStream: widget._appRefreshStream,
-                  onFuture: FieldRecord<Map<String, dynamic>>(
+                  onFuture: FieldRecord<PathProjections>(
                     apiAddress: widget._apiAddress,
                     dbName: widget._dbName,
                     authToken: widget._authToken,
                     tableName: 'ship_parameters',
                     fieldName: 'value',
-                    toValue: (value) => jsonDecode(value),
+                    toValue: (value) => JsonSvgPathProjections(json: value),
                     filter: {'key': 'hull_svg'},
                   ).fetch,
                   caseData: (context, hull, _) => FutureBuilderWidget(
                     refreshStream: widget._appRefreshStream,
-                    onFuture: FieldRecord<Map<String, dynamic>>(
+                    onFuture: FieldRecord<PathProjections>(
                       apiAddress: widget._apiAddress,
                       dbName: widget._dbName,
                       authToken: widget._authToken,
                       tableName: 'ship_parameters',
                       fieldName: 'value',
-                      toValue: (value) => jsonDecode(value),
+                      toValue: (value) => JsonSvgPathProjections(json: value),
                       filter: {'key': 'hull_beauty_svg'},
                     ).fetch,
                     caseData: (context, hullBeauty, _) => CargoSchemes(

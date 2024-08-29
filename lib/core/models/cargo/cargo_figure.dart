@@ -3,9 +3,11 @@ import 'package:flutter/painting.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/figure/combined_figure.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
+import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 import 'package:sss_computing_client/core/models/figure/line_segment_3d_figure.dart';
 import 'package:sss_computing_client/core/models/figure/rectangular_cuboid_figure.dart';
-import 'package:sss_computing_client/core/models/figure/svg_path_figure.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections_figure.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 import 'package:vector_math/vector_math_64.dart';
 ///
 /// Extract [Figure] from [Cargo]
@@ -18,8 +20,8 @@ class CargoFigure {
   /// Extract [Cargo] figure
   Figure figure() {
     final color = cargo.type.color;
-    return switch (cargo.path) {
-      final String path => SVGPathFigure(
+    return switch (cargo.paths) {
+      final PathProjections projections => PathProjectionsFigure(
           paints: [
             Paint()
               ..color = color
@@ -28,11 +30,7 @@ class CargoFigure {
               ..color = color.withOpacity(0.25)
               ..style = PaintingStyle.fill,
           ],
-          pathProjections: {
-            FigurePlane.xy: jsonDecode(path)['xy'],
-            FigurePlane.xz: jsonDecode(path)['xz'],
-            FigurePlane.yz: jsonDecode(path)['yz'],
-          },
+          pathProjections: projections,
         ),
       _ => CombinedFigure(
           paints: [

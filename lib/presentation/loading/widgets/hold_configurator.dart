@@ -1,10 +1,11 @@
-import 'dart:convert';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
+import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/bulkheads/bulkheads.dart';
@@ -67,24 +68,24 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                 caseData: (context, framesTheoretical, _) =>
                     FutureBuilderWidget(
                   refreshStream: widget._appRefreshStream,
-                  onFuture: FieldRecord<Map<String, dynamic>>(
+                  onFuture: FieldRecord<PathProjections>(
                     apiAddress: widget._apiAddress,
                     dbName: widget._dbName,
                     authToken: widget._authToken,
                     tableName: 'ship_parameters',
                     fieldName: 'value',
-                    toValue: (value) => jsonDecode(value),
+                    toValue: (value) => JsonSvgPathProjections(json: value),
                     filter: {'key': 'hull_svg'},
                   ).fetch,
                   caseData: (context, hull, _) => FutureBuilderWidget(
                     refreshStream: widget._appRefreshStream,
-                    onFuture: FieldRecord<Map<String, dynamic>>(
+                    onFuture: FieldRecord<PathProjections>(
                       apiAddress: widget._apiAddress,
                       dbName: widget._dbName,
                       authToken: widget._authToken,
                       tableName: 'ship_parameters',
                       fieldName: 'value',
-                      toValue: (value) => jsonDecode(value),
+                      toValue: (value) => JsonSvgPathProjections(json: value),
                       filter: {'key': 'hull_beauty_svg'},
                     ).fetch,
                     caseData: (context, hullBeauty, _) => CargoSchemes(
