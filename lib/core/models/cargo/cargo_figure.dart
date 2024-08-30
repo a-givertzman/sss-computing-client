@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/painting.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/figure/combined_figure.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
-import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 import 'package:sss_computing_client/core/models/figure/line_segment_3d_figure.dart';
 import 'package:sss_computing_client/core/models/figure/rectangular_cuboid_figure.dart';
 import 'package:sss_computing_client/core/models/figure/path_projections_figure.dart';
