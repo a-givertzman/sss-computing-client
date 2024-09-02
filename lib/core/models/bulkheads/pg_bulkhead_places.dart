@@ -43,15 +43,15 @@ class PgBulkheadPlaces implements BulkheadPlaces {
                 bulkhead_place AS bp
             WHERE
                 bp.ship_id = 1
-            ORDER BY "id";
+            ORDER BY "id" DESC;
             """,
       ),
       entryBuilder: (row) => JsonBulkheadPlace(
         json: {
           'id': row['id'] as int,
-          'projectId': row['projectId'] as int,
+          'projectId': row['projectId'] as int?,
           'shipId': row['shipId'] as int,
-          'name': row['title'] as String,
+          'name': row['name'] as String,
           'bulkheadId': row['bulkheadId'] as int?,
           'holdGroupId': row['holdGroupId'] as int,
         },
@@ -98,15 +98,15 @@ class PgBulkheadPlaces implements BulkheadPlaces {
             WHERE
                 bp.ship_id = 1
                 AND bp.id = $id
-            ORDER BY "id";
+            ORDER BY "id" DESC;
             """,
       ),
       entryBuilder: (row) => JsonBulkheadPlace(
         json: {
           'id': row['id'] as int,
-          'projectId': row['projectId'] as int,
+          'projectId': row['projectId'] as int?,
           'shipId': row['shipId'] as int,
-          'name': row['title'] as String,
+          'name': row['name'] as String,
           'bulkheadId': row['bulkheadId'] as int?,
           'holdGroupId': row['holdGroupId'] as int,
         },
@@ -134,9 +134,53 @@ class PgBulkheadPlaces implements BulkheadPlaces {
   }
   //
   @override
-  Future<Result<BulkheadPlace, Failure<String>>> updateWithId(
-    int id,
-    BulkheadPlace bulkheadPlace,
+  Future<Result<void, Failure<String>>> installBulkheadWithId(
+    int placeId,
+    int bulkheadId,
+  ) async {
+    final sqlAccess = SqlAccess(
+      address: _apiAddress,
+      authToken: _authToken ?? '',
+      database: _dbName,
+      sqlBuilder: (_, __) => Sql(
+        sql: """
+            DO \$\$ BEGIN
+              UPDATE bulkhead_place AS bp SET
+                  bulkhead_id = NULL
+              WHERE
+                  bp.bulkhead_id = $bulkheadId;
+              UPDATE bulkhead_place AS bp SET
+                  bulkhead_id = $bulkheadId
+              WHERE
+                  bp.id = $placeId;
+            END \$\$;
+            """,
+      ),
+    );
+    return sqlAccess
+        .fetch()
+        .then<Result<void, Failure<String>>>(
+          (result) => switch (result) {
+            Ok() => const Ok(null),
+            Err(:final error) => Err(
+                Failure(
+                  message: '$error',
+                  stackTrace: StackTrace.current,
+                ),
+              ),
+          },
+        )
+        .onError(
+          (error, stackTrace) => Err(Failure(
+            message: '$error',
+            stackTrace: stackTrace,
+          )),
+        );
+  }
+  //
+  @override
+  Future<Result<void, Failure<String>>> removeBulkheadWithId(
+    int bulkheadId,
   ) async {
     final sqlAccess = SqlAccess(
       address: _apiAddress,
@@ -145,40 +189,17 @@ class PgBulkheadPlaces implements BulkheadPlaces {
       sqlBuilder: (_, __) => Sql(
         sql: """
             UPDATE bulkhead_place AS bp SET
-                project_id = ${bulkheadPlace.projectId},
-                ship_id = ${bulkheadPlace.shipId},
-                name = ${bulkheadPlace.name},
-                bulkhead_id = ${bulkheadPlace.bulkheadId},
-                hold_group_id = ${bulkheadPlace.holdGroupId}
+                bulkhead_id = NULL
             WHERE
-                bp.ship_id = 1
-                AND bp.id = 2
-            RETURNING
-              bp.id AS "id",
-              bp.project_id AS "projectId",
-              bp.ship_id AS "shipId",
-              bp.name AS "name",
-              bp.bulkhead_id AS "bulkheadId",
-              bp.hold_group_id AS "holdGroupId"
-            ;
+                bp.bulkhead_id = $bulkheadId;
             """,
-      ),
-      entryBuilder: (row) => JsonBulkheadPlace(
-        json: {
-          'id': row['id'] as int,
-          'projectId': row['projectId'] as int,
-          'shipId': row['shipId'] as int,
-          'name': row['title'] as String,
-          'bulkheadId': row['bulkheadId'] as int?,
-          'holdGroupId': row['holdGroupId'] as int,
-        },
       ),
     );
     return sqlAccess
         .fetch()
-        .then<Result<BulkheadPlace, Failure<String>>>(
+        .then<Result<void, Failure<String>>>(
           (result) => switch (result) {
-            Ok(value: final bulkheadPlaces) => Ok(bulkheadPlaces.first),
+            Ok() => const Ok(null),
             Err(:final error) => Err(
                 Failure(
                   message: '$error',
