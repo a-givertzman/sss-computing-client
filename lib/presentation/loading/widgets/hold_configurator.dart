@@ -14,10 +14,13 @@ import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_lcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_level_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_name_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_stowage_factor_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_tcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_type_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_vcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_volume_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
@@ -154,6 +157,27 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                   authToken: widget._authToken,
                 ),
                 CargoLevelColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  tableName: 'hold_compartment',
+                  authToken: widget._authToken,
+                ),
+                CargoLCGColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  tableName: 'hold_compartment',
+                  authToken: widget._authToken,
+                ),
+                CargoTCGColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  tableName: 'hold_compartment',
+                  authToken: widget._authToken,
+                ),
+                CargoVCGColumn(
                   isEditable: true,
                   apiAddress: widget._apiAddress,
                   dbName: widget._dbName,
