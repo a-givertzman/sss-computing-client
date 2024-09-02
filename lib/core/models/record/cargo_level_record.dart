@@ -105,7 +105,7 @@ final class CargoLevelRecord implements ValueRecord<double?> {
       sqlBuilder: (_, __) => Sql(
         sql: """
           UPDATE $_tableName
-          SET volume=($value * volume_max) / 100.0
+          SET volume=volume_max * ($value / 100.0)
           WHERE $filterQuery
           RETURNING (volume / volume_max) * 100.0 AS level;
         """,
