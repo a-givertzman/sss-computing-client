@@ -1,84 +1,182 @@
+import 'package:collection/collection.dart';
+import 'package:ext_rw/ext_rw.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/models/bulkheads/pg_bulkhead_places.dart';
+import 'package:sss_computing_client/core/models/bulkheads/pg_bulkheads.dart';
+import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 ///
 class BulkheadData {
-  final int index;
-  final String label;
+  final int id;
   ///
   const BulkheadData({
-    required this.index,
-    required this.label,
+    required this.id,
   });
 }
 ///
-class Bulkheads extends StatelessWidget {
+class BulkheadPlaceData {
+  final int id;
+  final String label;
+  final int? bulkheadId;
+  ///
+  const BulkheadPlaceData({
+    required this.id,
+    required this.label,
+    this.bulkheadId,
+  });
+}
+///
+class BulkheadPlaces extends StatefulWidget {
+  const BulkheadPlaces({super.key});
+  @override
+  State<BulkheadPlaces> createState() => _BulkheadPlacesState();
+}
+///
+class _BulkheadPlacesState extends State<BulkheadPlaces> {
+  late final ApiAddress _apiAddress;
+  late final String _dbName;
+  late final String? _authToken;
+  late bool _isLoading;
+  static const _bulkheadHeight = 256.0;
+  //
+  @override
+  void initState() {
+    _apiAddress = ApiAddress(
+      host: const Setting('api-host').toString(),
+      port: const Setting('api-port').toInt,
+    );
+    _dbName = const Setting('api-database').toString();
+    _authToken = const Setting('api-auth-token').toString();
+    _isLoading = false;
+    super.initState();
+  }
+  ///
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilderWidget(
+      onFuture: PgBulkheadPlaces(
+        apiAddress: _apiAddress,
+        dbName: _dbName,
+        authToken: _authToken,
+      ).fetchAll,
+      caseData: (context, bulkheadPlaces, refresh) => FutureBuilderWidget(
+        onFuture: PgBulkheads(
+          apiAddress: _apiAddress,
+          dbName: _dbName,
+          authToken: _authToken,
+        ).fetchAllRemoved,
+        caseData: (context, bulkheadsRemoved, _) => Stack(
+          children: [
+            Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Flexible(
+                    child: _BulkheadPlaceholdersSection(
+                      bulkheadHeight: _bulkheadHeight,
+                      label: const Localized('Трюм').v,
+                      onBulkheadDropped: (bulkheadPlace, bulkhead) {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        PgBulkheadPlaces(
+                          apiAddress: _apiAddress,
+                          dbName: _dbName,
+                          authToken: _authToken,
+                        )
+                            .installBulkheadWithId(
+                              bulkheadPlace.id,
+                              bulkhead.id,
+                            )
+                            .then(
+                              (result) => switch (result) {
+                                Ok() => setState(() {
+                                    _isLoading = false;
+                                    refresh();
+                                  }),
+                                Err() => setState(() {
+                                    _isLoading = false;
+                                  }),
+                              },
+                            );
+                      },
+                      bulkheadPlaceholders: bulkheadPlaces
+                          .map((place) => BulkheadPlaceData(
+                                id: place.id,
+                                bulkheadId: place.bulkheadId,
+                                label: place.name,
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                  Flexible(
+                    child: _BulkheadRemovedSection(
+                      bulkheadHeight: _bulkheadHeight,
+                      label: const Localized('За бортом').v,
+                      dataList: [
+                        ...bulkheadsRemoved.map((bulkhead) => BulkheadData(
+                              id: bulkhead.id,
+                            )),
+                      ],
+                      onBulkheadDropped: (bulkhead) => PgBulkheadPlaces(
+                        apiAddress: _apiAddress,
+                        dbName: _dbName,
+                        authToken: _authToken,
+                      )
+                          .removeBulkheadWithId(
+                            bulkhead.id,
+                          )
+                          .then(
+                            (_) => refresh(),
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (_isLoading)
+              Container(
+                color: Colors.grey.withOpacity(0.25),
+                child: const Center(
+                  child: CupertinoActivityIndicator(),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+///
+class BulkheadsPageBody extends StatelessWidget {
   static const bulkheadHeight = 256.0;
   ///
-  const Bulkheads({super.key});
+  const BulkheadsPageBody({super.key});
   //
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final blockPadding = const Setting('blockPadding').toDouble;
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        _BulkheadPlaceholdersSection(
-          label: const Localized('Сложенные').v,
-          bulkheadHeight: bulkheadHeight,
-          bulkheadPlaceholders: [
-            '${const Localized('Frame').v} #28',
-            '${const Localized('Frame').v} #27',
-          ],
-        ),
-        VerticalDivider(
-          width: blockPadding,
-          thickness: 2.0,
-          color: theme.colorScheme.surface,
-        ),
-        _BulkheadPlaceholdersSection(
-          label: const Localized('Трюм').v,
-          bulkheadHeight: bulkheadHeight,
-          bulkheadPlaceholders: [
-            '${const Localized('Frame').v} #51',
-            '${const Localized('Frame').v} #113',
-          ],
-        ),
-        VerticalDivider(
-          width: blockPadding,
-          thickness: 2.0,
-          color: theme.colorScheme.surface,
-        ),
-        _BulkheadRemovedSection(
-          label: const Localized('За бортом').v,
-          bulkheadHeight: bulkheadHeight,
-          dataList: [
-            BulkheadData(
-              index: 0,
-              label: '${const Localized('Зерновая переборка').v} #1',
-            ),
-            BulkheadData(
-              index: 1,
-              label: '${const Localized('Зерновая переборка').v} #2',
-            ),
-          ],
-        ),
-      ],
-    );
+    return const BulkheadPlaces();
   }
 }
 ///
 class _BulkheadPlaceholdersSection extends StatelessWidget {
   final String label;
   final double bulkheadHeight;
-  final List<String> bulkheadPlaceholders;
+  final List<BulkheadPlaceData> bulkheadPlaceholders;
+  final void Function(
+    BulkheadPlaceData bulkheadPlace,
+    BulkheadData bulkhead,
+  )? onBulkheadDropped;
   ///
   const _BulkheadPlaceholdersSection({
     required this.label,
     required this.bulkheadHeight,
     required this.bulkheadPlaceholders,
+    this.onBulkheadDropped,
   });
   //
   @override
@@ -105,10 +203,15 @@ class _BulkheadPlaceholdersSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemBuilder: (context, index) => _BulkheadPlaceholder(
-              label: bulkheadPlaceholders[index],
+              bulkheadPlaceData: bulkheadPlaceholders[index],
+              bulkheadData: switch (bulkheadPlaceholders[index].bulkheadId) {
+                final int id => BulkheadData(id: id),
+                _ => null,
+              },
               bulkheadHeight: bulkheadHeight,
               margin: placeholderMargin,
               padding: placeholderPadding,
+              onBulkheadDropped: onBulkheadDropped,
             ),
           ),
         ),
@@ -121,11 +224,15 @@ class _BulkheadRemovedSection extends StatefulWidget {
   final String label;
   final double bulkheadHeight;
   final List<BulkheadData> dataList;
+  final void Function(
+    BulkheadData bulkhead,
+  )? onBulkheadDropped;
   ///
   const _BulkheadRemovedSection({
     required this.label,
     required this.bulkheadHeight,
     this.dataList = const [],
+    this.onBulkheadDropped,
   });
   //
   @override
@@ -141,18 +248,6 @@ class _BulkheadRemovedSectionState extends State<_BulkheadRemovedSection> {
     _dataList = widget.dataList;
     _willAccept = null;
     super.initState();
-  }
-  //
-  void _removeData(BulkheadData data) {
-    setState(() {
-      _dataList.removeWhere((item) => item == data);
-    });
-  }
-  //
-  void _addData(BulkheadData data) {
-    setState(() {
-      _dataList.add(data);
-    });
   }
   //
   @override
@@ -173,13 +268,18 @@ class _BulkheadRemovedSectionState extends State<_BulkheadRemovedSection> {
         SizedBox(height: padding),
         Padding(
           padding: const EdgeInsets.all(itemsMargin),
-          child: DragTarget<BulkheadData>(
-            onAcceptWithDetails: (details) => setState(() {
-              _addData(details.data);
-              _willAccept = null;
-            }),
+          child: DragTarget<int>(
+            onAcceptWithDetails: (details) {
+              widget.onBulkheadDropped?.call(BulkheadData(id: details.data));
+              setState(() {
+                _willAccept = null;
+              });
+            },
             onWillAcceptWithDetails: (details) {
-              final willAccept = !_dataList.contains(details.data);
+              final willAccept = _dataList.singleWhereOrNull(
+                    (data) => data.id == details.data,
+                  ) ==
+                  null;
               if (willAccept != _willAccept) {
                 setState(() {
                   _willAccept = willAccept;
@@ -217,7 +317,7 @@ class _BulkheadRemovedSectionState extends State<_BulkheadRemovedSection> {
                       ? _BulkheadDraggable(
                           data: _dataList[index],
                           height: widget.bulkheadHeight,
-                          onDragCompleted: () => _removeData(_dataList[index]),
+                          label: 'Зерновая переборка',
                         )
                       : _BulkheadEmpty(
                           height: widget.bulkheadHeight,
@@ -302,19 +402,21 @@ class BulkheadBase extends StatelessWidget {
 class _BulkheadDraggable extends StatelessWidget {
   final BulkheadData data;
   final double height;
-  final void Function()? onDragCompleted;
+  final String label;
+  final Function()? onDragCompleted;
   ///
   const _BulkheadDraggable({
     required this.data,
     required this.height,
+    required this.label,
     this.onDragCompleted,
   });
   //
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Draggable<BulkheadData>(
-      data: data,
+    return Draggable<int>(
+      data: data.id,
       onDragCompleted: onDragCompleted,
       feedback: Material(
         type: MaterialType.transparency,
@@ -329,7 +431,7 @@ class _BulkheadDraggable extends StatelessWidget {
             size: 18.0,
           ),
           child: OverflowableText(
-            data.label,
+            label,
             style: TextStyle(
               color: theme.colorScheme.onPrimary,
             ),
@@ -350,7 +452,7 @@ class _BulkheadDraggable extends StatelessWidget {
             size: 18.0,
           ),
           child: OverflowableText(
-            data.label,
+            label,
             style: TextStyle(
               color: theme.colorScheme.onPrimary,
             ),
@@ -369,7 +471,7 @@ class _BulkheadDraggable extends StatelessWidget {
           size: 18.0,
         ),
         child: OverflowableText(
-          data.label,
+          label,
           style: TextStyle(
             color: theme.colorScheme.onPrimary,
           ),
@@ -386,7 +488,7 @@ class _BulkheadEmpty extends StatelessWidget {
   ///
   const _BulkheadEmpty({
     required this.height,
-    this.label = 'Переборка не установлена',
+    this.label = 'Установить переборку',
   });
   //
   @override
@@ -407,30 +509,33 @@ class _BulkheadEmpty extends StatelessWidget {
 }
 ///
 class _BulkheadPlaceholder extends StatefulWidget {
-  final String label;
   final double bulkheadHeight;
   final double margin;
   final double padding;
-  final BulkheadData? data;
+  final BulkheadPlaceData bulkheadPlaceData;
+  final BulkheadData? bulkheadData;
+  final void Function(
+    BulkheadPlaceData bulkheadPlace,
+    BulkheadData bulkhead,
+  )? onBulkheadDropped;
   ///
   const _BulkheadPlaceholder({
-    required this.label,
     required this.bulkheadHeight,
     required this.margin,
     required this.padding,
-    this.data,
+    required this.bulkheadPlaceData,
+    this.onBulkheadDropped,
+    this.bulkheadData,
   });
   //
   @override
   State<_BulkheadPlaceholder> createState() => _BulkheadPlaceholderState();
 }
 class _BulkheadPlaceholderState extends State<_BulkheadPlaceholder> {
-  late BulkheadData? _data;
   late bool? _willAccept;
   //
   @override
   void initState() {
-    _data = widget.data;
     _willAccept = null;
     super.initState();
   }
@@ -442,14 +547,19 @@ class _BulkheadPlaceholderState extends State<_BulkheadPlaceholder> {
       children: [
         Padding(
           padding: EdgeInsets.all(widget.margin),
-          child: DragTarget<BulkheadData>(
-            onAcceptWithDetails: (details) => setState(() {
-              _data = details.data;
-              _willAccept = null;
-            }),
+          child: DragTarget<int>(
+            onAcceptWithDetails: (details) {
+              widget.onBulkheadDropped?.call(
+                widget.bulkheadPlaceData,
+                BulkheadData(id: details.data),
+              );
+              setState(() {
+                _willAccept = null;
+              });
+            },
             onWillAcceptWithDetails: (details) {
-              if (details.data == _data) return false;
-              final willAccept = _data == null;
+              if (details.data == widget.bulkheadData?.id) return false;
+              final willAccept = widget.bulkheadData == null;
               if (willAccept != _willAccept) {
                 setState(() {
                   _willAccept = willAccept;
@@ -477,13 +587,11 @@ class _BulkheadPlaceholderState extends State<_BulkheadPlaceholder> {
                   ),
                 ),
               ),
-              child: switch (_data) {
+              child: switch (widget.bulkheadData) {
                 final BulkheadData data => _BulkheadDraggable(
                     data: data,
                     height: widget.bulkheadHeight,
-                    onDragCompleted: () => setState(() {
-                      _data = null;
-                    }),
+                    label: 'Зерновая переборка',
                   ),
                 null => _BulkheadEmpty(height: widget.bulkheadHeight),
               },
@@ -506,7 +614,7 @@ class _BulkheadPlaceholderState extends State<_BulkheadPlaceholder> {
                   horizontal: 4.0,
                 ),
                 child: Text(
-                  widget.label,
+                  widget.bulkheadPlaceData.label,
                   textAlign: TextAlign.start,
                   style: const TextStyle(
                     fontSize: 12.0,
