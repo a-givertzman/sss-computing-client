@@ -1,3 +1,4 @@
+///
 /// Common data for correspodnig [BulkheadPlace]
 abstract interface class BulkheadPlace {
   ///
@@ -8,7 +9,7 @@ abstract interface class BulkheadPlace {
   int? get projectId;
   ///
   /// ID of the [BulkheadPlace]
-  int? get id;
+  int get id;
   ///
   /// Name of the [BulkheadPlace]
   String get name;

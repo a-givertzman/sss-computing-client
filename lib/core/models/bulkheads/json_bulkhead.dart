@@ -8,7 +8,7 @@ class JsonBulkhead implements Bulkhead {
   }) : _json = json;
   //
   @override
-  int? get id => _json['id'];
+  int get id => _json['id'];
   //
   @override
   int? get projectId => _json['projectId'];
