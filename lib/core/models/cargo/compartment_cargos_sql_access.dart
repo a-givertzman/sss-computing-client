@@ -37,7 +37,7 @@ class CompartmentCargosSqlAccess {
             SELECT
               c.project_id AS "projectId",
               c.ship_id AS "shipId",
-              c.space_id AS "id",
+              c.id AS "id",
               c.name AS "name",
               c.mass AS "mass",
               c.volume AS "volume",

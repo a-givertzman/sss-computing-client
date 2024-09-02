@@ -7,16 +7,17 @@ import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
+import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
-class CargoNameColumn implements TableColumn<Cargo, String?> {
+class CargoStowageFactorColumn implements TableColumn<Cargo, double?> {
   final bool _isEditable;
   final ApiAddress _apiAddress;
   final String _dbName;
   final String _tableName;
   final String? _authToken;
   ///
-  const CargoNameColumn({
+  const CargoStowageFactorColumn({
     bool isEditable = false,
     required ApiAddress apiAddress,
     required String dbName,
@@ -29,31 +30,32 @@ class CargoNameColumn implements TableColumn<Cargo, String?> {
         _authToken = authToken;
   //
   @override
-  String get key => 'name';
+  String get key => 'stowageFactor';
   //
   @override
-  FieldType get type => FieldType.string;
+  FieldType get type => FieldType.real;
   //
   @override
-  String get name => const Localized('Name').v;
+  String get name =>
+      '${const Localized('Stowage factor').v} [${const Localized('m^3/t').v}]';
   //
   @override
   String get nullValue => '—';
   //
   @override
-  String? get defaultValue => '';
+  double? get defaultValue => 1.0;
   //
   @override
-  Alignment get headerAlignment => Alignment.centerLeft;
+  Alignment get headerAlignment => Alignment.centerRight;
   //
   @override
-  Alignment get cellAlignment => Alignment.centerLeft;
+  Alignment get cellAlignment => Alignment.centerRight;
   //
   @override
   double? get grow => null;
   //
   @override
-  double? get width => 350.0;
+  double? get width => 150.0;
   //
   @override
   bool get isEditable => _isEditable;
@@ -65,26 +67,29 @@ class CargoNameColumn implements TableColumn<Cargo, String?> {
   Validator? get validator => const Validator(
         cases: [
           MinLengthValidationCase(1),
+          RealValidationCase(),
         ],
       );
   //
   @override
-  String? extractValue(Cargo cargo) => cargo.name;
+  double? extractValue(Cargo cargo) => cargo.stowageFactor;
   //
   @override
-  String? parseToValue(String text) => text;
+  double? parseToValue(String text) => double.tryParse(text);
   //
   @override
-  String parseToString(String? value) => value ?? nullValue;
+  String parseToString(double? value) {
+    return (value ?? 0.0).toStringAsFixed(3);
+  }
   //
   @override
   Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['name'] = parseToValue(text),
+        json: cargo.asMap()..['density'] = parseToValue(text),
       );
   //
   @override
-  ValueRecord? buildRecord(Cargo cargo) => FieldRecord<String?>(
-        fieldName: 'name',
+  ValueRecord? buildRecord(Cargo cargo) => FieldRecord<double?>(
+        fieldName: 'stowage_factor',
         toValue: (text) => parseToValue(text),
         apiAddress: _apiAddress,
         dbName: _dbName,

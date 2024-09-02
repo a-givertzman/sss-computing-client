@@ -243,6 +243,10 @@
         "ρ",
         "ρ"
     ],
+    "Stowage factor": [
+        "SF",
+        "SF"
+    ],
     "Run calculations": [
         "Run calculations",
         "Запустить вычисления"
@@ -422,6 +426,10 @@
     "t/m^3": [
         "t/m³",
         "т/м³"
+    ],
+    "m^3/t": [
+        "m³/t",
+        "м³/т"
     ],
     "Edit": [
         "Edit",

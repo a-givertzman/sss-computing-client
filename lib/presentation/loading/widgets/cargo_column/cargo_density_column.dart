@@ -14,16 +14,19 @@ class CargoDensityColumn implements TableColumn<Cargo, double?> {
   final bool _isEditable;
   final ApiAddress _apiAddress;
   final String _dbName;
+  final String _tableName;
   final String? _authToken;
   ///
   const CargoDensityColumn({
     bool isEditable = false,
     required ApiAddress apiAddress,
     required String dbName,
+    required String tableName,
     required String? authToken,
   })  : _isEditable = isEditable,
         _apiAddress = apiAddress,
         _dbName = dbName,
+        _tableName = tableName,
         _authToken = authToken;
   //
   @override
@@ -40,7 +43,7 @@ class CargoDensityColumn implements TableColumn<Cargo, double?> {
   String get nullValue => '—';
   //
   @override
-  double? get defaultValue => 0.0;
+  double? get defaultValue => 1.0;
   //
   @override
   Alignment get headerAlignment => Alignment.centerRight;
@@ -87,12 +90,12 @@ class CargoDensityColumn implements TableColumn<Cargo, double?> {
   @override
   ValueRecord? buildRecord(Cargo cargo) => FieldRecord<double?>(
         fieldName: 'density',
-        tableName: 'compartment',
         toValue: (text) => parseToValue(text),
         apiAddress: _apiAddress,
         dbName: _dbName,
+        tableName: _tableName,
         authToken: _authToken,
-        filter: {'space_id': cargo.id},
+        filter: {'id': cargo.id},
       );
   //
   @override

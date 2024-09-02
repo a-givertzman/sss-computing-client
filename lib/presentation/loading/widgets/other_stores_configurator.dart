@@ -8,7 +8,6 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
-import 'package:sss_computing_client/core/models/cargo/pg_all_cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_others.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
@@ -265,36 +264,43 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                               CargoNameColumn(
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
+                                tableName: 'compartment',
                                 authToken: widget._authToken,
                               ),
                               CargoWeightColumn(
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
+                                tableName: 'compartment',
                                 authToken: widget._authToken,
                               ),
                               CargoLCGColumn(
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
+                                tableName: 'compartment',
                                 authToken: widget._authToken,
                               ),
                               CargoTCGColumn(
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
+                                tableName: 'compartment',
                                 authToken: widget._authToken,
                               ),
                               CargoVCGColumn(
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
+                                tableName: 'compartment',
                                 authToken: widget._authToken,
                               ),
                               CargoX1Column(
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
+                                tableName: 'compartment',
                                 authToken: widget._authToken,
                               ),
                               CargoX2Column(
                                 apiAddress: widget._apiAddress,
                                 dbName: widget._dbName,
+                                tableName: 'compartment',
                                 authToken: widget._authToken,
                               ),
                             ],
@@ -470,36 +476,43 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                     CargoNameColumn(
                                       apiAddress: widget._apiAddress,
                                       dbName: widget._dbName,
+                                      tableName: 'compartment',
                                       authToken: widget._authToken,
                                     ),
                                     CargoWeightColumn(
                                       apiAddress: widget._apiAddress,
                                       dbName: widget._dbName,
+                                      tableName: 'compartment',
                                       authToken: widget._authToken,
                                     ),
                                     CargoLCGColumn(
                                       apiAddress: widget._apiAddress,
                                       dbName: widget._dbName,
+                                      tableName: 'compartment',
                                       authToken: widget._authToken,
                                     ),
                                     CargoTCGColumn(
                                       apiAddress: widget._apiAddress,
                                       dbName: widget._dbName,
+                                      tableName: 'compartment',
                                       authToken: widget._authToken,
                                     ),
                                     CargoVCGColumn(
                                       apiAddress: widget._apiAddress,
                                       dbName: widget._dbName,
+                                      tableName: 'compartment',
                                       authToken: widget._authToken,
                                     ),
                                     CargoX1Column(
                                       apiAddress: widget._apiAddress,
                                       dbName: widget._dbName,
+                                      tableName: 'compartment',
                                       authToken: widget._authToken,
                                     ),
                                     CargoX2Column(
                                       apiAddress: widget._apiAddress,
                                       dbName: widget._dbName,
+                                      tableName: 'compartment',
                                       authToken: widget._authToken,
                                     ),
                                   ],
@@ -526,30 +539,35 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                   isEditable: true,
                   apiAddress: widget._apiAddress,
                   dbName: widget._dbName,
+                  tableName: 'compartment',
                   authToken: widget._authToken,
                 ),
                 CargoWeightColumn(
                   isEditable: true,
                   apiAddress: widget._apiAddress,
                   dbName: widget._dbName,
+                  tableName: 'compartment',
                   authToken: widget._authToken,
                 ),
                 CargoLCGColumn(
                   isEditable: true,
                   apiAddress: widget._apiAddress,
                   dbName: widget._dbName,
+                  tableName: 'compartment',
                   authToken: widget._authToken,
                 ),
                 CargoTCGColumn(
                   isEditable: true,
                   apiAddress: widget._apiAddress,
                   dbName: widget._dbName,
+                  tableName: 'compartment',
                   authToken: widget._authToken,
                 ),
                 CargoVCGColumn(
                   isEditable: true,
                   apiAddress: widget._apiAddress,
                   dbName: widget._dbName,
+                  tableName: 'compartment',
                   authToken: widget._authToken,
                 ),
               ],
@@ -576,7 +594,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
   void _refetchCargo(Cargo oldCargo) {
     final id = oldCargo.id;
     if (id == null) return;
-    PgAllCargos(
+    PgStoresOthers(
       dbName: widget._dbName,
       apiAddress: widget._apiAddress,
       authToken: widget._authToken,

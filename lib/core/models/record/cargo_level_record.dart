@@ -6,9 +6,10 @@ import 'package:sss_computing_client/core/models/record/value_record.dart';
 ///
 /// Gives access to field of record stored in database.
 final class CargoLevelRecord implements ValueRecord<double?> {
-  final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
+  final String _dbName;
+  final String _tableName;
   final double? Function(String) _toValue;
   final Map<String, dynamic> _filter;
   ///
@@ -22,13 +23,15 @@ final class CargoLevelRecord implements ValueRecord<double?> {
   ///   - `toValue` - function for parsing string representation of
   /// field into value of desired type.
   const CargoLevelRecord({
-    required String dbName,
     required ApiAddress apiAddress,
+    required String dbName,
+    required String tableName,
     String? authToken,
     required double? Function(String value) toValue,
     required Map<String, dynamic> filter,
-  })  : _dbName = dbName,
-        _apiAddress = apiAddress,
+  })  : _apiAddress = apiAddress,
+        _dbName = dbName,
+        _tableName = tableName,
         _authToken = authToken,
         _toValue = toValue,
         _filter = filter;
@@ -53,7 +56,7 @@ final class CargoLevelRecord implements ValueRecord<double?> {
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-          SELECT (volume / volume_max) * 100.0 AS level FROM compartment
+          SELECT (volume / volume_max) * 100.0 AS level FROM $_tableName
           WHERE $filterQuery
           LIMIT 1;
         """,
@@ -101,7 +104,7 @@ final class CargoLevelRecord implements ValueRecord<double?> {
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-          UPDATE compartment
+          UPDATE $_tableName
           SET volume=($value * volume_max) / 100.0
           WHERE $filterQuery
           RETURNING (volume / volume_max) * 100.0 AS level;

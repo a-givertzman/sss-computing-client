@@ -1,14 +1,25 @@
 import 'dart:convert';
+import 'package:collection/collection.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/cargo/pg_hold_cargos.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
 import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
 import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
+import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_level_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_name_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_stowage_factor_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_type_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_volume_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 ///
 class HoldConfigurator extends StatefulWidget {
@@ -99,6 +110,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                       framesReal: framesReal,
                       framesTheoretical: framesTheoretical,
                       selectedCargo: _selectedCargo,
+                      onCargoTap: _toggleCargo,
                     ),
                   ),
                 ),
@@ -106,9 +118,104 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
             ),
           ),
           SizedBox(height: blockPadding),
-          const Spacer(),
+          Expanded(
+            child: EditingTable(
+              selectedRow: _selectedCargo,
+              onRowTap: _toggleCargo,
+              onRowUpdate: _refetchCargo,
+              columns: [
+                const CargoTypeColumn(),
+                CargoNameColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  tableName: 'hold_compartment',
+                  authToken: widget._authToken,
+                ),
+                CargoWeightColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  tableName: 'hold_compartment',
+                  authToken: widget._authToken,
+                ),
+                CargoVolumeColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  tableName: 'hold_compartment',
+                  authToken: widget._authToken,
+                ),
+                CargoStowageFactorColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  tableName: 'hold_compartment',
+                  authToken: widget._authToken,
+                ),
+                CargoLevelColumn(
+                  isEditable: true,
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  tableName: 'hold_compartment',
+                  authToken: widget._authToken,
+                ),
+              ],
+              rows: _cargos,
+            ),
+          ),
         ],
       ),
     );
+  }
+  //
+  void _toggleCargo(Cargo? cargo) {
+    if (cargo?.id != _selectedCargo?.id) {
+      setState(() {
+        _selectedCargo = cargo;
+      });
+      return;
+    }
+    setState(() {
+      _selectedCargo = null;
+    });
+  }
+  //
+  void _refetchCargo(Cargo oldCargo) {
+    final id = oldCargo.id;
+    if (id == null) return;
+    PgHoldCargos(
+      dbName: widget._dbName,
+      apiAddress: widget._apiAddress,
+      authToken: widget._authToken,
+    )
+        .fetchById(id)
+        .then(
+          (result) => switch (result) {
+            Ok(value: final newCargo) => _updateCargo(newCargo),
+            Err(:final error) => _showErrorMessage(error.message),
+          },
+        )
+        .onError(
+          (_, __) => _showErrorMessage(const Localized('Unknown error').v),
+        );
+  }
+  //
+  void _updateCargo(Cargo newCargo) {
+    final idx = _cargos.indexWhere((cargo) => cargo.id == newCargo.id);
+    if (idx < 0 || !mounted) return;
+    setState(() {
+      if (_selectedCargo?.id == newCargo.id) _selectedCargo = newCargo;
+      _cargos = [
+        ..._cargos.slice(0, idx),
+        newCargo,
+        ..._cargos.slice(idx + 1),
+      ];
+    });
+  }
+  //
+  void _showErrorMessage(String message) {
+    if (!mounted) return;
+    BottomMessage.error(message: message).show(context);
   }
 }

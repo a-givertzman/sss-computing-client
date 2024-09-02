@@ -57,7 +57,7 @@ class PgStoresOthers implements Cargos {
       dbName: _dbName,
       apiAddress: _apiAddress,
       authToken: _authToken,
-      filter: {'space_id': id},
+      filter: {'c.id': id},
     )
         .fetch()
         .then<Result<Cargo, Failure<String>>>(

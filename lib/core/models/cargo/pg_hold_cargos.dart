@@ -53,7 +53,7 @@ class PgHoldCargos implements Cargos {
       dbName: _dbName,
       apiAddress: _apiAddress,
       authToken: _authToken,
-      filter: {'id': id},
+      filter: {'hc.id': id},
     )
         .fetch()
         .then<Result<Cargo, Failure<String>>>(
