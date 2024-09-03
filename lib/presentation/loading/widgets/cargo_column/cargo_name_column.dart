@@ -1,32 +1,27 @@
-import 'package:ext_rw/ext_rw.dart' hide FieldType;
 import 'package:flutter/widgets.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
-import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
 class CargoNameColumn implements TableColumn<Cargo, String?> {
   final bool _isEditable;
-  final ApiAddress _apiAddress;
-  final String _dbName;
-  final String _tableName;
-  final String? _authToken;
+  final ValueRecord<String?> Function(
+    Cargo data,
+    String? Function(String text) toValue,
+  )? _buildRecord;
   ///
   const CargoNameColumn({
     bool isEditable = false,
-    required ApiAddress apiAddress,
-    required String dbName,
-    required String tableName,
-    required String? authToken,
+    ValueRecord<String?> Function(
+      Cargo,
+      String? Function(String),
+    )? buildRecord,
   })  : _isEditable = isEditable,
-        _apiAddress = apiAddress,
-        _dbName = dbName,
-        _tableName = tableName,
-        _authToken = authToken;
+        _buildRecord = buildRecord;
   //
   @override
   String get key => 'name';
@@ -83,15 +78,11 @@ class CargoNameColumn implements TableColumn<Cargo, String?> {
       );
   //
   @override
-  ValueRecord? buildRecord(Cargo cargo) => FieldRecord<String?>(
-        fieldName: 'name',
-        toValue: (text) => parseToValue(text),
-        apiAddress: _apiAddress,
-        dbName: _dbName,
-        tableName: _tableName,
-        authToken: _authToken,
-        filter: {'id': cargo.id},
-      );
+  ValueRecord<String?>? buildRecord(
+    Cargo cargo,
+    String? Function(String text) toValue,
+  ) =>
+      _buildRecord?.call(cargo, toValue);
   //
   @override
   Widget? buildCell(BuildContext context, Cargo cargo) => null;

@@ -37,7 +37,7 @@ abstract interface class TableColumn<D, V> {
   ///
   D copyRowWith(D rowData, String text);
   ///
-  ValueRecord? buildRecord(D rowData);
+  ValueRecord<V>? buildRecord(D rowData, V Function(String text) toValue);
   ///
   Widget? buildCell(BuildContext context, D rowData);
 }

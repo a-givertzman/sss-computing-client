@@ -65,7 +65,11 @@ class CargoTypeColumn implements TableColumn<Cargo, String> {
       );
   //
   @override
-  ValueRecord? buildRecord(Cargo cargo) => null;
+  ValueRecord<String>? buildRecord(
+    Cargo rowData,
+    String Function(String text) toValue,
+  ) =>
+      null;
   //
   @override
   Widget? buildCell(BuildContext context, Cargo cargo) =>

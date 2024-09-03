@@ -88,6 +88,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
   //
   @override
   void dispose() {
+    _model.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -148,7 +149,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
       errorColor: theme.stateColors.error,
       onSubmit: (value) =>
           column
-              .buildRecord(row.data)
+              .buildRecord(row.data, column.parseToValue)
               ?.persist(value)
               .then((value) => switch (value) {
                     Ok(:final value) => Ok(column.parseToString(value)),

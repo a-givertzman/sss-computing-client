@@ -11,6 +11,7 @@ import 'package:sss_computing_client/core/models/cargo/pg_all_cargos.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
 import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
 import 'package:sss_computing_client/core/models/figure/path_projections.dart';
+import 'package:sss_computing_client/core/models/record/cargo_level_record.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_density_column.dart';
@@ -56,6 +57,12 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
   void initState() {
     _cargos = widget._cargos;
     super.initState();
+  }
+  @override
+  void dispose() {
+    _cargos = [];
+    _selectedCargo = null;
+    super.dispose();
   }
   //
   @override
@@ -131,62 +138,89 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                 const CargoTypeColumn(),
                 CargoNameColumn(
                   isEditable: true,
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                  buildRecord: (cargo, toValue) => FieldRecord<String?>(
+                    dbName: widget._dbName,
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    authToken: widget._authToken,
+                    tableName: 'compartment',
+                    fieldName: 'name',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
                 ),
                 CargoWeightColumn(
                   isEditable: true,
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                  buildRecord: (cargo, toValue) => FieldRecord<double?>(
+                    dbName: widget._dbName,
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    authToken: widget._authToken,
+                    tableName: 'compartment',
+                    fieldName: 'mass',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
                 ),
                 CargoVolumeColumn(
                   isEditable: true,
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                  buildRecord: (cargo, toValue) => FieldRecord<double?>(
+                    dbName: widget._dbName,
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    authToken: widget._authToken,
+                    tableName: 'compartment',
+                    fieldName: 'volume',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
                 ),
                 CargoDensityColumn(
                   isEditable: true,
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                  buildRecord: (cargo, toValue) => FieldRecord<double?>(
+                    dbName: widget._dbName,
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    authToken: widget._authToken,
+                    tableName: 'compartment',
+                    fieldName: 'density',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
                 ),
                 CargoLevelColumn(
                   isEditable: true,
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                  buildRecord: (cargo, toValue) => CargoLevelRecord(
+                    dbName: widget._dbName,
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    authToken: widget._authToken,
+                    tableName: 'compartment',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
                 ),
-                CargoLCGColumn(
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                const CargoLCGColumn(
+                  isEditable: false,
                 ),
-                CargoTCGColumn(
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                const CargoTCGColumn(
+                  isEditable: false,
                 ),
-                CargoVCGColumn(
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                const CargoVCGColumn(
+                  isEditable: false,
                 ),
-                CargoMFSXColumn(
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                const CargoMFSXColumn(
+                  isEditable: false,
                 ),
               ],
               rows: _cargos,
