@@ -53,7 +53,6 @@ class _LoadingPageState extends State<LoadingPage> {
           Expanded(
             child: LoadingPageBody(
               appRefreshStream: widget._appRefreshStream,
-              fireRefreshEvent: widget._fireRefreshEvent,
               apiAddress: _apiAddress,
               dbName: _dbName,
               authToken: _authToken,
