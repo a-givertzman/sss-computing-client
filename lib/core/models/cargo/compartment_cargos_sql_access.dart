@@ -87,8 +87,8 @@ class CompartmentCargosSqlAccess {
         'tcg': row['tcg'] as double?,
         'mfsx': row['mfsx'] as double?,
         'mfsy': row['mfsy'] as double?,
-        'path': row['path'] as String?,
         'type': row['type'] as String,
+        'path': row['path'] as String?,
       }),
     ).fetch();
   }

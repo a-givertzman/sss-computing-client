@@ -20,9 +20,9 @@ class JsonSvgPathProjections implements PathProjections {
         'xz': String xzSvg,
       } =>
         {
-          FigurePlane.xy: parseSvgPathData(xySvg),
-          FigurePlane.yz: parseSvgPathData(yzSvg),
-          FigurePlane.xz: parseSvgPathData(xzSvg),
+          FigurePlane.xy: _parseSvgPathData(xySvg),
+          FigurePlane.yz: _parseSvgPathData(yzSvg),
+          FigurePlane.xz: _parseSvgPathData(xzSvg),
         },
       _ => {
           FigurePlane.xy: Path(),
@@ -30,6 +30,18 @@ class JsonSvgPathProjections implements PathProjections {
           FigurePlane.xz: Path(),
         },
     };
+  }
+  Path _parseSvgPathData(String svg) {
+    return svg
+        .split(' z ')
+        .map((svg) => switch (svg.trim()) {
+              '' => null,
+              _ => parseSvgPathData('$svg z'),
+            })
+        .whereType<Path>()
+        .reduce(
+          (prev, curr) => Path.combine(PathOperation.union, prev, curr),
+        );
   }
   //
   @override

@@ -409,7 +409,6 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                         context: context,
                         builder: (context) => AlertDialog(
                           content: SizedBox(
-                            height: 500.0,
                             width: 500.0,
                             child: CargoParametersForm(
                               onClose: () {
