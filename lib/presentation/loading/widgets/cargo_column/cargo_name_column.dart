@@ -8,19 +8,19 @@ import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
 class CargoNameColumn implements TableColumn<Cargo, String?> {
-  final bool _isEditable;
+  final bool _useDefaultEditing;
   final ValueRecord<String?> Function(
     Cargo data,
     String? Function(String text) toValue,
   )? _buildRecord;
   ///
   const CargoNameColumn({
-    bool isEditable = false,
+    bool useDefaultEditing = false,
     ValueRecord<String?> Function(
       Cargo,
       String? Function(String),
     )? buildRecord,
-  })  : _isEditable = isEditable,
+  })  : _useDefaultEditing = useDefaultEditing,
         _buildRecord = buildRecord;
   //
   @override
@@ -51,7 +51,7 @@ class CargoNameColumn implements TableColumn<Cargo, String?> {
   double? get width => 350.0;
   //
   @override
-  bool get isEditable => _isEditable;
+  bool get useDefaultEditing => _useDefaultEditing;
   //
   @override
   bool get isResizable => true;
@@ -85,5 +85,5 @@ class CargoNameColumn implements TableColumn<Cargo, String?> {
       _buildRecord?.call(cargo, toValue);
   //
   @override
-  Widget? buildCell(BuildContext context, Cargo cargo) => null;
+  Widget? buildCell(context, cargo, updateValue) => null;
 }

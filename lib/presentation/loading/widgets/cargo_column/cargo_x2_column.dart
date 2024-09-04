@@ -9,19 +9,19 @@ import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
 class CargoX2Column implements TableColumn<Cargo, double?> {
-  final bool _isEditable;
+  final bool _useDefaultEditing;
   final ValueRecord<double?> Function(
     Cargo data,
     double? Function(String text) toValue,
-  ) _buildRecord;
+  )? _buildRecord;
   ///
   const CargoX2Column({
-    bool isEditable = false,
-    required ValueRecord<double?> Function(
+    bool useDefaultEditing = false,
+    ValueRecord<double?> Function(
       Cargo,
       double? Function(String),
-    ) buildRecord,
-  })  : _isEditable = isEditable,
+    )? buildRecord,
+  })  : _useDefaultEditing = useDefaultEditing,
         _buildRecord = buildRecord;
   //
   @override
@@ -52,7 +52,7 @@ class CargoX2Column implements TableColumn<Cargo, double?> {
   double? get width => null;
   //
   @override
-  bool get isEditable => _isEditable;
+  bool get useDefaultEditing => _useDefaultEditing;
   //
   @override
   bool get isResizable => true;
@@ -86,8 +86,8 @@ class CargoX2Column implements TableColumn<Cargo, double?> {
     Cargo cargo,
     double? Function(String text) toValue,
   ) =>
-      _buildRecord(cargo, toValue);
+      _buildRecord?.call(cargo, toValue);
   //
   @override
-  Widget? buildCell(BuildContext context, Cargo cargo) => null;
+  Widget? buildCell(context, cargo, updateValue) => null;
 }

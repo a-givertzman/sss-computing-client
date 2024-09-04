@@ -137,7 +137,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
               columns: [
                 const CargoTypeColumn(),
                 CargoNameColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<String?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -152,7 +152,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                   ),
                 ),
                 CargoWeightColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<double?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -167,7 +167,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                   ),
                 ),
                 CargoVolumeColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<double?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -182,7 +182,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                   ),
                 ),
                 CargoDensityColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<double?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -197,7 +197,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                   ),
                 ),
                 CargoLevelColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => CargoLevelRecord(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -211,16 +211,16 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                   ),
                 ),
                 const CargoLCGColumn(
-                  isEditable: false,
+                  useDefaultEditing: false,
                 ),
                 const CargoTCGColumn(
-                  isEditable: false,
+                  useDefaultEditing: false,
                 ),
                 const CargoVCGColumn(
-                  isEditable: false,
+                  useDefaultEditing: false,
                 ),
                 const CargoMFSXColumn(
-                  isEditable: false,
+                  useDefaultEditing: false,
                 ),
               ],
               rows: _cargos,

@@ -13,6 +13,7 @@ import 'package:sss_computing_client/core/models/figure/json_svg_path_projection
 import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 import 'package:sss_computing_client/core/models/record/cargo_level_record.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
+import 'package:sss_computing_client/core/models/record/hold_cargo_shiftable_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_lcg_column.dart';
@@ -24,6 +25,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_vcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_volume_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/hold_cargo_shiftable_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 ///
 class HoldConfigurator extends StatefulWidget {
@@ -130,7 +132,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
               columns: [
                 const CargoTypeColumn(),
                 CargoNameColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<String?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -138,14 +140,14 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                       port: widget._apiAddress.port,
                     ),
                     authToken: widget._authToken,
-                    tableName: 'compartment',
+                    tableName: 'hold_compartment',
                     fieldName: 'name',
                     filter: {'id': cargo.id},
                     toValue: toValue,
                   ),
                 ),
                 CargoWeightColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<double?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -153,14 +155,14 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                       port: widget._apiAddress.port,
                     ),
                     authToken: widget._authToken,
-                    tableName: 'compartment',
+                    tableName: 'hold_compartment',
                     fieldName: 'mass',
                     filter: {'id': cargo.id},
                     toValue: toValue,
                   ),
                 ),
                 CargoVolumeColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<double?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -168,14 +170,14 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                       port: widget._apiAddress.port,
                     ),
                     authToken: widget._authToken,
-                    tableName: 'compartment',
+                    tableName: 'hold_compartment',
                     fieldName: 'volume',
                     filter: {'id': cargo.id},
                     toValue: toValue,
                   ),
                 ),
                 CargoStowageFactorColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<double?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -183,14 +185,14 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                       port: widget._apiAddress.port,
                     ),
                     authToken: widget._authToken,
-                    tableName: 'compartment',
+                    tableName: 'hold_compartment',
                     fieldName: 'stowage_factor',
                     filter: {'id': cargo.id},
                     toValue: toValue,
                   ),
                 ),
                 CargoLevelColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => CargoLevelRecord(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -204,13 +206,25 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                   ),
                 ),
                 const CargoLCGColumn(
-                  isEditable: false,
+                  useDefaultEditing: false,
                 ),
                 const CargoTCGColumn(
-                  isEditable: false,
+                  useDefaultEditing: false,
                 ),
                 const CargoVCGColumn(
-                  isEditable: false,
+                  useDefaultEditing: false,
+                ),
+                HoldCargoShiftableColumn(
+                  buildRecord: (cargo, toValue) => HoldCargoShiftableRecord(
+                    dbName: widget._dbName,
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    authToken: widget._authToken,
+                    id: cargo.id!,
+                    toValue: toValue,
+                  ),
                 ),
               ],
               rows: _cargos,

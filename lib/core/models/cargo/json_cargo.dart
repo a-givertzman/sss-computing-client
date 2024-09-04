@@ -62,6 +62,8 @@ class JsonCargo implements Cargo {
   @override
   CargoType get type => CargoType.from(_json['type']);
   @override
+  bool get shiftable => _json['shiftable'];
+  @override
   Map<String, dynamic> asMap() => Map.from(_json);
   @override
   String toString() => _json.toString();

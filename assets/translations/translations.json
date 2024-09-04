@@ -255,6 +255,10 @@
         "SF",
         "УПО"
     ],
+    "Shiftable": [
+        "Shiftable",
+        "Смещаемый"
+    ],
     "Run calculations": [
         "Run calculations",
         "Запустить вычисления"
@@ -322,6 +326,14 @@
     "Other": [
         "Other",
         "Другое"
+    ],
+    "Bulk cargo": [
+        "Bulk cargo",
+        "Груз навалочный"
+    ],
+    "Bulk cargo, shiftable": [
+        "Bulk cargo, shiftable",
+        "Груз навалочный, смещаемый"
     ],
     "Axes": [
         "Axes",

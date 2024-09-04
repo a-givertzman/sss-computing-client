@@ -23,7 +23,7 @@ abstract interface class TableColumn<D, V> {
   ///
   double? get width;
   ///
-  bool get isEditable;
+  bool get useDefaultEditing;
   ///
   bool get isResizable;
   ///
@@ -39,5 +39,9 @@ abstract interface class TableColumn<D, V> {
   ///
   ValueRecord<V>? buildRecord(D rowData, V Function(String text) toValue);
   ///
-  Widget? buildCell(BuildContext context, D rowData);
+  Widget? buildCell(
+    BuildContext context,
+    D rowData,
+    void Function(String text) updateValue,
+  );
 }

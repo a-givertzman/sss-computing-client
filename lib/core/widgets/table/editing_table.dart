@@ -122,7 +122,13 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
     DaviRow<T> row,
     TableColumn column,
   ) {
-    return column.buildCell(context, row.data) ??
+    return column.buildCell(
+          context,
+          row.data,
+          (value) => widget._onRowUpdate?.call(
+            column.copyRowWith(row.data, value),
+          ),
+        ) ??
         Text(
           switch (column.extractValue(row.data)) {
             null => column.nullValue,
@@ -173,7 +179,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
     DaviRow<T> row,
     TableColumn column,
   ) {
-    return column.isEditable
+    return column.useDefaultEditing
         ? _buildEditableCell(
             context,
             row,

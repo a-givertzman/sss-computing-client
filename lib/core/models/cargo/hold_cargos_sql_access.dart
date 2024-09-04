@@ -66,7 +66,11 @@ class HoldCargosSqlAccess {
                 hc.mass_shift_y AS "tcg",
                 hc.mass_shift_z AS "vcg",
                 cc.key AS "type",
-                hsp.svg_paths::TEXT AS "path"
+                hsp.svg_paths::TEXT AS "path",
+                CASE
+                    WHEN cc.matter_type = 'bulk' THEN TRUE
+                    ELSE FALSE
+                END AS "shiftable"
             FROM hold_compartment AS hc
             JOIN hold_svg_paths AS hsp ON
                 hc.id = hsp.hold_compartment_id
@@ -99,6 +103,7 @@ class HoldCargosSqlAccess {
         'lcg': row['lcg'] as double?,
         'tcg': row['tcg'] as double?,
         'type': row['type'] as String,
+        'shiftable': row['shiftable'] as bool,
         'path': switch (row['path']) {
           String pathList => _formatPathList(pathList),
           _ => null,

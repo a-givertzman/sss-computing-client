@@ -34,7 +34,7 @@ class CargoTypeColumn implements TableColumn<Cargo, String> {
   Alignment get cellAlignment => Alignment.centerLeft;
   //
   @override
-  bool get isEditable => false;
+  bool get useDefaultEditing => false;
   //
   @override
   bool get isResizable => false;
@@ -72,8 +72,7 @@ class CargoTypeColumn implements TableColumn<Cargo, String> {
       null;
   //
   @override
-  Widget? buildCell(BuildContext context, Cargo cargo) =>
-      _CargoTypeWidget(type: cargo.type);
+  Widget? buildCell(context, cargo, _) => _CargoTypeWidget(type: cargo.type);
 }
 ///
 class _CargoTypeWidget extends StatelessWidget {

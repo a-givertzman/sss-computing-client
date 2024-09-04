@@ -55,7 +55,11 @@ class CompartmentCargosSqlAccess {
               c.m_f_s_x AS "mfsx",
               c.m_f_s_y AS "mfsy",
               c.svg_paths AS "path",
-              cc.key::TEXT AS "type"
+              cc.key::TEXT AS "type",
+              CASE
+                  WHEN cc.matter_type = 'bulk' THEN TRUE
+                  ELSE FALSE
+              END AS "shiftable"
             FROM
               compartment AS c
               JOIN cargo_category AS cc ON c.category_id = cc.id
@@ -88,6 +92,7 @@ class CompartmentCargosSqlAccess {
         'mfsx': row['mfsx'] as double?,
         'mfsy': row['mfsy'] as double?,
         'type': row['type'] as String,
+        'shiftable': row['shiftable'] as bool,
         'path': row['path'] as String?,
       }),
     ).fetch();

@@ -262,7 +262,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                             fetch: false,
                             columns: [
                               CargoNameColumn(
-                                isEditable: true,
+                                useDefaultEditing: true,
                                 buildRecord: (cargo, toValue) =>
                                     FieldRecord<String?>(
                                   dbName: widget._dbName,
@@ -278,7 +278,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                 ),
                               ),
                               CargoWeightColumn(
-                                isEditable: true,
+                                useDefaultEditing: true,
                                 buildRecord: (cargo, toValue) =>
                                     FieldRecord<double?>(
                                   dbName: widget._dbName,
@@ -294,7 +294,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                 ),
                               ),
                               CargoLCGColumn(
-                                isEditable: true,
+                                useDefaultEditing: true,
                                 buildRecord: (cargo, toValue) =>
                                     FieldRecord<double?>(
                                   dbName: widget._dbName,
@@ -310,7 +310,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                 ),
                               ),
                               CargoTCGColumn(
-                                isEditable: true,
+                                useDefaultEditing: true,
                                 buildRecord: (cargo, toValue) =>
                                     FieldRecord<double?>(
                                   dbName: widget._dbName,
@@ -326,7 +326,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                 ),
                               ),
                               CargoVCGColumn(
-                                isEditable: true,
+                                useDefaultEditing: true,
                                 buildRecord: (cargo, toValue) =>
                                     FieldRecord<double?>(
                                   dbName: widget._dbName,
@@ -342,7 +342,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                 ),
                               ),
                               CargoX1Column(
-                                isEditable: true,
+                                useDefaultEditing: true,
                                 buildRecord: (cargo, toValue) =>
                                     FieldRecord<double?>(
                                   dbName: widget._dbName,
@@ -358,7 +358,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                 ),
                               ),
                               CargoX2Column(
-                                isEditable: true,
+                                useDefaultEditing: true,
                                 buildRecord: (cargo, toValue) =>
                                     FieldRecord<double?>(
                                   dbName: widget._dbName,
@@ -543,7 +543,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                   cargo: cargo,
                                   columns: [
                                     CargoNameColumn(
-                                      isEditable: true,
+                                      useDefaultEditing: true,
                                       buildRecord: (cargo, toValue) =>
                                           FieldRecord<String?>(
                                         dbName: widget._dbName,
@@ -559,7 +559,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                       ),
                                     ),
                                     CargoWeightColumn(
-                                      isEditable: true,
+                                      useDefaultEditing: true,
                                       buildRecord: (cargo, toValue) =>
                                           FieldRecord<double?>(
                                         dbName: widget._dbName,
@@ -575,7 +575,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                       ),
                                     ),
                                     CargoLCGColumn(
-                                      isEditable: true,
+                                      useDefaultEditing: true,
                                       buildRecord: (cargo, toValue) =>
                                           FieldRecord<double?>(
                                         dbName: widget._dbName,
@@ -591,7 +591,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                       ),
                                     ),
                                     CargoTCGColumn(
-                                      isEditable: true,
+                                      useDefaultEditing: true,
                                       buildRecord: (cargo, toValue) =>
                                           FieldRecord<double?>(
                                         dbName: widget._dbName,
@@ -607,7 +607,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                       ),
                                     ),
                                     CargoVCGColumn(
-                                      isEditable: true,
+                                      useDefaultEditing: true,
                                       buildRecord: (cargo, toValue) =>
                                           FieldRecord<double?>(
                                         dbName: widget._dbName,
@@ -623,7 +623,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                       ),
                                     ),
                                     CargoX1Column(
-                                      isEditable: true,
+                                      useDefaultEditing: true,
                                       buildRecord: (cargo, toValue) =>
                                           FieldRecord<double?>(
                                         dbName: widget._dbName,
@@ -639,7 +639,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                       ),
                                     ),
                                     CargoX2Column(
-                                      isEditable: true,
+                                      useDefaultEditing: true,
                                       buildRecord: (cargo, toValue) =>
                                           FieldRecord<double?>(
                                         dbName: widget._dbName,
@@ -675,7 +675,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
               columns: [
                 const CargoTypeColumn(),
                 CargoNameColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<String?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -690,7 +690,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                   ),
                 ),
                 CargoWeightColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<double?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -705,7 +705,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                   ),
                 ),
                 CargoLCGColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<double?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -720,7 +720,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                   ),
                 ),
                 CargoTCGColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<double?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -735,7 +735,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                   ),
                 ),
                 CargoVCGColumn(
-                  isEditable: true,
+                  useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<double?>(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(

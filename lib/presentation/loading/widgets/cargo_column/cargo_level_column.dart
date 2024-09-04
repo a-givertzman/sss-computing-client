@@ -9,19 +9,19 @@ import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
 class CargoLevelColumn implements TableColumn<Cargo, double?> {
-  final bool _isEditable;
+  final bool _useDefaultEditing;
   final ValueRecord<double?> Function(
     Cargo data,
     double? Function(String text) toValue,
   )? _buildRecord;
   ///
   const CargoLevelColumn({
-    bool isEditable = false,
+    bool useDefaultEditing = false,
     ValueRecord<double?> Function(
       Cargo,
       double? Function(String),
     )? buildRecord,
-  })  : _isEditable = isEditable,
+  })  : _useDefaultEditing = useDefaultEditing,
         _buildRecord = buildRecord;
   //
   @override
@@ -52,7 +52,7 @@ class CargoLevelColumn implements TableColumn<Cargo, double?> {
   double? get width => 150.0;
   //
   @override
-  bool get isEditable => _isEditable;
+  bool get useDefaultEditing => _useDefaultEditing;
   //
   @override
   bool get isResizable => true;
@@ -89,7 +89,7 @@ class CargoLevelColumn implements TableColumn<Cargo, double?> {
       _buildRecord?.call(cargo, toValue);
   //
   @override
-  Widget? buildCell(BuildContext context, Cargo cargo) => _CargoLevelWidget(
+  Widget? buildCell(context, cargo, _) => _CargoLevelWidget(
         level: cargo.level ?? 0.0,
         label: parseToString(cargo.level),
         color: Theme.of(context).colorScheme.primary,

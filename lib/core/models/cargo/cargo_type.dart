@@ -7,6 +7,12 @@ enum CargoType {
   freshWater('Fresh water', Colors.blue, 'fresh_drinking_water_tank'),
   acidsAndAlkalis('Acids and alkalis', Colors.purple, 'urea_tank'),
   pollutedLiquids('Polluted liquids', Colors.black, 'sundry_tank'),
+  bulkCargo('Bulk cargo', Colors.grey, 'bulk_cargo'),
+  bulkCargoShiftable(
+    'Bulk cargo, shiftable',
+    Colors.grey,
+    'bulk_cargo_shiftable',
+  ),
   other('Other', Colors.grey, 'other');
   ///
   /// Text label for cargo type

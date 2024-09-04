@@ -67,6 +67,9 @@ abstract interface class Cargo {
   /// type of the cargo
   CargoType get type;
   ///
+  /// indicator that determines whether cargo is shiftable
+  bool get shiftable;
+  ///
   /// TODO: update doc
   PathProjections? get paths;
   ///
