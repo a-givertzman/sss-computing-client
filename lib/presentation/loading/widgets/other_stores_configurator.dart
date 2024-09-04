@@ -176,7 +176,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                             )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
-                                  message: 'X1 ≰ Xg',
+                                  message: 'X1 !≤ Xg',
                                   stackTrace: StackTrace.current,
                                 )),
                             },
@@ -191,7 +191,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                     )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
-                                  message: 'X1 ≰ Xg',
+                                  message: 'X1 !≤ Xg',
                                   stackTrace: StackTrace.current,
                                 )),
                             },
@@ -206,7 +206,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                             )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
-                                  message: 'Xg ≰ X2',
+                                  message: 'Xg !≤ X2',
                                   stackTrace: StackTrace.current,
                                 )),
                             },
@@ -221,7 +221,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                     )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
-                                  message: 'Xg ≰ X2',
+                                  message: 'Xg !≤ X2',
                                   stackTrace: StackTrace.current,
                                 )),
                             },
@@ -236,7 +236,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                             )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
-                                  message: 'X1 ≮ X2',
+                                  message: 'X1 !< X2',
                                   stackTrace: StackTrace.current,
                                 )),
                             },
@@ -251,7 +251,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                     )) {
                               Ok(value: true) => const Ok(null),
                               Ok(value: false) => Err(Failure(
-                                  message: 'X1 ≮ X2',
+                                  message: 'X1 !< X2',
                                   stackTrace: StackTrace.current,
                                 )),
                             },
@@ -262,46 +262,116 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                             fetch: false,
                             columns: [
                               CargoNameColumn(
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                tableName: 'compartment',
-                                authToken: widget._authToken,
+                                isEditable: true,
+                                buildRecord: (cargo, toValue) =>
+                                    FieldRecord<String?>(
+                                  dbName: widget._dbName,
+                                  apiAddress: ApiAddress(
+                                    host: widget._apiAddress.host,
+                                    port: widget._apiAddress.port,
+                                  ),
+                                  authToken: widget._authToken,
+                                  tableName: 'compartment',
+                                  fieldName: 'name',
+                                  filter: {'id': cargo.id},
+                                  toValue: toValue,
+                                ),
                               ),
                               CargoWeightColumn(
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                tableName: 'compartment',
-                                authToken: widget._authToken,
+                                isEditable: true,
+                                buildRecord: (cargo, toValue) =>
+                                    FieldRecord<double?>(
+                                  dbName: widget._dbName,
+                                  apiAddress: ApiAddress(
+                                    host: widget._apiAddress.host,
+                                    port: widget._apiAddress.port,
+                                  ),
+                                  authToken: widget._authToken,
+                                  tableName: 'compartment',
+                                  fieldName: 'mass',
+                                  filter: {'id': cargo.id},
+                                  toValue: toValue,
+                                ),
                               ),
                               CargoLCGColumn(
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                tableName: 'compartment',
-                                authToken: widget._authToken,
+                                isEditable: true,
+                                buildRecord: (cargo, toValue) =>
+                                    FieldRecord<double?>(
+                                  dbName: widget._dbName,
+                                  apiAddress: ApiAddress(
+                                    host: widget._apiAddress.host,
+                                    port: widget._apiAddress.port,
+                                  ),
+                                  authToken: widget._authToken,
+                                  tableName: 'compartment',
+                                  fieldName: 'mass_shift_x',
+                                  filter: {'id': cargo.id},
+                                  toValue: toValue,
+                                ),
                               ),
                               CargoTCGColumn(
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                tableName: 'compartment',
-                                authToken: widget._authToken,
+                                isEditable: true,
+                                buildRecord: (cargo, toValue) =>
+                                    FieldRecord<double?>(
+                                  dbName: widget._dbName,
+                                  apiAddress: ApiAddress(
+                                    host: widget._apiAddress.host,
+                                    port: widget._apiAddress.port,
+                                  ),
+                                  authToken: widget._authToken,
+                                  tableName: 'compartment',
+                                  fieldName: 'mass_shift_y',
+                                  filter: {'id': cargo.id},
+                                  toValue: toValue,
+                                ),
                               ),
                               CargoVCGColumn(
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                tableName: 'compartment',
-                                authToken: widget._authToken,
+                                isEditable: true,
+                                buildRecord: (cargo, toValue) =>
+                                    FieldRecord<double?>(
+                                  dbName: widget._dbName,
+                                  apiAddress: ApiAddress(
+                                    host: widget._apiAddress.host,
+                                    port: widget._apiAddress.port,
+                                  ),
+                                  authToken: widget._authToken,
+                                  tableName: 'compartment',
+                                  fieldName: 'mass_shift_z',
+                                  filter: {'id': cargo.id},
+                                  toValue: toValue,
+                                ),
                               ),
                               CargoX1Column(
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                tableName: 'compartment',
-                                authToken: widget._authToken,
+                                isEditable: true,
+                                buildRecord: (cargo, toValue) =>
+                                    FieldRecord<double?>(
+                                  dbName: widget._dbName,
+                                  apiAddress: ApiAddress(
+                                    host: widget._apiAddress.host,
+                                    port: widget._apiAddress.port,
+                                  ),
+                                  authToken: widget._authToken,
+                                  tableName: 'compartment',
+                                  fieldName: 'bound_x1',
+                                  filter: {'id': cargo.id},
+                                  toValue: toValue,
+                                ),
                               ),
                               CargoX2Column(
-                                apiAddress: widget._apiAddress,
-                                dbName: widget._dbName,
-                                tableName: 'compartment',
-                                authToken: widget._authToken,
+                                isEditable: true,
+                                buildRecord: (cargo, toValue) =>
+                                    FieldRecord<double?>(
+                                  dbName: widget._dbName,
+                                  apiAddress: ApiAddress(
+                                    host: widget._apiAddress.host,
+                                    port: widget._apiAddress.port,
+                                  ),
+                                  authToken: widget._authToken,
+                                  tableName: 'compartment',
+                                  fieldName: 'bound_x2',
+                                  filter: {'id': cargo.id},
+                                  toValue: toValue,
+                                ),
                               ),
                             ],
                           ),
@@ -383,7 +453,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                   )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
-                                        message: 'X1 ≰ Xg',
+                                        message: 'X1 !≤ Xg',
                                         stackTrace: StackTrace.current,
                                       )),
                                   },
@@ -400,7 +470,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                           )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
-                                        message: 'X1 ≰ Xg',
+                                        message: 'X1 !≤ Xg',
                                         stackTrace: StackTrace.current,
                                       )),
                                   },
@@ -415,7 +485,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                   )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
-                                        message: 'Xg ≰ X2',
+                                        message: 'Xg !≤ X2',
                                         stackTrace: StackTrace.current,
                                       )),
                                   },
@@ -432,7 +502,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                           )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
-                                        message: 'Xg ≰ X2',
+                                        message: 'Xg !≤ X2',
                                         stackTrace: StackTrace.current,
                                       )),
                                   },
@@ -447,7 +517,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                   )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
-                                        message: 'X1 ≮ X2',
+                                        message: 'X1 !< X2',
                                         stackTrace: StackTrace.current,
                                       )),
                                   },
@@ -462,7 +532,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                           )) {
                                     Ok(value: true) => const Ok(null),
                                     Ok(value: false) => Err(Failure(
-                                        message: 'X1 ≮ X2',
+                                        message: 'X1 !< X2',
                                         stackTrace: StackTrace.current,
                                       )),
                                   },
@@ -474,46 +544,116 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                                   cargo: cargo,
                                   columns: [
                                     CargoNameColumn(
-                                      apiAddress: widget._apiAddress,
-                                      dbName: widget._dbName,
-                                      tableName: 'compartment',
-                                      authToken: widget._authToken,
+                                      isEditable: true,
+                                      buildRecord: (cargo, toValue) =>
+                                          FieldRecord<String?>(
+                                        dbName: widget._dbName,
+                                        apiAddress: ApiAddress(
+                                          host: widget._apiAddress.host,
+                                          port: widget._apiAddress.port,
+                                        ),
+                                        authToken: widget._authToken,
+                                        tableName: 'compartment',
+                                        fieldName: 'name',
+                                        filter: {'id': cargo.id},
+                                        toValue: toValue,
+                                      ),
                                     ),
                                     CargoWeightColumn(
-                                      apiAddress: widget._apiAddress,
-                                      dbName: widget._dbName,
-                                      tableName: 'compartment',
-                                      authToken: widget._authToken,
+                                      isEditable: true,
+                                      buildRecord: (cargo, toValue) =>
+                                          FieldRecord<double?>(
+                                        dbName: widget._dbName,
+                                        apiAddress: ApiAddress(
+                                          host: widget._apiAddress.host,
+                                          port: widget._apiAddress.port,
+                                        ),
+                                        authToken: widget._authToken,
+                                        tableName: 'compartment',
+                                        fieldName: 'mass',
+                                        filter: {'id': cargo.id},
+                                        toValue: toValue,
+                                      ),
                                     ),
                                     CargoLCGColumn(
-                                      apiAddress: widget._apiAddress,
-                                      dbName: widget._dbName,
-                                      tableName: 'compartment',
-                                      authToken: widget._authToken,
+                                      isEditable: true,
+                                      buildRecord: (cargo, toValue) =>
+                                          FieldRecord<double?>(
+                                        dbName: widget._dbName,
+                                        apiAddress: ApiAddress(
+                                          host: widget._apiAddress.host,
+                                          port: widget._apiAddress.port,
+                                        ),
+                                        authToken: widget._authToken,
+                                        tableName: 'compartment',
+                                        fieldName: 'mass_shift_x',
+                                        filter: {'id': cargo.id},
+                                        toValue: toValue,
+                                      ),
                                     ),
                                     CargoTCGColumn(
-                                      apiAddress: widget._apiAddress,
-                                      dbName: widget._dbName,
-                                      tableName: 'compartment',
-                                      authToken: widget._authToken,
+                                      isEditable: true,
+                                      buildRecord: (cargo, toValue) =>
+                                          FieldRecord<double?>(
+                                        dbName: widget._dbName,
+                                        apiAddress: ApiAddress(
+                                          host: widget._apiAddress.host,
+                                          port: widget._apiAddress.port,
+                                        ),
+                                        authToken: widget._authToken,
+                                        tableName: 'compartment',
+                                        fieldName: 'mass_shift_y',
+                                        filter: {'id': cargo.id},
+                                        toValue: toValue,
+                                      ),
                                     ),
                                     CargoVCGColumn(
-                                      apiAddress: widget._apiAddress,
-                                      dbName: widget._dbName,
-                                      tableName: 'compartment',
-                                      authToken: widget._authToken,
+                                      isEditable: true,
+                                      buildRecord: (cargo, toValue) =>
+                                          FieldRecord<double?>(
+                                        dbName: widget._dbName,
+                                        apiAddress: ApiAddress(
+                                          host: widget._apiAddress.host,
+                                          port: widget._apiAddress.port,
+                                        ),
+                                        authToken: widget._authToken,
+                                        tableName: 'compartment',
+                                        fieldName: 'mass_shift_z',
+                                        filter: {'id': cargo.id},
+                                        toValue: toValue,
+                                      ),
                                     ),
                                     CargoX1Column(
-                                      apiAddress: widget._apiAddress,
-                                      dbName: widget._dbName,
-                                      tableName: 'compartment',
-                                      authToken: widget._authToken,
+                                      isEditable: true,
+                                      buildRecord: (cargo, toValue) =>
+                                          FieldRecord<double?>(
+                                        dbName: widget._dbName,
+                                        apiAddress: ApiAddress(
+                                          host: widget._apiAddress.host,
+                                          port: widget._apiAddress.port,
+                                        ),
+                                        authToken: widget._authToken,
+                                        tableName: 'compartment',
+                                        fieldName: 'bound_x1',
+                                        filter: {'id': cargo.id},
+                                        toValue: toValue,
+                                      ),
                                     ),
                                     CargoX2Column(
-                                      apiAddress: widget._apiAddress,
-                                      dbName: widget._dbName,
-                                      tableName: 'compartment',
-                                      authToken: widget._authToken,
+                                      isEditable: true,
+                                      buildRecord: (cargo, toValue) =>
+                                          FieldRecord<double?>(
+                                        dbName: widget._dbName,
+                                        apiAddress: ApiAddress(
+                                          host: widget._apiAddress.host,
+                                          port: widget._apiAddress.port,
+                                        ),
+                                        authToken: widget._authToken,
+                                        tableName: 'compartment',
+                                        fieldName: 'bound_x2',
+                                        filter: {'id': cargo.id},
+                                        toValue: toValue,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -537,38 +677,78 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                 const CargoTypeColumn(),
                 CargoNameColumn(
                   isEditable: true,
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                  buildRecord: (cargo, toValue) => FieldRecord<String?>(
+                    dbName: widget._dbName,
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    authToken: widget._authToken,
+                    tableName: 'compartment',
+                    fieldName: 'name',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
                 ),
                 CargoWeightColumn(
                   isEditable: true,
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                  buildRecord: (cargo, toValue) => FieldRecord<double?>(
+                    dbName: widget._dbName,
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    authToken: widget._authToken,
+                    tableName: 'compartment',
+                    fieldName: 'mass',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
                 ),
                 CargoLCGColumn(
                   isEditable: true,
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                  buildRecord: (cargo, toValue) => FieldRecord<double?>(
+                    dbName: widget._dbName,
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    authToken: widget._authToken,
+                    tableName: 'compartment',
+                    fieldName: 'mass_shift_x',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
                 ),
                 CargoTCGColumn(
                   isEditable: true,
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                  buildRecord: (cargo, toValue) => FieldRecord<double?>(
+                    dbName: widget._dbName,
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    authToken: widget._authToken,
+                    tableName: 'compartment',
+                    fieldName: 'mass_shift_y',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
                 ),
                 CargoVCGColumn(
                   isEditable: true,
-                  apiAddress: widget._apiAddress,
-                  dbName: widget._dbName,
-                  tableName: 'compartment',
-                  authToken: widget._authToken,
+                  buildRecord: (cargo, toValue) => FieldRecord<double?>(
+                    dbName: widget._dbName,
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    authToken: widget._authToken,
+                    tableName: 'compartment',
+                    fieldName: 'mass_shift_z',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
                 ),
               ],
               rows: _cargos,
@@ -653,7 +833,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
               label: col.name,
               initialValue: col.defaultValue,
               validator: col.validator,
-              record: col.buildRecord(cargo)!,
+              record: col.buildRecord(cargo, col.parseToValue)!,
               toValue: col.parseToValue,
               toText: col.parseToString,
               isPersisted: !fetch,
