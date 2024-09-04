@@ -6,10 +6,12 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/draft/draft.dart';
 import 'package:sss_computing_client/core/models/draft/pg_drafts.dart';
-import 'package:sss_computing_client/core/models/figure/figure.dart';
+import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
+import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
 import 'package:sss_computing_client/core/models/figure/line_segment_3d_figure.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections_figure.dart';
 import 'package:sss_computing_client/core/models/figure/rectangular_cuboid_figure.dart';
-import 'package:sss_computing_client/core/models/figure/svg_path_figure.dart';
 import 'package:sss_computing_client/core/models/heel_trim/pg_heel_trim.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
@@ -44,13 +46,15 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
   Widget build(BuildContext context) {
     return FutureBuilderWidget(
       refreshStream: widget._appRefreshStream,
-      onFuture: FieldRecord<Map<String, dynamic>>(
+      onFuture: FieldRecord<PathProjections>(
         tableName: 'ship_parameters',
         fieldName: 'value',
         dbName: widget._dbName,
         apiAddress: widget._apiAddress,
         authToken: widget._authToken,
-        toValue: (value) => jsonDecode(value),
+        toValue: (value) => JsonSvgPathProjections(
+          json: json.decode(value),
+        ),
         filter: {'key': 'hull_beauty_svg'},
       ).fetch,
       caseData: (context, hullProjections, _) => FutureBuilderWidget(
@@ -109,7 +113,7 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
                             maxX: 65.0,
                             minY: -15.0,
                             maxY: 15.0,
-                            yAxisReversed: true,
+                            yAxisReversed: false,
                             buildContent: (context, transform) => Stack(
                               children: [
                                 SchemeFigures(
@@ -125,7 +129,7 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
                                       start: Vector3(-65.0, -15.0, 0.0),
                                       end: Vector3(65.0, 15.0, 0.0),
                                     ),
-                                    SVGPathFigure(
+                                    PathProjectionsFigure(
                                       paints: [
                                         Paint()
                                           ..color = Colors.grey
@@ -135,11 +139,7 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
                                           ..strokeWidth = 2.0
                                           ..style = PaintingStyle.stroke,
                                       ],
-                                      pathProjections: {
-                                        FigurePlane.xy: hullProjections['xy'],
-                                        FigurePlane.xz: hullProjections['xz'],
-                                        FigurePlane.yz: hullProjections['yz'],
-                                      },
+                                      pathProjections: hullProjections,
                                     ),
                                     LineSegment3DFigure(
                                       paints: [
@@ -195,12 +195,7 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
                                   ),
                                 ],
                                 if (_draftTypeIndex == 1) ...[
-                                  ..._buildDraftLabelsPS(
-                                    drafts: drafts,
-                                    style: labelStyle,
-                                    layoutTransform: transform,
-                                  ),
-                                  ..._buildDraftLabelsSB(
+                                  ..._buildDraftLabels(
                                     drafts: drafts,
                                     style: labelStyle,
                                     layoutTransform: transform,
@@ -223,7 +218,7 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
     );
   }
   //
-  List<SchemeText> _buildDraftLabelsPS({
+  List<SchemeText> _buildDraftLabels({
     required List<Draft> drafts,
     required TextStyle? style,
     required Matrix4 layoutTransform,
@@ -232,28 +227,13 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
           .map(
             (draft) => SchemeText(
               text:
-                  '${draft.label} ${draft.value.toStringAsFixed(2)} ${const Localized('m').v}',
+                  '${draft.label.split(' ').map((word) => Localized(word).v).join(' ')} ${draft.value.toStringAsFixed(2)} ${const Localized('m').v}',
               style: style,
               offset: Offset(draft.x, draft.y),
-              alignment: const Alignment(0.0, -2.0),
-              layoutTransform: layoutTransform,
-            ),
-          )
-          .toList();
-  //
-  List<SchemeText> _buildDraftLabelsSB({
-    required List<Draft> drafts,
-    required TextStyle? style,
-    required Matrix4 layoutTransform,
-  }) =>
-      drafts
-          .map(
-            (draft) => SchemeText(
-              text:
-                  '${draft.label} ${draft.value.toStringAsFixed(2)} ${const Localized('m').v}',
-              style: style,
-              offset: Offset(draft.x, -draft.y),
-              alignment: const Alignment(0.0, 2.0),
+              alignment: Alignment(
+                0.0,
+                draft.y < 0.0 ? -2.0 : 2.0,
+              ),
               layoutTransform: layoutTransform,
             ),
           )
