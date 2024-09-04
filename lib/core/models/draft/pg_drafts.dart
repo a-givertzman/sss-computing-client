@@ -36,7 +36,7 @@ class PgDrafts implements Drafts {
               project_id AS "projectId",
               ship_id AS "shipId",
               name AS "label",
-              draft_value AS "value",
+              value AS "value",
               x - 59.194 AS "x",
               y AS "y"
             FROM draft_mark_result
