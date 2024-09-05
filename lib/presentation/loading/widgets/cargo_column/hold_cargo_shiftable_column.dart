@@ -95,8 +95,12 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
             .then(
               (result) => switch (result) {
                 Ok(:final value) => updateValue(value.toString()),
-                Err(:final error) => print(error.message),
+                Err(:final error) =>
+                  const Log('HoldCargoShiftableColumn').error(error.message),
               },
+            )
+            .onError(
+              (error, _) => const Log('HoldCargoShiftableColumn').error(error),
             ),
       );
 }
@@ -125,7 +129,10 @@ class _CargoShiftableWidget extends StatelessWidget {
           activeColor: _color,
           splashRadius: 14.0,
           value: _isShiftable,
-          onChanged: (value) => _onUpdate(value!),
+          onChanged: (value) {
+            if (value == null) return;
+            _onUpdate(value);
+          },
         ),
       ),
     );
