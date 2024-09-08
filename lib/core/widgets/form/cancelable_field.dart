@@ -10,7 +10,7 @@ import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 class CancelableField extends StatefulWidget {
   final FieldType _fieldType;
   final String _initialValue;
-  final TextEditingController? _controller;
+  final TextEditingController _controller;
   final String? _label;
   final String? _suffixText;
   final String? _sendError;
@@ -21,11 +21,11 @@ class CancelableField extends StatefulWidget {
   ///
   const CancelableField({
     super.key,
+    required TextEditingController controller,
     String? label,
     String? suffixText,
     String? sendError,
     String initialValue = '',
-    TextEditingController? controller,
     FieldType fieldType = FieldType.string,
     void Function(String)? onChanged,
     void Function(String)? onCanceled,
@@ -68,6 +68,7 @@ class _CancelableFieldState extends State<CancelableField> {
   String _initialValue;
   String? _sendError;
   bool _isInProcess = false;
+  ///
   _CancelableFieldState({
     required String initialValue,
     required Validator? validator,
@@ -90,8 +91,7 @@ class _CancelableFieldState extends State<CancelableField> {
   //
   @override
   void initState() {
-    _controller =
-        widget._controller ?? TextEditingController(text: _initialValue);
+    _controller = widget._controller;
     super.initState();
   }
   //
@@ -153,20 +153,22 @@ class _CancelableFieldState extends State<CancelableField> {
             _isInProcess = true;
             _sendError = null;
           });
-          _onSaved?.call(value).then((result) => switch (result) {
-                Ok() => () {
-                    setState(() {
-                      _initialValue = _controller.text;
-                      _isInProcess = false;
-                    });
-                  }(),
-                Err(:final error) => () {
-                    setState(() {
-                      _sendError = error.message;
-                      _isInProcess = false;
-                    });
-                  }(),
-              });
+          _onSaved
+              ?.call(value)
+              .then((result) => switch (result) {
+                    Ok() => setState(() {
+                        _initialValue = _controller.text;
+                        _isInProcess = false;
+                      }),
+                    Err(:final error) => setState(() {
+                        _sendError = error.message;
+                        _isInProcess = false;
+                      }),
+                  })
+              .onError((error, _) => setState(() {
+                    _sendError = '$error';
+                    _isInProcess = false;
+                  }));
         }
       },
       decoration: InputDecoration(

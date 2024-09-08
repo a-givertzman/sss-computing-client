@@ -120,7 +120,7 @@ class PgStoresOthers implements Cargos {
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-              DELETE FROM compartment WHERE space_id = ${cargo.id};
+              DELETE FROM compartment WHERE id = ${cargo.id};
             """,
       ),
     )

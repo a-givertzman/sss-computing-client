@@ -14,7 +14,7 @@ class FieldData<T> {
   final ValueRecord<T> _record;
   final TextEditingController _controller;
   final Validator? _validator;
-  bool _isPersisted;
+  bool _isSynced;
   ///
   /// Model that holds data for [TextFormField] or [TextField].
   ///
@@ -29,11 +29,11 @@ class FieldData<T> {
     required T initialValue,
     required ValueRecord<T> record,
     Validator? validator,
-    bool isPersisted = false,
+    bool isSynced = false,
   })  : _initialValue = initialValue,
         _record = record,
         _validator = validator,
-        _isPersisted = isPersisted,
+        _isSynced = isSynced,
         _controller = TextEditingController(text: toText(initialValue));
   ///
   FieldData._({
@@ -50,7 +50,7 @@ class FieldData<T> {
         _initialValue = initialValue,
         _controller = controller,
         _validator = validator,
-        _isPersisted = isPersisted;
+        _isSynced = isPersisted;
   ///
   /// Initial content of the target field.
   T get initialValue => _initialValue;
@@ -62,7 +62,7 @@ class FieldData<T> {
   bool get isChanged => toText(_initialValue) != _controller.text;
   ///
   /// Whether content of the target synced with source or not
-  bool get isSynced => _isPersisted;
+  bool get isSynced => _isSynced;
   ///
   Validator? get validator => _validator;
   ///
@@ -71,7 +71,7 @@ class FieldData<T> {
     switch (await _record.fetch()) {
       case Ok(:final value):
         refreshWith(toText(value));
-        _isPersisted = true;
+        _isSynced = true;
         return Ok(value);
       case final Err<T, Failure> err:
         Log('$runtimeType | fetch').error(err.error);
@@ -85,7 +85,7 @@ class FieldData<T> {
     switch (await _record.persist(text)) {
       case Ok():
         refreshWith(text);
-        _isPersisted = true;
+        _isSynced = true;
         return Ok(toValue(text));
       case final Err<void, Failure> err:
         Log('$runtimeType | fetch').error(err.error);
@@ -104,21 +104,21 @@ class FieldData<T> {
     _controller.text = toText(_initialValue);
   }
   ///
+  /// Returns copy of [FieldData]
   FieldData<T> copyWith({
     T? initialValue,
     ValueRecord<T>? record,
     Validator? validator,
     bool? isPersisted,
   }) =>
-      FieldData<T>._(
+      FieldData<T>(
         id: id,
         label: label,
         toValue: toValue,
         toText: toText,
         initialValue: initialValue ?? _initialValue,
         record: record ?? _record,
-        controller: controller..text = toText(initialValue ?? _initialValue),
         validator: validator ?? _validator,
-        isPersisted: isPersisted ?? _isPersisted,
+        isSynced: isPersisted ?? _isSynced,
       );
 }

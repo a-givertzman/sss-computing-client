@@ -11,24 +11,19 @@ import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_others.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
-import 'package:sss_computing_client/core/models/number_math_relation/less_than.dart';
-import 'package:sss_computing_client/core/models/number_math_relation/less_than_or_equal_to.dart';
 import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
 import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
-import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_lcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_name_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_tcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_type_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_vcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_x1_column.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_x2_column.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/cargo_parameters/cargo_parameters_form.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/other_stores_cargo_form.dart';
 ///
 class OtherStoresConfigurator extends StatefulWidget {
   final List<Cargo> _cargos;
@@ -135,268 +130,13 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
             children: [
               IconButton.filled(
                 icon: const Icon(Icons.add_rounded),
-                onPressed: () => showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    content: SizedBox(
-                      width: 500.0,
-                      child: CargoParametersForm(
-                        onClose: () {
-                          Navigator.of(context).pop();
-                          _toggleCargo(null);
-                          widget._fireRefreshEvent();
-                        },
-                        onSave: (fieldsData) async {
-                          final cargo = JsonCargo(json: {
-                            for (final field in fieldsData)
-                              field.id: field.toValue(field.controller.text),
-                          });
-                          switch (await PgStoresOthers(
-                            apiAddress: widget._apiAddress,
-                            dbName: widget._dbName,
-                            authToken: widget._authToken,
-                          ).add(cargo)) {
-                            case Ok():
-                              Navigator.of(context).pop(context);
-                              widget._fireRefreshEvent();
-                              return const Ok([]);
-                            case Err(:final error):
-                              return Err(error);
-                          }
-                        },
-                        compundValidationCases: [
-                          CompoundFormFieldValidationCase(
-                            oneId: 'x1',
-                            otherId: 'lcg',
-                            validateValues: (x1, lcg) =>
-                                switch (const LessThanOrEqualTo().process(
-                              double.tryParse(x1) ?? 0.0,
-                              double.tryParse(lcg) ?? 0.0,
-                            )) {
-                              Ok(value: true) => const Ok(null),
-                              Ok(value: false) => Err(Failure(
-                                  message: 'X1 !≤ Xg',
-                                  stackTrace: StackTrace.current,
-                                )),
-                            },
-                          ),
-                          CompoundFormFieldValidationCase(
-                            oneId: 'lcg',
-                            otherId: 'x1',
-                            validateValues: (lcg, x1) => switch (
-                                const LessThanOrEqualTo().swaped().process(
-                                      double.tryParse(lcg) ?? 0.0,
-                                      double.tryParse(x1) ?? 0.0,
-                                    )) {
-                              Ok(value: true) => const Ok(null),
-                              Ok(value: false) => Err(Failure(
-                                  message: 'X1 !≤ Xg',
-                                  stackTrace: StackTrace.current,
-                                )),
-                            },
-                          ),
-                          CompoundFormFieldValidationCase(
-                            oneId: 'lcg',
-                            otherId: 'x2',
-                            validateValues: (lcg, x2) =>
-                                switch (const LessThanOrEqualTo().process(
-                              double.tryParse(lcg) ?? 0.0,
-                              double.tryParse(x2) ?? 0.0,
-                            )) {
-                              Ok(value: true) => const Ok(null),
-                              Ok(value: false) => Err(Failure(
-                                  message: 'Xg !≤ X2',
-                                  stackTrace: StackTrace.current,
-                                )),
-                            },
-                          ),
-                          CompoundFormFieldValidationCase(
-                            oneId: 'x2',
-                            otherId: 'lcg',
-                            validateValues: (x2, lcg) => switch (
-                                const LessThanOrEqualTo().swaped().process(
-                                      double.tryParse(x2) ?? 0.0,
-                                      double.tryParse(lcg) ?? 0.0,
-                                    )) {
-                              Ok(value: true) => const Ok(null),
-                              Ok(value: false) => Err(Failure(
-                                  message: 'Xg !≤ X2',
-                                  stackTrace: StackTrace.current,
-                                )),
-                            },
-                          ),
-                          CompoundFormFieldValidationCase(
-                            oneId: 'x1',
-                            otherId: 'x2',
-                            validateValues: (x1, x2) =>
-                                switch (const LessThan().process(
-                              double.tryParse(x1) ?? 0.0,
-                              double.tryParse(x2) ?? 0.0,
-                            )) {
-                              Ok(value: true) => const Ok(null),
-                              Ok(value: false) => Err(Failure(
-                                  message: 'X1 !< X2',
-                                  stackTrace: StackTrace.current,
-                                )),
-                            },
-                          ),
-                          CompoundFormFieldValidationCase(
-                            oneId: 'x2',
-                            otherId: 'x1',
-                            validateValues: (x2, x1) =>
-                                switch (const LessThan().swaped().process(
-                                      double.tryParse(x2) ?? 0.0,
-                                      double.tryParse(x1) ?? 0.0,
-                                    )) {
-                              Ok(value: true) => const Ok(null),
-                              Ok(value: false) => Err(Failure(
-                                  message: 'X1 !< X2',
-                                  stackTrace: StackTrace.current,
-                                )),
-                            },
-                          ),
-                        ],
-                        fieldData: [
-                          ..._mapColumnsToFields(
-                            fetch: false,
-                            columns: [
-                              CargoNameColumn(
-                                useDefaultEditing: true,
-                                buildRecord: (cargo, toValue) =>
-                                    FieldRecord<String?>(
-                                  dbName: widget._dbName,
-                                  apiAddress: ApiAddress(
-                                    host: widget._apiAddress.host,
-                                    port: widget._apiAddress.port,
-                                  ),
-                                  authToken: widget._authToken,
-                                  tableName: 'compartment',
-                                  fieldName: 'name',
-                                  filter: {'id': cargo.id},
-                                  toValue: toValue,
-                                ),
-                              ),
-                              CargoWeightColumn(
-                                useDefaultEditing: true,
-                                buildRecord: (cargo, toValue) =>
-                                    FieldRecord<double?>(
-                                  dbName: widget._dbName,
-                                  apiAddress: ApiAddress(
-                                    host: widget._apiAddress.host,
-                                    port: widget._apiAddress.port,
-                                  ),
-                                  authToken: widget._authToken,
-                                  tableName: 'compartment',
-                                  fieldName: 'mass',
-                                  filter: {'id': cargo.id},
-                                  toValue: toValue,
-                                ),
-                              ),
-                              CargoLCGColumn(
-                                useDefaultEditing: true,
-                                buildRecord: (cargo, toValue) =>
-                                    FieldRecord<double?>(
-                                  dbName: widget._dbName,
-                                  apiAddress: ApiAddress(
-                                    host: widget._apiAddress.host,
-                                    port: widget._apiAddress.port,
-                                  ),
-                                  authToken: widget._authToken,
-                                  tableName: 'compartment',
-                                  fieldName: 'mass_shift_x',
-                                  filter: {'id': cargo.id},
-                                  toValue: toValue,
-                                ),
-                              ),
-                              CargoTCGColumn(
-                                useDefaultEditing: true,
-                                buildRecord: (cargo, toValue) =>
-                                    FieldRecord<double?>(
-                                  dbName: widget._dbName,
-                                  apiAddress: ApiAddress(
-                                    host: widget._apiAddress.host,
-                                    port: widget._apiAddress.port,
-                                  ),
-                                  authToken: widget._authToken,
-                                  tableName: 'compartment',
-                                  fieldName: 'mass_shift_y',
-                                  filter: {'id': cargo.id},
-                                  toValue: toValue,
-                                ),
-                              ),
-                              CargoVCGColumn(
-                                useDefaultEditing: true,
-                                buildRecord: (cargo, toValue) =>
-                                    FieldRecord<double?>(
-                                  dbName: widget._dbName,
-                                  apiAddress: ApiAddress(
-                                    host: widget._apiAddress.host,
-                                    port: widget._apiAddress.port,
-                                  ),
-                                  authToken: widget._authToken,
-                                  tableName: 'compartment',
-                                  fieldName: 'mass_shift_z',
-                                  filter: {'id': cargo.id},
-                                  toValue: toValue,
-                                ),
-                              ),
-                              CargoX1Column(
-                                useDefaultEditing: true,
-                                buildRecord: (cargo, toValue) =>
-                                    FieldRecord<double?>(
-                                  dbName: widget._dbName,
-                                  apiAddress: ApiAddress(
-                                    host: widget._apiAddress.host,
-                                    port: widget._apiAddress.port,
-                                  ),
-                                  authToken: widget._authToken,
-                                  tableName: 'compartment',
-                                  fieldName: 'bound_x1',
-                                  filter: {'id': cargo.id},
-                                  toValue: toValue,
-                                ),
-                              ),
-                              CargoX2Column(
-                                useDefaultEditing: true,
-                                buildRecord: (cargo, toValue) =>
-                                    FieldRecord<double?>(
-                                  dbName: widget._dbName,
-                                  apiAddress: ApiAddress(
-                                    host: widget._apiAddress.host,
-                                    port: widget._apiAddress.port,
-                                  ),
-                                  authToken: widget._authToken,
-                                  tableName: 'compartment',
-                                  fieldName: 'bound_x2',
-                                  filter: {'id': cargo.id},
-                                  toValue: toValue,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                onPressed: _handleCargoAdd,
               ),
               SizedBox(width: blockPadding),
               IconButton.filled(
                 icon: const Icon(Icons.remove_rounded),
                 onPressed: switch (_selectedCargo) {
-                  final Cargo cargo => () async {
-                      switch (await PgStoresOthers(
-                        apiAddress: widget._apiAddress,
-                        dbName: widget._dbName,
-                        authToken: widget._authToken,
-                      ).remove(cargo)) {
-                        case Ok():
-                          _removeCargo(cargo);
-                        case Err(:final error):
-                          const Log('Remove cargo').error(error);
-                      }
-                    },
+                  final Cargo cargo => () => _handleCargoRemove(cargo),
                   _ => null,
                 },
               ),
@@ -404,263 +144,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
               IconButton.filled(
                 icon: const Icon(Icons.edit_rounded),
                 onPressed: switch (_selectedCargo) {
-                  final Cargo cargo => () => showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          content: SizedBox(
-                            width: 500.0,
-                            child: CargoParametersForm(
-                              onClose: () {
-                                Navigator.of(context).pop();
-                                _toggleCargo(null);
-                                widget._fireRefreshEvent();
-                              },
-                              onSave: (fieldsData) async {
-                                try {
-                                  final fieldsPersisted = await Future.wait(
-                                    fieldsData.map(
-                                      (field) async {
-                                        switch (await field.save()) {
-                                          case Ok(:final value):
-                                            return field.copyWith(
-                                              initialValue: value,
-                                            );
-                                          case Err(:final error):
-                                            Log('$runtimeType | _persistAll')
-                                                .error(error);
-                                            throw Err<List<FieldData>, Failure>(
-                                              error,
-                                            );
-                                        }
-                                      },
-                                    ),
-                                  );
-                                  return Ok(fieldsPersisted);
-                                } on Err<List<FieldData>, Failure> catch (err) {
-                                  return err;
-                                }
-                              },
-                              compundValidationCases: [
-                                CompoundFormFieldValidationCase(
-                                  oneId: 'x1',
-                                  otherId: 'lcg',
-                                  validateValues: (x1, lcg) =>
-                                      switch (const LessThanOrEqualTo().process(
-                                    double.tryParse(x1) ?? 0.0,
-                                    double.tryParse(lcg) ?? 0.0,
-                                  )) {
-                                    Ok(value: true) => const Ok(null),
-                                    Ok(value: false) => Err(Failure(
-                                        message: 'X1 !≤ Xg',
-                                        stackTrace: StackTrace.current,
-                                      )),
-                                  },
-                                ),
-                                CompoundFormFieldValidationCase(
-                                  oneId: 'lcg',
-                                  otherId: 'x1',
-                                  validateValues: (lcg, x1) => switch (
-                                      const LessThanOrEqualTo()
-                                          .swaped()
-                                          .process(
-                                            double.tryParse(lcg) ?? 0.0,
-                                            double.tryParse(x1) ?? 0.0,
-                                          )) {
-                                    Ok(value: true) => const Ok(null),
-                                    Ok(value: false) => Err(Failure(
-                                        message: 'X1 !≤ Xg',
-                                        stackTrace: StackTrace.current,
-                                      )),
-                                  },
-                                ),
-                                CompoundFormFieldValidationCase(
-                                  oneId: 'lcg',
-                                  otherId: 'x2',
-                                  validateValues: (lcg, x2) =>
-                                      switch (const LessThanOrEqualTo().process(
-                                    double.tryParse(lcg) ?? 0.0,
-                                    double.tryParse(x2) ?? 0.0,
-                                  )) {
-                                    Ok(value: true) => const Ok(null),
-                                    Ok(value: false) => Err(Failure(
-                                        message: 'Xg !≤ X2',
-                                        stackTrace: StackTrace.current,
-                                      )),
-                                  },
-                                ),
-                                CompoundFormFieldValidationCase(
-                                  oneId: 'x2',
-                                  otherId: 'lcg',
-                                  validateValues: (x2, lcg) => switch (
-                                      const LessThanOrEqualTo()
-                                          .swaped()
-                                          .process(
-                                            double.tryParse(x2) ?? 0.0,
-                                            double.tryParse(lcg) ?? 0.0,
-                                          )) {
-                                    Ok(value: true) => const Ok(null),
-                                    Ok(value: false) => Err(Failure(
-                                        message: 'Xg !≤ X2',
-                                        stackTrace: StackTrace.current,
-                                      )),
-                                  },
-                                ),
-                                CompoundFormFieldValidationCase(
-                                  oneId: 'x1',
-                                  otherId: 'x2',
-                                  validateValues: (x1, x2) =>
-                                      switch (const LessThan().process(
-                                    double.tryParse(x1) ?? 0.0,
-                                    double.tryParse(x2) ?? 0.0,
-                                  )) {
-                                    Ok(value: true) => const Ok(null),
-                                    Ok(value: false) => Err(Failure(
-                                        message: 'X1 !< X2',
-                                        stackTrace: StackTrace.current,
-                                      )),
-                                  },
-                                ),
-                                CompoundFormFieldValidationCase(
-                                  oneId: 'x2',
-                                  otherId: 'x1',
-                                  validateValues: (x2, x1) =>
-                                      switch (const LessThan().swaped().process(
-                                            double.tryParse(x2) ?? 0.0,
-                                            double.tryParse(x1) ?? 0.0,
-                                          )) {
-                                    Ok(value: true) => const Ok(null),
-                                    Ok(value: false) => Err(Failure(
-                                        message: 'X1 !< X2',
-                                        stackTrace: StackTrace.current,
-                                      )),
-                                  },
-                                ),
-                              ],
-                              fieldData: [
-                                ..._mapColumnsToFields(
-                                  fetch: true,
-                                  cargo: cargo,
-                                  columns: [
-                                    CargoNameColumn(
-                                      useDefaultEditing: true,
-                                      buildRecord: (cargo, toValue) =>
-                                          FieldRecord<String?>(
-                                        dbName: widget._dbName,
-                                        apiAddress: ApiAddress(
-                                          host: widget._apiAddress.host,
-                                          port: widget._apiAddress.port,
-                                        ),
-                                        authToken: widget._authToken,
-                                        tableName: 'compartment',
-                                        fieldName: 'name',
-                                        filter: {'id': cargo.id},
-                                        toValue: toValue,
-                                      ),
-                                    ),
-                                    CargoWeightColumn(
-                                      useDefaultEditing: true,
-                                      buildRecord: (cargo, toValue) =>
-                                          FieldRecord<double?>(
-                                        dbName: widget._dbName,
-                                        apiAddress: ApiAddress(
-                                          host: widget._apiAddress.host,
-                                          port: widget._apiAddress.port,
-                                        ),
-                                        authToken: widget._authToken,
-                                        tableName: 'compartment',
-                                        fieldName: 'mass',
-                                        filter: {'id': cargo.id},
-                                        toValue: toValue,
-                                      ),
-                                    ),
-                                    CargoLCGColumn(
-                                      useDefaultEditing: true,
-                                      buildRecord: (cargo, toValue) =>
-                                          FieldRecord<double?>(
-                                        dbName: widget._dbName,
-                                        apiAddress: ApiAddress(
-                                          host: widget._apiAddress.host,
-                                          port: widget._apiAddress.port,
-                                        ),
-                                        authToken: widget._authToken,
-                                        tableName: 'compartment',
-                                        fieldName: 'mass_shift_x',
-                                        filter: {'id': cargo.id},
-                                        toValue: toValue,
-                                      ),
-                                    ),
-                                    CargoTCGColumn(
-                                      useDefaultEditing: true,
-                                      buildRecord: (cargo, toValue) =>
-                                          FieldRecord<double?>(
-                                        dbName: widget._dbName,
-                                        apiAddress: ApiAddress(
-                                          host: widget._apiAddress.host,
-                                          port: widget._apiAddress.port,
-                                        ),
-                                        authToken: widget._authToken,
-                                        tableName: 'compartment',
-                                        fieldName: 'mass_shift_y',
-                                        filter: {'id': cargo.id},
-                                        toValue: toValue,
-                                      ),
-                                    ),
-                                    CargoVCGColumn(
-                                      useDefaultEditing: true,
-                                      buildRecord: (cargo, toValue) =>
-                                          FieldRecord<double?>(
-                                        dbName: widget._dbName,
-                                        apiAddress: ApiAddress(
-                                          host: widget._apiAddress.host,
-                                          port: widget._apiAddress.port,
-                                        ),
-                                        authToken: widget._authToken,
-                                        tableName: 'compartment',
-                                        fieldName: 'mass_shift_z',
-                                        filter: {'id': cargo.id},
-                                        toValue: toValue,
-                                      ),
-                                    ),
-                                    CargoX1Column(
-                                      useDefaultEditing: true,
-                                      buildRecord: (cargo, toValue) =>
-                                          FieldRecord<double?>(
-                                        dbName: widget._dbName,
-                                        apiAddress: ApiAddress(
-                                          host: widget._apiAddress.host,
-                                          port: widget._apiAddress.port,
-                                        ),
-                                        authToken: widget._authToken,
-                                        tableName: 'compartment',
-                                        fieldName: 'bound_x1',
-                                        filter: {'id': cargo.id},
-                                        toValue: toValue,
-                                      ),
-                                    ),
-                                    CargoX2Column(
-                                      useDefaultEditing: true,
-                                      buildRecord: (cargo, toValue) =>
-                                          FieldRecord<double?>(
-                                        dbName: widget._dbName,
-                                        apiAddress: ApiAddress(
-                                          host: widget._apiAddress.host,
-                                          port: widget._apiAddress.port,
-                                        ),
-                                        authToken: widget._authToken,
-                                        tableName: 'compartment',
-                                        fieldName: 'bound_x2',
-                                        filter: {'id': cargo.id},
-                                        toValue: toValue,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                  final Cargo cargo => () => _handleCargoEdit(cargo),
                   _ => null,
                 },
               ),
@@ -803,40 +287,103 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
     });
   }
   //
-  void _removeCargo(Cargo oldCargo) {
-    final idx = _cargos.indexWhere((cargo) => cargo.id == oldCargo.id);
-    if (idx < 0 || !mounted) return;
-    setState(() {
-      if (_selectedCargo?.id == oldCargo.id) _selectedCargo = null;
-      _cargos = [
-        ..._cargos.slice(0, idx),
-        ..._cargos.slice(idx + 1),
-      ];
-    });
+  void _handleCargoAdd() {
+    final navigator = Navigator.of(context);
+    navigator.push(
+      MaterialPageRoute(
+        builder: (context) => OtherStoresCargoForm(
+          label: const Localized('Other stores').v,
+          cargo: const JsonCargo(json: {}),
+          onClose: navigator.pop,
+          onSave: (fieldsData) async {
+            final cargo = JsonCargo(json: {
+              for (final field in fieldsData)
+                field.id: field.toValue(field.controller.text),
+            });
+            switch (await PgStoresOthers(
+              apiAddress: widget._apiAddress,
+              dbName: widget._dbName,
+              authToken: widget._authToken,
+            ).add(cargo)) {
+              case Ok():
+                navigator.pop();
+                widget._fireRefreshEvent();
+                return Ok(fieldsData);
+              case Err(:final error):
+                return Err(error);
+            }
+          },
+        ),
+        maintainState: false,
+      ),
+    );
+  }
+  //
+  void _handleCargoRemove(Cargo cargo) async {
+    switch (await PgStoresOthers(
+      apiAddress: widget._apiAddress,
+      dbName: widget._dbName,
+      authToken: widget._authToken,
+    ).remove(cargo)) {
+      case Ok():
+        widget._fireRefreshEvent();
+      case Err(:final error):
+        const Log('Remove cargo').error(error);
+        _showErrorMessage(error.message);
+    }
+  }
+  //
+  void _handleCargoEdit(Cargo cargo) {
+    final navigator = Navigator.of(context);
+    navigator.push(
+      MaterialPageRoute(
+        builder: (context) => OtherStoresCargoForm(
+          label: const Localized('Other stores').v,
+          cargo: cargo,
+          fetchData: true,
+          onClose: () {
+            navigator.pop();
+            _toggleCargo(null);
+            widget._fireRefreshEvent();
+          },
+          onSave: (fieldsData) async {
+            final fieldSaveResults = await Future.wait(
+              fieldsData.map<Future<ResultF<FieldData>>>(
+                (field) async => switch (await field.save()) {
+                  Ok(:final value) => Ok(
+                      field.copyWith(initialValue: value),
+                    ),
+                  Err(:final error) => Err(
+                      Failure(
+                        message: error.message,
+                        stackTrace: StackTrace.current,
+                      ),
+                    ),
+                },
+              ),
+            );
+            final resultsOk =
+                fieldSaveResults.whereType<Ok<FieldData, Failure>>();
+            final resultsErr =
+                fieldSaveResults.whereType<Err<FieldData, Failure>>();
+            if (resultsErr.isNotEmpty) {
+              return Err(Failure(
+                message: resultsErr.first.error.message,
+                stackTrace: StackTrace.current,
+              ));
+            }
+            return Ok(
+              resultsOk.map((result) => result.value).toList(),
+            );
+          },
+        ),
+        maintainState: false,
+      ),
+    );
   }
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
     BottomMessage.error(message: message).show(context);
   }
-  //
-  List<FieldData> _mapColumnsToFields({
-    required List<TableColumn<Cargo, dynamic>> columns,
-    Cargo cargo = const JsonCargo(json: {}),
-    bool fetch = false,
-  }) =>
-      columns
-          .map(
-            (col) => FieldData(
-              id: col.key,
-              label: col.name,
-              initialValue: col.defaultValue,
-              validator: col.validator,
-              record: col.buildRecord(cargo, col.parseToValue)!,
-              toValue: col.parseToValue,
-              toText: col.parseToString,
-              isPersisted: !fetch,
-            ),
-          )
-          .toList();
 }
