@@ -67,7 +67,10 @@ class CargoStowageFactorColumn implements TableColumn<Cargo, double?> {
       );
   //
   @override
-  double? extractValue(Cargo cargo) => cargo.stowageFactor;
+  double? extractValue(Cargo cargo) => switch (cargo.density) {
+        final double value => 1.0 / value,
+        null => null,
+      };
   //
   @override
   double? parseToValue(String text) => double.tryParse(text);
@@ -79,7 +82,11 @@ class CargoStowageFactorColumn implements TableColumn<Cargo, double?> {
   //
   @override
   Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['density'] = parseToValue(text),
+        json: cargo.asMap()
+          ..['density'] = switch (parseToValue(text)) {
+            final double value => 1.0 / value,
+            null => null,
+          },
       );
   //
   @override

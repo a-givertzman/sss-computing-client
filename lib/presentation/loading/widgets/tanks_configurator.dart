@@ -11,7 +11,7 @@ import 'package:sss_computing_client/core/models/cargo/pg_all_cargos.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
 import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
 import 'package:sss_computing_client/core/models/figure/path_projections.dart';
-import 'package:sss_computing_client/core/models/record/cargo_level_record.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo_level_record.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_density_column.dart';
@@ -206,7 +206,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                     ),
                     authToken: widget._authToken,
                     tableName: 'compartment',
-                    filter: {'id': cargo.id},
+                    id: cargo.id,
                     toValue: toValue,
                   ),
                 ),

@@ -99,7 +99,7 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
           ),
         ),
         TabSetting(
-          label: const Localized('Hold').v,
+          label: const Localized('Bulk').v,
           content: FutureBuilderWidget(
             refreshStream: widget._appRefreshStream,
             onFuture: PgHoldCargos(
@@ -110,6 +110,7 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
             caseData: (context, cargos, _) => HoldConfigurator(
               cargos: cargos,
               appRefreshStream: widget._appRefreshStream,
+              fireRefreshEvent: widget._fireRefreshEvent,
               apiAddress: widget._apiAddress,
               dbName: widget._dbName,
               authToken: widget._authToken,
