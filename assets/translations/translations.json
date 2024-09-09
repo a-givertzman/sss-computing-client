@@ -141,7 +141,7 @@
     ],
     "Bulk": [
         "Bulk",
-        "Сыпучий"
+        "Навалочный"
     ],
     "Stores": [
         "Stores",
@@ -470,5 +470,29 @@
     "Cargo parameters": [
         "Cargo parameters",
         "Параметры груза"
+    ],
+    "Grain bulkheads installation": [
+        "Grain bulkheads installation",
+        "Установка зерновых переборок"
+    ],
+    "Overboard": [
+        "Overboard",
+        "За бортом"
+    ],
+    "Grain bulkhead": [
+        "Grain bulkhead",
+        "Зерновая переборка"
+    ],
+    "Grain bulkheads": [
+        "Grain bulkheads",
+        "Зерновые переборки"
+    ],
+    "Install bulkhead": [
+        "Install bulkhead",
+        "Установить переборку"
+    ],
+    "Remove bulkhead": [
+        "Remove bulkhead",
+        "Убрать переборку"
     ]
 }
