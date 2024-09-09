@@ -146,13 +146,10 @@ class _CargoShiftableWidget extends StatelessWidget {
               Ok() => const Log('_CargoShiftableWidget | _onUpdate')
                   .info('value updated'),
               Err(:final error) =>
-                // ignore: use_build_context_synchronously
                 _showErrorMessage(context, '${error.message}')
             })
         .onError(
-          (error, _) =>
-              // ignore: use_build_context_synchronously
-              _showErrorMessage(context, '$error'),
+          (error, _) => _showErrorMessage(context, '$error'),
         );
   }
   //
