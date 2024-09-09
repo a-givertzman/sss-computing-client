@@ -23,7 +23,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/other_stores_cargo_form.dart';
+import 'package:sss_computing_client/presentation/other_stores_cargo/other_stores_cargo_page.dart';
 ///
 class OtherStoresConfigurator extends StatefulWidget {
   final List<Cargo> _cargos;
@@ -291,7 +291,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
     final navigator = Navigator.of(context);
     navigator.push(
       MaterialPageRoute(
-        builder: (context) => OtherStoresCargoForm(
+        builder: (context) => OtherStoresCargoPage(
           label: const Localized('Other stores').v,
           cargo: const JsonCargo(json: {}),
           onClose: navigator.pop,
@@ -337,7 +337,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
     final navigator = Navigator.of(context);
     navigator.push(
       MaterialPageRoute(
-        builder: (context) => OtherStoresCargoForm(
+        builder: (context) => OtherStoresCargoPage(
           label: const Localized('Other stores').v,
           cargo: cargo,
           fetchData: true,
