@@ -9,7 +9,7 @@ final class HoldCargoShiftableRecord implements ValueRecord<bool> {
   final ApiAddress _apiAddress;
   final String? _authToken;
   final String _dbName;
-  final int _id;
+  final int? _id;
   final bool Function(String) _toValue;
   ///
   /// Create [HoldCargoShiftableRecord] that giving access
@@ -24,8 +24,8 @@ final class HoldCargoShiftableRecord implements ValueRecord<bool> {
   const HoldCargoShiftableRecord({
     required ApiAddress apiAddress,
     required String dbName,
-    required int id,
     String? authToken,
+    int? id,
     required bool Function(String value) toValue,
   })  : _apiAddress = apiAddress,
         _dbName = dbName,

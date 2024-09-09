@@ -13,13 +13,13 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
   final ValueRecord<bool> Function(
     Cargo data,
     bool Function(String text) toValue,
-  )? _buildRecord;
+  ) _buildRecord;
   ///
   const HoldCargoShiftableColumn({
-    ValueRecord<bool> Function(
+    required ValueRecord<bool> Function(
       Cargo,
       bool Function(String),
-    )? buildRecord,
+    ) buildRecord,
   }) : _buildRecord = buildRecord;
   //
   @override
@@ -83,24 +83,28 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
     Cargo cargo,
     bool Function(String text) toValue,
   ) =>
-      _buildRecord?.call(cargo, toValue);
+      _buildRecord.call(cargo, toValue);
   //
   @override
   Widget? buildCell(context, cargo, updateValue) => _CargoShiftableWidget(
         isShiftable: cargo.shiftable,
         color: Theme.of(context).colorScheme.primary,
-        onUpdate: (value) => _buildRecord
-            ?.call(cargo, parseToValue)
+        onUpdate: (value) => _buildRecord(cargo, parseToValue)
             .persist(value.toString())
             .then(
               (result) => switch (result) {
-                Ok(:final value) => updateValue(value.toString()),
-                Err(:final error) =>
-                  const Log('HoldCargoShiftableColumn').error(error.message),
+                Ok(:final value) => () {
+                    updateValue(value.toString());
+                    return const Ok<void, Failure>(null);
+                  }(),
+                Err(:final error) => Err<void, Failure>(error),
               },
             )
             .onError(
-              (error, _) => const Log('HoldCargoShiftableColumn').error(error),
+              (error, stackTrace) => Err(Failure(
+                message: '$error',
+                stackTrace: stackTrace,
+              )),
             ),
       );
 }
@@ -108,12 +112,12 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
 class _CargoShiftableWidget extends StatelessWidget {
   final bool _isShiftable;
   final Color _color;
-  final void Function(bool value) _onUpdate;
+  final Future<ResultF<void>> Function(bool value) _onUpdate;
   ///
   const _CargoShiftableWidget({
     required bool isShiftable,
     required Color color,
-    required void Function(bool value) onUpdate,
+    required Future<ResultF<void>> Function(bool value) onUpdate,
   })  : _isShiftable = isShiftable,
         _color = color,
         _onUpdate = onUpdate;
@@ -131,10 +135,29 @@ class _CargoShiftableWidget extends StatelessWidget {
           value: _isShiftable,
           onChanged: (value) {
             if (value == null) return;
-            _onUpdate(value);
+            _onUpdate(value)
+                .then((result) => switch (result) {
+                      Ok() => const Log('_CargoShiftableWidget | _onUpdate')
+                          .info('value updated'),
+                      Err(:final error) => _showErrorMessage(
+                          '${error.message}',
+                          context,
+                        )
+                    })
+                .onError(
+                  (error, _) => _showErrorMessage(
+                    '$error',
+                    context,
+                  ),
+                );
           },
         ),
       ),
     );
+  }
+  //
+  void _showErrorMessage(String message, BuildContext context) {
+    if (!context.mounted) return;
+    BottomMessage.error(message: message).show(context);
   }
 }

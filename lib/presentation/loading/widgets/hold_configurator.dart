@@ -7,15 +7,17 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo_stowage_factor_record.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_hold_cargos.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
 import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
 import 'package:sss_computing_client/core/models/figure/path_projections.dart';
-import 'package:sss_computing_client/core/models/record/cargo_level_record.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo_level_record.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
-import 'package:sss_computing_client/core/models/record/hold_cargo_shiftable_record.dart';
+import 'package:sss_computing_client/core/models/cargo/hold_cargo_shiftable_record.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
+import 'package:sss_computing_client/presentation/bulkheads/bulkheads_page.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_lcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_level_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_name_column.dart';
@@ -31,6 +33,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.
 class HoldConfigurator extends StatefulWidget {
   final List<Cargo> _cargos;
   final Stream<DsDataPoint<bool>> _appRefreshStream;
+  final void Function() _fireRefreshEvent;
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
@@ -39,11 +42,13 @@ class HoldConfigurator extends StatefulWidget {
     super.key,
     required List<Cargo> cargos,
     required Stream<DsDataPoint<bool>> appRefreshStream,
+    required void Function() fireRefreshEvent,
     required ApiAddress apiAddress,
     required String dbName,
     required String? authToken,
   })  : _cargos = cargos,
         _appRefreshStream = appRefreshStream,
+        _fireRefreshEvent = fireRefreshEvent,
         _apiAddress = apiAddress,
         _dbName = dbName,
         _authToken = authToken;
@@ -63,6 +68,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
   @override
   Widget build(BuildContext context) {
     final blockPadding = const Setting('blockPadding').toDouble;
+    final navigator = Navigator.of(context);
     return Padding(
       padding: EdgeInsets.all(blockPadding),
       child: Column(
@@ -124,6 +130,22 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
             ),
           ),
           SizedBox(height: blockPadding),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FilledButton.icon(
+                onPressed: () => navigator.push(MaterialPageRoute(
+                  builder: (context) => BulkheadsPage(
+                    onClose: widget._fireRefreshEvent,
+                  ),
+                  maintainState: false,
+                )),
+                icon: const Icon(Icons.settings),
+                label: Text(const Localized('Grain bulkheads').v),
+              ),
+            ],
+          ),
+          SizedBox(height: blockPadding),
           Expanded(
             child: EditingTable(
               selectedRow: _selectedCargo,
@@ -178,7 +200,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                 ),
                 CargoStowageFactorColumn(
                   useDefaultEditing: true,
-                  buildRecord: (cargo, toValue) => FieldRecord<double?>(
+                  buildRecord: (cargo, toValue) => CargoStowageFactorRecord(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
                       host: widget._apiAddress.host,
@@ -186,8 +208,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                     ),
                     authToken: widget._authToken,
                     tableName: 'hold_compartment',
-                    fieldName: 'stowage_factor',
-                    filter: {'id': cargo.id},
+                    id: cargo.id,
                     toValue: toValue,
                   ),
                 ),
@@ -201,7 +222,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                     ),
                     authToken: widget._authToken,
                     tableName: 'hold_compartment',
-                    filter: {'id': cargo.id},
+                    id: cargo.id,
                     toValue: toValue,
                   ),
                 ),
@@ -222,7 +243,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                       port: widget._apiAddress.port,
                     ),
                     authToken: widget._authToken,
-                    id: cargo.id!,
+                    id: cargo.id,
                     toValue: toValue,
                   ),
                 ),
