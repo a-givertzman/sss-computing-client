@@ -4,7 +4,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 ///
-/// Model that holds data for [TextFormField] or [TextField].
+/// Object that holds data for [TextFormField] or [TextField].
 class FieldData<T> {
   final String id;
   final String label;
@@ -16,11 +16,16 @@ class FieldData<T> {
   final Validator? _validator;
   bool _isSynced;
   ///
-  /// Create object that holds data for [TextFormField] or [TextField].
-  ///
-  ///   - [label] - text with which the target field will be labeled.
-  ///   - [initialValue] - initial content of the target field. Also will be set to [value].
-  ///   - [record] - database field from which we can read or to which we can write data.
+  /// Creates object that holds data for [TextFormField] or [TextField].
+  ///   - `id` - [FieldData] unique identifier.
+  ///   - `label` - text with which the target field will be labeled.
+  ///   - `initialValue` - initial content of the target field. Also will be set to [value].
+  ///   - `toValue` - function for parsing string representation of
+  /// field into value of desired type.
+  ///   - `toText` - function for converting value to it string representation.
+  ///   - `record` - [ValueRecord] from which we can read or to which we can write data.
+  ///   - `validator` - [Validator] for the [FieldData] value.
+  ///   - `isSynced` -  indicated whether content of the [FieldData] synced with source or not.
   FieldData({
     required this.id,
     required this.label,
