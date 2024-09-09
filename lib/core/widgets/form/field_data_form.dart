@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
@@ -90,39 +89,6 @@ class _FieldDataFormState extends State<FieldDataForm> {
     );
   }
   ///
-  void _showSnackBarMessage(BuildContext context, String message, Icon icon) {
-    final theme = Theme.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: theme.cardColor,
-        content: Row(
-          children: [
-            icon,
-            SizedBox(width: const Setting('padding').toDouble),
-            Text(
-              message,
-              style: TextStyle(
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  ///
-  void _showErrorMessage(BuildContext context, String message) {
-    if (!context.mounted) return;
-    _showSnackBarMessage(
-      context,
-      message,
-      Icon(
-        Icons.warning_amber_rounded,
-        color: Theme.of(context).stateColors.error,
-      ),
-    );
-  }
-  ///
   void _updateFieldsWithNewData(List<FieldData> newFields) {
     final newValues = {
       for (final field in newFields) field.id: field.controller.text,
@@ -147,13 +113,19 @@ class _FieldDataFormState extends State<FieldDataForm> {
           _updateFieldsWithNewData(newFields);
           _formKey.currentState?.save();
         case Err(:final error):
-          _showErrorMessage(context, error.message);
+          const Log('FieldDataForm | _trySaveData').error(error);
+          _showErrorMessage(error.message);
       }
     }
     setState(() {
       _isSaving = false;
     });
   }
-  ///
+  //
   bool _isFormValid() => _formKey.currentState?.validate() ?? false;
+  //
+  void _showErrorMessage(String message) {
+    if (!mounted) return;
+    BottomMessage.error(message: message).show(context);
+  }
 }
