@@ -8,12 +8,14 @@ import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
+
 ///
 class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
   final ValueRecord<bool> Function(
     Cargo data,
     bool Function(String text) toValue,
   ) _buildRecord;
+
   ///
   const HoldCargoShiftableColumn({
     required ValueRecord<bool> Function(
@@ -108,11 +110,13 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
             ),
       );
 }
+
 ///
 class _CargoShiftableWidget extends StatelessWidget {
   final bool _isShiftable;
   final Color _color;
   final Future<ResultF<void>> Function(bool value) _onUpdate;
+
   ///
   const _CargoShiftableWidget({
     required bool isShiftable,
@@ -133,30 +137,36 @@ class _CargoShiftableWidget extends StatelessWidget {
           activeColor: _color,
           splashRadius: 14.0,
           value: _isShiftable,
-          onChanged: (value) {
-            if (value == null) return;
-            _onUpdate(value)
-                .then((result) => switch (result) {
-                      Ok() => const Log('_CargoShiftableWidget | _onUpdate')
-                          .info('value updated'),
-                      Err(:final error) => _showErrorMessage(
-                          '${error.message}',
-                          context,
-                        )
-                    })
-                .onError(
-                  (error, _) => _showErrorMessage(
-                    '$error',
-                    context,
-                  ),
-                );
-          },
+          onChanged: (value) => _updateValue(context, value),
         ),
       ),
     );
   }
+
   //
-  void _showErrorMessage(String message, BuildContext context) {
+  // ignore: use_build_context_synchronously
+  void _updateValue(BuildContext context, bool? value) {
+    if (value == null) return;
+    _onUpdate(value)
+        .then((result) => switch (result) {
+              Ok() => const Log('_CargoShiftableWidget | _onUpdate')
+                  .info('value updated'),
+              Err(:final error) => _showErrorMessage(
+                  context,
+                  '${error.message}',
+                )
+            })
+        .onError(
+          (error, _) => _showErrorMessage(
+            context,
+            '$error',
+          ),
+        );
+  }
+
+  //
+  // ignore: use_build_context_synchronously
+  void _showErrorMessage(BuildContext context, String message) {
     if (!context.mounted) return;
     BottomMessage.error(message: message).show(context);
   }
