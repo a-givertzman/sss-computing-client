@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 ///
+/// Button to start asynchronous action.
 class AsyncActionButton extends StatefulWidget {
   final double? _height;
   final double? _width;
@@ -8,6 +9,12 @@ class AsyncActionButton extends StatefulWidget {
   final double _labelLineHeight;
   final Future<void> Function()? _onPressed;
   ///
+  /// Creates button to start asynchronous action.
+  ///
+  /// `onPressed` callback starts asynchronous action.
+  /// `label` is used as button text.
+  /// `width` and `height` determines button size.
+  /// `labelLineHeight` determines lineHeight for label text.
   const AsyncActionButton({
     super.key,
     required Future<void> Function()? onPressed,
@@ -20,27 +27,17 @@ class AsyncActionButton extends StatefulWidget {
         _height = height,
         _label = label,
         _onPressed = onPressed;
+  //
   @override
   State<AsyncActionButton> createState() => _AsyncActionButtonState();
 }
+///
 class _AsyncActionButtonState extends State<AsyncActionButton> {
   late bool _isInProgress;
   @override
   void initState() {
     _isInProgress = false;
     super.initState();
-  }
-  void _onPressed() {
-    setState(() {
-      _isInProgress = true;
-    });
-    widget._onPressed?.call().then((_) {
-      if (mounted) {
-        setState(() {
-          _isInProgress = false;
-        });
-      }
-    });
   }
   //
   @override
@@ -73,5 +70,24 @@ class _AsyncActionButtonState extends State<AsyncActionButton> {
         ),
       ),
     );
+  }
+  //
+  void _onPressed() {
+    setState(() {
+      _isInProgress = true;
+    });
+    widget._onPressed?.call().then((_) {
+      if (mounted) {
+        setState(() {
+          _isInProgress = false;
+        });
+      }
+    }).onError((_, __) {
+      if (mounted) {
+        setState(() {
+          _isInProgress = false;
+        });
+      }
+    });
   }
 }

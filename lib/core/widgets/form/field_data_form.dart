@@ -7,21 +7,30 @@ import 'package:sss_computing_client/core/widgets/form/async_action_button.dart'
 import 'package:sss_computing_client/core/widgets/form/compund_field_data_validation.dart';
 import 'package:sss_computing_client/core/widgets/form/form_field_group.dart';
 ///
+/// Form that is constructed from list of [FieldData].
 class FieldDataForm extends StatefulWidget {
   final String _label;
-  final List<FieldData> _fieldsData;
+  final List<FieldData> _fieldDatas;
   final List<CompoundFieldDataValidation> _compundValidations;
   final Future<ResultF<List<FieldData>>> Function(List<FieldData>)? _onSave;
   ///
+  /// Creates form that is constructed from list of [FieldData].
+  ///
+  ///   `label` - title for form.
+  ///   `fieldDatas` - list of field datas from which form is built.
+  ///
+  ///   `compundValidations` used for validation
+  /// based on values ​​of different fields.
+  ///
+  ///   `onSave` callback is called when new field datas is saved.
   const FieldDataForm({
     super.key,
     required String label,
-    required List<FieldData> fieldData,
+    required List<FieldData> fieldDatas,
     List<CompoundFieldDataValidation> compundValidations = const [],
     Future<ResultF<List<FieldData>>> Function(List<FieldData>)? onSave,
-    void Function()? onClose,
   })  : _label = label,
-        _fieldsData = fieldData,
+        _fieldDatas = fieldDatas,
         _compundValidations = compundValidations,
         _onSave = onSave;
   //
@@ -31,20 +40,18 @@ class FieldDataForm extends StatefulWidget {
 ///
 class _FieldDataFormState extends State<FieldDataForm> {
   final _formKey = GlobalKey<FormState>();
-  late List<FieldData> _fieldsData;
   late bool _isSaving;
   //
   @override
   void initState() {
     _isSaving = false;
-    _fieldsData = widget._fieldsData;
     super.initState();
   }
   //
   @override
   Widget build(BuildContext context) {
     final isAnyFieldChanged =
-        _fieldsData.where((data) => data.isChanged).isNotEmpty;
+        widget._fieldDatas.where((data) => data.isChanged).isNotEmpty;
     const buttonHeight = 40.0;
     return Form(
       key: _formKey,
@@ -56,8 +63,8 @@ class _FieldDataFormState extends State<FieldDataForm> {
             child: Stack(
               children: [
                 FormFieldGroup(
-                  groupName: widget._label,
-                  fieldsData: _fieldsData,
+                  name: widget._label,
+                  fieldDatas: widget._fieldDatas,
                   compoundValidationCases: widget._compundValidations,
                   onCancelled: () => setState(() {
                     return;
@@ -93,13 +100,15 @@ class _FieldDataFormState extends State<FieldDataForm> {
     final newValues = {
       for (final field in newFields) field.id: field.controller.text,
     };
-    _fieldsData
+    widget._fieldDatas
         .where((field) => newValues.containsKey(field.id))
-        .forEach((field) {
-      final newValue = newValues[field.id]!;
-      field.refreshWith(newValue);
-      field.controller.text = newValue;
-    });
+        .forEach(
+      (field) {
+        final newValue = newValues[field.id]!;
+        field.refreshWith(newValue);
+        field.controller.text = newValue;
+      },
+    );
   }
   ///
   Future<void> _trySaveData(BuildContext context) async {
@@ -108,7 +117,7 @@ class _FieldDataFormState extends State<FieldDataForm> {
     });
     final onSave = widget._onSave;
     if (onSave != null) {
-      switch (await onSave(_fieldsData)) {
+      switch (await onSave(widget._fieldDatas)) {
         case Ok(value: final newFields):
           _updateFieldsWithNewData(newFields);
           _formKey.currentState?.save();

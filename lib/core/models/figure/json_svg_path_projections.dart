@@ -4,9 +4,11 @@ import 'package:path_drawing/path_drawing.dart';
 import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 ///
+/// [PathProjections] that parse itself from json.
 class JsonSvgPathProjections implements PathProjections {
   final Map<String, dynamic> _json;
   ///
+  /// Creates [PathProjections] that parse itself from provided json.
   const JsonSvgPathProjections({
     required Map<String, dynamic> json,
   }) : _json = json;
@@ -31,6 +33,7 @@ class JsonSvgPathProjections implements PathProjections {
         },
     };
   }
+  //
   Path _parseSvgPathData(String svg) {
     return svg
         .split(' z ')

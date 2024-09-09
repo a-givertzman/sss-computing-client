@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:sss_computing_client/core/widgets/tabs/tab_setting.dart';
 ///
+/// Tab view that construsted based on list of [TabSetting].
 class TabViewWidget extends StatelessWidget {
-  final List<TabSetting> _tabsSettings;
+  final List<TabSetting> _tabSettings;
   final bool _isScrollable;
   final Color? _indicatorColor;
   final Color? _dividerColor;
   final ScrollPhysics? _physics;
   ///
+  /// Creates tab view that construsted based on list of provided [TabSetting].
+  ///
+  ///   `tabsSettings` used to construct [TabBarView] and [TabBar].
+  ///   `isScrollable`, `indicatorColor`, `dividerColor` and `physics`
+  /// used as parameters of [TabBar].
   const TabViewWidget({
     super.key,
-    List<TabSetting> tabsSettings = const [],
+    List<TabSetting> tabSettings = const [],
     bool isScrollable = false,
     Color? indicatorColor,
     Color? dividerColor,
     ScrollPhysics? physics,
-  })  : _tabsSettings = tabsSettings,
+  })  : _tabSettings = tabSettings,
         _isScrollable = isScrollable,
         _indicatorColor = indicatorColor,
         _dividerColor = dividerColor,
@@ -24,7 +30,7 @@ class TabViewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final tabsLength = _tabsSettings.length;
+    final tabsLength = _tabSettings.length;
     return DefaultTabController(
       length: tabsLength,
       child: Column(
@@ -37,8 +43,8 @@ class TabViewWidget extends StatelessWidget {
             tabs: List.generate(
               tabsLength,
               (index) => Tab(
-                icon: _tabsSettings[index].icon,
-                text: _tabsSettings[index].label,
+                icon: _tabSettings[index].icon,
+                text: _tabSettings[index].label,
               ),
             ),
           ),
@@ -47,7 +53,7 @@ class TabViewWidget extends StatelessWidget {
               physics: _physics,
               children: List.generate(
                 tabsLength,
-                (index) => _tabsSettings[index].content,
+                (index) => _tabSettings[index].content,
               ),
             ),
           ),

@@ -2,9 +2,9 @@ import 'package:sss_computing_client/core/models/draft/draft.dart';
 ///
 /// [Draft] that parses itself from json map.
 class JsonDraft implements Draft {
-  /// Json representaion of the [Criterion].
   final Map<String, dynamic> _json;
-  /// Creates [Criterion] that parses itself from json map.
+  ///
+  /// Creates [Draft] that parses itself from provided json.
   JsonDraft({
     required Map<String, dynamic> json,
   }) : _json = json;

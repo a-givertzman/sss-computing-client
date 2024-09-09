@@ -1,8 +1,10 @@
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead_place.dart';
 ///
+/// [BulkheadPlace] that parses itself from json map.
 class JsonBulkheadPlace implements BulkheadPlace {
   final Map<String, dynamic> _json;
   ///
+  /// Creates [BulkheadPlace] that parses itself from provided `json` map.
   const JsonBulkheadPlace({
     required Map<String, dynamic> json,
   }) : _json = json;

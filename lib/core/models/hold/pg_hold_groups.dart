@@ -58,12 +58,10 @@ class PgHoldGroups implements HoldGroups {
         .then<Result<List<HoldGroup>, Failure<String>>>(
           (result) => switch (result) {
             Ok(value: final holdGroups) => Ok(holdGroups),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
+            Err(:final error) => Err(Failure(
+                message: '$error',
+                stackTrace: StackTrace.current,
+              )),
           },
         )
         .onError(
@@ -109,12 +107,10 @@ class PgHoldGroups implements HoldGroups {
         .then<Result<HoldGroup, Failure<String>>>(
           (result) => switch (result) {
             Ok(value: final holdGroups) => Ok(holdGroups.first),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
+            Err(:final error) => Err(Failure(
+                message: '$error',
+                stackTrace: StackTrace.current,
+              )),
           },
         )
         .onError(

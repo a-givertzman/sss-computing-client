@@ -42,7 +42,7 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
     return TabViewWidget(
       isScrollable: true,
       physics: const NeverScrollableScrollPhysics(),
-      tabsSettings: [
+      tabSettings: [
         TabSetting(
           label: const Localized('Ballast tank').v,
           content: FutureBuilderWidget(

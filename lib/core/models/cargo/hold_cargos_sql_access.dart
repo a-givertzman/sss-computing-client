@@ -1,16 +1,25 @@
 import 'dart:convert';
 import 'package:ext_rw/ext_rw.dart';
+import 'package:hmi_core/hmi_core.dart' hide Result;
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
 ///
+/// Object that provides [SqlAccess] to hold compartment cargos.
 class HoldCargosSqlAccess {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
   final Map<String, dynamic>? _filter;
   ///
+  /// Creates object that provides [SqlAccess] to hold compartment cargos.
+  ///
+  ///   - `dbName` - name of the database;
+  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
+  ///   - `authToken` - string  authentication token for accessing server;
+  ///   - `filter` - Map with field name as key and field value as value
+  /// for filtering records of table based on its fields values.
   const HoldCargosSqlAccess({
     required String dbName,
     required ApiAddress apiAddress,
@@ -21,6 +30,7 @@ class HoldCargosSqlAccess {
         _authToken = authToken,
         _filter = filter;
   ///
+  /// Retrieves and returns list of hold compartment [Cargo].
   Future<ResultF<List<Cargo>>> fetch() {
     final filterQuery = _filter?.entries
         .map(
@@ -66,7 +76,7 @@ class HoldCargosSqlAccess {
                 hc.mass_shift_y AS "tcg",
                 hc.mass_shift_z AS "vcg",
                 cc.key AS "type",
-                hsp.svg_paths::TEXT AS "path",
+                hsp.svg_paths::TEXT AS "pathList",
                 CASE
                     WHEN cc.matter_type = 'bulk' THEN TRUE
                     ELSE FALSE
@@ -87,7 +97,27 @@ class HoldCargosSqlAccess {
                 hc.id ASC;
             """,
       ),
-      entryBuilder: (row) => JsonCargo(json: {
+      entryBuilder: _buildCargoEntry,
+    )
+        .fetch()
+        .then<Result<List<Cargo>, Failure<String>>>(
+          (result) => switch (result) {
+            Ok(value: final cargos) => Ok(cargos),
+            Err(:final error) => Err(Failure(
+                message: '$error',
+                stackTrace: StackTrace.current,
+              )),
+          },
+        )
+        .onError(
+          (error, stackTrace) => Err(Failure(
+            message: '$error',
+            stackTrace: stackTrace,
+          )),
+        );
+  }
+  //
+  JsonCargo _buildCargoEntry(Map<String, dynamic> row) => JsonCargo(json: {
         'shipId': row['shipId'] as int,
         'projectId': row['projectId'] as int?,
         'id': row['id'] as int?,
@@ -104,13 +134,12 @@ class HoldCargosSqlAccess {
         'tcg': row['tcg'] as double?,
         'type': row['type'] as String,
         'shiftable': row['shiftable'] as bool,
-        'path': switch (row['path']) {
+        'path': switch (row['pathList']) {
           String pathList => _formatPathList(pathList),
           _ => null,
         },
-      }),
-    ).fetch();
-  }
+      });
+  //
   String _formatPathList(String pathList) => json
       .decode(pathList)
       .map(

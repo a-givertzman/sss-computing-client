@@ -2,9 +2,8 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
-/// TODO: rewrite doc
 ///
-/// Gives access to field of record stored in database.
+/// Gives access to field of cargo stowage factor record stored in database.
 final class CargoStowageFactorRecord implements ValueRecord<double?> {
   final ApiAddress _apiAddress;
   final String? _authToken;
@@ -14,10 +13,11 @@ final class CargoStowageFactorRecord implements ValueRecord<double?> {
   final double? Function(String) _toValue;
   ///
   /// Create [CargoStowageFactorRecord] that giving access
-  /// to field of record stored in database.
+  /// to field of cargo stowage factor record stored in database.
   ///
   /// Value can be obtained using:
-  ///   - `dbName` - name of the database;
+  ///   - `dbName` - name of database;
+  ///   - `tableName` - name of database table;
   ///   - `apiAddress` - [ApiAddress] of server that interact with database;
   ///   - `authToken` - string  authentication token for accessing server;
   ///   - `toValue` - function for parsing string representation of
@@ -37,9 +37,6 @@ final class CargoStowageFactorRecord implements ValueRecord<double?> {
         _toValue = toValue;
   ///
   /// Returns result of field fetching.
-  ///
-  /// `filter` - Map with field name as key and field value as value
-  /// for filtering records of table based on its fields values.
   @override
   Future<ResultF<double?>> fetch() async {
     final sqlAccess = SqlAccess(
@@ -60,12 +57,10 @@ final class CargoStowageFactorRecord implements ValueRecord<double?> {
         .then<ResultF<double?>>(
           (result) => switch (result) {
             Ok(:final value) => Ok(_toValue(value.first)),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
+            Err(:final error) => Err(Failure(
+                message: '$error',
+                stackTrace: StackTrace.current,
+              )),
           },
         )
         .onError(
@@ -77,9 +72,6 @@ final class CargoStowageFactorRecord implements ValueRecord<double?> {
   }
   ///
   /// Returns result of field persisting.
-  ///
-  /// `filter` - Map with field name as key and field value as value
-  /// for filtering records of table based on its fields values.
   @override
   Future<ResultF<double?>> persist(String value) async {
     final sqlAccess = SqlAccess(
@@ -101,12 +93,10 @@ final class CargoStowageFactorRecord implements ValueRecord<double?> {
         .then<ResultF<double?>>(
           (result) => switch (result) {
             Ok(:final value) => Ok(_toValue(value.first)),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
+            Err(:final error) => Err(Failure(
+                message: '$error',
+                stackTrace: StackTrace.current,
+              )),
           },
         )
         .onError(

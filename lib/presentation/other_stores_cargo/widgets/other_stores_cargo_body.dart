@@ -71,7 +71,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
           child: FieldDataForm(
             label: const Localized('Cargo parameters').v,
             onSave: widget._onSave,
-            fieldData: _mapColumnsToFields(
+            fieldDatas: _mapColumnsToFields(
               cargo: widget._cargo,
               fetch: widget._fetchData,
               columns: [

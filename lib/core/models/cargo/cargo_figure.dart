@@ -8,17 +8,19 @@ import 'package:sss_computing_client/core/models/figure/path_projections_figure.
 import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 import 'package:vector_math/vector_math_64.dart';
 ///
-/// Extract [Figure] from [Cargo]
+/// Object that extracts [Figure] from [Cargo]
 class CargoFigure {
-  final Cargo cargo;
+  final Cargo _cargo;
   ///
-  /// Creates object that extract [Figure] from [Cargo]
-  const CargoFigure({required this.cargo});
+  /// Creates object that extracts [Figure] from [Cargo]
+  const CargoFigure({
+    required Cargo cargo,
+  }) : _cargo = cargo;
   ///
-  /// Extract [Cargo] figure
+  /// Returns [Figure] for cargo.
   Figure figure() {
-    final color = cargo.type.color;
-    return switch (cargo.paths) {
+    final color = _cargo.type.color;
+    return switch (_cargo.paths) {
       final PathProjections projections => PathProjectionsFigure(
           paints: [
             Paint()
@@ -41,14 +43,14 @@ class CargoFigure {
               ..style = PaintingStyle.fill,
           ],
           figureOne: LineSegment3DFigure(
-            start: Vector3(cargo.x1, cargo.tcg ?? 0.0, cargo.vcg ?? 0.0),
-            end: Vector3(cargo.x2, cargo.tcg ?? 0.0, cargo.vcg ?? 0.0),
+            start: Vector3(_cargo.x1, _cargo.tcg ?? 0.0, _cargo.vcg ?? 0.0),
+            end: Vector3(_cargo.x2, _cargo.tcg ?? 0.0, _cargo.vcg ?? 0.0),
           ),
           figureTwo: RectangularCuboidFigure.fromCenter(
             center: Vector3(
-              cargo.lcg ?? 0.0,
-              cargo.tcg ?? 0.0,
-              cargo.vcg ?? 0.0,
+              _cargo.lcg ?? 0.0,
+              _cargo.tcg ?? 0.0,
+              _cargo.vcg ?? 0.0,
             ),
             length: 1.0,
             width: 1.0,

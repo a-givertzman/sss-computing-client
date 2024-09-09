@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 ///
+/// Button to run cancel action.
 class CancellationButton extends StatelessWidget {
   final double? _height;
   final double? _width;
@@ -8,6 +9,12 @@ class CancellationButton extends StatelessWidget {
   final double _labelLineHeught;
   final void Function()? _onPressed;
   ///
+  /// Creates button to run cancel action.
+  ///
+  /// `onPressed` callback starts cancel action.
+  /// `label` is used as button text.
+  /// `width` and `height` determines button size.
+  /// `labelLineHeight` determines lineHeight for label text.
   const CancellationButton({
     super.key,
     required void Function()? onPressed,

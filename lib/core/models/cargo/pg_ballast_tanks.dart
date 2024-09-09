@@ -34,12 +34,10 @@ class PgBallastTanks implements Cargos {
         .then<Result<List<Cargo>, Failure<String>>>(
           (result) => switch (result) {
             Ok(value: final cargos) => Ok(cargos),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
+            Err(:final error) => Err(Failure(
+                message: '$error',
+                stackTrace: StackTrace.current,
+              )),
           },
         )
         .onError(
@@ -62,12 +60,10 @@ class PgBallastTanks implements Cargos {
         .then<Result<Cargo, Failure<String>>>(
           (result) => switch (result) {
             Ok(value: final cargos) => Ok(cargos.first),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
+            Err(:final error) => Err(Failure(
+                message: '$error',
+                stackTrace: StackTrace.current,
+              )),
           },
         )
         .onError(

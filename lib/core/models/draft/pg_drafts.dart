@@ -61,12 +61,10 @@ class PgDrafts implements Drafts {
         .then<Result<List<Draft>, Failure<String>>>(
           (result) => switch (result) {
             Ok(value: final drafts) => Ok(drafts),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
+            Err(:final error) => Err(Failure(
+                message: '$error',
+                stackTrace: StackTrace.current,
+              )),
           },
         )
         .onError(

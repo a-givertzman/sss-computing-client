@@ -1,3 +1,4 @@
+///
 /// Common data for correspodnig [HoldGroup]
 abstract interface class HoldGroup {
   ///

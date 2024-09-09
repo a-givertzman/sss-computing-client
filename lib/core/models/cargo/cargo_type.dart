@@ -21,7 +21,7 @@ enum CargoType {
   /// Color of cargo
   final Color color;
   ///
-  /// Unique String key for cargo type
+  /// Unique String identifier for cargo type
   final String key;
   ///
   const CargoType(this.label, this.color, this.key);

@@ -18,8 +18,8 @@ final class FieldRecord<T> implements ValueRecord<T> {
   ///
   /// Value can be obtained using:
   ///   - `dbName` - name of the database;
-  ///   - `tableName` - name of the database table;
-  ///   - `fieldName` - name of the table field (column);
+  ///   - `tableName` - name of database table;
+  ///   - `fieldName` - name of table field (column);
   ///   - `apiAddress` - [ApiAddress] of server that interact with database;
   ///   - `authToken` - string  authentication token for accessing server;
   ///   - `toValue` - function for parsing string representation of

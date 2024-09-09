@@ -1,14 +1,23 @@
 import 'package:ext_rw/ext_rw.dart';
+import 'package:hmi_core/hmi_core.dart' hide Result;
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 ///
+/// Object that provides [SqlAccess] to compartment cargos.
 class CompartmentCargosSqlAccess {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
   final Map<String, dynamic>? _filter;
   ///
+  /// Creates object that provides [SqlAccess] to compartment cargos.
+  ///
+  ///   - `dbName` - name of the database;
+  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
+  ///   - `authToken` - string  authentication token for accessing server;
+  ///   - `filter` - Map with field name as key and field value as value
+  /// for filtering records of table based on its fields values.
   const CompartmentCargosSqlAccess({
     required String dbName,
     required ApiAddress apiAddress,
@@ -19,6 +28,7 @@ class CompartmentCargosSqlAccess {
         _authToken = authToken,
         _filter = filter;
   ///
+  /// Retrieves and returns list of compartment [Cargo].
   Future<ResultF<List<Cargo>>> fetch() {
     final filterQuery = _filter?.entries
         .map(
@@ -71,7 +81,27 @@ class CompartmentCargosSqlAccess {
               name;
             """,
       ),
-      entryBuilder: (row) => JsonCargo(json: {
+      entryBuilder: _buildCargoEntry,
+    )
+        .fetch()
+        .then<Result<List<Cargo>, Failure<String>>>(
+          (result) => switch (result) {
+            Ok(value: final cargos) => Ok(cargos),
+            Err(:final error) => Err(Failure(
+                message: '$error',
+                stackTrace: StackTrace.current,
+              )),
+          },
+        )
+        .onError(
+          (error, stackTrace) => Err(Failure(
+            message: '$error',
+            stackTrace: stackTrace,
+          )),
+        );
+  }
+  //
+  JsonCargo _buildCargoEntry(Map<String, dynamic> row) => JsonCargo(json: {
         'shipId': row['shipId'] as int,
         'projectId': row['projectId'] as int?,
         'id': row['id'] as int?,
@@ -94,7 +124,5 @@ class CompartmentCargosSqlAccess {
         'type': row['type'] as String,
         'shiftable': row['shiftable'] as bool,
         'path': row['path'] as String?,
-      }),
-    ).fetch();
-  }
+      });
 }
