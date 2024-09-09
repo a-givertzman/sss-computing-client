@@ -2,7 +2,6 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
-/// TODO: rewrite doc
 ///
 /// Gives access to field of record stored in database.
 final class FieldRecord<T> implements ValueRecord<T> {
@@ -25,6 +24,8 @@ final class FieldRecord<T> implements ValueRecord<T> {
   ///   - `authToken` - string  authentication token for accessing server;
   ///   - `toValue` - function for parsing string representation of
   /// field into value of desired type.
+  ///   - `filter` - Map with field name as key and field value as value
+  /// for filtering records of table based on its fields values.
   const FieldRecord({
     required String dbName,
     required String tableName,
@@ -42,9 +43,6 @@ final class FieldRecord<T> implements ValueRecord<T> {
         _filter = filter;
   ///
   /// Returns result of field fetching.
-  ///
-  ///   - `filter` - Map with field name as key and field value as value
-  /// for filtering records of table based on its fields values.
   @override
   Future<ResultF<T>> fetch() async {
     final filterQuery = _filter.entries
@@ -90,9 +88,6 @@ final class FieldRecord<T> implements ValueRecord<T> {
   }
   ///
   /// Returns result of field persisting.
-  ///
-  ///   - `filter` - Map with field name as key and field value as value
-  /// for filtering records of table based on its fields values.
   @override
   Future<ResultF<T>> persist(String value) async {
     final filterQuery = _filter.entries
