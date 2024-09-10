@@ -80,7 +80,7 @@ class TableView<T> extends StatelessWidget {
         decoration: BoxDecoration(
           border: outerBorder,
         ),
-        columnDividerColor: tableBorderColor,
+        columnDividerColor: theme.colorScheme.surface.withOpacity(0.25),
         columnDividerThickness: _tableBorderThickness,
         headerCell: HeaderCellThemeData(
           sortIconColors: SortIconColors(
@@ -92,10 +92,10 @@ class TableView<T> extends StatelessWidget {
         header: HeaderThemeData(
           bottomBorderColor: headerBorderColor,
           bottomBorderHeight: _headerBorderThickness,
-          columnDividerColor: tableBorderColor,
+          columnDividerColor: _tableBorderColor,
         ),
         row: RowThemeData(
-          dividerColor: Colors.transparent,
+          dividerColor: theme.colorScheme.surface.withOpacity(0.25),
           dividerThickness: 0.0,
           color: RowThemeData.zebraColor(
             evenColor: Colors.black.withOpacity(0.125),
@@ -118,7 +118,7 @@ class TableView<T> extends StatelessWidget {
           pinnedHorizontalBorderColor: Colors.transparent,
           unpinnedHorizontalColor: scrollbarBackgroundColor,
           unpinnedHorizontalBorderColor: Colors.transparent,
-          columnDividerColor: tableBorderColor,
+          columnDividerColor: theme.colorScheme.surface.withOpacity(0.25),
           thumbColor: thumbColor,
         ),
         topCornerColor: Colors.transparent,
