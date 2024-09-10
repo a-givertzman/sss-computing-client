@@ -16,6 +16,7 @@ class CancelableField extends StatefulWidget {
   final String? _sendError;
   final void Function(String)? _onChanged;
   final void Function(String)? _onCanceled;
+  final void Function(String)? _onSubmitted;
   final Future<ResultF<String>> Function(String?)? _onSaved;
   final Validator? _validator;
   ///
@@ -29,6 +30,7 @@ class CancelableField extends StatefulWidget {
     FieldType fieldType = FieldType.string,
     void Function(String)? onChanged,
     void Function(String)? onCanceled,
+    void Function(String)? onSubmitted,
     Future<ResultF<String>> Function(String?)? onSaved,
     Validator? validator,
   })  : _controller = controller,
@@ -38,6 +40,7 @@ class CancelableField extends StatefulWidget {
         _initialValue = initialValue,
         _onChanged = onChanged,
         _onCanceled = onCanceled,
+        _onSubmitted = onSubmitted,
         _onSaved = onSaved,
         _validator = validator,
         _fieldType = fieldType;
@@ -142,6 +145,7 @@ class _CancelableFieldState extends State<CancelableField> {
         return message != null ? Localized(message).v : null;
       },
       controller: _controller,
+      onFieldSubmitted: widget._onSubmitted,
       onChanged: (value) {
         setState(() {
           _onChanged?.call(value);

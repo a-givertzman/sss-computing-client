@@ -50,8 +50,13 @@ class _FieldDataFormState extends State<FieldDataForm> {
   //
   @override
   Widget build(BuildContext context) {
-    final isAnyFieldChanged =
-        widget._fieldDatas.where((data) => data.isChanged).isNotEmpty;
+    final theme = Theme.of(context);
+    final isAnyFieldChanged = widget._fieldDatas
+        .where(
+          (data) => data.isChanged,
+        )
+        .isNotEmpty;
+    final isFormValid = _isFormValid();
     const buttonHeight = 40.0;
     return Form(
       key: _formKey,
@@ -75,11 +80,11 @@ class _FieldDataFormState extends State<FieldDataForm> {
                   onSaved: () => setState(() {
                     return;
                   }),
+                  onSubmitted: isFormValid ? _trySaveData : null,
                 ),
                 if (_isSaving)
                   Container(
-                    color:
-                        Theme.of(context).colorScheme.surface.withOpacity(0.75),
+                    color: theme.colorScheme.surface.withOpacity(0.75),
                   ),
               ],
             ),
@@ -87,9 +92,7 @@ class _FieldDataFormState extends State<FieldDataForm> {
           AsyncActionButton(
             height: buttonHeight,
             label: const Localized('Save').v,
-            onPressed: isAnyFieldChanged && _isFormValid()
-                ? () async => _trySaveData(context)
-                : null,
+            onPressed: isAnyFieldChanged && isFormValid ? _trySaveData : null,
           ),
         ],
       ),
@@ -110,8 +113,8 @@ class _FieldDataFormState extends State<FieldDataForm> {
       },
     );
   }
-  ///
-  Future<void> _trySaveData(BuildContext context) async {
+  //
+  Future<void> _trySaveData() async {
     setState(() {
       _isSaving = true;
     });

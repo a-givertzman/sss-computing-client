@@ -14,6 +14,7 @@ class FormFieldGroup extends StatefulWidget {
   final String _name;
   final void Function()? _onChanged;
   final void Function()? _onCancelled;
+  final void Function()? _onSubmitted;
   final void Function()? _onSaved;
   final List<FieldData> _fieldDatas;
   final List<CompoundFieldDataValidation> _compoundValidationCases;
@@ -25,9 +26,9 @@ class FormFieldGroup extends StatefulWidget {
   ///
   ///   `compundValidations` used for validation
   /// based on values ​​of different fields.
-  ///   `onChanged`, 'onCancelled' and `onSaved` callbacks are called when
-  /// field data changed, cancelled or saved respectively.
-  ///
+  ///   `onChanged`, 'onCancelled', `onSubmitted` and `onSaved` callbacks
+  /// are called when field data changed, cancelled, submitted or saved
+  /// respectively.
   const FormFieldGroup({
     super.key,
     required String name,
@@ -35,10 +36,12 @@ class FormFieldGroup extends StatefulWidget {
     List<CompoundFieldDataValidation> compoundValidationCases = const [],
     void Function()? onChanged,
     void Function()? onCancelled,
+    void Function()? onSubmitted,
     void Function()? onSaved,
   })  : _name = name,
-        _onCancelled = onCancelled,
         _onChanged = onChanged,
+        _onCancelled = onCancelled,
+        _onSubmitted = onSubmitted,
         _onSaved = onSaved,
         _fieldDatas = fieldDatas,
         _compoundValidationCases = compoundValidationCases;
@@ -64,13 +67,14 @@ class _FormFieldGroupState extends State<FormFieldGroup> {
   //
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final padding = const Setting('padding').toDouble;
     final blockPadding = const Setting('blockPadding').toDouble;
     return Column(
       children: [
         Text(
           widget._name,
-          style: Theme.of(context).textTheme.titleLarge,
+          style: theme.textTheme.titleLarge,
         ),
         SizedBox(height: blockPadding),
         Expanded(
@@ -137,6 +141,7 @@ class _FormFieldGroupState extends State<FormFieldGroup> {
         data.cancel();
         widget._onCancelled?.call();
       },
+      onSubmitted: (_) => widget._onSubmitted?.call(),
       onSaved: (_) {
         widget._onSaved?.call();
         return Future.value(const Ok(''));
