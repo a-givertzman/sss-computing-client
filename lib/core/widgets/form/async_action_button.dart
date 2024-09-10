@@ -73,16 +73,12 @@ class _AsyncActionButtonState extends State<AsyncActionButton> {
   }
   //
   void _onPressed() {
+    final onPressed = widget._onPressed;
+    if (onPressed == null) return;
     setState(() {
       _isInProgress = true;
     });
-    widget._onPressed?.call().then((_) {
-      if (mounted) {
-        setState(() {
-          _isInProgress = false;
-        });
-      }
-    }).onError((_, __) {
+    onPressed().whenComplete(() {
       if (mounted) {
         setState(() {
           _isInProgress = false;
