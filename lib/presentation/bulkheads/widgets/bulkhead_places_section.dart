@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead_place.dart';
-import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_placeholder.dart';
+import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_place_widget.dart';
 ///
+/// Widget displaying section of places for grain bulkhead.
 class BulkheadPlacesSection extends StatelessWidget {
   final String _label;
   final double _bulkheadHeight;
@@ -12,6 +13,11 @@ class BulkheadPlacesSection extends StatelessWidget {
     int bulkheadI,
   )? _onBulkheadDropped;
   ///
+  /// Creates widget displaying section of places for grain bulkhead.
+  ///
+  ///   `bulkhaedPlaces` - bulkhead places that will be displayed.
+  ///   `onBulkheadDropped` - callback that will be called when
+  /// bulkhead draggable widget is dropped and accepted by some place.
   const BulkheadPlacesSection({
     super.key,
     required String label,
@@ -46,7 +52,7 @@ class BulkheadPlacesSection extends StatelessWidget {
             itemCount: _bulkheadPlaces.length,
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
-            itemBuilder: (context, index) => BulkheadPlaceholder(
+            itemBuilder: (context, index) => BulkheadPlaceWidget(
               bulkheadPlace: _bulkheadPlaces[index],
               bulkheadId: switch (_bulkheadPlaces[index].bulkheadId) {
                 final int id => id,

@@ -3,10 +3,14 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_base_widget.dart';
 ///
+/// Bulkhead widget with no data.
 class BulkheadEmptyWidget extends StatelessWidget {
   final double _height;
   final String _label;
   ///
+  /// Creates bulkhead widget with no data.
+  ///
+  ///   `height` and `label` define height and label text.
   const BulkheadEmptyWidget({
     super.key,
     required double height,

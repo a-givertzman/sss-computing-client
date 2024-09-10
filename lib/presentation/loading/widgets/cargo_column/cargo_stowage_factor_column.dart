@@ -8,6 +8,7 @@ import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
+/// Creates [TableColumn] for [Cargo] stowage factor.
 class CargoStowageFactorColumn implements TableColumn<Cargo, double?> {
   final bool _useDefaultEditing;
   final ValueRecord<double?> Function(
@@ -15,6 +16,10 @@ class CargoStowageFactorColumn implements TableColumn<Cargo, double?> {
     double? Function(String text) toValue,
   )? _buildRecord;
   ///
+  /// Creates [TableColumn] for [Cargo] stowage factor.
+  ///
+  ///   `useDefaultEditing` either standard [EditingTable] editor is used or not.
+  ///   `buildRecord` build [ValueRecord] for [Cargo] stowage factor field.
   const CargoStowageFactorColumn({
     bool useDefaultEditing = false,
     ValueRecord<double?> Function(

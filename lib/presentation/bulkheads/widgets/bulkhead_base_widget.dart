@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 ///
+/// Widget displaying grain bulkhead.
 class BulkheadBaseWidget extends StatelessWidget {
   final Color _borderColor;
   final Color _backgroundColor;
@@ -11,6 +12,13 @@ class BulkheadBaseWidget extends StatelessWidget {
   final Widget? _leading;
   final Widget? _trailing;
   ///
+  /// Creates widget displaying grain bulkhead.
+  ///
+  ///   `borderColor`, `backgroundColor`, `height` and `width`
+  /// define appearance of grain bulkhead widget.
+  ///   `leadging` and `trailing` widgets are rendered on top and bottom
+  /// of grain bulkhead widget respectively.
+  ///   If `isDraged` is true, widget has elevated effect.
   const BulkheadBaseWidget({
     super.key,
     required Color borderColor,

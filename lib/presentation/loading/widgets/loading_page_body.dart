@@ -12,6 +12,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/hold_configura
 import 'package:sss_computing_client/presentation/loading/widgets/other_stores_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/tanks_configurator.dart';
 ///
+/// Body for loading page.
 class LoadingPageBody extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
@@ -19,6 +20,14 @@ class LoadingPageBody extends StatefulWidget {
   final String _dbName;
   final String? _authToken;
   ///
+  /// Creates body for loading page.
+  ///
+  ///   `appRefreshStream` - stream with events causing data to be updated.
+  ///   `fireRefreshEvent` - callback for triggering refresh event, called
+  /// when calculation succeeds or fails;
+  ///   `apiAddress` - [ApiAddress] of server that interact with database;
+  ///   `dbName` - name of the database;
+  ///   `authToken` - string authentication token for accessing server;
   const LoadingPageBody({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,

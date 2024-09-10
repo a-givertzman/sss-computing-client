@@ -25,6 +25,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
 import 'package:sss_computing_client/presentation/other_stores_cargo/other_stores_cargo_page.dart';
 ///
+/// Configurator for ship other stores cargo.
 class OtherStoresConfigurator extends StatefulWidget {
   final List<Cargo> _cargos;
   final Stream<DsDataPoint<bool>> _appRefreshStream;
@@ -33,6 +34,15 @@ class OtherStoresConfigurator extends StatefulWidget {
   final String _dbName;
   final String? _authToken;
   ///
+  /// Creates configurator for ship other stores cargo.
+  ///
+  ///   `cargos` - list of [Cargo] to be configured.
+  ///   `appRefreshStream` - stream with events causing data to be updated.
+  ///   `fireRefreshEvent` - callback for triggering refresh event, called
+  /// when calculation succeeds or fails;
+  ///   `apiAddress` - [ApiAddress] of server that interact with database;
+  ///   `dbName` - name of the database;
+  ///   `authToken` - string authentication token for accessing server;
   const OtherStoresConfigurator({
     super.key,
     required List<Cargo> cargos,

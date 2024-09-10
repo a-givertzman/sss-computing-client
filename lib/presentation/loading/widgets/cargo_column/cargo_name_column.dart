@@ -7,6 +7,7 @@ import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
+/// Creates [TableColumn] for [Cargo] name.
 class CargoNameColumn implements TableColumn<Cargo, String?> {
   final bool _useDefaultEditing;
   final ValueRecord<String?> Function(
@@ -14,6 +15,10 @@ class CargoNameColumn implements TableColumn<Cargo, String?> {
     String? Function(String text) toValue,
   )? _buildRecord;
   ///
+  /// Creates [TableColumn] for [Cargo] name.
+  ///
+  ///   `useDefaultEditing` either standard [EditingTable] editor is used or not.
+  ///   `buildRecord` build [ValueRecord] for [Cargo] name field.
   const CargoNameColumn({
     bool useDefaultEditing = false,
     ValueRecord<String?> Function(

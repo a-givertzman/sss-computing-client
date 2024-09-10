@@ -4,12 +4,17 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_draggable_widget.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_empty_widget.dart';
 ///
+/// Widget displaying section with removed grain bulkhead.
 class BulkheadRemovedSection extends StatefulWidget {
   final String _label;
   final double _bulkheadHeight;
   final List<int> _bulkheadIds;
   final void Function(int bulkheadId)? _onBulkheadDropped;
+  /// Creates widget displaying section with removed grain bulkhead.
   ///
+  ///   `bulkheadIds` - list with id of removed bulkhead.
+  ///   `onBulkheadDropped` - callback that will be called when
+  /// bulkhead draggable widget is dropped and accepted by [BulkheadRemovedSection].
   const BulkheadRemovedSection({
     super.key,
     required String label,

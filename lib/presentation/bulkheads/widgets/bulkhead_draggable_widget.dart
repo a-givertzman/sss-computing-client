@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_base_widget.dart';
 ///
+/// Bulkhead widget that can be dragged and dropped onto target.
 class BulkheadDraggableWidget extends StatelessWidget {
   final int _data;
   final double _height;
   final String _label;
   final Function()? _onDragCompleted;
   ///
+  /// Creates bulkhead widget that can be dragged and dropped onto target.
+  ///
+  ///   `data` - data that passed to [DragTarget] when dropped.
+  ///   `height` and `label` define height and label text.
+  ///   `onDragCompleted` will be called when widget is dropped
+  /// and accepted by [DragTarget].
   const BulkheadDraggableWidget({
     super.key,
     required int data,

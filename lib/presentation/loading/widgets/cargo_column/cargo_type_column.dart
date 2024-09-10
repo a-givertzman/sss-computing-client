@@ -8,8 +8,10 @@ import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
+/// [TableColumn] for [Cargo] type.
 class CargoTypeColumn implements TableColumn<Cargo, String> {
   ///
+  /// Creates [TableColumn] for [Cargo] type.
   const CargoTypeColumn();
   //
   @override

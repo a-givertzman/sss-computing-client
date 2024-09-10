@@ -13,9 +13,11 @@ import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_places_section.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_removed_section.dart';
 ///
+/// Display configurator of ship's grain bulkheads.
 class BulkheadsPageBody extends StatefulWidget {
   final double _bulkheadHeight;
   ///
+  /// Creates widget displaying configurator of ship's grain bulkheads.
   const BulkheadsPageBody({
     super.key,
     double bulkheadHeight = 256.0,

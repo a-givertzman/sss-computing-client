@@ -5,7 +5,8 @@ import 'package:sss_computing_client/core/models/bulkheads/bulkhead_place.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_draggable_widget.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_empty_widget.dart';
 ///
-class BulkheadPlaceholder extends StatefulWidget {
+/// Widget displaying place for grain bulkhead.
+class BulkheadPlaceWidget extends StatefulWidget {
   final double _bulkheadHeight;
   final double _margin;
   final double _padding;
@@ -16,7 +17,13 @@ class BulkheadPlaceholder extends StatefulWidget {
     int bulkheadId,
   )? _onBulkheadDropped;
   ///
-  const BulkheadPlaceholder({
+  /// Creates widget displaying place for grain bulkhead.
+  ///
+  ///   `bulkhaedPlace` - bulkhead place that will be displayed.
+  ///   `onBulkheadDropped` - callback that will be called when
+  /// bulkhead draggable widget is dropped and accepted.
+  ///   `bulkheadId` - id of installed bulkhead at this place.
+  const BulkheadPlaceWidget({
     super.key,
     required double bulkheadHeight,
     required double margin,
@@ -32,9 +39,10 @@ class BulkheadPlaceholder extends StatefulWidget {
         _onBulkheadDropped = onBulkheadDropped;
   //
   @override
-  State<BulkheadPlaceholder> createState() => _BulkheadPlaceholderState();
+  State<BulkheadPlaceWidget> createState() => _BulkheadPlaceWidgetState();
 }
-class _BulkheadPlaceholderState extends State<BulkheadPlaceholder> {
+///
+class _BulkheadPlaceWidgetState extends State<BulkheadPlaceWidget> {
   late bool? _willAccept;
   //
   @override

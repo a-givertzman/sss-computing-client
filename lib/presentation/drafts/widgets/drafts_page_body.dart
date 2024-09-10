@@ -22,12 +22,19 @@ import 'package:sss_computing_client/presentation/drafts/widgets/draft_type.dart
 import 'package:sss_computing_client/presentation/drafts/widgets/draft_type_dropdown.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 ///
+/// Body of drafts page.
 class DraftsPageBody extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
   ///
+  /// Creates body of drafts page.
+  ///
+  ///   `appRefreshStream` - stream with events causing data to be updated.
+  ///   `apiAddress` - [ApiAddress] of server that interact with database;
+  ///   `dbName` - name of the database;
+  ///   `authToken` - string authentication token for accessing server;
   const DraftsPageBody({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,

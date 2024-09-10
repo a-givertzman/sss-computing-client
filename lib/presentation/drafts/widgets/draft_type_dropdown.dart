@@ -3,10 +3,15 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/presentation/drafts/widgets/draft_type.dart';
 ///
+/// Dropdown for selecting [DraftType] value.
 class DraftTypeDropdown extends StatelessWidget {
   final DraftType _initialValue;
   final void Function(DraftType) _onValueChanged;
   ///
+  /// Creates dropdown for selecting [DraftType] value.
+  ///
+  ///   `intialValue` - starting value of dropdown.
+  ///   `onValueChanged` - callback that will be called on value changed.
   const DraftTypeDropdown({
     super.key,
     required DraftType initialValue,

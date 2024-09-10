@@ -9,12 +9,16 @@ import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
+/// [TableColumn] for hold [Cargo] shiftable.
 class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
   final ValueRecord<bool> Function(
     Cargo data,
     bool Function(String text) toValue,
   ) _buildRecord;
   ///
+  /// Creates [TableColumn] for hold [Cargo] shiftable.
+  ///
+  ///   `buildRecord` build [ValueRecord] for hold [Cargo] shiftable field.
   const HoldCargoShiftableColumn({
     required ValueRecord<bool> Function(
       Cargo,

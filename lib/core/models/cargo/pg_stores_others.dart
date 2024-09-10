@@ -75,6 +75,7 @@ class PgStoresOthers implements Cargos {
         );
   }
   ///
+  /// Push new cargo to other sotres [Cargo] collection.
   Future<Result<void, Failure<String>>> add(Cargo cargo) async {
     return SqlAccess(
       address: _apiAddress,
@@ -107,6 +108,7 @@ class PgStoresOthers implements Cargos {
         );
   }
   ///
+  /// Remove cargo from other stores [Cargo] collection.
   Future<Result<void, Failure<String>>> remove(Cargo cargo) async {
     return SqlAccess(
       address: _apiAddress,
