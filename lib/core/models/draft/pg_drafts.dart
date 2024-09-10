@@ -33,16 +33,19 @@ class PgDrafts implements Drafts {
       sqlBuilder: (_, __) => Sql(
         sql: """
             SELECT
-              project_id AS "projectId",
-              ship_id AS "shipId",
-              name AS "label",
-              value AS "value",
-              x - 59.194 AS "x",
-              y AS "y"
-            FROM draft_mark_result
-            WHERE
-              ship_id = 1
-            ORDER BY id;
+              dmr.project_id AS "projectId",
+              dmr.ship_id AS "shipId",
+              dmr.name AS "label",
+              dmr.value AS "value",
+              dmr.x - sp.value::REAL AS "x",
+              dmr.y AS "y"
+            FROM draft_mark_result AS dmr
+            JOIN ship_parameters AS sp ON
+              dmr.ship_id = sp.ship_id
+              AND dmr.project_id IS NOT DISTINCT FROM sp.project_id
+              AND sp.key = 'X midship from Fr0'
+            WHERE dmr.ship_id = 1
+            ORDER BY dmr.id;
             """,
       ),
       entryBuilder: (row) => JsonDraft(
