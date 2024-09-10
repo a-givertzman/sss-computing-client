@@ -95,6 +95,10 @@ class _CancelableFieldState extends State<CancelableField> {
   @override
   void initState() {
     _controller = widget._controller;
+    _controller.selection = TextSelection(
+      baseOffset: 0,
+      extentOffset: _controller.text.length,
+    );
     super.initState();
   }
   //
