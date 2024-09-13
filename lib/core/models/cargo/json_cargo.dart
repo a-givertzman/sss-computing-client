@@ -74,6 +74,9 @@ class JsonCargo implements Cargo {
   double? get mfsy => _json['mfsy'];
   //
   @override
+  bool get useMaxMfs => _json['useMaxMfs'];
+  //
+  @override
   PathProjections? get paths => switch (_json['path']) {
         String jsonString => JsonSvgPathProjections(
             json: json.decode(jsonString),

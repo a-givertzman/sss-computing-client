@@ -134,6 +134,7 @@ class HoldCargosSqlAccess {
         'tcg': row['tcg'] as double?,
         'type': row['type'] as String,
         'shiftable': row['shiftable'] as bool,
+        'useMaxMfs': false,
         'path': switch (row['pathList']) {
           String pathList => _formatPathList(pathList),
           _ => null,

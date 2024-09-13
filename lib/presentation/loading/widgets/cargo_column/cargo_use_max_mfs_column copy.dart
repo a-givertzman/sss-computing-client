@@ -8,18 +8,20 @@ import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
+
 ///
-/// [TableColumn] for hold [Cargo] shiftable.
-class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
+/// [TableColumn] for [Cargo] useMaxMfs.
+class CargoUseMaxMfsColumn implements TableColumn<Cargo, bool> {
   final ValueRecord<bool> Function(
     Cargo data,
     bool Function(String text) toValue,
   ) _buildRecord;
+
   ///
   /// Creates [TableColumn] for hold [Cargo] shiftable.
   ///
   ///   `buildRecord` build [ValueRecord] for hold [Cargo] shiftable field.
-  const HoldCargoShiftableColumn({
+  const CargoUseMaxMfsColumn({
     required ValueRecord<bool> Function(
       Cargo,
       bool Function(String),
@@ -27,13 +29,13 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
   }) : _buildRecord = buildRecord;
   //
   @override
-  String get key => 'shiftable';
+  String get key => 'useMaxMfs';
   //
   @override
   FieldType get type => FieldType.bool;
   //
   @override
-  String get name => const Localized('Shiftable').v;
+  String get name => const Localized('useMaxMfs').v;
   //
   @override
   String get nullValue => '—';
@@ -63,7 +65,7 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
   Validator? get validator => null;
   //
   @override
-  bool extractValue(Cargo cargo) => cargo.shiftable;
+  bool extractValue(Cargo cargo) => cargo.useMaxMfs;
   //
   @override
   bool parseToValue(String text) =>
@@ -74,7 +76,7 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
   //
   @override
   Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['shiftable'] = parseToValue(text),
+        json: cargo.asMap()..['useMaxMfs'] = parseToValue(text),
       );
   //
   @override
@@ -85,8 +87,8 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
       _buildRecord.call(cargo, toValue);
   //
   @override
-  Widget? buildCell(context, cargo, updateValue) => _CargoShiftableWidget(
-        isShiftable: cargo.shiftable,
+  Widget? buildCell(context, cargo, updateValue) => _CargoUseMaxMfsWidget(
+        isShiftable: cargo.useMaxMfs,
         color: Theme.of(context).colorScheme.primary,
         onUpdate: (value) => _buildRecord(cargo, parseToValue)
             .persist(value.toString())
@@ -107,17 +109,19 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
             ),
       );
 }
+
 ///
-class _CargoShiftableWidget extends StatelessWidget {
-  final bool _isShiftable;
+class _CargoUseMaxMfsWidget extends StatelessWidget {
+  final bool _isUseMaxMfs;
   final Color _color;
   final Future<ResultF<void>> Function(bool value) _onUpdate;
+
   ///
-  const _CargoShiftableWidget({
+  const _CargoUseMaxMfsWidget({
     required bool isShiftable,
     required Color color,
     required Future<ResultF<void>> Function(bool value) onUpdate,
-  })  : _isShiftable = isShiftable,
+  })  : _isUseMaxMfs = isShiftable,
         _color = color,
         _onUpdate = onUpdate;
   //
@@ -127,22 +131,29 @@ class _CargoShiftableWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(
         vertical: 2.0,
       ),
-      child: Center(
-        child: Checkbox(
-          activeColor: _color,
-          splashRadius: 14.0,
-          value: _isShiftable,
-          onChanged: (value) => _updateValue(context, value),
+      child: Tooltip(
+        message: switch (_isUseMaxMfs) {
+          true => const Localized('mfsModMax').v,
+          false => const Localized('mfsModCurrent').v,
+        },
+        child: Center(
+          child: Checkbox(
+            activeColor: _color,
+            splashRadius: 14.0,
+            value: _isUseMaxMfs,
+            onChanged: (value) => _updateValue(context, value),
+          ),
         ),
       ),
     );
   }
+
   //
   void _updateValue(BuildContext context, bool? value) {
     if (value == null) return;
     _onUpdate(value)
         .then((result) => switch (result) {
-              Ok() => const Log('_CargoShiftableWidget | _onUpdate')
+              Ok() => const Log('_CargoUseMaxMfsWidget | _onUpdate')
                   .info('value updated'),
               Err(:final error) =>
                 _showErrorMessage(context, '${error.message}')
@@ -151,6 +162,7 @@ class _CargoShiftableWidget extends StatelessWidget {
           (error, _) => _showErrorMessage(context, '$error'),
         );
   }
+
   //
   void _showErrorMessage(BuildContext context, String message) async {
     if (!context.mounted) return;

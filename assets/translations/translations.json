@@ -494,5 +494,17 @@
     "Remove bulkhead": [
         "Remove bulkhead",
         "Убрать переборку"
+    ],
+    "useMaxMfs": [
+        "Mf.sx max.",
+        "Mf.sx макс."
+    ],
+    "mfsModMax": [
+        "Consider maximum modifications",
+        "Учитываются максимальные поправки"
+    ],
+    "mfsModCurrent": [
+        "Consider current modifications",
+        "Учитываются поправки по текущему заполнению"
     ]
 }

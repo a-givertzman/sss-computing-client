@@ -64,6 +64,9 @@ abstract interface class Cargo {
   /// y-moment of inertia of the free surface of the water
   double? get mfsy;
   ///
+  /// Either maximum value for moments used or not
+  bool get useMaxMfs;
+  ///
   /// type of the cargo
   CargoType get type;
   ///

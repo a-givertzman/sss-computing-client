@@ -62,10 +62,17 @@ class CompartmentCargosSqlAccess {
               c.mass_shift_x AS "lcg",
               c.mass_shift_y AS "tcg",
               c.mass_shift_z AS "vcg",
-              c.m_f_s_x AS "mfsx",
-              c.m_f_s_y AS "mfsy",
+              CASE
+                  WHEN c.use_max_m_f_s = TRUE THEN c.max_m_f_s_x
+                  ELSE c.m_f_s_x
+              END AS "mfsx",
+              CASE
+                  WHEN c.use_max_m_f_s = TRUE THEN c.max_m_f_s_y
+                  ELSE c.m_f_s_y
+              END AS "mfsy",
               c.svg_paths AS "path",
               cc.key::TEXT AS "type",
+              c.use_max_m_f_s AS "useMaxMfs",
               CASE
                   WHEN cc.matter_type = 'bulk' THEN TRUE
                   ELSE FALSE
@@ -123,6 +130,7 @@ class CompartmentCargosSqlAccess {
         'mfsy': row['mfsy'] as double?,
         'type': row['type'] as String,
         'shiftable': row['shiftable'] as bool,
+        'useMaxMfs': row['useMaxMfs'] as bool,
         'path': row['path'] as String?,
       });
 }
