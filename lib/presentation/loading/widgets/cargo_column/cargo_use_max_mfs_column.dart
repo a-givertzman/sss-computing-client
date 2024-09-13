@@ -6,9 +6,7 @@ import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
-import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
-
 ///
 /// [TableColumn] for [Cargo] useMaxMfs.
 class CargoUseMaxMfsColumn implements TableColumn<Cargo, bool> {
@@ -16,11 +14,10 @@ class CargoUseMaxMfsColumn implements TableColumn<Cargo, bool> {
     Cargo data,
     bool Function(String text) toValue,
   ) _buildRecord;
-
   ///
-  /// Creates [TableColumn] for hold [Cargo] shiftable.
+  /// Creates [TableColumn] for [Cargo] useMaxMfs.
   ///
-  ///   `buildRecord` build [ValueRecord] for hold [Cargo] shiftable field.
+  ///   `buildRecord` build [ValueRecord] for [Cargo] useMaxMfs field.
   const CargoUseMaxMfsColumn({
     required ValueRecord<bool> Function(
       Cargo,
@@ -109,13 +106,11 @@ class CargoUseMaxMfsColumn implements TableColumn<Cargo, bool> {
             ),
       );
 }
-
 ///
 class _CargoUseMaxMfsWidget extends StatelessWidget {
   final bool _isUseMaxMfs;
   final Color _color;
   final Future<ResultF<void>> Function(bool value) _onUpdate;
-
   ///
   const _CargoUseMaxMfsWidget({
     required bool isShiftable,
@@ -147,7 +142,6 @@ class _CargoUseMaxMfsWidget extends StatelessWidget {
       ),
     );
   }
-
   //
   void _updateValue(BuildContext context, bool? value) {
     if (value == null) return;
@@ -162,7 +156,6 @@ class _CargoUseMaxMfsWidget extends StatelessWidget {
           (error, _) => _showErrorMessage(context, '$error'),
         );
   }
-
   //
   void _showErrorMessage(BuildContext context, String message) async {
     if (!context.mounted) return;

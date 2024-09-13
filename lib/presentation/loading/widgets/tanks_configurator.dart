@@ -22,7 +22,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_name_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_tcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_type_column.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_use_max_mfs_column%20copy.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_use_max_mfs_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_vcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_volume_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
