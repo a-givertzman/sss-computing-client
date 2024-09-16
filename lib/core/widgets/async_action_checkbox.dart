@@ -1,12 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 ///
+/// Checkbox to start asynchronous action.
 class AsyncActionCheckbox extends StatefulWidget {
   final bool? _initialValue;
   final Future<void> Function(bool?)? _onChanged;
   final Color? _activeColor;
   final Color? _indicatorColor;
   ///
+  /// Creates checkbox to start asynchronous action.
+  ///
+  ///   `initialValue` - initial value of checkbox;
+  ///   `onChanged` - callback to start asynchronous action;
+  ///   `activeColor` - checkbox color to use when checkbox is checked;
+  ///   `indicatorColor` - indicator color to use when performing an action;
   const AsyncActionCheckbox({
     super.key,
     required bool? initialValue,
@@ -21,6 +28,7 @@ class AsyncActionCheckbox extends StatefulWidget {
   @override
   State<AsyncActionCheckbox> createState() => _AsyncActionCheckboxState();
 }
+///
 class _AsyncActionCheckboxState extends State<AsyncActionCheckbox> {
   late bool _isLoading;
   //
