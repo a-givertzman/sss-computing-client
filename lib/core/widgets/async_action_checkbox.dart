@@ -30,13 +30,7 @@ class AsyncActionCheckbox extends StatefulWidget {
 }
 ///
 class _AsyncActionCheckboxState extends State<AsyncActionCheckbox> {
-  late bool _isLoading;
-  //
-  @override
-  void initState() {
-    _isLoading = false;
-    super.initState();
-  }
+  late bool _isLoading = false;
   //
   @override
   Widget build(BuildContext context) {
