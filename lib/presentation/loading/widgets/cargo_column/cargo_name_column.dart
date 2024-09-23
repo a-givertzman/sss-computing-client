@@ -17,8 +17,8 @@ class CargoNameColumn implements TableColumn<Cargo, String?> {
   ///
   /// Creates [TableColumn] for [Cargo] name.
   ///
-  ///   `useDefaultEditing` either standard [EditingTable] editor is used or not.
-  ///   `buildRecord` build [ValueRecord] for [Cargo] name field.
+  ///   [useDefaultEditing] either standard [EditingTable] editor is used or not.
+  ///   [buildRecord] build [ValueRecord] for [Cargo] name field.
   const CargoNameColumn({
     bool useDefaultEditing = false,
     ValueRecord<String?> Function(

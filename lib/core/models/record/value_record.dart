@@ -9,6 +9,6 @@ abstract interface class ValueRecord<T> {
   /// Writes a new value to record
   /// and returns [Result] with written value.
   ///
-  /// `value` - value that will be written to record.
+  /// [value] – value that will be written to record.
   Future<ResultF<T>> persist(String value);
 }

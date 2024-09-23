@@ -13,8 +13,8 @@ class TextEditingControllerValidationCase implements ValidationCase {
   /// Creates [ValidationCase] that compares value
   /// with [TextEditingController] text.
   ///
-  /// `controller` - controller whose text is used for comparison;
-  /// `compareValues` - used to determine validity of value,
+  /// [controller] – controller whose text is used for comparison;
+  /// [compareValues] – used to determine validity of value,
   /// returns [Ok] if value is valid and [Err] otherwise.
   const TextEditingControllerValidationCase({
     required TextEditingController controller,

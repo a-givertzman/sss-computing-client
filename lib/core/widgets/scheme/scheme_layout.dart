@@ -28,20 +28,20 @@ class SchemeLayout extends StatelessWidget {
   final Widget Function(BuildContext, Matrix4) _buildContent;
   ///
   /// Displays the scheme layout. Includes axes, grid, caption
-  /// and scheme content if `buildContent` passed.
-  /// Fit scheme in available space based on passed `fit` parameter.
-  /// Transformations for content passed as `transform` parameter to
-  /// `buildContent` callback.
+  /// and scheme content if [buildContent] passed.
+  /// Fit scheme in available space based on passed [fit] parameter.
+  /// Transformations for content passed as [transform] parameter to
+  /// [buildContent] callback.
   ///
-  /// `minX`, `maxX`, `minY`, `maxY` define border values for scheme axes.
-  /// `xAxis` and `yAxis` contain data about scheme axes and define
+  /// [minX], [maxX], [minY], [maxY] define border values for scheme axes.
+  /// [xAxis] and [yAxis] contain data about scheme axes and define
   ///  value interval, reserved size from layout border, and options for
   /// labels, captions and grid.
   ///
-  /// `scaleX`, `scaleY`, `shiftX` and `shiftY` - scales and shifts
+  /// [scaleX], [scaleY], [shiftX] and [shiftY] – scales and shifts
   /// from the top left corner of scheme layout.
   ///
-  /// `xReversed` and `yReversed` - indicates that corresponding axis
+  /// [xReversed] and [yReversed] – indicates that corresponding axis
   /// has opposite direction. By default axes are directed from top to bottom
   /// and left to right for the vertical and horizontal axis respectively.
   const SchemeLayout({

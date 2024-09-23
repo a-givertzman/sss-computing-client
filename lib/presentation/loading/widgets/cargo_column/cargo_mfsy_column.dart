@@ -18,8 +18,8 @@ class CargoMFSYColumn implements TableColumn<Cargo, double?> {
   ///
   /// Creates [TableColumn] for [Cargo] MFSY.
   ///
-  ///   `useDefaultEditing` either standard [EditingTable] editor is used or not.
-  ///   `buildRecord` build [ValueRecord] for [Cargo] MFSY field.
+  ///   [useDefaultEditing] either standard [EditingTable] editor is used or not.
+  ///   [buildRecord] build [ValueRecord] for [Cargo] MFSY field.
   const CargoMFSYColumn({
     bool useDefaultEditing = false,
     ValueRecord<double?> Function(

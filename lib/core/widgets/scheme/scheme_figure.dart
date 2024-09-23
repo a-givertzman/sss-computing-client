@@ -13,11 +13,11 @@ class SchemeFigure extends StatelessWidget {
   /// Render figure on scheme. Can handle figure tap
   /// if corresponding callback has passed.
   ///
-  /// `plane` - [FigurePlane] on which figure will be rendred.
-  /// `figure` - which will be rendered.
-  /// `layoutTransform` - transformation of layout on which figure
+  /// [plane] – [FigurePlane] on which figure will be rendred.
+  /// [figure] – which will be rendered.
+  /// [layoutTransform] – transformation of layout on which figure
   /// will be rendered.
-  /// `onTap` - callback for handling taps on figure.
+  /// [onTap] – callback for handling taps on figure.
   const SchemeFigure({
     super.key,
     required FigurePlane plane,

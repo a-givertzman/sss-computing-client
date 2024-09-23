@@ -20,12 +20,12 @@ class EditingTable<T> extends StatefulWidget {
   ///
   /// Creates widget that displays [T] list in form of table.
   ///
-  /// `columns` - list of [TableColumn] to construct table.
-  /// `rows` - list of rows to display.
-  /// `onRowTap` - called to handle tap on row.
-  /// `selected` - selected element, visually separated from the rest by a special color.
-  /// `selectedColor` - color of selected item.
-  /// `rowHeight` - table row height.
+  /// [columns] – list of [TableColumn] to construct table.
+  /// [rows] – list of rows to display.
+  /// [onRowTap] – called to handle tap on row.
+  /// [selected] – selected element, visually separated from the rest by a special color.
+  /// [selectedColor] – color of selected item.
+  /// [rowHeight] – table row height.
   const EditingTable({
     super.key,
     required List<TableColumn> columns,

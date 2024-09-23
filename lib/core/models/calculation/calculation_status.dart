@@ -28,7 +28,7 @@ class CalculationStatus extends ChangeNotifier {
   }
   ///
   /// Changes calculation status to "completed"
-  /// and change values for `message` and `errorMessage`
+  /// and change values for [message] and [errorMessage]
   /// depending on passed parameters values.
   /// If calculation is already completed, do nothing.
   void complete({String? message, String? errorMessage}) {

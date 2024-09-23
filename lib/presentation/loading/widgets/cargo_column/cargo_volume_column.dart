@@ -18,8 +18,8 @@ class CargoVolumeColumn implements TableColumn<Cargo, double?> {
   ///
   /// Creates [TableColumn] for [Cargo] volume.
   ///
-  ///   `useDefaultEditing` either standard [EditingTable] editor is used or not.
-  ///   `buildRecord` build [ValueRecord] for [Cargo] volume field.
+  ///   [useDefaultEditing] either standard [EditingTable] editor is used or not.
+  ///   [buildRecord] build [ValueRecord] for [Cargo] volume field.
   const CargoVolumeColumn({
     bool useDefaultEditing = false,
     ValueRecord<double?> Function(

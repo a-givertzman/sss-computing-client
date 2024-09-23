@@ -41,13 +41,13 @@ class HoldConfigurator extends StatefulWidget {
   ///
   /// Creates configurator for ship hold cargo.
   ///
-  ///   `cargos` - list of [Cargo] to be configured.
-  ///   `appRefreshStream` - stream with events causing data to be updated.
-  ///   `fireRefreshEvent` - callback for triggering refresh event, called
+  ///   [cargos] – list of [Cargo] to be configured.
+  ///   [appRefreshStream] – stream with events causing data to be updated.
+  ///   [fireRefreshEvent] – callback for triggering refresh event, called
   /// when calculation succeeds or fails;
-  ///   `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   `dbName` - name of the database;
-  ///   `authToken` - string authentication token for accessing server;
+  ///   [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   [dbName] – name of the database;
+  ///   [authToken] – string authentication token for accessing server;
   const HoldConfigurator({
     super.key,
     required List<Cargo> cargos,

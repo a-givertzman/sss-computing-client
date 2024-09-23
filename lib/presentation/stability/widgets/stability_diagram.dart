@@ -25,10 +25,10 @@ class StabilityDiagram extends StatelessWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   ///
   /// Creates widget that displaying stability diagram.
-  ///   `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   `dbName` - name of the database;
-  ///   `authToken` - string authentication token for accessing server;
-  ///   `appRefreshStream` - stream with events causing data to be updated.
+  ///   [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   [dbName] – name of the database;
+  ///   [authToken] – string authentication token for accessing server;
+  ///   [appRefreshStream] – stream with events causing data to be updated.
   const StabilityDiagram({
     super.key,
     required ApiAddress apiAddress,

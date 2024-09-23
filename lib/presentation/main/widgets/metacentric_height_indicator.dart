@@ -19,9 +19,9 @@ class MetacentricHeightIndicator extends StatelessWidget {
   /// Creates widget that fetching data about metacentric height
   /// and displaying it as CircularValueIndicator widget.
   ///
-  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   - `dbName` - name of the database;
-  ///   - `authToken` - string authentication token for accessing server.
+  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   - [dbName] – name of the database;
+  ///   - [authToken] – string authentication token for accessing server.
   const MetacentricHeightIndicator({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,

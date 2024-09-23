@@ -15,10 +15,10 @@ final class HoldCargoShiftableRecord implements ValueRecord<bool> {
   /// to field of hold cargo shiftable record stored in database.
   ///
   /// Value can be obtained using:
-  ///   - `dbName` - name of the database;
-  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   - `authToken` - string  authentication token for accessing server;
-  ///   - `toValue` - function for parsing string representation of
+  ///   - [dbName] – name of the database;
+  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   - [authToken] – string  authentication token for accessing server;
+  ///   - [toValue] – function for parsing string representation of
   /// field into value of desired type.
   const HoldCargoShiftableRecord({
     required ApiAddress apiAddress,

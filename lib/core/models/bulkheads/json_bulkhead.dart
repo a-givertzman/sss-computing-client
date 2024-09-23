@@ -4,7 +4,7 @@ import 'package:sss_computing_client/core/models/bulkheads/bulkhead.dart';
 class JsonBulkhead implements Bulkhead {
   final Map<String, dynamic> _json;
   ///
-  /// Creates [Bulkhead] that parses itself from provided `json` map.
+  /// Creates [Bulkhead] that parses itself from provided [json] map.
   const JsonBulkhead({
     required Map<String, dynamic> json,
   }) : _json = json;

@@ -14,13 +14,13 @@ class OtherStoresCargoPage extends StatelessWidget {
   ///
   /// Creates page for configuration of other stores cargo
   ///
-  /// `onClose` and `onSave` callbacks run after returning on previous page
+  /// [onClose] and [onSave] callbacks run after returning on previous page
   /// or saving edited data, respectively.
   ///
-  /// `label` used as title of page.
+  /// [label] used as title of page.
   ///
-  /// `cargo` is instance of [Cargo] to be configured.
-  /// Data for the the `cargo` will be fetched if `fetchData` is true.
+  /// [cargo] is instance of [Cargo] to be configured.
+  /// Data for the the [cargo] will be fetched if [fetchData] is true.
   const OtherStoresCargoPage({
     super.key,
     required void Function() onClose,

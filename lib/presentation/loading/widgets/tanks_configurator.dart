@@ -39,11 +39,11 @@ class TanksConfigurator extends StatefulWidget {
   ///
   /// Creates configurator for ship tanks cargo.
   ///
-  ///   `cargos` - list of [Cargo] to be configured.
-  ///   `appRefreshStream` - stream with events causing data to be updated.
-  ///   `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   `dbName` - name of the database;
-  ///   `authToken` - string authentication token for accessing server;
+  ///   [cargos] – list of [Cargo] to be configured.
+  ///   [appRefreshStream] – stream with events causing data to be updated.
+  ///   [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   [dbName] – name of the database;
+  ///   [authToken] – string authentication token for accessing server;
   const TanksConfigurator({
     super.key,
     required List<Cargo> cargos,

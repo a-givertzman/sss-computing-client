@@ -18,8 +18,8 @@ class CargoMFSXColumn implements TableColumn<Cargo, double?> {
   ///
   /// Creates [TableColumn] for [Cargo] MFSX.
   ///
-  ///   `useDefaultEditing` either standard [EditingTable] editor is used or not.
-  ///   `buildRecord` build [ValueRecord] for [Cargo] MFSX field.
+  ///   [useDefaultEditing] either standard [EditingTable] editor is used or not.
+  ///   [buildRecord] build [ValueRecord] for [Cargo] MFSX field.
   const CargoMFSXColumn({
     bool useDefaultEditing = false,
     ValueRecord<double?> Function(

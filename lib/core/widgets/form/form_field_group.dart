@@ -21,12 +21,12 @@ class FormFieldGroup extends StatefulWidget {
   ///
   /// Creates group of fields for form.
   ///
-  ///   `name` - title for field group.
-  ///   `fieldDatas` - list of fields included in group.
+  ///   [name] – title for field group.
+  ///   [fieldDatas] – list of fields included in group.
   ///
-  ///   `compundValidations` used for validation
+  ///   [compundValidations] used for validation
   /// based on values ​​of different fields.
-  ///   `onChanged`, 'onCancelled', `onSubmitted` and `onSaved` callbacks
+  ///   [onChanged], 'onCancelled', [onSubmitted] and [onSaved] callbacks
   /// are called when field data changed, cancelled, submitted or saved
   /// respectively.
   const FormFieldGroup({

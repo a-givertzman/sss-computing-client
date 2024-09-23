@@ -11,8 +11,8 @@ class TabViewWidget extends StatelessWidget {
   ///
   /// Creates tab view that construsted based on list of provided [TabSetting].
   ///
-  ///   `tabsSettings` used to construct [TabBarView] and [TabBar].
-  ///   `isScrollable`, `indicatorColor`, `dividerColor` and `physics`
+  ///   [tabsSettings] used to construct [TabBarView] and [TabBar].
+  ///   [isScrollable], [indicatorColor], [dividerColor] and [physics]
   /// used as parameters of [TabBar].
   const TabViewWidget({
     super.key,

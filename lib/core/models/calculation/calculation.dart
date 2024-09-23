@@ -10,9 +10,9 @@ class Calculation {
   ///
   /// Creates model for running calculations on backend and processing results.
   ///
-  /// - `apiAddress` - [ApiAddress] of server that interact with backend script.
-  /// - `authToken` - string authentication token for accessing server.
-  /// - `scriptName` - name of script to run by server.
+  /// - [apiAddress] – [ApiAddress] of server that interact with backend script.
+  /// - [authToken] – string authentication token for accessing server.
+  /// - [scriptName] – name of script to run by server.
   const Calculation({
     required ApiAddress apiAddress,
     required String authToken,

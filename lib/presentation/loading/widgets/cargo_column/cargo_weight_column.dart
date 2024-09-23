@@ -18,8 +18,8 @@ class CargoWeightColumn implements TableColumn<Cargo, double?> {
   ///
   /// Creates [TableColumn] for [Cargo] weight.
   ///
-  ///   `useDefaultEditing` either standard [EditingTable] editor is used or not.
-  ///   `buildRecord` build [ValueRecord] for [Cargo] weight field.
+  ///   [useDefaultEditing] either standard [EditingTable] editor is used or not.
+  ///   [buildRecord] build [ValueRecord] for [Cargo] weight field.
   const CargoWeightColumn({
     bool useDefaultEditing = false,
     ValueRecord<double?> Function(

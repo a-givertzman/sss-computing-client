@@ -19,10 +19,10 @@ class BulkheadPlaceWidget extends StatefulWidget {
   ///
   /// Creates widget displaying place for grain bulkhead.
   ///
-  ///   `bulkhaedPlace` - bulkhead place that will be displayed.
-  ///   `onBulkheadDropped` - callback that will be called when
+  ///   [bulkhaedPlace] – bulkhead place that will be displayed.
+  ///   [onBulkheadDropped] – callback that will be called when
   /// bulkhead draggable widget is dropped and accepted.
-  ///   `bulkheadId` - id of installed bulkhead at this place.
+  ///   [bulkheadId] – id of installed bulkhead at this place.
   const BulkheadPlaceWidget({
     super.key,
     required double bulkheadHeight,

@@ -18,8 +18,8 @@ class CargoStowageFactorColumn implements TableColumn<Cargo, double?> {
   ///
   /// Creates [TableColumn] for [Cargo] stowage factor.
   ///
-  ///   `useDefaultEditing` either standard [EditingTable] editor is used or not.
-  ///   `buildRecord` build [ValueRecord] for [Cargo] stowage factor field.
+  ///   [useDefaultEditing] either standard [EditingTable] editor is used or not.
+  ///   [buildRecord] build [ValueRecord] for [Cargo] stowage factor field.
   const CargoStowageFactorColumn({
     bool useDefaultEditing = false,
     ValueRecord<double?> Function(

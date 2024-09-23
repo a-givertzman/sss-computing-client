@@ -13,9 +13,9 @@ class PgBulkheadPlaces implements BulkheadPlaces {
   ///
   /// [BulkheadPlaces] collection that stored in postgres DB.
   ///
-  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   - `dbName` - name of the database;
-  ///   - `authToken` - string  authentication token for accessing server;
+  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   - [dbName] – name of the database;
+  ///   - [authToken] – string  authentication token for accessing server;
   const PgBulkheadPlaces({
     required String dbName,
     required ApiAddress apiAddress,

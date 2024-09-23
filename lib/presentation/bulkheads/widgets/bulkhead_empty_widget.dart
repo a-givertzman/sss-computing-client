@@ -10,7 +10,7 @@ class BulkheadEmptyWidget extends StatelessWidget {
   ///
   /// Creates bulkhead widget with no data.
   ///
-  ///   `height` and `label` define height and label text.
+  ///   [height] and [label] define height and label text.
   const BulkheadEmptyWidget({
     super.key,
     required double height,

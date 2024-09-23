@@ -10,10 +10,10 @@ class AsyncActionCheckbox extends StatefulWidget {
   ///
   /// Creates checkbox to start asynchronous action.
   ///
-  ///   `initialValue` - initial value of checkbox;
-  ///   `onChanged` - callback to start asynchronous action;
-  ///   `activeColor` - checkbox color to use when checkbox is checked;
-  ///   `indicatorColor` - indicator color to use when performing an action;
+  ///   [initialValue] – initial value of checkbox;
+  ///   [onChanged] – callback to start asynchronous action;
+  ///   [activeColor] – checkbox color to use when checkbox is checked;
+  ///   [indicatorColor] – indicator color to use when performing an action;
   const AsyncActionCheckbox({
     super.key,
     required bool? initialValue,

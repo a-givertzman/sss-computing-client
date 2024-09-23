@@ -8,7 +8,7 @@ class BulkheadsPage extends StatelessWidget {
   ///
   /// Creates page for configuration of bulkheads.
   ///
-  ///  `onClose` callback is called when returning to previous page.
+  ///  [onClose] callback is called when returning to previous page.
   const BulkheadsPage({
     super.key,
     void Function()? onClose,

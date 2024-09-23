@@ -11,7 +11,7 @@ abstract interface class Figure {
   /// Returns orthographic projection of [Figure]
   /// onto passed plane.
   ///
-  ///   `plane` - [FigurePlane] of orthogonal projection
+  ///   [plane] – [FigurePlane] of orthogonal projection
   Path orthoProjection(FigurePlane plane);
   ///
   /// Returns copy of [Figure] with new paints.

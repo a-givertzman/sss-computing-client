@@ -12,8 +12,8 @@ class BulkheadRemovedSection extends StatefulWidget {
   final void Function(int bulkheadId)? _onBulkheadDropped;
   /// Creates widget displaying section with removed grain bulkhead.
   ///
-  ///   `bulkheadIds` - list with id of removed bulkhead.
-  ///   `onBulkheadDropped` - callback that will be called when
+  ///   [bulkheadIds] – list with id of removed bulkhead.
+  ///   [onBulkheadDropped] – callback that will be called when
   /// bulkhead draggable widget is dropped and accepted by [BulkheadRemovedSection].
   const BulkheadRemovedSection({
     super.key,

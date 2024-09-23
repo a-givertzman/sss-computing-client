@@ -14,11 +14,11 @@ class BulkheadBaseWidget extends StatelessWidget {
   ///
   /// Creates widget displaying grain bulkhead.
   ///
-  ///   `borderColor`, `backgroundColor`, `height` and `width`
+  ///   [borderColor], [backgroundColor], [height] and [width]
   /// define appearance of grain bulkhead widget.
-  ///   `leadging` and `trailing` widgets are rendered on top and bottom
+  ///   [leadging] and [trailing] widgets are rendered on top and bottom
   /// of grain bulkhead widget respectively.
-  ///   If `isDraged` is true, widget has elevated effect.
+  ///   If [isDraged] is true, widget has elevated effect.
   const BulkheadBaseWidget({
     super.key,
     required Color borderColor,

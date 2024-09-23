@@ -16,13 +16,13 @@ class FieldDataForm extends StatefulWidget {
   ///
   /// Creates form that is constructed from list of [FieldData].
   ///
-  ///   `label` - title for form.
-  ///   `fieldDatas` - list of field datas from which form is built.
+  ///   [label] – title for form.
+  ///   [fieldDatas] – list of field datas from which form is built.
   ///
-  ///   `compundValidations` used for validation
+  ///   [compundValidations] used for validation
   /// based on values ​​of different fields.
   ///
-  ///   `onSave` callback is called when new field datas is saved.
+  ///   [onSave] callback is called when new field datas is saved.
   const FieldDataForm({
     super.key,
     required String label,

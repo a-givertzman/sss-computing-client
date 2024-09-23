@@ -11,10 +11,10 @@ class CancellationButton extends StatelessWidget {
   ///
   /// Creates button to run cancel action.
   ///
-  /// `onPressed` callback starts cancel action.
-  /// `label` is used as button text.
-  /// `width` and `height` determines button size.
-  /// `labelLineHeight` determines lineHeight for label text.
+  /// [onPressed] callback starts cancel action.
+  /// [label] is used as button text.
+  /// [width] and [height] determines button size.
+  /// [labelLineHeight] determines lineHeight for label text.
   const CancellationButton({
     super.key,
     required void Function()? onPressed,

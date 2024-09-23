@@ -25,15 +25,15 @@ class CargoSchemes extends StatefulWidget {
   ///
   /// Creates widget of ship schemes with cargos projections on three main planes.
   ///
-  /// `cargos` - [List] of ship's [Cargo] to be display.
+  /// [cargos] – [List] of ship's [Cargo] to be display.
   ///
-  /// `framesReal` and `framesTheoretical` are displayed as additional axes
+  /// [framesReal] and [framesTheoretical] are displayed as additional axes
   /// in foreground.
   ///
-  /// `hull` and 'hullBeauty' - [Map] with svg path projections of ship's hull
+  /// [hull] and 'hullBeauty' - [Map] with svg path projections of ship's hull
   /// which used to display ship's hull on background.
   ///
-  /// `onCargoTap` - called when clicking on rendered cargo.
+  /// [onCargoTap] – called when clicking on rendered cargo.
   const CargoSchemes({
     super.key,
     required List<Cargo> cargos,
@@ -255,9 +255,9 @@ class _SortedFigures {
   ///
   /// Create object for sorting figures along given axis.
   ///
-  /// `cargoFigures` - [List] of [Cargo] and its [Figure] for sorting.
-  /// `axis` - axis along which figures are sorted
-  /// `ascendingOrder` - if true figures are sorted in ascending order
+  /// [cargoFigures] – [List] of [Cargo] and its [Figure] for sorting.
+  /// [axis] – axis along which figures are sorted
+  /// [ascendingOrder] – if true figures are sorted in ascending order
   /// along given axis, and in descending order otherwise.
   const _SortedFigures({
     required List<({Figure figure, Cargo cargo})> cargoFigures,

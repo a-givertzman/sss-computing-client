@@ -15,10 +15,10 @@ final class CargoUseMaxMfsRecord implements ValueRecord<bool> {
   /// to field of cargo useMaxMfs record stored in database.
   ///
   /// Value can be obtained using:
-  ///   - `dbName` - name of the database;
-  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   - `authToken` - string  authentication token for accessing server;
-  ///   - `toValue` - function for parsing string representation of
+  ///   - [dbName] – name of the database;
+  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   - [authToken] – string  authentication token for accessing server;
+  ///   - [toValue] – function for parsing string representation of
   /// field into value of desired type.
   const CargoUseMaxMfsRecord({
     required ApiAddress apiAddress,

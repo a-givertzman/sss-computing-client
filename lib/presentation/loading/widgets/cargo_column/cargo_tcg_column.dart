@@ -18,8 +18,8 @@ class CargoTCGColumn implements TableColumn<Cargo, double?> {
   ///
   /// Creates [TableColumn] for [Cargo] TCG.
   ///
-  ///   `useDefaultEditing` either standard [EditingTable] editor is used or not.
-  ///   `buildRecord` build [ValueRecord] for [Cargo] TCG field.
+  ///   [useDefaultEditing] either standard [EditingTable] editor is used or not.
+  ///   [buildRecord] build [ValueRecord] for [Cargo] TCG field.
   const CargoTCGColumn({
     bool useDefaultEditing = false,
     ValueRecord<double?> Function(

@@ -27,10 +27,10 @@ class OtherStoresCargoBody extends StatefulWidget {
   ///
   /// Creates form for configuration of other stores cargo.
   ///
-  /// `onSave` callbacks run after saving edited data
+  /// [onSave] callbacks run after saving edited data
   ///
-  /// `cargo` is instance of [Cargo] to be configured.
-  /// Data for the the `cargo` will be fetched if `fetchData` is true.
+  /// [cargo] is instance of [Cargo] to be configured.
+  /// Data for the the [cargo] will be fetched if [fetchData] is true.
   const OtherStoresCargoBody({
     super.key,
     required Future<ResultF<List<FieldData>>> Function(List<FieldData>) onSave,

@@ -32,22 +32,22 @@ class CargoScheme extends StatelessWidget {
   ///
   /// Creates widget that displays scheme of cargos on ship.
   ///
-  /// `cargoFigures`, `selectedCargoFigure` and `selectedCargoColor`
+  /// [cargoFigures], [selectedCargoFigure] and [selectedCargoColor]
   /// used to display cargos on scheme.
-  /// `hull` used to display ship's hull on background.
+  /// [hull] used to display ship's hull on background.
   ///
-  /// `framesReal` and `framesTheoretical` are displayed as additional axes
+  /// [framesReal] and [framesTheoretical] are displayed as additional axes
   /// in foreground.
   ///
-  /// `projectionPlane` determines in which plane figures on scheme
+  /// [projectionPlane] determines in which plane figures on scheme
   /// will be rendered.
   ///
-  /// `minX`, `maxX`, `minY`, `maxY` define border values for scheme axes.
-  /// `xAxis` and `yAxis` contain data about scheme axes and define
+  /// [minX], [maxX], [minY], [maxY] define border values for scheme axes.
+  /// [xAxis] and [yAxis] contain data about scheme axes and define
   ///  value interval, reserved size from layout border, and options for
   /// labels, captions and grid.
   ///
-  /// `xReversed` and `yReversed` - indicates that corresponding axis
+  /// [xReversed] and [yReversed] – indicates that corresponding axis
   /// has opposite direction. By default axes are directed from top to bottom
   /// and left to right for the vertical and horizontal axis respectively.
   const CargoScheme({

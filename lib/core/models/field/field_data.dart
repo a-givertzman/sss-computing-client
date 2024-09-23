@@ -17,15 +17,15 @@ class FieldData<T> {
   bool _isSynced;
   ///
   /// Creates object that holds data for [TextFormField] or [TextField].
-  ///   - `id` - [FieldData] unique identifier.
-  ///   - `label` - text with which the target field will be labeled.
-  ///   - `initialValue` - initial content of the target field. Also will be set to [value].
-  ///   - `toValue` - function for parsing string representation of
+  ///   - [id] – [FieldData] unique identifier.
+  ///   - [label] – text with which the target field will be labeled.
+  ///   - [initialValue] – initial content of the target field. Also will be set to [value].
+  ///   - [toValue] – function for parsing string representation of
   /// field into value of desired type.
-  ///   - `toText` - function for converting value to it string representation.
-  ///   - `record` - [ValueRecord] from which we can read or to which we can write data.
-  ///   - `validator` - [Validator] for the [FieldData] value.
-  ///   - `isSynced` -  indicated whether content of the [FieldData] synced with source or not.
+  ///   - [toText] – function for converting value to it string representation.
+  ///   - [record] – [ValueRecord] from which we can read or to which we can write data.
+  ///   - [validator] – [Validator] for the [FieldData] value.
+  ///   - [isSynced] –  indicated whether content of the [FieldData] synced with source or not.
   FieldData({
     required this.id,
     required this.label,
@@ -58,13 +58,13 @@ class FieldData<T> {
   /// Returns validator for its [FieldData].
   Validator? get validator => _validator;
   ///
-  /// Parses text to `value`.
+  /// Parses text to [value].
   T toValue(String text) => _toValue(text);
   ///
-  /// Returns string representation of `value`.
+  /// Returns string representation of [value].
   String toText(T value) => _toText(value);
   ///
-  /// Pull data from the database through provided `record`.
+  /// Pull data from the database through provided [record].
   Future<ResultF<T>> fetch() async {
     switch (await _record.fetch()) {
       case Ok(:final value):
@@ -77,7 +77,7 @@ class FieldData<T> {
     }
   }
   ///
-  /// Persist data to the database through provided `record`.
+  /// Persist data to the database through provided [record].
   Future<ResultF<T>> save() async {
     final text = controller.text;
     switch (await _record.persist(text)) {
@@ -91,13 +91,13 @@ class FieldData<T> {
     }
   }
   ///
-  /// Sets `initialaValue` and `controller` text to provided one.
+  /// Sets [initialaValue] and [controller] text to provided one.
   void refreshWith(String text) {
     _controller.text = text;
     _initialValue = _toValue(text);
   }
   ///
-  /// Set current `value` to its initial state.
+  /// Set current [value] to its initial state.
   void cancel() {
     _controller.text = _toText(_initialValue);
   }

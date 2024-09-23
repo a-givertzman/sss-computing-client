@@ -15,8 +15,8 @@ class BulkheadPlacesSection extends StatelessWidget {
   ///
   /// Creates widget displaying section of places for grain bulkhead.
   ///
-  ///   `bulkhaedPlaces` - bulkhead places that will be displayed.
-  ///   `onBulkheadDropped` - callback that will be called when
+  ///   [bulkhaedPlaces] – bulkhead places that will be displayed.
+  ///   [onBulkheadDropped] – callback that will be called when
   /// bulkhead draggable widget is dropped and accepted by some place.
   const BulkheadPlacesSection({
     super.key,

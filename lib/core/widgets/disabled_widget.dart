@@ -10,8 +10,8 @@ class DisabledWidget extends StatelessWidget {
   /// and blocking all mouse events for child widget
   /// if disabled state passed.
   ///
-  /// `child` - widget that will be disabled.
-  /// `disabled` - if true widget will be disabled,
+  /// [child] – widget that will be disabled.
+  /// [disabled] – if true widget will be disabled,
   /// otherwise it will be passed in widget tree without changes.
   const DisabledWidget({
     super.key,

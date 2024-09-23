@@ -18,8 +18,8 @@ class CargoX1Column implements TableColumn<Cargo, double?> {
   ///
   /// Creates [TableColumn] for [Cargo] x1.
   ///
-  ///   `useDefaultEditing` either standard [EditingTable] editor is used or not.
-  ///   `buildRecord` build [ValueRecord] for [Cargo] x1 field.
+  ///   [useDefaultEditing] either standard [EditingTable] editor is used or not.
+  ///   [buildRecord] build [ValueRecord] for [Cargo] x1 field.
   const CargoX1Column({
     bool useDefaultEditing = false,
     ValueRecord<double?> Function(

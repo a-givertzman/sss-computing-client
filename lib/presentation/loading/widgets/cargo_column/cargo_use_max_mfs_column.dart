@@ -18,7 +18,7 @@ class CargoUseMaxMfsColumn implements TableColumn<Cargo, bool> {
   ///
   /// Creates [TableColumn] for [Cargo] useMaxMfs.
   ///
-  ///   `buildRecord` build [ValueRecord] for [Cargo] useMaxMfs field.
+  ///   [buildRecord] build [ValueRecord] for [Cargo] useMaxMfs field.
   const CargoUseMaxMfsColumn({
     required ValueRecord<bool> Function(
       Cargo,

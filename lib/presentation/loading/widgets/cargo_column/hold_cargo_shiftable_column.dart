@@ -18,7 +18,7 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
   ///
   /// Creates [TableColumn] for hold [Cargo] shiftable.
   ///
-  ///   `buildRecord` build [ValueRecord] for hold [Cargo] shiftable field.
+  ///   [buildRecord] build [ValueRecord] for hold [Cargo] shiftable field.
   const HoldCargoShiftableColumn({
     required ValueRecord<bool> Function(
       Cargo,

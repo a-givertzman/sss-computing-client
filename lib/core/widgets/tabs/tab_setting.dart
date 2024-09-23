@@ -8,8 +8,8 @@ class TabSetting {
   ///
   /// Creates object holding data for tab.
   ///
-  ///   `label` and `icon` are used for tab title.
-  ///   `content` - widget with content of tab.
+  ///   [label] and [icon] are used for tab title.
+  ///   [content] – widget with content of tab.
   const TabSetting({
     required String label,
     required Widget content,

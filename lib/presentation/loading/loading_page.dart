@@ -14,10 +14,10 @@ class LoadingPage extends StatefulWidget {
   ///
   /// Creates page for configuring ship cargos.
   ///
-  ///   `appRefreshStream` - stream with events causing data to be updated.
-  ///   `fireRefreshEvent` - callback for triggering refresh event, called
+  ///   [appRefreshStream] – stream with events causing data to be updated.
+  ///   [fireRefreshEvent] – callback for triggering refresh event, called
   /// when calculation succeeds or fails;
-  ///   `calculationStatusNotifier` - passed to control calculation status
+  ///   [calculationStatusNotifier] – passed to control calculation status
   /// between many instances of calculation button.
   const LoadingPage({
     super.key,

@@ -13,10 +13,10 @@ class CompartmentCargosSqlAccess {
   ///
   /// Creates object that provides [SqlAccess] to compartment cargos.
   ///
-  ///   - `dbName` - name of the database;
-  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   - `authToken` - string  authentication token for accessing server;
-  ///   - `filter` - Map with field name as key and field value as value
+  ///   - [dbName] – name of the database;
+  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   - [authToken] – string  authentication token for accessing server;
+  ///   - [filter] – Map with field name as key and field value as value
   /// for filtering records of table based on its fields values.
   const CompartmentCargosSqlAccess({
     required String dbName,

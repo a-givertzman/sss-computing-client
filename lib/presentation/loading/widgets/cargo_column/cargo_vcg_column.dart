@@ -18,8 +18,8 @@ class CargoVCGColumn implements TableColumn<Cargo, double?> {
   ///
   /// Creates [TableColumn] for [Cargo] VCG.
   ///
-  ///   `useDefaultEditing` either standard [EditingTable] editor is used or not.
-  ///   `buildRecord` build [ValueRecord] for [Cargo] VCG field.
+  ///   [useDefaultEditing] either standard [EditingTable] editor is used or not.
+  ///   [buildRecord] build [ValueRecord] for [Cargo] VCG field.
   const CargoVCGColumn({
     bool useDefaultEditing = false,
     ValueRecord<double?> Function(

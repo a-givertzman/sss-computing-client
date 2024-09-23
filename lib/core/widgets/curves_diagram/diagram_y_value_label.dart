@@ -12,7 +12,7 @@ class DiagramYValueLabel {
   ///
   /// Creates object that holds value label data and converts it to
   /// [FlLine] for display on [LineChart] as horizontal line
-  /// for provided `value` with label over it .
+  /// for provided [value] with label over it .
   DiagramYValueLabel({
     required String caption,
     required double value,

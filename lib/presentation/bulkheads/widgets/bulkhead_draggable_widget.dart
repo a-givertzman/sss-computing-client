@@ -11,9 +11,9 @@ class BulkheadDraggableWidget extends StatelessWidget {
   ///
   /// Creates bulkhead widget that can be dragged and dropped onto target.
   ///
-  ///   `data` - data that passed to [DragTarget] when dropped.
-  ///   `height` and `label` define height and label text.
-  ///   `onDragCompleted` will be called when widget is dropped
+  ///   [data] – data that passed to [DragTarget] when dropped.
+  ///   [height] and [label] define height and label text.
+  ///   [onDragCompleted] will be called when widget is dropped
   /// and accepted by [DragTarget].
   const BulkheadDraggableWidget({
     super.key,

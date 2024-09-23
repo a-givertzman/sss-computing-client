@@ -15,9 +15,9 @@ class WeightIndicators extends StatelessWidget {
   /// Creates widget that fetching data about ship weigths
   /// and displaying its as text value indicator widgets.
   ///
-  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   - `dbName` - name of the database;
-  ///   - `authToken` - string authentication token for accessing server.
+  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   - [dbName] – name of the database;
+  ///   - [authToken] – string authentication token for accessing server.
   const WeightIndicators({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,

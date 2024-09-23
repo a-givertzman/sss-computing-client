@@ -11,10 +11,10 @@ class AsyncActionButton extends StatefulWidget {
   ///
   /// Creates button to start asynchronous action.
   ///
-  /// `onPressed` callback starts asynchronous action.
-  /// `label` is used as button text.
-  /// `width` and `height` determines button size.
-  /// `labelLineHeight` determines lineHeight for label text.
+  /// [onPressed] callback starts asynchronous action.
+  /// [label] is used as button text.
+  /// [width] and [height] determines button size.
+  /// [labelLineHeight] determines lineHeight for label text.
   const AsyncActionButton({
     super.key,
     required Future<void> Function()? onPressed,

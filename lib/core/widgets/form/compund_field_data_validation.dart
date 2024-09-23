@@ -15,9 +15,9 @@ class CompoundFieldDataValidation {
   /// Create object providing [ValidationCase]
   /// that uses value of multiple [FieldData].
   ///
-  ///   `ownId` - id of field for which validation case is provided.
-  ///   `otherId` - id of field used for comparison.
-  ///   `validateValues` - used to determine validity of value,
+  ///   [ownId] – id of field for which validation case is provided.
+  ///   [otherId] – id of field used for comparison.
+  ///   [validateValues] – used to determine validity of value,
   /// returns [Ok] if value is valid and [Err] otherwise.
   const CompoundFieldDataValidation({
     required String ownId,
@@ -38,7 +38,7 @@ class CompoundFieldDataValidation {
   ///
   /// Constructs and returns validation case based on multiple fields.
   ///
-  ///   `fieldsData` - list containing fields used during validation.
+  ///   [fieldsData] – list containing fields used during validation.
   ValidationCase validationCase(List<FieldData> fieldsData) {
     return TECValidationCase(
       controller: fieldsData

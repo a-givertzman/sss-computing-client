@@ -18,8 +18,8 @@ class CargoLCGColumn implements TableColumn<Cargo, double?> {
   ///
   /// Creates [TableColumn] for [Cargo] LCG.
   ///
-  ///   `useDefaultEditing` either standard [EditingTable] editor is used or not.
-  ///   `buildRecord` build [ValueRecord] for [Cargo] LCG field.
+  ///   [useDefaultEditing] either standard [EditingTable] editor is used or not.
+  ///   [buildRecord] build [ValueRecord] for [Cargo] LCG field.
   const CargoLCGColumn({
     bool useDefaultEditing = false,
     ValueRecord<double?> Function(

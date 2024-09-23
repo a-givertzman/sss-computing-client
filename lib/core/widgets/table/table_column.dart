@@ -15,7 +15,7 @@ abstract interface class TableColumn<D, V> {
   /// Rturns title of [TableColumn].
   String get name;
   ///
-  /// Returns string representation for `null` value.
+  /// Returns string representation for [null] value.
   String get nullValue;
   ///
   /// Returns default [V] value.
