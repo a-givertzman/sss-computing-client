@@ -257,7 +257,7 @@ class _SortedFigures {
   ///
   /// [cargoFigures] – [List] of [Cargo] and its [Figure] for sorting.
   /// [axis] – axis along which figures are sorted
-  /// [ascendingOrder] – if true figures are sorted in ascending order
+  /// [ascendingOrder] – if `true` figures are sorted in ascending order
   /// along given axis, and in descending order otherwise.
   const _SortedFigures({
     required List<({Figure figure, Cargo cargo})> cargoFigures,

@@ -8,8 +8,8 @@ class CalculationStatus extends ChangeNotifier {
   String? _errorMessage;
   ///
   /// Indicates calculation status.
-  /// Returns true if calculation is in progress.
-  /// Returns false if calculation is completed
+  /// Returns `true` if calculation is in progress.
+  /// Returns `false` if calculation is completed
   /// or has not yet been performed.
   bool get isInProcess => _isInProcess;
   ///
