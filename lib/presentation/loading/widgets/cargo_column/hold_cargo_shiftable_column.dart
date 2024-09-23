@@ -151,16 +151,17 @@ class _CargoShiftableWidget extends StatelessWidget {
         .then((result) => switch (result) {
               Ok() => const Log('_CargoShiftableWidget | _onUpdate')
                   .info('value updated'),
-              Err(:final error) =>
-                _showErrorMessage(context, '${error.message}')
+              Err(:final error) => context.mounted
+                  ? _showErrorMessage(context, '${error.message}')
+                  : null
             })
         .onError(
-          (error, _) => _showErrorMessage(context, '$error'),
+          (error, _) =>
+              context.mounted ? _showErrorMessage(context, '$error') : null,
         );
   }
   //
   void _showErrorMessage(BuildContext context, String message) async {
-    if (!context.mounted) return;
     BottomMessage.error(message: message).show(context);
   }
 }

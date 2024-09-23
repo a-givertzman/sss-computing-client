@@ -157,16 +157,17 @@ class _CargoUseMaxMfsWidget extends StatelessWidget {
         .then((result) => switch (result) {
               Ok() => const Log('_CargoUseMaxMfsWidget | _onUpdate')
                   .info('value updated'),
-              Err(:final error) =>
-                _showErrorMessage(context, '${error.message}')
+              Err(:final error) => context.mounted
+                  ? _showErrorMessage(context, '${error.message}')
+                  : null
             })
         .onError(
-          (error, _) => _showErrorMessage(context, '$error'),
+          (error, _) =>
+              context.mounted ? _showErrorMessage(context, '$error') : null,
         );
   }
   //
   void _showErrorMessage(BuildContext context, String message) {
-    if (!context.mounted) return;
     BottomMessage.error(message: message).show(context);
   }
 }
