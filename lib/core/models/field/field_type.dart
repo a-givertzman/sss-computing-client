@@ -1,5 +1,5 @@
 ///
-/// Enum of FieldData value types
+/// Enum of [FieldData] value types
 enum FieldType {
   int,
   real,
