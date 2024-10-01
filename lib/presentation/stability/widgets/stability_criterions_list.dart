@@ -14,7 +14,7 @@ class StabilityCriterionsList extends StatefulWidget {
   /// Creates widget that displays list of criterions
   /// with summary about its pass status.
   ///
-  /// `criterions` - list of criterions that will be displayed.
+  /// [criterions] – list of criterions that will be displayed.
   const StabilityCriterionsList({
     super.key,
     required List<Criterion> criterions,

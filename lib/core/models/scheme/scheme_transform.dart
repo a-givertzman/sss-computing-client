@@ -17,13 +17,13 @@ class SchemeLayoutTransform {
   /// Creates object for calculating common transformation matrix
   /// for objects of scheme layout based on layout parameters.
   ///
-  /// `minX`, `maxX`, `minY` and `maxY` - the range of values for coordinates
+  /// [minX], [maxX], [minY] and [maxY] – the range of values for coordinates
   /// value of scheme layout.
   ///
-  /// `scaleX`, `scaleY`, `shiftX` and `shiftY` - scales and shifts
+  /// [scaleX], [scaleY], [shiftX] and [shiftY] – scales and shifts
   /// from the top left corner of scheme layout.
   ///
-  /// `xReversed` and `yReversed` - indicates that corresponding axis
+  /// [xReversed] and [yReversed] – indicates that corresponding axis
   /// has opposite direction. By default axes are directed from top to bottom
   /// and left to right for the vertical and horizontal axis respectively.
   const SchemeLayoutTransform({

@@ -22,6 +22,6 @@ class ChartAxis {
     this.isGridVisible = false,
   }) : _isCaptionVisible = isCaptionVisible;
   ///
-  /// Returns true if [caption] is not null and [_isCaptionVisible] is true
+  /// Returns `true` if [caption] is not null and [_isCaptionVisible] is true
   bool get isCaptionVisible => caption != null && _isCaptionVisible;
 }

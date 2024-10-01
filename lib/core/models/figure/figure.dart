@@ -1,8 +1,5 @@
 import 'package:flutter/painting.dart';
-///
-/// Enum of three main planes for
-/// orthogonal projections.
-enum FigurePlane { xy, yz, xz }
+import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 ///
 /// Construct [Path] as orthographic projection onto three main planes
 /// and store paints needed to draw it on cavas.
@@ -14,7 +11,7 @@ abstract interface class Figure {
   /// Returns orthographic projection of [Figure]
   /// onto passed plane.
   ///
-  ///   `plane` - [FigurePlane] of orthogonal projection
+  ///   [plane] – [FigurePlane] of orthogonal projection
   Path orthoProjection(FigurePlane plane);
   ///
   /// Returns copy of [Figure] with new paints.

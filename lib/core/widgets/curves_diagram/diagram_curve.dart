@@ -12,11 +12,11 @@ class DiagramCurve {
   /// Creates object that holds curve data and converts it to
   /// [LineChartBarData] for display on [LineChart].
   ///
-  /// `points` is list of points defining curve on two-dimensional plane,
+  /// [points] is list of points defining curve on two-dimensional plane,
   /// [LineChart] draws curve passing through given points.
-  /// `caption` is [String] that identifies curve, describes its data.
-  /// `color` determines color of drawing line
-  /// `showDots` determines wheter to draw points through which curve passes.
+  /// [caption] is [String] that identifies curve, describes its data.
+  /// [color] determines color of drawing line
+  /// [showDots] determines wheter to draw points through which curve passes.
   DiagramCurve({
     required List<Offset> points,
     required String caption,

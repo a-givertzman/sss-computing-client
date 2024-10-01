@@ -11,8 +11,8 @@ class ScrollableBuilderWidget extends StatefulWidget {
   /// Creates a widget that provides information about ability to scroll
   /// content of widget with passed [ScrollController].
   ///
-  /// `builder` - called to construct widget tree.
-  /// `controller` - [ScrollController] of tracked scrollable widget.
+  /// [builder] – called to construct widget tree.
+  /// [controller] – [ScrollController] of tracked scrollable widget.
   ///
   /// To correct work, scrollable widget must be a direct child of
   /// [ScrollableBuilderWidget].

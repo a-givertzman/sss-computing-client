@@ -12,9 +12,9 @@ class FittedBuilderWidget extends StatelessWidget {
   /// and desired way to fill the available space.
   /// Scaling factors can be used via builder function.
   ///
-  /// `builder` - builder for widget with scaling factors as parameters.
-  /// `size` - initial size of the widget.
-  /// `fit` - specifies how a box should be inscribed into another box.
+  /// [builder] – builder for widget with scaling factors as parameters.
+  /// [size] – initial size of the widget.
+  /// [fit] – specifies how a box should be inscribed into another box.
   const FittedBuilderWidget({
     super.key,
     required Widget Function(

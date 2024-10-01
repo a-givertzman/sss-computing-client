@@ -7,4 +7,7 @@ abstract interface class Cargos {
   ///
   /// Get all [Cargo] in [Cargos] collection.
   Future<Result<List<Cargo>, Failure<String>>> fetchAll();
+  ///
+  /// Get [Cargo] by id.
+  Future<Result<Cargo, Failure<String>>> fetchById(int id);
 }

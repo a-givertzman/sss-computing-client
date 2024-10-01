@@ -17,8 +17,7 @@ final class NotEqualTo implements NumberMathRelation {
     T firstValue,
     T secondValue,
   ) {
-    final equalResult = const EqualTo().process(firstValue, secondValue);
-    return Ok(!equalResult.value);
+    return Ok(firstValue != secondValue);
   }
   //
   @override

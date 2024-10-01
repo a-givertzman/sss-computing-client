@@ -8,10 +8,10 @@ class SchemeAxisTicksReal {
   ///
   /// Object that represents real number axis ticks offsets.
   ///
-  /// `minValue` and `maxValue` - range of displayed values on axis.
-  /// `valueInterval` - interval between displaying values.
-  /// `valueLabel` - label for displaying values (e.g. unit).
-  /// `labelFractionDigits` - largest number of digits in the fractional part
+  /// [minValue] and [maxValue] – range of displayed values on axis.
+  /// [valueInterval] – interval between displaying values.
+  /// [valueLabel] – label for displaying values (e.g. unit).
+  /// [labelFractionDigits] – largest number of digits in the fractional part
   /// of value text representation.
   const SchemeAxisTicksReal({
     required double minValue,

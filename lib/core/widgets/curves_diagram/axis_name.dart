@@ -6,7 +6,7 @@ class AxisName extends StatelessWidget {
   final String? _unit;
   final Color _color;
   /// Creates widget that displays axis title. Title text is generated
-  /// based on passed `title` and `unit`. `color` sets color of rendered title.
+  /// based on passed [title] and [unit]. [color] sets color of rendered title.
   const AxisName({
     super.key,
     required String title,

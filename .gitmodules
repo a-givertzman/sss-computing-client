@@ -1,0 +1,3 @@
+[submodule "assets/info"]
+	path = assets/info
+	url = https://github.com/a-givertzman/sss.git

@@ -15,10 +15,10 @@ class FTextValueIndicator extends StatelessWidget {
   ///
   /// Creates widget that indicating current value as text.
   ///
-  /// - `fetch` - fetching data and returns future;
-  /// - `caption` - name of the value to show;
-  /// - `unit` - unit of the value to show;
-  /// - `width` - width of the widget.
+  /// - [fetch] – fetching data and returns future;
+  /// - [caption] – name of the value to show;
+  /// - [unit] – unit of the value to show;
+  /// - [width] – width of the widget.
   const FTextValueIndicator({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,

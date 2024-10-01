@@ -3,7 +3,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
-import 'package:sss_computing_client/core/models/field_record/field_record.dart';
+import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/models/stability_curve/metacentric_height_line.dart';
 import 'package:sss_computing_client/core/models/stability_curve/pg_dynamic_stability_curve.dart';
 import 'package:sss_computing_client/core/models/stability_curve/pg_static_stability_curve.dart';
@@ -25,10 +25,10 @@ class StabilityDiagram extends StatelessWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   ///
   /// Creates widget that displaying stability diagram.
-  ///   `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   `dbName` - name of the database;
-  ///   `authToken` - string authentication token for accessing server;
-  ///   `appRefreshStream` - stream with events causing data to be updated.
+  ///   [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   [dbName] – name of the database;
+  ///   [authToken] – string authentication token for accessing server;
+  ///   [appRefreshStream] – stream with events causing data to be updated.
   const StabilityDiagram({
     super.key,
     required ApiAddress apiAddress,
@@ -48,24 +48,26 @@ class StabilityDiagram extends StatelessWidget {
     final labelsStyle = theme.textTheme.labelSmall ?? const TextStyle();
     return FutureBuilderWidget(
       refreshStream: _appRefreshStream,
-      onFuture: () => FieldRecord<double>(
+      onFuture: FieldRecord<double>(
         tableName: 'parameter_data',
         fieldName: 'result',
         dbName: _dbName,
         apiAddress: _apiAddress,
         authToken: _authToken,
         toValue: (value) => double.parse(value),
-      ).fetch(filter: {'parameter_id': 18}),
+        filter: {'parameter_id': 18},
+      ).fetch,
       caseData: (context, h, _) => FutureBuilderWidget(
         refreshStream: _appRefreshStream,
-        onFuture: () => FieldRecord<double>(
+        onFuture: FieldRecord<double>(
           tableName: 'parameter_data',
           fieldName: 'result',
           dbName: _dbName,
           apiAddress: _apiAddress,
           authToken: _authToken,
           toValue: (value) => double.parse(value),
-        ).fetch(filter: {'parameter_id': 7}),
+          filter: {'parameter_id': 7},
+        ).fetch,
         caseData: (context, theta0, _) => FutureBuilderWidget(
           refreshStream: _appRefreshStream,
           onFuture: PgStaticStabilityCurve(

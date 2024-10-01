@@ -6,7 +6,7 @@ class StrengthForceAllow {
   ///
   /// Creates representation of allow value for [StrengthForceLimited].
   ///
-  /// `force` - the [StrengthForceLimited] force for which
+  /// [force] – the [StrengthForceLimited] force for which
   /// allow value is calculated.
   const StrengthForceAllow({
     required StrengthForceLimited force,

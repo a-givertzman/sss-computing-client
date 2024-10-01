@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
+import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 ///
 /// Construct [Figure] as combined paths of figure 1 and 2.
 class CombinedFigure implements Figure {
@@ -9,7 +10,7 @@ class CombinedFigure implements Figure {
   ///
   /// Construct [Figure] as combined paths of figure 1 and 2.
   const CombinedFigure({
-    required List<Paint> paints,
+    List<Paint> paints = const [],
     required Figure figureOne,
     required Figure figureTwo,
   })  : _paints = paints,
@@ -29,9 +30,9 @@ class CombinedFigure implements Figure {
   @override
   Figure copyWith({List<Paint>? paints}) {
     return CombinedFigure(
-      paints: paints ?? _paints,
-      figureOne: _figureOne,
-      figureTwo: _figureTwo,
+      paints: paints ?? List.from(_paints),
+      figureOne: _figureOne.copyWith(),
+      figureTwo: _figureTwo.copyWith(),
     );
   }
 }

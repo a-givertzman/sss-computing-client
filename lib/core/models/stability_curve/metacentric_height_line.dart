@@ -17,8 +17,8 @@ final class MetacentricHeightLine implements Curve {
   final double _valueInterval;
   ///
   /// Creates a metacentric height [Curve] as maximum possible line segment
-  /// with starting point (`theta0`, 0,0) and ending point (`theta0` + 1 radian, `h`),
-  /// limited in x by interval [`minX`, `maxX`]. `valueInterval` - x interval
+  /// with starting point ([theta0`, 0,0) and ending point ([theta0` + 1 radian, [h]),
+  /// limited in x by interval [[minX], [maxX]]. [valueInterval] – x interval
   /// between two adjacent points of the curve (x interval between last two points
   /// of the curve may be less than this value).
   const MetacentricHeightLine({

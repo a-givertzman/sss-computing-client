@@ -23,9 +23,9 @@ class AllowedStrengthForceChart extends StatelessWidget {
   /// Creates widget that fetching data about strength allowance
   /// and displaying it as bar chart.
   ///
-  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   - `dbName` - name of the database;
-  ///   - `authToken` - string authentication token for accessing server.
+  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   - [dbName] – name of the database;
+  ///   - [authToken] – string authentication token for accessing server.
   const AllowedStrengthForceChart({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,

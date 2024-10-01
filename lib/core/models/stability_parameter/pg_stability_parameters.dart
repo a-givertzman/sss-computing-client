@@ -13,9 +13,9 @@ class PgStabilityParameters implements StabilityParameters {
   ///
   /// Creates stability [Criterions] collection that stored in postgres DB.
   ///
-  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   - `dbName` - name of the database;
-  ///   - `authToken` - string  authentication token for accessing server;
+  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   - [dbName] – name of the database;
+  ///   - [authToken] – string  authentication token for accessing server;
   const PgStabilityParameters({
     required String dbName,
     required ApiAddress apiAddress,

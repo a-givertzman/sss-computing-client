@@ -11,9 +11,9 @@ final class PgDynamicStabilityCurve implements Curve {
   final String? _authToken;
   ///
   /// Creates dynamic stabilty [Curve] that stored in Postgres DB.
-  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   - `dbName` - name of the database;
-  ///   - `authToken` - string  authentication token for accessing server;
+  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   - [dbName] – name of the database;
+  ///   - [authToken] – string  authentication token for accessing server;
   const PgDynamicStabilityCurve({
     required ApiAddress apiAddress,
     required String dbName,

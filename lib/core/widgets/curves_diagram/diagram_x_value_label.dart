@@ -12,7 +12,7 @@ class DiagramXValueLabel {
   ///
   /// Creates object that holds value label data and converts it to
   /// [FlLine] for display on [LineChart] as vertical line
-  /// with label for provided `value` with label to right of it.
+  /// with label for provided [value] with label to right of it.
   DiagramXValueLabel({
     required String caption,
     required double value,

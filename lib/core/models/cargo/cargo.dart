@@ -1,4 +1,5 @@
 import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 ///
 /// Common data for corresponding [Cargo].
 abstract interface class Cargo {
@@ -17,6 +18,18 @@ abstract interface class Cargo {
   ///
   /// Weight of the cargo
   double? get weight;
+  ///
+  /// Volume of the cargo
+  double? get volume;
+  ///
+  /// Density of the cargo
+  double? get density;
+  ///
+  /// Stowage factor of the cargo
+  double? get stowageFactor;
+  ///
+  /// Level of the cargo
+  double? get level;
   ///
   /// Vertital Center of Gravity of the [Cargo]
   double? get vcg;
@@ -51,11 +64,17 @@ abstract interface class Cargo {
   /// y-moment of inertia of the free surface of the water
   double? get mfsy;
   ///
+  /// Either maximum value for moments used or not
+  bool get useMaxMfs;
+  ///
   /// type of the cargo
   CargoType get type;
   ///
+  /// indicator that determines whether cargo is shiftable
+  bool get shiftable;
   ///
-  String? get path;
+  /// TODO: update doc
+  PathProjections? get paths;
   ///
   /// Returns [Map] representation of the [Cargo]
   Map<String, dynamic> asMap();
