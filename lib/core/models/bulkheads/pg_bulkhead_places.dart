@@ -4,6 +4,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead_place.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead_places.dart';
 import 'package:sss_computing_client/core/models/bulkheads/json_bulkhead_place.dart';
+import 'package:sss_computing_client/core/future_result_extension.dart';
 ///
 /// [BulkheadPlaces] collection that stored in postgres DB.
 class PgBulkheadPlaces implements BulkheadPlaces {
@@ -57,25 +58,7 @@ class PgBulkheadPlaces implements BulkheadPlaces {
         },
       ),
     );
-    return sqlAccess
-        .fetch()
-        .then<Result<List<BulkheadPlace>, Failure<String>>>(
-          (result) => switch (result) {
-            Ok(value: final bulkheadPlaces) => Ok(bulkheadPlaces),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-          },
-        )
-        .onError(
-          (error, stackTrace) => Err(Failure(
-            message: '$error',
-            stackTrace: stackTrace,
-          )),
-        );
+    return sqlAccess.fetch().convertFailure();
   }
   //
   @override
@@ -112,25 +95,15 @@ class PgBulkheadPlaces implements BulkheadPlaces {
         },
       ),
     );
-    return sqlAccess
-        .fetch()
-        .then<Result<BulkheadPlace, Failure<String>>>(
-          (result) => switch (result) {
-            Ok(value: final bulkheadPlaces) => Ok(bulkheadPlaces.first),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
+    return sqlAccess.fetch().convertFailure().then((result) => switch (result) {
+          Ok(value: final entries) => entries.length == 1
+              ? Ok(entries.first)
+              : Err(Failure(
+                  message: 'Not found',
                   stackTrace: StackTrace.current,
-                ),
-              ),
-          },
-        )
-        .onError(
-          (error, stackTrace) => Err(Failure(
-            message: '$error',
-            stackTrace: stackTrace,
-          )),
-        );
+                )),
+          Err(:final error) => Err(error),
+        });
   }
   //
   @override
@@ -157,25 +130,7 @@ class PgBulkheadPlaces implements BulkheadPlaces {
             """,
       ),
     );
-    return sqlAccess
-        .fetch()
-        .then<Result<void, Failure<String>>>(
-          (result) => switch (result) {
-            Ok() => const Ok(null),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-          },
-        )
-        .onError(
-          (error, stackTrace) => Err(Failure(
-            message: '$error',
-            stackTrace: stackTrace,
-          )),
-        );
+    return sqlAccess.fetch().convertFailure();
   }
   //
   @override
@@ -195,24 +150,6 @@ class PgBulkheadPlaces implements BulkheadPlaces {
             """,
       ),
     );
-    return sqlAccess
-        .fetch()
-        .then<Result<void, Failure<String>>>(
-          (result) => switch (result) {
-            Ok() => const Ok(null),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-          },
-        )
-        .onError(
-          (error, stackTrace) => Err(Failure(
-            message: '$error',
-            stackTrace: stackTrace,
-          )),
-        );
+    return sqlAccess.fetch().convertFailure();
   }
 }
