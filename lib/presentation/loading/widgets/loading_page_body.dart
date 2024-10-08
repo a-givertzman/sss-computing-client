@@ -8,6 +8,7 @@ import 'package:sss_computing_client/core/models/cargo/pg_stores_tanks.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/tabs/tab_setting.dart';
 import 'package:sss_computing_client/core/widgets/tabs/tabs_view_widget.dart';
+import 'package:sss_computing_client/presentation/loading/containers_configurator/containers_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/hold_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/other_stores_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/tanks_configurator.dart';
@@ -125,6 +126,10 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
               authToken: widget._authToken,
             ),
           ),
+        ),
+        TabSetting(
+          label: const Localized('Контейнеры').v,
+          content: const ContainersConfigurator(),
         ),
       ],
     );

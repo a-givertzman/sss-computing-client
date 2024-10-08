@@ -31,6 +31,7 @@ dependencies:
   collection: ^1.18.0
   vector_math: ^2.1.4
   path_drawing: ^1.0.1
+  dashed_line: ^0.1.0+3
 
 dev_dependencies:
   flutter_test:

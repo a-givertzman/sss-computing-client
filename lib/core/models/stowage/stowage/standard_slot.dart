@@ -40,6 +40,9 @@ class StandardSlot implements Slot {
   final double maxHeight;
   //
   @override
+  final double minHeight;
+  //
+  @override
   final double minVerticalSeparation;
   //
   @override
@@ -60,6 +63,7 @@ class StandardSlot implements Slot {
     required this.leftZ,
     required this.rightZ,
     required this.maxHeight,
+    required this.minHeight,
     required this.minVerticalSeparation,
     this.containerId,
   });
@@ -113,6 +117,7 @@ class StandardSlot implements Slot {
     double? leftZ,
     double? rightZ,
     double? maxHeight,
+    double? minHeight,
     double? minVerticalSeparation,
     required int? containerId,
   }) =>
@@ -127,6 +132,7 @@ class StandardSlot implements Slot {
         leftZ: leftZ ?? this.leftZ,
         rightZ: rightZ ?? this.rightZ,
         maxHeight: maxHeight ?? this.maxHeight,
+        minHeight: minHeight ?? this.minHeight,
         minVerticalSeparation:
             minVerticalSeparation ?? this.minVerticalSeparation,
         containerId: containerId,

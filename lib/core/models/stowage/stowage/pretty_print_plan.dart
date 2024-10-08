@@ -14,11 +14,11 @@ extension PrettyPrint on StowagePlan {
   /// odd and even bays. Otherwise, it prints the stowage plan for each bay individually.
   void printAll({bool usePairs = true}) {
     if (usePairs) {
-      for (final group in _iterateBayPairs()) {
+      for (final group in iterateBayPairs()) {
         _printBayPair(group.odd, group.even);
       }
     } else {
-      for (int bay in _iterateBays()) {
+      for (int bay in iterateBays()) {
         _printBayPair(bay, null);
       }
     }
@@ -43,10 +43,10 @@ extension PrettyPrint on StowagePlan {
     final maxRow = slotsInBayPair.map((slot) => slot.row).max;
     final withZeroRow = slotsInBayPair.any((slot) => slot.row == 0);
     final maxTier = slotsInBayPair.map((slot) => slot.tier).max;
-    for (int tier in _iterateTiers(maxTier)) {
+    for (int tier in iterateTiers(maxTier)) {
       final String tierNumber = tier.toString().padLeft(2, '0');
       String slotsLine = '';
-      for (int row in _iterateRows(maxRow, withZeroRow)) {
+      for (int row in iterateRows(maxRow, withZeroRow)) {
         final slots = slotsInBayPair.where(
           (s) => s.row == row && s.tier == tier,
         );
@@ -68,7 +68,7 @@ extension PrettyPrint on StowagePlan {
       if (slotsLine.trim().isNotEmpty) print('$tierNumber $slotsLine');
     }
     String rowNumbers = _rowNumbersPad;
-    for (int row in _iterateRows(maxRow, withZeroRow)) {
+    for (int row in iterateRows(maxRow, withZeroRow)) {
       rowNumbers += ' ${row.toString().padLeft(2, '0')} ';
     }
     print(rowNumbers);
@@ -76,7 +76,7 @@ extension PrettyPrint on StowagePlan {
   ///
   /// Returns [Iterable] collection of unique bay numbers
   /// present in the stowage plan, sorted in descending order.
-  Iterable<int> _iterateBays() {
+  Iterable<int> iterateBays() {
     final uniqueBays = toFilteredSlotList().map((slot) => slot.bay).toSet();
     final sortedBays = uniqueBays.toList()..sort((a, b) => b.compareTo(a));
     return sortedBays;
@@ -85,7 +85,7 @@ extension PrettyPrint on StowagePlan {
   /// Returns [Iterable] collection of row numbers
   /// in accordance with stowage numbering system for rows
   /// [ISO 9711-1, 3.2](https://www.iso.org/ru/standard/17568.html)
-  Iterable<int> _iterateRows(int maxRow, bool withZeroRow) sync* {
+  Iterable<int> iterateRows(int maxRow, bool withZeroRow) sync* {
     for (int row = maxRow; row >= 2; row -= 2) {
       yield row;
     }
@@ -98,7 +98,7 @@ extension PrettyPrint on StowagePlan {
   /// Returns [Iterable] collection of tier numbers
   /// in accordance with stowage numbering system for rows
   /// [ISO 9711-1, 3.3](https://www.iso.org/ru/standard/17568.html)
-  Iterable<int> _iterateTiers(int maxTier) sync* {
+  Iterable<int> iterateTiers(int maxTier) sync* {
     for (int tier = maxTier; tier >= 2; tier -= 2) {
       yield tier;
     }
@@ -111,8 +111,8 @@ extension PrettyPrint on StowagePlan {
   /// - an odd bay number (`odd`) and the even bay number (`even`) that immediately precedes it,
   /// - only an odd bay number (`odd`) if no preceding even bay number exists,
   /// - only an even bay number (`even`) if no following odd bay number exists.
-  Iterable<({int? odd, int? even})> _iterateBayPairs() sync* {
-    final bays = _iterateBays().toList();
+  Iterable<({int? odd, int? even})> iterateBayPairs() sync* {
+    final bays = iterateBays().toList();
     for (int i = 0; i < bays.length; i++) {
       final current = bays[i];
       final next = bays.elementAtOrNull(i + 1);
