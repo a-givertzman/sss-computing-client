@@ -7,11 +7,13 @@ import 'package:sss_computing_client/core/models/calculation/calculation_status.
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_page_body.dart';
+
 ///
 class StrengthPage extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
+
   ///
   const StrengthPage({
     super.key,
@@ -25,6 +27,7 @@ class StrengthPage extends StatefulWidget {
   @override
   State<StrengthPage> createState() => _StrengthPageState();
 }
+
 ///
 class _StrengthPageState extends State<StrengthPage> {
   late final ApiAddress _apiAddress;
@@ -41,10 +44,12 @@ class _StrengthPageState extends State<StrengthPage> {
     _authToken = const Setting('api-auth-token').toString();
     super.initState();
   }
+
   //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Row(
         children: [
           NavigationPanel(

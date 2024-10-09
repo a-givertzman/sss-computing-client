@@ -506,5 +506,17 @@
     "mfsModCurrent": [
         "Consider current modifications",
         "Учитываются поправки по текущему заполнению"
+    ],
+    "Containers": [
+        "Containers",
+        "Контейнеры"
+    ],
+    "BAY No.": [
+        "BAY No.",
+        "Бэй №"
+    ],
+    "Code": [
+        "Code",
+        "Код"
     ]
 }

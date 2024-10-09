@@ -5,12 +5,14 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/loading_page_body.dart';
+
 ///
 /// Page for configuring ship cargos.
 class LoadingPage extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
+
   ///
   /// Creates page for configuring ship cargos.
   ///
@@ -31,6 +33,7 @@ class LoadingPage extends StatefulWidget {
   @override
   State<LoadingPage> createState() => _LoadingPageState();
 }
+
 class _LoadingPageState extends State<LoadingPage> {
   late final ApiAddress _apiAddress;
   late final String _dbName;
@@ -46,10 +49,12 @@ class _LoadingPageState extends State<LoadingPage> {
     _authToken = const Setting('api-auth-token').toString();
     super.initState();
   }
+
   //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Row(
         children: [
           NavigationPanel(

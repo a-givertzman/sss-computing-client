@@ -12,6 +12,7 @@ import 'package:sss_computing_client/presentation/loading/containers_configurato
 import 'package:sss_computing_client/presentation/loading/widgets/hold_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/other_stores_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/tanks_configurator.dart';
+
 ///
 /// Body for loading page.
 class LoadingPageBody extends StatefulWidget {
@@ -20,6 +21,7 @@ class LoadingPageBody extends StatefulWidget {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
+
   ///
   /// Creates body for loading page.
   ///
@@ -45,6 +47,7 @@ class LoadingPageBody extends StatefulWidget {
   @override
   State<LoadingPageBody> createState() => _LoadingPageBodyState();
 }
+
 class _LoadingPageBodyState extends State<LoadingPageBody> {
   //
   @override
@@ -128,7 +131,7 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
           ),
         ),
         TabSetting(
-          label: const Localized('Контейнеры').v,
+          label: const Localized('Containers').v,
           content: const ContainersConfigurator(),
         ),
       ],

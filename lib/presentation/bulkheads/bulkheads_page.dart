@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkheads_page_body.dart';
+
 ///
 /// Page for configuration of bulkheads;
 class BulkheadsPage extends StatelessWidget {
   final void Function()? _onClose;
+
   ///
   /// Creates page for configuration of bulkheads.
   ///
@@ -18,6 +20,7 @@ class BulkheadsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         leading: BackButton(
           onPressed: () {

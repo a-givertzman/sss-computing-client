@@ -3,6 +3,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/presentation/other_stores_cargo/widgets/other_stores_cargo_body.dart';
+
 ///
 /// Page for configuration of other stores cargo.
 class OtherStoresCargoPage extends StatelessWidget {
@@ -11,6 +12,7 @@ class OtherStoresCargoPage extends StatelessWidget {
   final String _label;
   final Cargo _cargo;
   final bool _fetchData;
+
   ///
   /// Creates page for configuration of other stores cargo
   ///
@@ -37,6 +39,7 @@ class OtherStoresCargoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         leading: BackButton(
           onPressed: _onClose,

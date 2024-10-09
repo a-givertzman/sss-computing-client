@@ -3,11 +3,13 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/stability/widgets/stability_body.dart';
+
 ///
 class StabilityPage extends StatelessWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
+
   ///
   const StabilityPage({
     super.key,
@@ -21,6 +23,7 @@ class StabilityPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Row(
         children: [
           NavigationPanel(

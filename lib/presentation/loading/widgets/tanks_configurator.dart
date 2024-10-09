@@ -28,6 +28,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
+
 ///
 /// Configurator for ship tanks cargo.
 class TanksConfigurator extends StatefulWidget {
@@ -36,6 +37,7 @@ class TanksConfigurator extends StatefulWidget {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
+
   ///
   /// Creates configurator for ship tanks cargo.
   ///
@@ -60,6 +62,7 @@ class TanksConfigurator extends StatefulWidget {
   @override
   State<TanksConfigurator> createState() => _TanksConfiguratorState();
 }
+
 class _TanksConfiguratorState extends State<TanksConfigurator> {
   late List<Cargo> _cargos;
   Cargo? _selectedCargo;
@@ -68,12 +71,14 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
     _cargos = widget._cargos;
     super.initState();
   }
+
   @override
   void dispose() {
     _cargos = [];
     _selectedCargo = null;
     super.dispose();
   }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -104,12 +109,12 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                     apiAddress: widget._apiAddress,
                     dbName: widget._dbName,
                     authToken: widget._authToken,
-                    tableName: 'ship_parameters',
-                    fieldName: 'value',
+                    tableName: 'ship_geometry',
+                    fieldName: 'hull_svg',
                     toValue: (value) => JsonSvgPathProjections(
                       json: json.decode(value),
                     ),
-                    filter: {'key': 'hull_svg'},
+                    filter: {'id': 1},
                   ).fetch,
                   caseData: (context, hull, _) => FutureBuilderWidget(
                     refreshStream: widget._appRefreshStream,
@@ -117,12 +122,12 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                       apiAddress: widget._apiAddress,
                       dbName: widget._dbName,
                       authToken: widget._authToken,
-                      tableName: 'ship_parameters',
-                      fieldName: 'value',
+                      tableName: 'ship_geometry',
+                      fieldName: 'hull_beauty_svg',
                       toValue: (value) => JsonSvgPathProjections(
                         json: json.decode(value),
                       ),
-                      filter: {'key': 'hull_beauty_svg'},
+                      filter: {'id': 1},
                     ).fetch,
                     caseData: (context, hullBeauty, _) => CargoSchemes(
                       cargos: _cargos,
@@ -252,6 +257,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
       ),
     );
   }
+
   //
   void _toggleCargo(Cargo? cargo) {
     if (cargo?.id != _selectedCargo?.id) {
@@ -264,6 +270,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
       _selectedCargo = null;
     });
   }
+
   //
   void _refetchCargo(Cargo oldCargo) {
     final id = oldCargo.id;
@@ -284,6 +291,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
           (_, __) => _showErrorMessage(const Localized('Unknown error').v),
         );
   }
+
   //
   void _updateCargo(Cargo newCargo) {
     final idx = _cargos.indexWhere((cargo) => cargo.id == newCargo.id);
@@ -297,6 +305,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
       ];
     });
   }
+
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;

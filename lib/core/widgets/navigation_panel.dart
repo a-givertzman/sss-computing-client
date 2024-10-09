@@ -9,6 +9,7 @@ import 'package:sss_computing_client/presentation/loading/loading_page.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
 import 'package:sss_computing_client/presentation/stability/stability_page.dart';
 import 'package:sss_computing_client/presentation/strength/strength_page.dart';
+
 ///
 /// App main navigation widget.
 class NavigationPanel extends StatelessWidget {
@@ -16,6 +17,7 @@ class NavigationPanel extends StatelessWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
+
   ///
   /// Creates app main navigation widget.
   const NavigationPanel({
@@ -167,6 +169,8 @@ class NavigationPanel extends StatelessWidget {
                       ),
                       Expanded(
                         child: Scaffold(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.background,
                           body: ErrorMessageWidget(
                             message: const Localized('Page not found').v,
                           ),

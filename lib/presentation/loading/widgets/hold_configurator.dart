@@ -29,6 +29,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/hold_cargo_shiftable_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
+
 ///
 /// Configurator for ship hold cargo.
 class HoldConfigurator extends StatefulWidget {
@@ -38,6 +39,7 @@ class HoldConfigurator extends StatefulWidget {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
+
   ///
   /// Creates configurator for ship hold cargo.
   ///
@@ -66,6 +68,7 @@ class HoldConfigurator extends StatefulWidget {
   @override
   State<HoldConfigurator> createState() => _HoldConfiguratorState();
 }
+
 class _HoldConfiguratorState extends State<HoldConfigurator> {
   late List<Cargo> _cargos;
   Cargo? _selectedCargo;
@@ -74,6 +77,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
     _cargos = widget._cargos;
     super.initState();
   }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -105,12 +109,12 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                     apiAddress: widget._apiAddress,
                     dbName: widget._dbName,
                     authToken: widget._authToken,
-                    tableName: 'ship_parameters',
-                    fieldName: 'value',
+                    tableName: 'ship_geometry',
+                    fieldName: 'hull_svg',
                     toValue: (value) => JsonSvgPathProjections(
                       json: json.decode(value),
                     ),
-                    filter: {'key': 'hull_svg'},
+                    filter: {'id': 1},
                   ).fetch,
                   caseData: (context, hull, _) => FutureBuilderWidget(
                     refreshStream: widget._appRefreshStream,
@@ -118,12 +122,12 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                       apiAddress: widget._apiAddress,
                       dbName: widget._dbName,
                       authToken: widget._authToken,
-                      tableName: 'ship_parameters',
-                      fieldName: 'value',
+                      tableName: 'ship_geometry',
+                      fieldName: 'hull_beauty_svg',
                       toValue: (value) => JsonSvgPathProjections(
                         json: json.decode(value),
                       ),
-                      filter: {'key': 'hull_beauty_svg'},
+                      filter: {'id': 1},
                     ).fetch,
                     caseData: (context, hullBeauty, _) => CargoSchemes(
                       cargos: _cargos,
@@ -265,6 +269,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
       ),
     );
   }
+
   //
   void _toggleCargo(Cargo? cargo) {
     if (cargo?.id != _selectedCargo?.id) {
@@ -277,6 +282,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
       _selectedCargo = null;
     });
   }
+
   //
   void _refetchCargo(Cargo oldCargo) {
     final id = oldCargo.id;
@@ -297,6 +303,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
           (_, __) => _showErrorMessage(const Localized('Unknown error').v),
         );
   }
+
   //
   void _updateCargo(Cargo newCargo) {
     final idx = _cargos.indexWhere((cargo) => cargo.id == newCargo.id);
@@ -310,6 +317,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
       ];
     });
   }
+
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;

@@ -5,12 +5,14 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/drafts/widgets/drafts_page_body.dart';
+
 ///
 /// Page displaying drafts data.
 class DraftsPage extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
+
   ///
   /// Creates page displaying drafts data.
   ///
@@ -31,6 +33,7 @@ class DraftsPage extends StatefulWidget {
   @override
   State<DraftsPage> createState() => _DraftsPageState();
 }
+
 class _DraftsPageState extends State<DraftsPage> {
   late final ApiAddress _apiAddress;
   late final String _dbName;
@@ -46,10 +49,12 @@ class _DraftsPageState extends State<DraftsPage> {
     _authToken = const Setting('api-auth-token').toString();
     super.initState();
   }
+
   //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Row(
         children: [
           NavigationPanel(
