@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 ///
 /// Creates widget that becomes active when clicked
 /// and deactivates when clicked outside its area.
@@ -13,6 +14,7 @@ class ActivateOnTapBuilderWidget extends StatefulWidget {
   final bool? Function()? onActivate;
   final bool? Function()? onDeactivate;
   final MouseCursor cursor;
+
   ///
   const ActivateOnTapBuilderWidget({
     super.key,
@@ -21,11 +23,13 @@ class ActivateOnTapBuilderWidget extends StatefulWidget {
     this.onDeactivate,
     this.cursor = SystemMouseCursors.click,
   });
+
   ///
   @override
   State<ActivateOnTapBuilderWidget> createState() =>
       _ActivateOnTapBuilderWidgetState();
 }
+
 ///
 class _ActivateOnTapBuilderWidgetState
     extends State<ActivateOnTapBuilderWidget> {
@@ -38,6 +42,7 @@ class _ActivateOnTapBuilderWidgetState
       _isActivated = true;
     });
   }
+
   //
   void _handleDeactivate() {
     if (widget.onDeactivate?.call() ?? false) return;
@@ -45,18 +50,21 @@ class _ActivateOnTapBuilderWidgetState
       _isActivated = false;
     });
   }
+
   //
   @override
   void initState() {
     _focusNode = FocusNode();
     super.initState();
   }
+
   //
   @override
   void dispose() {
     _focusNode.dispose();
     super.dispose();
   }
+
   ///
   @override
   Widget build(BuildContext context) {
@@ -80,7 +88,7 @@ class _ActivateOnTapBuilderWidgetState
         : MouseRegion(
             cursor: widget.cursor,
             child: GestureDetector(
-              onTap: () => _handleActivate(),
+              onDoubleTap: () => _handleActivate(),
               child: Builder(
                 builder: (context) => widget.builder(
                   context,

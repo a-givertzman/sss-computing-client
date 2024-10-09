@@ -7,6 +7,7 @@ import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/widgets/table/table_view.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 import 'package:sss_computing_client/core/widgets/table/edit_on_tap_cell.dart';
+
 ///
 /// Widget that displays [T] list in form of table with editing fields.
 class EditingTable<T> extends StatefulWidget {
@@ -17,6 +18,7 @@ class EditingTable<T> extends StatefulWidget {
   final T? _selectedRow;
   final Color _selectedRowColor;
   final double _rowHeight;
+
   ///
   /// Creates widget that displays [T] list in form of table.
   ///
@@ -46,6 +48,7 @@ class EditingTable<T> extends StatefulWidget {
   @override
   State<EditingTable<T>> createState() => _EditingTableState<T>();
 }
+
 ///
 class _EditingTableState<T> extends State<EditingTable<T>> {
   late final ScrollController _scrollController;
@@ -85,6 +88,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
     );
     super.initState();
   }
+
   //
   @override
   void dispose() {
@@ -92,6 +96,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
     _scrollController.dispose();
     super.dispose();
   }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -116,6 +121,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
       ],
     );
   }
+
   ///
   Widget _buildPreviewCell(
     BuildContext context,
@@ -136,8 +142,20 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
           },
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
+          textAlign: switch (column.cellAlignment) {
+            Alignment.centerLeft ||
+            Alignment.bottomLeft ||
+            Alignment.topLeft =>
+              TextAlign.left,
+            Alignment.centerRight ||
+            Alignment.bottomRight ||
+            Alignment.topRight =>
+              TextAlign.right,
+            _ => TextAlign.center
+          },
         );
   }
+
   ///
   Widget _buildEditableCell(
     BuildContext context,
@@ -173,6 +191,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
       ),
     );
   }
+
   ///
   Widget _buildCell(
     BuildContext context,
@@ -191,6 +210,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
             column,
           );
   }
+
   ///
   CellStyle? _buildCellStyle(DaviRow<T> row) {
     return row.data == widget._selectedRow
@@ -199,6 +219,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
           )
         : null;
   }
+
   ///
   void _highlightRow(T? rowData) {
     if (rowData == null) return;
