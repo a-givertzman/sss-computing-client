@@ -1,5 +1,5 @@
-import 'package:sss_computing_client/core/models/stowage/stowage/slot.dart';
-import 'package:sss_computing_client/core/models/stowage/stowage/standard_slot.dart';
+import 'package:sss_computing_client/core/models/stowage/stowage/slot/slot.dart';
+import 'package:sss_computing_client/core/models/stowage/stowage/slot/standard_slot.dart';
 const List<Slot> arkSlots = [
   StandardSlot(
     bay: 1,

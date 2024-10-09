@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
-import 'package:sss_computing_client/core/models/stowage/stowage/slot.dart';
-import 'package:sss_computing_client/core/models/stowage/stowage/stowage_plan.dart';
+import 'package:sss_computing_client/core/models/stowage/stowage/slot/slot.dart';
+import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/stowage_collection.dart';
 ///
-/// Provides an extension methods for pretty-printing a [StowagePlan].
-extension PrettyPrint on StowagePlan {
+/// Provides an extension methods for pretty-printing a [StowageCollection].
+extension PrettyPrint on StowageCollection {
   static const String _nullSlot = '    ';
   static const String _occupiedSlot = '[▥] ';
   static const String _emptySlot = '[ ] ';
@@ -18,7 +18,7 @@ extension PrettyPrint on StowagePlan {
         _printBayPair(group.odd, group.even);
       }
     } else {
-      for (int bay in iterateBays()) {
+      for (int bay in _iterateBays()) {
         _printBayPair(bay, null);
       }
     }
@@ -76,7 +76,7 @@ extension PrettyPrint on StowagePlan {
   ///
   /// Returns [Iterable] collection of unique bay numbers
   /// present in the stowage plan, sorted in descending order.
-  Iterable<int> iterateBays() {
+  Iterable<int> _iterateBays() {
     final uniqueBays = toFilteredSlotList().map((slot) => slot.bay).toSet();
     final sortedBays = uniqueBays.toList()..sort((a, b) => b.compareTo(a));
     return sortedBays;
@@ -112,7 +112,7 @@ extension PrettyPrint on StowagePlan {
   /// - only an odd bay number (`odd`) if no preceding even bay number exists,
   /// - only an even bay number (`even`) if no following odd bay number exists.
   Iterable<({int? odd, int? even})> iterateBayPairs() sync* {
-    final bays = iterateBays().toList();
+    final bays = _iterateBays().toList();
     for (int i = 0; i < bays.length; i++) {
       final current = bays[i];
       final next = bays.elementAtOrNull(i + 1);
