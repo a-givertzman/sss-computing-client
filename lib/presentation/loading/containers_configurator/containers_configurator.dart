@@ -12,6 +12,7 @@ import 'package:sss_computing_client/core/models/stowage/container/container_1cc
 import 'package:sss_computing_client/core/models/stowage/faked_slots.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/slot/slot.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/pretty_print_plan.dart';
+import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/stowage_collection.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/stowage_map.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/put_container_operation.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/remove_container_operation.dart';
@@ -21,7 +22,9 @@ import 'package:sss_computing_client/core/widgets/scheme/scheme_text.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
 import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_code_column.dart';
 import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_name_column.dart';
-import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_serial_column.dart';
+import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_pod_column.dart';
+import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_pol_column.dart';
+import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_slot_column.dart';
 import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_type_column.dart';
 import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_weight_column.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
@@ -41,28 +44,127 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
   late final ItemScrollController _itemScrollController;
   late final ItemPositionsListener _itemPositionsListener;
   /// For testing
+  late List<({int? odd, int? even})> _bayPairs;
   late List<Slot> _selectedSlots;
   late int? _selectedContainerId;
   //
   @override
   void initState() {
     _stowagePlan = StowageMap.fromSlotList(arkSlots);
-    _containers = List.from(const [
-      Container1CC(serial: 1, id: 1, tareWeight: 1.0),
-      Container1AA(serial: 2, id: 2, tareWeight: 1.0),
-    ]);
+    _containers = List.generate(
+      50,
+      (index) => index.isOdd
+          ? Container1CC(id: index, serial: index, tareWeight: 1.0)
+          : Container1AA(id: index, serial: index, tareWeight: 1.0),
+    );
     _itemScrollController = ItemScrollController();
     _itemPositionsListener = ItemPositionsListener.create();
+    _bayPairs = _stowagePlan.iterateBayPairs().toList();
     //
     _selectedSlots = [];
     _selectedContainerId = null;
     super.initState();
   }
   //
+  Slot? _findSlotWithContainerId(int? containerId) {
+    return _stowagePlan
+        .toFilteredSlotList(
+          shouldIncludeSlot: (s) => s.containerId == containerId,
+        )
+        .firstOrNull;
+  }
+  //
+  stowage.Container? _findContainerWithId(int id) {
+    return _containers.firstWhereOrNull((c) => c.id == id);
+  }
+  //
+  bool _isFlyoverSlot(Slot slot) {
+    if (slot.containerId != null) return false;
+    final upperSlot = _stowagePlan.findSlot(slot.bay, slot.row, slot.tier + 2);
+    if (upperSlot == null) return false;
+    return true;
+  }
+  //
+  void _onContainerSelected(stowage.Container container) {
+    _selectedContainerId = container.id;
+    final slotWithContainer = _findSlotWithContainerId(container.id);
+    if (slotWithContainer != null) {
+      _onSlotSelected(
+        slotWithContainer.bay,
+        slotWithContainer.row,
+        slotWithContainer.tier,
+      );
+    }
+    setState(() {
+      return;
+    });
+  }
+  //
+  void _onSlotSelected(int bay, int row, int tier) {
+    _selectedSlots = _stowagePlan.toFilteredSlotList(
+      row: row,
+      tier: tier,
+      shouldIncludeSlot: (slot) {
+        if (bay.isOdd) {
+          return slot.bay == bay || slot.bay == bay - 1;
+        } else {
+          return slot.bay == bay || slot.bay == bay + 1;
+        }
+      },
+    );
+    final containerIdInSlot = _selectedSlots
+        .firstWhereOrNull((s) => s.containerId != null)
+        ?.containerId;
+    if (containerIdInSlot != null) _selectedContainerId = containerIdInSlot;
+    setState(() {
+      return;
+    });
+  }
+  //
+  void _putContainer() {
+    final alreadyOccupiedSlot = _findSlotWithContainerId(_selectedContainerId);
+    final container = _containers.firstWhere(
+      (c) => c.id == _selectedContainerId,
+    );
+    final slot = _selectedSlots.firstWhere((s) => switch (container.type) {
+          ContainerType.type1AA => s.bay.isEven,
+          ContainerType.type1CC => s.bay.isOdd,
+        });
+    PutContainerOperation(
+      container: container,
+      bay: slot.bay,
+      row: slot.row,
+      tier: slot.tier,
+    ).execute(_stowagePlan);
+    _selectedSlots.clear();
+    if (alreadyOccupiedSlot != null) {
+      RemoveContainerOperation(
+        bay: alreadyOccupiedSlot.bay,
+        row: alreadyOccupiedSlot.row,
+        tier: alreadyOccupiedSlot.tier,
+      ).execute(_stowagePlan);
+    }
+    setState(() {
+      return;
+    });
+  }
+  void _removeContainer() {
+    for (final s in _selectedSlots) {
+      RemoveContainerOperation(
+        bay: s.bay,
+        row: s.row,
+        tier: s.tier,
+      ).execute(_stowagePlan);
+    }
+    _selectedSlots.clear();
+    setState(() {
+      return;
+    });
+  }
+  //
   @override
   Widget build(BuildContext context) {
     final blockPadding = const Setting('blockPadding').toDouble;
-    final bayPairs = _stowagePlan.iterateBayPairs().toList();
     return Padding(
       padding: EdgeInsets.all(blockPadding),
       child: Column(
@@ -72,33 +174,30 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
               itemScrollController: _itemScrollController,
               itemPositionsListener: _itemPositionsListener,
               scrollDirection: Axis.horizontal,
-              itemCount: bayPairs.length,
+              itemCount: _bayPairs.length,
               itemBuilder: (_, index) => BayPlan(
-                oddBayNumber: bayPairs[index].odd,
-                evenBayNumber: bayPairs[index].even,
+                oddBayNumber: _bayPairs[index].odd,
+                evenBayNumber: _bayPairs[index].even,
                 slots: _stowagePlan.toFilteredSlotList(
                   shouldIncludeSlot: (slot) =>
-                      slot.bay == bayPairs[index].odd ||
-                      slot.bay == bayPairs[index].even,
+                      slot.bay == _bayPairs[index].odd ||
+                      slot.bay == _bayPairs[index].even,
                 ),
-                onSlotSelected: (bay, row, tier) => setState(() {
-                  _selectedSlots = _stowagePlan.toFilteredSlotList(
-                    row: row,
-                    tier: tier,
-                    shouldIncludeSlot: (slot) {
-                      if (bay.isOdd) {
-                        return slot.bay == bay || slot.bay == bay - 1;
-                      } else {
-                        return slot.bay == bay || slot.bay == bay + 1;
-                      }
-                    },
-                  );
-                }),
+                isFlyoverSlot: _isFlyoverSlot,
+                onSlotTap: _onSlotSelected,
+                onSlotDoubleTap: (bay, row, tier) {
+                  _onSlotSelected(bay, row, tier);
+                  _putContainer();
+                },
+                onSlotSecondaryTap: (bay, row, tier) {
+                  _onSlotSelected(bay, row, tier);
+                  _removeContainer();
+                },
                 selectedSlots: _selectedSlots
                     .where(
                       (s) =>
-                          s.bay == bayPairs[index].odd ||
-                          s.bay == bayPairs[index].even,
+                          s.bay == _bayPairs[index].odd ||
+                          s.bay == _bayPairs[index].even,
                     )
                     .toList(),
               ),
@@ -134,7 +233,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
                   }
                   return ListView.separated(
                     scrollDirection: Axis.horizontal,
-                    itemCount: bayPairs.length,
+                    itemCount: _bayPairs.length,
                     itemBuilder: (_, index) => GestureDetector(
                       onTap: () => _itemScrollController.scrollTo(
                         index: index,
@@ -148,12 +247,12 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
                             max != null &&
                             index >= min &&
                             index <= max,
-                        oddBayNumber: bayPairs[index].odd,
-                        evenBayNumber: bayPairs[index].even,
+                        oddBayNumber: _bayPairs[index].odd,
+                        evenBayNumber: _bayPairs[index].even,
                         slots: _stowagePlan.toFilteredSlotList(
                           shouldIncludeSlot: (slot) =>
-                              slot.bay == bayPairs[index].odd ||
-                              slot.bay == bayPairs[index].even,
+                              slot.bay == _bayPairs[index].odd ||
+                              slot.bay == _bayPairs[index].even,
                         ),
                       ),
                     ),
@@ -171,23 +270,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
                 icon: const Icon(Icons.add_rounded),
                 onPressed:
                     (_selectedContainerId != null && _selectedSlots.isNotEmpty)
-                        ? () => setState(() {
-                              final container = _containers.firstWhere(
-                                (c) => c.id == _selectedContainerId,
-                              );
-                              final slot = _selectedSlots
-                                  .firstWhere((s) => switch (container.type) {
-                                        ContainerType.type1AA => s.bay.isEven,
-                                        ContainerType.type1CC => s.bay.isOdd,
-                                      });
-                              PutContainerOperation(
-                                container: container,
-                                bay: slot.bay,
-                                row: slot.row,
-                                tier: slot.tier,
-                              ).execute(_stowagePlan);
-                              _selectedSlots.clear();
-                            })
+                        ? _putContainer
                         : null,
               ),
               SizedBox(width: blockPadding),
@@ -195,16 +278,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
                 icon: const Icon(Icons.remove_rounded),
                 onPressed: (_selectedSlots.isNotEmpty &&
                         _selectedSlots.any((s) => s.containerId != null))
-                    ? () => setState(() {
-                          for (final s in _selectedSlots) {
-                            RemoveContainerOperation(
-                              bay: s.bay,
-                              row: s.row,
-                              tier: s.tier,
-                            ).execute(_stowagePlan);
-                          }
-                          _selectedSlots.clear();
-                        })
+                    ? _removeContainer
                     : null,
               ),
             ],
@@ -213,6 +287,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
           Expanded(
             child: ContainersTable(
               containers: _containers,
+              collection: _stowagePlan,
               selectedId: _selectedContainerId,
               onRowUpdate: (container) {
                 setState(() {
@@ -227,8 +302,24 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
                   _selectedContainerId = null;
                   return;
                 }
-                _selectedContainerId = container.id;
+                _onContainerSelected(container);
               }),
+              onRowDoubleTap: (container) {
+                final slotWithContainer =
+                    _findSlotWithContainerId(container.id);
+                if (slotWithContainer == null) return;
+                _onContainerSelected(container);
+                final bayPairIndex = _bayPairs.indexWhere(
+                  (bayPair) =>
+                      bayPair.odd == slotWithContainer.bay ||
+                      bayPair.even == slotWithContainer.bay,
+                );
+                _itemScrollController.scrollTo(
+                  index: bayPairIndex,
+                  duration: const Duration(milliseconds: 500),
+                  alignment: 0.5,
+                );
+              },
             ),
           ),
         ],
@@ -277,30 +368,38 @@ class BayPairsNumber extends StatelessWidget {
 ///
 class ContainersTable extends StatelessWidget {
   final List<stowage.Container> containers;
+  final StowageCollection collection;
   final void Function(stowage.Container container)? onRowUpdate;
   final void Function(stowage.Container container)? onRowTap;
+  final void Function(stowage.Container container)? onRowDoubleTap;
   final int? selectedId;
   ///
   const ContainersTable({
     super.key,
     required this.containers,
+    required this.collection,
     this.onRowUpdate,
-    this.selectedId,
     this.onRowTap,
+    this.onRowDoubleTap,
+    this.selectedId,
   });
   //
   @override
   Widget build(BuildContext context) {
     return EditingTable<stowage.Container>(
-      columns: const [
-        ContainerTypeColumn(),
-        ContainerCodeColumn(),
-        ContainerNameColumn(),
-        ContainerWeightColumn(useDefaultEditing: true),
-        ContainerSerialColumn(useDefaultEditing: true),
+      columns: [
+        const ContainerTypeColumn(),
+        const ContainerCodeColumn(),
+        const ContainerNameColumn(),
+        const ContainerWeightColumn(useDefaultEditing: true),
+        // ContainerSerialColumn(useDefaultEditing: true),
+        const ContainerPODColumn(),
+        const ContainerPOLColumn(),
+        ContainerSlotColumn(collection: collection),
       ],
       selectedRow: containers.firstWhereOrNull((c) => c.id == selectedId),
       onRowTap: onRowTap,
+      onRowDoubleTap: onRowDoubleTap,
       rows: containers,
       onRowUpdate: onRowUpdate,
     );
@@ -312,14 +411,20 @@ class BayPlan extends StatefulWidget {
   final int? evenBayNumber;
   final List<Slot> slots;
   final List<Slot> selectedSlots;
-  final Function(int bay, int row, int tier)? onSlotSelected;
+  final void Function(int bay, int row, int tier)? onSlotTap;
+  final void Function(int bat, int row, int tier)? onSlotDoubleTap;
+  final void Function(int bat, int row, int tier)? onSlotSecondaryTap;
+  final bool Function(Slot slot)? isFlyoverSlot;
   ///
   const BayPlan({
     super.key,
     required this.oddBayNumber,
     required this.evenBayNumber,
     required this.selectedSlots,
-    this.onSlotSelected,
+    this.onSlotTap,
+    this.onSlotDoubleTap,
+    this.onSlotSecondaryTap,
+    this.isFlyoverSlot,
     this.slots = const [],
   });
   //
@@ -336,6 +441,16 @@ class _BayPlanState extends State<BayPlan> {
     _tierNumbering = numberingAxes.tierNumberingAxis(widget.slots);
     _rowNumbering = numberingAxes.rowNumberingAxis(widget.slots);
     super.initState();
+  }
+  //
+  @override
+  void didUpdateWidget(BayPlan oldWidget) {
+    if (widget.slots != oldWidget.slots) {
+      const numberingAxes = StowagePlanNumberingAxes();
+      _tierNumbering = numberingAxes.tierNumberingAxis(widget.slots);
+      _rowNumbering = numberingAxes.rowNumberingAxis(widget.slots);
+    }
+    super.didUpdateWidget(oldWidget);
   }
   //
   @override
@@ -383,9 +498,21 @@ class _BayPlanState extends State<BayPlan> {
             (slot) => Positioned.fill(
               child: SchemeFigure(
                 plane: figurePlane,
-                figure: const BaySlotFigure().slotFigure(slot),
+                figure: BaySlotFigure(
+                  isFlyover: widget.isFlyoverSlot?.call(slot) ?? false,
+                ).slotFigure(slot),
                 layoutTransform: transform,
-                onTap: () => widget.onSlotSelected?.call(
+                onTap: () => widget.onSlotTap?.call(
+                  slot.bay,
+                  slot.row,
+                  slot.tier,
+                ),
+                onDoubleTap: () => widget.onSlotDoubleTap?.call(
+                  slot.bay,
+                  slot.row,
+                  slot.tier,
+                ),
+                onSecondaryTap: () => widget.onSlotSecondaryTap?.call(
                   slot.bay,
                   slot.row,
                   slot.tier,
@@ -397,11 +524,12 @@ class _BayPlanState extends State<BayPlan> {
             (slot) => Positioned.fill(
               child: SchemeFigure(
                 plane: figurePlane,
-                figure: const BaySlotFigure(
+                figure: BaySlotFigure(
+                  isFlyover: widget.isFlyoverSlot?.call(slot) ?? false,
                   isSelected: true,
                 ).slotFigure(slot),
                 layoutTransform: transform,
-                onTap: () => widget.onSlotSelected?.call(-1, -1, -1),
+                onTap: () => widget.onSlotTap?.call(-1, -1, -1),
               ),
             ),
           ),
@@ -521,7 +649,7 @@ class StowagePlanNumberingAxes {
               .firstOrNull;
           if (slotInRow == null) return null;
           return StowagePlanNumberingData(
-            number: row,
+            number: _mapRow(row),
             start: Vector3(
               slotInRow.leftX,
               slotInRow.leftY,
@@ -538,6 +666,12 @@ class StowagePlanNumberingAxes {
         .toList();
     return rowNumberingData;
   }
+  int _mapRow(int row) =>
+      {
+        3: 2,
+        2: 3,
+      }[row] ??
+      row;
 }
 ///
 class StowagePlanNumberingData {
@@ -563,21 +697,27 @@ class StowagePlanNumberingData {
 ///
 class BaySlotFigure {
   final bool isSelected;
+  final bool isFlyover;
   ///
   const BaySlotFigure({
     this.isSelected = false,
+    this.isFlyover = false,
   });
   ///
   Figure slotFigure(Slot slot) {
-    final color = isSelected ? Colors.amber : Colors.white;
-    final fillColor = slot.bay.isEven ? Colors.blue : Colors.green;
+    final strokeColor = isSelected ? Colors.amber : Colors.white;
+    final fillColor = isFlyover
+        ? Colors.brown
+        : slot.bay.isEven
+            ? Colors.blue
+            : Colors.green;
     return RectangularCuboidFigure(
       paints: [
         Paint()
-          ..color = color
+          ..color = strokeColor
           ..strokeWidth = 2.0
           ..style = PaintingStyle.stroke,
-        if (slot.containerId != null)
+        if (slot.containerId != null || isFlyover)
           Paint()
             ..color = fillColor.withOpacity(0.25)
             ..style = PaintingStyle.fill,

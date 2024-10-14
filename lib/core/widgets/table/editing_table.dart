@@ -7,18 +7,17 @@ import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/widgets/table/table_view.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 import 'package:sss_computing_client/core/widgets/table/edit_on_tap_cell.dart';
-
 ///
 /// Widget that displays [T] list in form of table with editing fields.
 class EditingTable<T> extends StatefulWidget {
   final List<TableColumn> _columns;
   final List<T> _rows;
   final void Function(T rowData)? _onRowTap;
+  final void Function(T rowData)? _onRowDoubleTap;
   final void Function(T rowData)? _onRowUpdate;
   final T? _selectedRow;
   final Color _selectedRowColor;
   final double _rowHeight;
-
   ///
   /// Creates widget that displays [T] list in form of table.
   ///
@@ -33,6 +32,7 @@ class EditingTable<T> extends StatefulWidget {
     required List<TableColumn> columns,
     required List<T> rows,
     void Function(T rowData)? onRowTap,
+    void Function(T rowData)? onRowDoubleTap,
     void Function(T rowData)? onRowUpdate,
     T? selectedRow,
     Color selectedColor = Colors.amber,
@@ -40,6 +40,7 @@ class EditingTable<T> extends StatefulWidget {
   })  : _columns = columns,
         _rows = rows,
         _onRowTap = onRowTap,
+        _onRowDoubleTap = onRowDoubleTap,
         _onRowUpdate = onRowUpdate,
         _selectedRow = selectedRow,
         _selectedRowColor = selectedColor,
@@ -48,7 +49,6 @@ class EditingTable<T> extends StatefulWidget {
   @override
   State<EditingTable<T>> createState() => _EditingTableState<T>();
 }
-
 ///
 class _EditingTableState<T> extends State<EditingTable<T>> {
   late final ScrollController _scrollController;
@@ -88,7 +88,6 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
     );
     super.initState();
   }
-
   //
   @override
   void dispose() {
@@ -96,7 +95,6 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
     _scrollController.dispose();
     super.dispose();
   }
-
   //
   @override
   Widget build(BuildContext context) {
@@ -115,13 +113,13 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
             scrollController: _scrollController,
             cellPadding: EdgeInsets.zero,
             onRowTap: (rowData) => widget._onRowTap?.call(rowData),
+            onRowDoubleTap: (rowData) => widget._onRowDoubleTap?.call(rowData),
             tableBorderColor: Colors.transparent,
           ),
         ),
       ],
     );
   }
-
   ///
   Widget _buildPreviewCell(
     BuildContext context,
@@ -155,7 +153,6 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
           },
         );
   }
-
   ///
   Widget _buildEditableCell(
     BuildContext context,
@@ -191,7 +188,6 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
       ),
     );
   }
-
   ///
   Widget _buildCell(
     BuildContext context,
@@ -210,7 +206,6 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
             column,
           );
   }
-
   ///
   CellStyle? _buildCellStyle(DaviRow<T> row) {
     return row.data == widget._selectedRow
@@ -219,7 +214,6 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
           )
         : null;
   }
-
   ///
   void _highlightRow(T? rowData) {
     if (rowData == null) return;

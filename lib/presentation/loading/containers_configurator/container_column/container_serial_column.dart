@@ -8,11 +8,9 @@ import 'package:sss_computing_client/core/validation/required_validation_case.da
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 import 'package:sss_computing_client/core/models/stowage/container/container.dart'
     as stowage;
-
 ///
 class ContainerSerialColumn implements TableColumn<stowage.Container, int> {
   final bool _useDefaultEditing;
-
   ///
   const ContainerSerialColumn({
     bool useDefaultEditing = false,
@@ -22,7 +20,7 @@ class ContainerSerialColumn implements TableColumn<stowage.Container, int> {
   String get key => 'serial';
   //
   @override
-  FieldType get type => FieldType.real;
+  FieldType get type => FieldType.int;
   //
   @override
   String get name => const Localized('Serial').v;
@@ -70,7 +68,6 @@ class ContainerSerialColumn implements TableColumn<stowage.Container, int> {
   String parseToString(int value) {
     return '$value'.padLeft(6, '0');
   }
-
   //
   @override
   stowage.Container copyRowWith(stowage.Container container, String text) =>
