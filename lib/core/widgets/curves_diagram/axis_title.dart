@@ -10,10 +10,10 @@ class AxisTitle extends StatelessWidget {
   ///
   /// Creates widget displaying title for axis value.
   ///
-  /// `value` is value for wich title is displayed.
-  /// `meta` and `color` determine appearance for title and
-  /// `valueInterval` used to filter displayed values,
-  /// if `valueInterval` is divisor of `value` then title will be rendered.
+  /// [value] is value for wich title is displayed.
+  /// [meta] and [color] determine appearance for title and
+  /// [valueInterval] used to filter displayed values,
+  /// if [valueInterval] is divisor of [value] then title will be rendered.
   const AxisTitle({
     super.key,
     required double value,

@@ -3,43 +3,43 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo_figure.dart';
-import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/figure/combined_figure.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
-import 'package:sss_computing_client/core/models/figure/svg_path_figure.dart';
+import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections_figure.dart';
 import 'package:sss_computing_client/core/models/frame/frame.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_scheme.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_scheme_view_options.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/cargo_type_dropdown.dart';
 ///
 /// Ship schemes with cargos projections on three main planes.
 class CargoSchemes extends StatefulWidget {
   final List<Cargo> _cargos;
   final Cargo? _selectedCargo;
-  final Map<String, dynamic> _hull;
-  final Map<String, dynamic> _hullBeauty;
+  final PathProjections _hull;
+  final PathProjections _hullBeauty;
   final List<Frame> _framesReal;
   final List<Frame> _framesTheoretical;
   final void Function(Cargo cargo)? _onCargoTap;
   ///
   /// Creates widget of ship schemes with cargos projections on three main planes.
   ///
-  /// `cargos` - [List] of ship's [Cargo] to be display.
+  /// [cargos] – [List] of ship's [Cargo] to be display.
   ///
-  /// `framesReal` and `framesTheoretical` are displayed as additional axes
+  /// [framesReal] and [framesTheoretical] are displayed as additional axes
   /// in foreground.
   ///
-  /// `hull` and 'hullBeauty' - [Map] with svg path projections of ship's hull
+  /// [hull] and 'hullBeauty' - [Map] with svg path projections of ship's hull
   /// which used to display ship's hull on background.
   ///
-  /// `onCargoTap` - called when clicking on rendered cargo.
+  /// [onCargoTap] – called when clicking on rendered cargo.
   const CargoSchemes({
     super.key,
     required List<Cargo> cargos,
     Cargo? selectedCargo,
-    required Map<String, dynamic> hull,
-    required Map<String, dynamic> hullBeauty,
+    required PathProjections hull,
+    required PathProjections hullBeauty,
     required List<Frame> framesReal,
     required List<Frame> framesTheoretical,
     void Function(Cargo)? onCargoTap,
@@ -57,14 +57,12 @@ class CargoSchemes extends StatefulWidget {
 ///
 class _CargoSchemesState extends State<CargoSchemes> {
   late final Figure _hullFigure;
-  late final List<({Figure figure, Cargo cargo})> _cargoFigures;
+  late List<({Figure figure, Cargo cargo})> _cargoFigures;
   late Set<CargoSchemeViewOption> _viewOptions;
-  late CargoType _cargoTypeSelected;
   //
   @override
   void initState() {
     _viewOptions = {CargoSchemeViewOption.showGrid};
-    _cargoTypeSelected = CargoType.values.first;
     _hullFigure = CombinedFigure(
       paints: [
         Paint()
@@ -72,22 +70,8 @@ class _CargoSchemesState extends State<CargoSchemes> {
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2.0,
       ],
-      figureOne: SVGPathFigure(
-        paints: [],
-        pathProjections: {
-          FigurePlane.xy: widget._hull['xy'],
-          FigurePlane.xz: widget._hull['xz'],
-          FigurePlane.yz: widget._hull['yz'],
-        },
-      ),
-      figureTwo: SVGPathFigure(
-        paints: [],
-        pathProjections: {
-          FigurePlane.xy: widget._hullBeauty['xy'],
-          FigurePlane.xz: widget._hullBeauty['xz'],
-          FigurePlane.yz: widget._hullBeauty['yz'],
-        },
-      ),
+      figureOne: PathProjectionsFigure(pathProjections: widget._hull),
+      figureTwo: PathProjectionsFigure(pathProjections: widget._hullBeauty),
     );
     _cargoFigures = widget._cargos
         .map((cargo) => (
@@ -96,6 +80,19 @@ class _CargoSchemesState extends State<CargoSchemes> {
             ))
         .toList();
     super.initState();
+  }
+  //
+  @override
+  void didUpdateWidget(covariant CargoSchemes oldWidget) {
+    if (oldWidget._cargos != widget._cargos) {
+      _cargoFigures = widget._cargos
+          .map((cargo) => (
+                figure: CargoFigure(cargo: cargo).figure(),
+                cargo: cargo,
+              ))
+          .toList();
+    }
+    super.didUpdateWidget(oldWidget);
   }
   //
   @override
@@ -108,11 +105,6 @@ class _CargoSchemesState extends State<CargoSchemes> {
       isGridVisible: _viewOptions.contains(CargoSchemeViewOption.showGrid),
       valueUnit: const Localized('m').v,
     );
-    final cargoFiguresFiltered = _cargoFigures
-        .where(
-          (cargoFigure) => cargoFigure.cargo.type == _cargoTypeSelected,
-        )
-        .toList();
     final selectedCargoFigure = widget._selectedCargo != null
         ? (
             cargo: widget._selectedCargo!,
@@ -124,20 +116,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              flex: 2,
-              child: Center(
-                child: SizedBox(
-                  width: 250.0,
-                  child: CargoTypeDropdown(
-                    initialValue: _cargoTypeSelected,
-                    onTypeChanged: (newType) => setState(() {
-                      _cargoTypeSelected = newType;
-                    }),
-                  ),
-                ),
-              ),
-            ),
+            const Spacer(flex: 2),
             SizedBox(width: padding),
             Expanded(
               flex: 3,
@@ -189,7 +168,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
                         projectionPlane: FigurePlane.xz,
                         hull: _hullFigure,
                         cargoFigures: _SortedFigures(
-                          cargoFigures: cargoFiguresFiltered,
+                          cargoFigures: _cargoFigures,
                           axis: _FigureAxis.y,
                         ).sorted(),
                         onCargoTap: widget._onCargoTap,
@@ -222,7 +201,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
                         projectionPlane: FigurePlane.xy,
                         hull: _hullFigure,
                         cargoFigures: _SortedFigures(
-                          cargoFigures: cargoFiguresFiltered,
+                          cargoFigures: _cargoFigures,
                           axis: _FigureAxis.z,
                         ).sorted(),
                         onCargoTap: widget._onCargoTap,
@@ -249,7 +228,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
                   projectionPlane: FigurePlane.yz,
                   hull: _hullFigure,
                   cargoFigures: _SortedFigures(
-                    cargoFigures: cargoFiguresFiltered,
+                    cargoFigures: _cargoFigures,
                     axis: _FigureAxis.x,
                     ascendingOrder: false,
                   ).sorted(),
@@ -276,9 +255,9 @@ class _SortedFigures {
   ///
   /// Create object for sorting figures along given axis.
   ///
-  /// `cargoFigures` - [List] of [Cargo] and its [Figure] for sorting.
-  /// `axis` - axis along which figures are sorted
-  /// `ascendingOrder` - if true figures are sorted in ascending order
+  /// [cargoFigures] – [List] of [Cargo] and its [Figure] for sorting.
+  /// [axis] – axis along which figures are sorted
+  /// [ascendingOrder] – if `true` figures are sorted in ascending order
   /// along given axis, and in descending order otherwise.
   const _SortedFigures({
     required List<({Figure figure, Cargo cargo})> cargoFigures,

@@ -141,7 +141,7 @@
     ],
     "Bulk": [
         "Bulk",
-        "Сыпучий"
+        "Навалочный"
     ],
     "Stores": [
         "Stores",
@@ -191,6 +191,14 @@
         "FWD",
         "Нос"
     ],
+    "stern": [
+        "AFT",
+        "Корма"
+    ],
+    "bow": [
+        "FWD",
+        "Нос"
+    ],
     "AP": [
         "AP",
         "КП"
@@ -213,15 +221,15 @@
     ],
     "VCG": [
         "VCG",
-        "Zg"
+        "z₉"
     ],
     "LCG": [
         "VCG",
-        "Xg"
+        "x₉"
     ],
     "TCG": [
         "VCG",
-        "Yg"
+        "y₉"
     ],
     "t•m": [
         "t•m",
@@ -232,8 +240,24 @@
         "Имя"
     ],
     "Mass": [
-        "Mass",
+        "Weight",
         "Масса"
+    ],
+    "Volume": [
+        "V",
+        "V"
+    ],
+    "Density": [
+        "ρ",
+        "ρ"
+    ],
+    "Stowage factor": [
+        "SF",
+        "УПО"
+    ],
+    "Shiftable": [
+        "Shiftable",
+        "Смещаемый"
     ],
     "Run calculations": [
         "Run calculations",
@@ -259,9 +283,37 @@
         "Loading",
         "Загрузка"
     ],
+    "Drafts": [
+        "Drafts",
+        "Осадки"
+    ],
+    "Draft marks": [
+        "Draft marks",
+        "На марках углубления"
+    ],
+    "Perpendicular drafts": [
+        "Perpendicular drafts",
+        "На перпендикуляре"
+    ],
     "Ballast": [
         "Ballast",
         "Балласт"
+    ],
+    "Ballast tank": [
+        "Ballast tanks",
+        "Балластные цистерны"
+    ],
+    "Stores tank": [
+        "Storage tanks",
+        "Цистерны запаса"
+    ],
+    "Other stores": [
+        "Other stores",
+        "Прочие запасы"
+    ],
+    "Hold": [
+        "Hold",
+        "Трюм"
     ],
     "Fresh water": [
         "Fresh water",
@@ -282,6 +334,14 @@
     "Other": [
         "Other",
         "Другое"
+    ],
+    "Bulk cargo": [
+        "Bulk cargo",
+        "Груз навалочный"
+    ],
+    "Bulk cargo, shiftable": [
+        "Bulk cargo, shiftable",
+        "Груз навалочный, смещаемый"
     ],
     "Axes": [
         "Axes",
@@ -390,5 +450,61 @@
     "Actual and limit values did not pass relation test": [
         "Actual and limit values did not pass relation test",
         "Актуальное значение не соответствует заданному лимиту"
+    ],
+    "m^3": [
+        "m³",
+        "м³"
+    ],
+    "t/m^3": [
+        "t/m³",
+        "т/м³"
+    ],
+    "m^3/t": [
+        "m³/t",
+        "м³/т"
+    ],
+    "Edit": [
+        "Edit",
+        "Редактировать"
+    ],
+    "Cargo parameters": [
+        "Cargo parameters",
+        "Параметры груза"
+    ],
+    "Grain bulkheads installation": [
+        "Grain bulkheads installation",
+        "Установка зерновых переборок"
+    ],
+    "Overboard": [
+        "Overboard",
+        "За бортом"
+    ],
+    "Grain bulkhead": [
+        "Grain bulkhead",
+        "Зерновая переборка"
+    ],
+    "Grain bulkheads": [
+        "Grain bulkheads",
+        "Зерновые переборки"
+    ],
+    "Install bulkhead": [
+        "Install bulkhead",
+        "Установить переборку"
+    ],
+    "Remove bulkhead": [
+        "Remove bulkhead",
+        "Убрать переборку"
+    ],
+    "useMaxMfs": [
+        "Mf.sx max.",
+        "Mf.sx макс."
+    ],
+    "mfsModMax": [
+        "Consider maximum modifications",
+        "Учитываются максимальные поправки"
+    ],
+    "mfsModCurrent": [
+        "Consider current modifications",
+        "Учитываются поправки по текущему заполнению"
     ]
 }

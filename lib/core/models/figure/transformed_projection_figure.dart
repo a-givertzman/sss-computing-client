@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
+import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 import 'package:vector_math/vector_math_64.dart';
 ///
 /// Construct [Figure] by transforming another
@@ -28,7 +29,7 @@ class TransformedProjectionFigure implements Figure {
   Figure copyWith({List<Paint>? paints}) {
     return TransformedProjectionFigure(
       figure: _figure.copyWith(paints: paints),
-      transform: _transform,
+      transform: _transform.clone(),
     );
   }
 }

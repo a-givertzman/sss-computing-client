@@ -7,7 +7,7 @@ import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/widgets/activate_on_tap_builder_widget.dart';
 ///
 /// Field that can be edited after activation by tap
-class EditOnTapField extends StatefulWidget {
+class EditOnTapCell extends StatefulWidget {
   final String _initialValue;
   final Color _textColor;
   final Color _iconColor;
@@ -16,19 +16,21 @@ class EditOnTapField extends StatefulWidget {
   final void Function(String)? _onSubmitted;
   final void Function(String)? _onCancel;
   final Validator? _validator;
+  final Widget _child;
   ///
-  /// Creates [EditOnTapField] that can be edited
+  /// Creates [EditOnTapCell] that can be edited
   /// after activation by tap
-  const EditOnTapField({
+  const EditOnTapCell({
     super.key,
     required String initialValue,
     required Color textColor,
     required Color iconColor,
     required Color errorColor,
     required Future<ResultF<String>> Function(String value) onSubmit,
-    dynamic Function(String)? onSubmitted,
-    dynamic Function(String)? onCancel,
+    void Function(String)? onSubmitted,
+    void Function(String)? onCancel,
     Validator? validator,
+    required Widget child,
   })  : _validator = validator,
         _onCancel = onCancel,
         _onSubmit = onSubmit,
@@ -36,23 +38,22 @@ class EditOnTapField extends StatefulWidget {
         _errorColor = errorColor,
         _iconColor = iconColor,
         _textColor = textColor,
-        _initialValue = initialValue;
+        _initialValue = initialValue,
+        _child = child;
   ///
   @override
-  State<EditOnTapField> createState() => _EditOnTapFieldState();
+  State<EditOnTapCell> createState() => _EditOnTapCellState();
 }
 ///
-class _EditOnTapFieldState extends State<EditOnTapField> {
+class _EditOnTapCellState extends State<EditOnTapCell> {
   TextEditingController? _controller;
   FocusNode? _focusNode;
   Failure<String>? _error;
   String? _validationError;
   bool _isInProcess = false;
-  late String _initialValue;
   //
   @override
   void initState() {
-    _initialValue = widget._initialValue;
     _isInProcess = false;
     super.initState();
   }
@@ -62,9 +63,50 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
     _handleEditingEnd();
     super.dispose();
   }
+  ///
+  @override
+  Widget build(BuildContext context) {
+    final iconSize = IconTheme.of(context).size ?? 10.0;
+    return ActivateOnTapBuilderWidget(
+      cursor: SystemMouseCursors.text,
+      onActivate: () {
+        _handleEditingStart();
+        return;
+      },
+      onDeactivate: () {
+        if (_isInProcess) return true;
+        _handleEditingEnd();
+        return false;
+      },
+      builder: ((context, isActivated, deactivate) => !isActivated
+          ? widget._child
+          : Row(
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: TextField(
+                    readOnly: _isInProcess,
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    onChanged: _handleValueChange,
+                    onSubmitted: (value) => _handleValueSave(value).then(
+                      (value) {
+                        if (value is Ok) deactivate();
+                      },
+                    ),
+                    style: TextStyle(
+                      color: widget._textColor,
+                    ),
+                  ),
+                ),
+                ..._buildActions(iconSize, deactivate),
+              ],
+            )),
+    );
+  }
   //
   void _handleEditingStart() {
-    _controller = TextEditingController(text: _initialValue);
+    _controller = TextEditingController(text: widget._initialValue);
     _controller?.selection = TextSelection(
       baseOffset: 0,
       extentOffset: _controller?.text.length ?? 0,
@@ -93,13 +135,13 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
       _isInProcess = true;
       _error = null;
     });
-    final ResultF<String> newValue =
-        value == _initialValue ? Ok(value) : await widget._onSubmit(value);
+    final ResultF<String> newValue = value == widget._initialValue
+        ? Ok(value)
+        : await widget._onSubmit(value);
     switch (newValue) {
       case Ok(:final value):
         setState(() {
           _isInProcess = false;
-          _initialValue = value;
         });
         widget._onSubmitted?.call(value);
         return const Ok(null);
@@ -127,51 +169,6 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
         _validationError = validationError;
       });
     }
-  }
-  ///
-  @override
-  Widget build(BuildContext context) {
-    final iconSize = IconTheme.of(context).size ?? 10.0;
-    return ActivateOnTapBuilderWidget(
-      cursor: SystemMouseCursors.text,
-      onActivate: () {
-        _handleEditingStart();
-        return;
-      },
-      onDeactivate: () {
-        if (_isInProcess) return true;
-        _handleEditingEnd();
-        return false;
-      },
-      builder: ((context, isActivated, deactivate) => !isActivated
-          ? Text(
-              _initialValue,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            )
-          : Row(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: TextField(
-                    readOnly: _isInProcess,
-                    controller: _controller,
-                    focusNode: _focusNode,
-                    onChanged: _handleValueChange,
-                    onSubmitted: (value) => _handleValueSave(value).then(
-                      (value) {
-                        if (value is Ok) deactivate();
-                      },
-                    ),
-                    style: TextStyle(
-                      color: widget._textColor,
-                    ),
-                  ),
-                ),
-                ..._buildActions(iconSize, deactivate),
-              ],
-            )),
-    );
   }
   //
   List<Widget> _buildActions(double iconSize, void Function() deactivate) {

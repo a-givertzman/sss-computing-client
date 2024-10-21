@@ -20,6 +20,11 @@ void main() {
       (25, 0),
       (0.0, 0.0),
       (0, 0),
+      (double.nan, 0),
+      (0, double.nan),
+      (double.nan, 0.0),
+      (0.0, double.nan),
+      (double.nan, double.nan),
     ];
     for (final values in okTrueValues) {
       final (firstValue, secondValue) = values;
@@ -78,6 +83,11 @@ void main() {
       (0, 25),
       (0.0, 0.0),
       (0, 0),
+      (double.nan, 0),
+      (0, double.nan),
+      (double.nan, 0.0),
+      (0.0, double.nan),
+      (double.nan, double.nan),
     ];
     for (final values in okTrueValues) {
       final (firstValue, secondValue) = values;
@@ -137,6 +147,11 @@ void main() {
       (25, 0),
       (0.0, 0.25),
       (0, 25),
+      (double.nan, 0),
+      (0, double.nan),
+      (double.nan, 0.0),
+      (0.0, double.nan),
+      (double.nan, double.nan),
     ];
     for (final values in okTrueValues) {
       final (firstValue, secondValue) = values;
@@ -190,6 +205,11 @@ void main() {
       (25, 0),
       (0.0, 0.25),
       (0, 25),
+      (double.nan, 0),
+      (0, double.nan),
+      (double.nan, 0.0),
+      (0.0, double.nan),
+      (double.nan, double.nan),
     ];
     final okFalseValues = [
       (0.0, 0.0),
@@ -253,6 +273,11 @@ void main() {
     final okFalseValues = [
       (0.25, 0.0),
       (25, 0),
+      (double.nan, 0),
+      (0, double.nan),
+      (double.nan, 0.0),
+      (0.0, double.nan),
+      (double.nan, double.nan),
     ];
     for (final values in okTrueValues) {
       final (firstValue, secondValue) = values;
@@ -310,6 +335,11 @@ void main() {
     final okFalseValues = [
       (0.0, 0.25),
       (0, 25),
+      (double.nan, 0),
+      (0, double.nan),
+      (double.nan, 0.0),
+      (0.0, double.nan),
+      (double.nan, double.nan),
     ];
     for (final values in okTrueValues) {
       final (firstValue, secondValue) = values;
@@ -365,6 +395,11 @@ void main() {
       (25.0, 25.0),
       (0.0, 0.25),
       (0, 25),
+      (double.nan, 0),
+      (0, double.nan),
+      (double.nan, 0.0),
+      (0.0, double.nan),
+      (double.nan, double.nan),
     ];
     for (final values in values) {
       final (firstValue, secondValue) = values;

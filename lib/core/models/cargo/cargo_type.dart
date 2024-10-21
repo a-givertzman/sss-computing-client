@@ -1,13 +1,35 @@
 import 'package:flutter/material.dart';
 ///
-/// Enum of cargo types with colors and labels.
+/// Enum of [Cargo] types with colors and labels.
 enum CargoType {
-  ballast('Ballast', Colors.green),
-  oilsAndFuels('Oils and fuels', Colors.brown),
-  freshWater('Fresh water', Colors.blue),
-  acidsAndAlkalis('Acids and alkalis', Colors.purple),
-  pollutedLiquids('Polluted liquids', Colors.black),
-  other('Other', Colors.grey);
+  ///
+  /// "water ballast" in OCX:liquidCargoType
+  ballast('Ballast tank', Colors.green, 'ballast_tank'),
+  ///
+  /// oils (e.g. vegetable oil, fuel oil) in OCX:liquidCargoType
+  oilsAndFuels('Oils and fuels', Colors.brown, 'fuel_tank'),
+  ///
+  /// "fresh water" in OCX:liquidCargoType
+  freshWater('Fresh water', Colors.blue, 'fresh_drinking_water_tank'),
+  ///
+  /// "ammonia" in OCX:liquidCargoType
+  acidsAndAlkalis('Acids and alkalis', Colors.purple, 'urea_tank'),
+  ///
+  /// TODO: determine type based on the OCX standard
+  pollutedLiquids('Polluted liquids', Colors.black, 'sundry_tank'),
+  ///
+  /// "general" in OCX:bulkCargoType
+  bulkCargo('Bulk cargo', Colors.grey, 'bulk_cargo'),
+  ///
+  /// "grain" in OCX:bulkCargoType
+  bulkCargoShiftable(
+    'Bulk cargo, shiftable',
+    Colors.grey,
+    'bulk_cargo_shiftable',
+  ),
+  ///
+  /// "unspecified" in OCX:unitCargoType
+  other('Other', Colors.grey, 'other');
   ///
   /// Text label for cargo type
   final String label;
@@ -15,17 +37,16 @@ enum CargoType {
   /// Color of cargo
   final Color color;
   ///
-  const CargoType(this.label, this.color);
+  /// Unique String identifier for cargo type
+  final String key;
+  //
+  const CargoType(this.label, this.color, this.key);
   ///
   /// Creates [CargoType] from passed string representation.
   factory CargoType.from(String value) {
-    return switch (value) {
-      'BALLAST' => CargoType.ballast,
-      'OILS_AND_FUELS' => CargoType.oilsAndFuels,
-      'FRESH_WATER' => CargoType.freshWater,
-      'ACIDS_AND_ALKALIS' => CargoType.acidsAndAlkalis,
-      'POLLUTED_LIQUIDS' => CargoType.pollutedLiquids,
-      _ => CargoType.other,
-    };
+    return CargoType.values.firstWhere(
+      (type) => type.key == value,
+      orElse: () => CargoType.other,
+    );
   }
 }

@@ -24,10 +24,10 @@ class CurvesDiagram extends StatefulWidget {
   ///
   /// Widget that displays diagram with curves and value labels.
   ///
-  /// `xAxis` and `yAxis` hold data about diagram axes and are used to define
-  /// axes titles, labels and values intervals. `minX`, `maxX`, `minY` and `maxY`
-  /// define border values for axes. `curves` are curves displayed on diagram.
-  /// `xLabels` and `yLabels` used to show value labels on diagram.
+  /// [xAxis] and [yAxis] hold data about diagram axes and are used to define
+  /// axes titles, labels and values intervals. [minX], [maxX], [minY] and [maxY]
+  /// define border values for axes. [curves] are curves displayed on diagram.
+  /// [xLabels] and [yLabels] used to show value labels on diagram.
   const CurvesDiagram({
     super.key,
     ChartAxis xAxis = const ChartAxis(),

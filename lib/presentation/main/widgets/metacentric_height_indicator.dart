@@ -2,7 +2,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:sss_computing_client/core/models/field_record/field_record.dart';
+import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/lerp_metacentric_height_limit.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/pg_metacentric_height_high_limits.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/pg_metacentric_height_low_limits.dart';
@@ -19,9 +19,9 @@ class MetacentricHeightIndicator extends StatelessWidget {
   /// Creates widget that fetching data about metacentric height
   /// and displaying it as CircularValueIndicator widget.
   ///
-  ///   - `apiAddress` - [ApiAddress] of server that interact with database;
-  ///   - `dbName` - name of the database;
-  ///   - `authToken` - string authentication token for accessing server.
+  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
+  ///   - [dbName] – name of the database;
+  ///   - [authToken] – string authentication token for accessing server.
   const MetacentricHeightIndicator({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,
@@ -61,6 +61,7 @@ class MetacentricHeightIndicator extends StatelessWidget {
               apiAddress: _apiAddress,
               authToken: _authToken,
               toValue: (value) => double.parse(value),
+              filter: {'ship_id': 1},
             ).fetch,
             caseLoading: (context) => _buildCaseLoading(),
             caseData: (context, draft, _) {
@@ -73,6 +74,7 @@ class MetacentricHeightIndicator extends StatelessWidget {
                   apiAddress: _apiAddress,
                   authToken: _authToken,
                   toValue: (value) => double.parse(value),
+                  filter: {'ship_id': 1},
                 ).fetch,
                 caseLoading: (context) => _buildCaseLoading(),
                 caseData: (context, displacement, _) {
@@ -122,13 +124,14 @@ class MetacentricHeightIndicator extends StatelessWidget {
           '> ${low?.toStringAsFixed(2) ?? '-inf'} ${const Localized('and').v} < ${high?.toStringAsFixed(2) ?? 'inf'}',
       child: FCircularValueIndicator(
         future: FieldRecord<double>(
-          tableName: 'result_stability',
+          tableName: 'parameter_data',
           fieldName: 'result',
           dbName: _dbName,
           apiAddress: _apiAddress,
           authToken: _authToken,
           toValue: (value) => double.parse(value),
-        ).fetch(filter: {'criterion_id': 12}),
+          filter: {'parameter_id': 18},
+        ).fetch(),
         title: const Localized('Metacentric height').v,
         valueUnit: const Localized('m').v,
         fractionDigits: 2,

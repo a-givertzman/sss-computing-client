@@ -11,11 +11,11 @@ class CanvasText {
   ///
   /// Creates text object that can be drawn on canvas.
   ///
-  /// `text` - text contained in text object,
-  /// `offset` - offset for text object from origin of canvas,
-  /// `align` - [Alignment] of text relative to passed offset,
-  /// `direction` - [TextDirection] for text,
-  /// `style` - [TextStyle] that used to paint text object on canvas;
+  /// [text] – text contained in text object,
+  /// [offset] – offset for text object from origin of canvas,
+  /// [align] – [Alignment] of text relative to passed offset,
+  /// [direction] – [TextDirection] for text,
+  /// [style] – [TextStyle] that used to paint text object on canvas;
   const CanvasText({
     required String text,
     Offset offset = Offset.zero,

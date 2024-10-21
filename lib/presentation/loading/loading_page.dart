@@ -6,11 +6,19 @@ import 'package:sss_computing_client/core/models/calculation/calculation_status.
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/loading_page_body.dart';
 ///
+/// Page for configuring ship cargos.
 class LoadingPage extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
   ///
+  /// Creates page for configuring ship cargos.
+  ///
+  ///   [appRefreshStream] – stream with events causing data to be updated.
+  ///   [fireRefreshEvent] – callback for triggering refresh event, called
+  /// when calculation succeeds or fails;
+  ///   [calculationStatusNotifier] – passed to control calculation status
+  /// between many instances of calculation button.
   const LoadingPage({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,
@@ -45,7 +53,7 @@ class _LoadingPageState extends State<LoadingPage> {
       body: Row(
         children: [
           NavigationPanel(
-            selectedPageIndex: 2,
+            selectedPageIndex: 4,
             appRefreshStream: widget._appRefreshStream,
             fireRefreshEvent: widget._fireRefreshEvent,
             calculationStatusNotifier: widget._calculationStatusNotifier,
@@ -53,6 +61,7 @@ class _LoadingPageState extends State<LoadingPage> {
           Expanded(
             child: LoadingPageBody(
               appRefreshStream: widget._appRefreshStream,
+              fireRefreshEvent: widget._fireRefreshEvent,
               apiAddress: _apiAddress,
               dbName: _dbName,
               authToken: _authToken,

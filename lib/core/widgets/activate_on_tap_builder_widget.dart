@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 ///
 /// Creates widget that becomes active when clicked
 /// and deactivates when clicked outside its area.
@@ -28,20 +29,33 @@ class ActivateOnTapBuilderWidget extends StatefulWidget {
 ///
 class _ActivateOnTapBuilderWidgetState
     extends State<ActivateOnTapBuilderWidget> {
+  late final FocusNode _focusNode;
   bool _isActivated = false;
-  ///
+  //
   void _handleActivate() {
+    if (widget.onActivate?.call() ?? false) return;
     setState(() {
-      if (widget.onActivate?.call() ?? false) return;
       _isActivated = true;
     });
   }
-  ///
+  //
   void _handleDeactivate() {
+    if (widget.onDeactivate?.call() ?? false) return;
     setState(() {
-      if (widget.onDeactivate?.call() ?? false) return;
       _isActivated = false;
     });
+  }
+  //
+  @override
+  void initState() {
+    _focusNode = FocusNode();
+    super.initState();
+  }
+  //
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
   ///
   @override
@@ -49,9 +63,18 @@ class _ActivateOnTapBuilderWidgetState
     return _isActivated
         ? TapRegion(
             onTapOutside: (_) => _handleDeactivate(),
-            child: Builder(
-              builder: (context) =>
-                  widget.builder(context, _isActivated, _handleDeactivate),
+            child: KeyboardListener(
+              focusNode: _focusNode,
+              autofocus: true,
+              onKeyEvent: (event) {
+                if (event.physicalKey == PhysicalKeyboardKey.escape) {
+                  _handleDeactivate();
+                }
+              },
+              child: Builder(
+                builder: (context) =>
+                    widget.builder(context, _isActivated, _handleDeactivate),
+              ),
             ),
           )
         : MouseRegion(
@@ -59,8 +82,11 @@ class _ActivateOnTapBuilderWidgetState
             child: GestureDetector(
               onTap: () => _handleActivate(),
               child: Builder(
-                builder: (context) =>
-                    widget.builder(context, _isActivated, _handleDeactivate),
+                builder: (context) => widget.builder(
+                  context,
+                  _isActivated,
+                  _handleDeactivate,
+                ),
               ),
             ),
           );

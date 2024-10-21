@@ -18,9 +18,9 @@ class RunCalculationButton extends StatefulWidget {
   /// Button that sends a request to backend to perform
   /// calculations and triggers update event when calculation is completed.
   ///
-  /// `fireRefreshEvent` - callback for triggering refresh event, called
+  /// [fireRefreshEvent] – callback for triggering refresh event, called
   /// when calculation succeeds or fails;
-  /// `calculationStatusNotifier` - passed to control calculation status
+  /// [calculationStatusNotifier] – passed to control calculation status
   /// between many instances of calculation button.
   const RunCalculationButton({
     super.key,

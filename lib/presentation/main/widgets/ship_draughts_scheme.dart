@@ -3,12 +3,14 @@ import 'dart:math';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:sss_computing_client/core/models/field_record/field_record.dart';
-import 'package:sss_computing_client/core/models/figure/box_figure.dart';
-import 'package:sss_computing_client/core/models/figure/figure.dart';
-import 'package:sss_computing_client/core/models/figure/line_figure.dart';
-import 'package:sss_computing_client/core/models/figure/svg_path_figure.dart';
-import 'package:sss_computing_client/core/models/figure/transformed_figure.dart';
+import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
+import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections.dart';
+import 'package:sss_computing_client/core/models/record/field_record.dart';
+import 'package:sss_computing_client/core/models/figure/rectangular_cuboid_figure.dart';
+import 'package:sss_computing_client/core/models/figure/line_segment_figure.dart';
+import 'package:sss_computing_client/core/models/figure/path_projections_figure.dart';
+import 'package:sss_computing_client/core/models/figure/transformed_projection_figure.dart';
 import 'package:sss_computing_client/core/models/heel_trim/pg_heel_trim.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_figure.dart';
@@ -41,14 +43,17 @@ class ShipDraughtsScheme extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilderWidget(
       refreshStream: _appRefreshStream,
-      onFuture: () => FieldRecord<Map<String, dynamic>>(
+      onFuture: FieldRecord<PathProjections>(
         tableName: 'ship_parameters',
         fieldName: 'value',
         dbName: _dbName,
         apiAddress: _apiAddress,
         authToken: _authToken,
-        toValue: (value) => jsonDecode(value),
-      ).fetch(filter: {'key': 'hull_beauty_svg'}),
+        toValue: (value) => JsonSvgPathProjections(
+          json: json.decode(value),
+        ),
+        filter: {'key': 'hull_beauty_svg'},
+      ).fetch,
       caseData: (context, hullProjections, _) {
         return FutureBuilderWidget(
           refreshStream: _appRefreshStream,
@@ -62,19 +67,15 @@ class ShipDraughtsScheme extends StatelessWidget {
             final massShiftX = heelTrim.draftAvg.offset;
             final trimAngle = heelTrim.trim;
             final heelAngle = heelTrim.heel;
-            final shipBody = SVGPathFigure(
+            final shipBody = PathProjectionsFigure(
               paints: [
                 Paint()
                   ..color = Colors.grey
                   ..style = PaintingStyle.fill,
               ],
-              pathProjections: {
-                FigurePlane.xy: hullProjections['xy'],
-                FigurePlane.xz: hullProjections['xz'],
-                FigurePlane.yz: hullProjections['yz'],
-              },
+              pathProjections: hullProjections,
             );
-            final waterlineFigure = RectangularCuboid(
+            final waterlineFigure = RectangularCuboidFigure(
               start: Vector3(-140.0, -40.0, -40.0),
               end: Vector3(140.0, 40.0, 0.0),
               paints: [
