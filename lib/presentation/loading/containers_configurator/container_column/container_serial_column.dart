@@ -3,13 +3,12 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
+import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
 import 'package:sss_computing_client/core/validation/int_validation_case.dart';
 import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
-import 'package:sss_computing_client/core/models/stowage/container/container.dart'
-    as stowage;
 ///
-class ContainerSerialColumn implements TableColumn<stowage.Container, int> {
+class ContainerSerialColumn implements TableColumn<FreightContainer, int> {
   final bool _useDefaultEditing;
   ///
   const ContainerSerialColumn({
@@ -59,7 +58,7 @@ class ContainerSerialColumn implements TableColumn<stowage.Container, int> {
       );
   //
   @override
-  int extractValue(stowage.Container container) => container.serial;
+  int extractValue(FreightContainer container) => container.serial;
   //
   @override
   int parseToValue(String text) => int.parse(text);
@@ -70,8 +69,8 @@ class ContainerSerialColumn implements TableColumn<stowage.Container, int> {
   }
   //
   @override
-  stowage.Container copyRowWith(stowage.Container container, String text) =>
-      stowage.Container.fromSizeCode(
+  FreightContainer copyRowWith(FreightContainer container, String text) =>
+      FreightContainer.fromSizeCode(
         container.type.isoName,
         id: container.id,
         tareWeight: container.tareWeight,
@@ -81,7 +80,7 @@ class ContainerSerialColumn implements TableColumn<stowage.Container, int> {
   //
   @override
   ValueRecord<int>? buildRecord(
-    stowage.Container container,
+    FreightContainer container,
     int Function(String text) toValue,
   ) =>
       null;

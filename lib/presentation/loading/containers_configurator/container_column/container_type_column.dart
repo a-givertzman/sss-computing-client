@@ -3,12 +3,11 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
+import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
+import 'package:sss_computing_client/core/models/stowage/container/freight_container_type.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
-import 'package:sss_computing_client/core/models/stowage/container/container.dart'
-    as stowage;
-
 ///
-class ContainerTypeColumn implements TableColumn<stowage.Container, String> {
+class ContainerTypeColumn implements TableColumn<FreightContainer, String> {
   const ContainerTypeColumn();
   //
   @override
@@ -48,7 +47,7 @@ class ContainerTypeColumn implements TableColumn<stowage.Container, String> {
   Validator? get validator => null;
   //
   @override
-  String extractValue(stowage.Container container) => container.type.isoName;
+  String extractValue(FreightContainer container) => container.type.isoName;
   //
   @override
   String parseToValue(String text) => text;
@@ -57,15 +56,15 @@ class ContainerTypeColumn implements TableColumn<stowage.Container, String> {
   String parseToString(String? value) => value ?? nullValue;
   //
   @override
-  stowage.Container copyRowWith(
-    stowage.Container container,
+  FreightContainer copyRowWith(
+    FreightContainer container,
     String text,
   ) =>
       container;
   //
   @override
   ValueRecord<String>? buildRecord(
-    stowage.Container container,
+    FreightContainer container,
     String? Function(String text) toValue,
   ) =>
       null;
@@ -75,14 +74,12 @@ class ContainerTypeColumn implements TableColumn<stowage.Container, String> {
         type: container.type,
       );
 }
-
 ///
 class _ContainerTypeWidget extends StatelessWidget {
-  final stowage.ContainerType _type;
-
+  final FreightContainerType _type;
   ///
   const _ContainerTypeWidget({
-    required stowage.ContainerType type,
+    required FreightContainerType type,
   }) : _type = type;
   //
   @override

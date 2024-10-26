@@ -1,18 +1,20 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_ballast_tanks.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_hold_cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_others.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_tanks.dart';
+import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/pg_stowage_collection.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/tabs/tab_setting.dart';
 import 'package:sss_computing_client/core/widgets/tabs/tabs_view_widget.dart';
 import 'package:sss_computing_client/presentation/loading/containers_configurator/containers_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/hold_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/other_stores_configurator.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/store_tanks_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/tanks_configurator.dart';
-
 ///
 /// Body for loading page.
 class LoadingPageBody extends StatefulWidget {
@@ -21,7 +23,6 @@ class LoadingPageBody extends StatefulWidget {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
-
   ///
   /// Creates body for loading page.
   ///
@@ -47,8 +48,27 @@ class LoadingPageBody extends StatefulWidget {
   @override
   State<LoadingPageBody> createState() => _LoadingPageBodyState();
 }
-
 class _LoadingPageBodyState extends State<LoadingPageBody> {
+  late final PgStowageCollection pgStowageCollection;
+  //
+  @override
+  void initState() {
+    super.initState();
+    pgStowageCollection = PgStowageCollection(
+      apiAddress: ApiAddress(
+        host: const Setting('api-host').toString(),
+        port: const Setting('api-port').toInt,
+      ),
+      dbName: const Setting('api-database').toString(),
+      authToken: const Setting('api-auth-token').toString(),
+    );
+  }
+  //
+  @override
+  void dispose() {
+    pgStowageCollection.dispose();
+    super.dispose();
+  }
   //
   @override
   Widget build(BuildContext context) {
@@ -83,7 +103,7 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
               dbName: widget._dbName,
               authToken: widget._authToken,
             ).fetchAll,
-            caseData: (context, cargos, _) => TanksConfigurator(
+            caseData: (context, cargos, _) => StoreTanksConfigurator(
               cargos: cargos,
               appRefreshStream: widget._appRefreshStream,
               apiAddress: widget._apiAddress,
@@ -132,7 +152,13 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
         ),
         TabSetting(
           label: const Localized('Containers').v,
-          content: const ContainersConfigurator(),
+          content: FutureBuilderWidget(
+            onFuture: pgStowageCollection.fetch,
+            caseData: (context, stowageCollection, _) => ContainersConfigurator(
+              stowageCollection: stowageCollection,
+              pgStowageCollection: pgStowageCollection,
+            ),
+          ),
         ),
       ],
     );

@@ -57,4 +57,7 @@ abstract interface class StowageCollection {
   ///
   /// Removes all slots from stowage collection.
   void removeAllSlots();
+  ///
+  /// Returns a copy of the stowage collection.
+  StowageCollection copy();
 }

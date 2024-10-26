@@ -7,7 +7,7 @@ import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/validation/validator_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/form/cancelable_field.dart';
-import 'package:sss_computing_client/core/widgets/form/compund_field_data_validation.dart';
+import 'package:sss_computing_client/core/widgets/form/compound_field_data_validation.dart';
 ///
 /// Group of fields for form.
 class FormFieldGroup extends StatefulWidget {
@@ -16,15 +16,15 @@ class FormFieldGroup extends StatefulWidget {
   final void Function()? _onCancelled;
   final void Function()? _onSubmitted;
   final void Function()? _onSaved;
-  final List<FieldData> _fieldDatas;
+  final List<FieldData> _fieldDataList;
   final List<CompoundFieldDataValidation> _compoundValidationCases;
   ///
   /// Creates group of fields for form.
   ///
   ///   [name] – title for field group.
-  ///   [fieldDatas] – list of fields included in group.
+  ///   [fieldDataList] – list of fields included in group.
   ///
-  ///   [compundValidations] used for validation
+  ///   [compoundValidationCases] used for validation
   /// based on values ​​of different fields.
   ///   [onChanged], 'onCancelled', [onSubmitted] and [onSaved] callbacks
   /// are called when field data changed, cancelled, submitted or saved
@@ -32,7 +32,7 @@ class FormFieldGroup extends StatefulWidget {
   const FormFieldGroup({
     super.key,
     required String name,
-    required List<FieldData> fieldDatas,
+    required List<FieldData> fieldDataList,
     List<CompoundFieldDataValidation> compoundValidationCases = const [],
     void Function()? onChanged,
     void Function()? onCancelled,
@@ -43,7 +43,7 @@ class FormFieldGroup extends StatefulWidget {
         _onCancelled = onCancelled,
         _onSubmitted = onSubmitted,
         _onSaved = onSaved,
-        _fieldDatas = fieldDatas,
+        _fieldDataList = fieldDataList,
         _compoundValidationCases = compoundValidationCases;
   //
   @override
@@ -79,7 +79,7 @@ class _FormFieldGroupState extends State<FormFieldGroup> {
         SizedBox(height: blockPadding),
         Expanded(
           child: FutureBuilder(
-            future: Future.wait(widget._fieldDatas.map(
+            future: Future.wait(widget._fieldDataList.map(
               (field) => field.isSynced
                   ? Future<ResultF>.value(const Ok(null))
                   : field.fetch(),
@@ -90,15 +90,17 @@ class _FormFieldGroupState extends State<FormFieldGroup> {
                     controller: _scrollController,
                     child: Column(
                       children: [
-                        for (int i = 0; i < widget._fieldDatas.length; i++) ...[
+                        for (int i = 0;
+                            i < widget._fieldDataList.length;
+                            i++) ...[
                           switch (result.data![i]) {
-                            Ok() => _mapDataToField(widget._fieldDatas[i]),
+                            Ok() => _mapDataToField(widget._fieldDataList[i]),
                             Err(:final error) => _mapDataToField(
-                                widget._fieldDatas[i],
+                                widget._fieldDataList[i],
                                 err: error,
                               ),
                           },
-                          if (i == widget._fieldDatas.length - 1)
+                          if (i == widget._fieldDataList.length - 1)
                             SizedBox(height: padding),
                         ],
                       ],
@@ -112,7 +114,7 @@ class _FormFieldGroupState extends State<FormFieldGroup> {
   }
   //
   CancelableField _mapDataToField(FieldData data, {Failure? err}) {
-    final compoundValidationDatas = widget._compoundValidationCases.where(
+    final compoundValidationDataList = widget._compoundValidationCases.where(
       (validationCase) => validationCase.ownId == data.id,
     );
     final defaultValidator = data.validator;
@@ -124,10 +126,11 @@ class _FormFieldGroupState extends State<FormFieldGroup> {
       validator: Validator(cases: [
         if (defaultValidator != null)
           ValidatorValidationCase(validator: defaultValidator),
-        ...compoundValidationDatas.map(
-          (caseData) => caseData.validationCase(widget._fieldDatas),
+        ...compoundValidationDataList.map(
+          (caseData) => caseData.validationCase(widget._fieldDataList),
         ),
       ]),
+      fieldType: data.fieldType,
       onChanged: (value) {
         data.controller.value = TextEditingValue(
           text: value,

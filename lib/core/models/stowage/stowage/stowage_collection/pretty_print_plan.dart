@@ -10,16 +10,20 @@ extension PrettyPrint on StowageCollection {
   static const String _rowNumbersPad = '   ';
   ///
   /// Prints a textual representation of the stowage plan
-  /// for all bays. If [usePairs] is `true`, the method prints the stowage plan for pairs of adjacent
+  /// for all bays.
+  ///
+  /// If [usePairs] is `true`, the method prints the stowage plan for pairs of adjacent
   /// odd and even bays. Otherwise, it prints the stowage plan for each bay individually.
-  void printAll({bool usePairs = true}) {
+  ///
+  /// If [printOnlyActive] is `true`, only active slots are printed.
+  void printAll({bool usePairs = true, bool printOnlyActive = true}) {
     if (usePairs) {
       for (final group in iterateBayPairs()) {
-        _printBayPair(group.odd, group.even);
+        _printBayPair(group.odd, group.even, printOnlyActive: printOnlyActive);
       }
     } else {
       for (int bay in _iterateBays()) {
-        _printBayPair(bay, null);
+        _printBayPair(bay, null, printOnlyActive: printOnlyActive);
       }
     }
   }
@@ -29,7 +33,14 @@ extension PrettyPrint on StowageCollection {
   ///
   /// The [oddBay] and [evenBay] parameters specify the pair of bays for which plan should be printed.
   /// If [oddBay] or [evenBay] is null, plan for a single bay is printed instead.
-  void _printBayPair(int? oddBay, int? evenBay) {
+  ///
+  /// If [printOnlyActive] is `true`, only active slots are printed.
+  // ignore: long-method
+  void _printBayPair(
+    int? oddBay,
+    int? evenBay, {
+    required bool printOnlyActive,
+  }) {
     final slotsInBayPair = toFilteredSlotList(
       shouldIncludeSlot: (slot) => slot.bay == oddBay || slot.bay == evenBay,
     );
@@ -43,7 +54,13 @@ extension PrettyPrint on StowageCollection {
     final maxRow = slotsInBayPair.map((slot) => slot.row).max;
     final withZeroRow = slotsInBayPair.any((slot) => slot.row == 0);
     final maxTier = slotsInBayPair.map((slot) => slot.tier).max;
+    bool isDeckEmpty = true;
+    bool isHoldEmpty = true;
     for (int tier in iterateTiers(maxTier)) {
+      if (tier == 78 || tier == 98) {
+        isDeckEmpty = true;
+        isHoldEmpty = true;
+      }
       final String tierNumber = tier.toString().padLeft(2, '0');
       String slotsLine = '';
       for (int row in iterateRows(maxRow, withZeroRow)) {
@@ -52,12 +69,19 @@ extension PrettyPrint on StowageCollection {
         );
         Slot? slotForDisplay =
             slots.firstWhereOrNull((s) => s.containerId != null) ??
-                slots.firstOrNull;
+                (printOnlyActive
+                    ? slots.firstWhereOrNull((s) => s.isActive)
+                    : slots.firstOrNull);
         switch (slotForDisplay) {
           case null:
             slotsLine += _nullSlot;
             break;
+          case Slot(isActive: false):
+            slotsLine += printOnlyActive ? _nullSlot : _emptySlot;
+            break;
           case Slot(containerId: final int _):
+            if (tier >= 80 && tier <= 98) isDeckEmpty = false;
+            if (tier >= 2 && tier <= 78) isHoldEmpty = false;
             slotsLine += _occupiedSlot;
             break;
           case Slot(containerId: null):
@@ -65,7 +89,16 @@ extension PrettyPrint on StowageCollection {
             break;
         }
       }
-      if (slotsLine.trim().isNotEmpty) print('$tierNumber $slotsLine');
+      if (slotsLine.trim().isNotEmpty) {
+        print('$tierNumber $slotsLine');
+      } else {
+        if (tier >= 80 && tier <= 98 && !isDeckEmpty) {
+          print('$tierNumber $slotsLine');
+        }
+        if (tier >= 2 && tier <= 78 && !isHoldEmpty) {
+          print('$tierNumber $slotsLine');
+        }
+      }
     }
     String rowNumbers = _rowNumbersPad;
     for (int row in iterateRows(maxRow, withZeroRow)) {
@@ -86,6 +119,7 @@ extension PrettyPrint on StowageCollection {
   /// in accordance with stowage numbering system for rows
   /// [ISO 9711-1, 3.2](https://www.iso.org/ru/standard/17568.html)
   Iterable<int> iterateRows(int maxRow, bool withZeroRow) sync* {
+    maxRow += maxRow.isOdd ? 1 : 0;
     for (int row = maxRow; row >= 2; row -= 2) {
       yield row;
     }
@@ -99,6 +133,7 @@ extension PrettyPrint on StowageCollection {
   /// in accordance with stowage numbering system for rows
   /// [ISO 9711-1, 3.3](https://www.iso.org/ru/standard/17568.html)
   Iterable<int> iterateTiers(int maxTier) sync* {
+    maxTier += maxTier.isOdd ? 1 : 0;
     for (int tier = maxTier; tier >= 2; tier -= 2) {
       yield tier;
     }

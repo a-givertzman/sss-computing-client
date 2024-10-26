@@ -4,34 +4,34 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/widgets/form/async_action_button.dart';
-import 'package:sss_computing_client/core/widgets/form/compund_field_data_validation.dart';
+import 'package:sss_computing_client/core/widgets/form/compound_field_data_validation.dart';
 import 'package:sss_computing_client/core/widgets/form/form_field_group.dart';
 ///
 /// Form that is constructed from list of [FieldData].
 class FieldDataForm extends StatefulWidget {
   final String _label;
-  final List<FieldData> _fieldDatas;
-  final List<CompoundFieldDataValidation> _compundValidations;
+  final List<FieldData> _fieldDataList;
+  final List<CompoundFieldDataValidation> _compoundValidations;
   final Future<ResultF<List<FieldData>>> Function(List<FieldData>)? _onSave;
   ///
   /// Creates form that is constructed from list of [FieldData].
   ///
   ///   [label] – title for form.
-  ///   [fieldDatas] – list of field datas from which form is built.
+  ///   [fieldDataList] – list of field data from which form is built.
   ///
-  ///   [compundValidations] used for validation
+  ///   [compoundValidations] used for validation
   /// based on values ​​of different fields.
   ///
-  ///   [onSave] callback is called when new field datas is saved.
+  ///   [onSave] callback is called when new field data is saved.
   const FieldDataForm({
     super.key,
     required String label,
-    required List<FieldData> fieldDatas,
-    List<CompoundFieldDataValidation> compundValidations = const [],
+    required List<FieldData> fieldDataList,
+    List<CompoundFieldDataValidation> compoundValidations = const [],
     Future<ResultF<List<FieldData>>> Function(List<FieldData>)? onSave,
   })  : _label = label,
-        _fieldDatas = fieldDatas,
-        _compundValidations = compundValidations,
+        _fieldDataList = fieldDataList,
+        _compoundValidations = compoundValidations,
         _onSave = onSave;
   //
   @override
@@ -51,7 +51,7 @@ class _FieldDataFormState extends State<FieldDataForm> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isAnyFieldChanged = widget._fieldDatas
+    final isAnyFieldChanged = widget._fieldDataList
         .where(
           (data) => data.isChanged,
         )
@@ -69,8 +69,8 @@ class _FieldDataFormState extends State<FieldDataForm> {
               children: [
                 FormFieldGroup(
                   name: widget._label,
-                  fieldDatas: widget._fieldDatas,
-                  compoundValidationCases: widget._compundValidations,
+                  fieldDataList: widget._fieldDataList,
+                  compoundValidationCases: widget._compoundValidations,
                   onCancelled: () => setState(() {
                     return;
                   }),
@@ -103,7 +103,7 @@ class _FieldDataFormState extends State<FieldDataForm> {
     final newValues = {
       for (final field in newFields) field.id: field.controller.text,
     };
-    widget._fieldDatas
+    widget._fieldDataList
         .where((field) => newValues.containsKey(field.id))
         .forEach(
       (field) {
@@ -120,7 +120,7 @@ class _FieldDataFormState extends State<FieldDataForm> {
     });
     final onSave = widget._onSave;
     if (onSave != null) {
-      switch (await onSave(widget._fieldDatas)) {
+      switch (await onSave(widget._fieldDataList)) {
         case Ok(value: final newFields):
           _updateFieldsWithNewData(newFields);
           _formKey.currentState?.save();

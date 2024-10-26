@@ -27,6 +27,10 @@ class StowageMap implements StowageCollection {
               slot.copy(),
             )),
       ));
+  ///
+  /// Creates empty stowage plan.
+  factory StowageMap.empty() => StowageMap._({});
+  ///
   //
   @override
   Slot? findSlot(
@@ -71,6 +75,13 @@ class StowageMap implements StowageCollection {
   @override
   void removeAllSlots() {
     _plan.clear();
+  }
+  //
+  @override
+  StowageCollection copy() {
+    return StowageMap.fromSlotList(
+      toFilteredSlotList(),
+    );
   }
   //
   @override

@@ -3,11 +3,10 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
+import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
-import 'package:sss_computing_client/core/models/stowage/container/container.dart'
-    as stowage;
 ///
-class ContainerPODColumn implements TableColumn<stowage.Container, String> {
+class ContainerPODColumn implements TableColumn<FreightContainer, String?> {
   ///
   const ContainerPODColumn();
   //
@@ -27,10 +26,10 @@ class ContainerPODColumn implements TableColumn<stowage.Container, String> {
   String get defaultValue => nullValue;
   //
   @override
-  Alignment get headerAlignment => Alignment.centerRight;
+  Alignment get headerAlignment => Alignment.centerLeft;
   //
   @override
-  Alignment get cellAlignment => Alignment.centerRight;
+  Alignment get cellAlignment => Alignment.centerLeft;
   //
   @override
   double? get grow => null;
@@ -48,7 +47,7 @@ class ContainerPODColumn implements TableColumn<stowage.Container, String> {
   Validator? get validator => null;
   //
   @override
-  String extractValue(stowage.Container container) => nullValue;
+  String? extractValue(FreightContainer container) => container.pod?.code;
   //
   @override
   String parseToValue(String text) => text;
@@ -57,13 +56,13 @@ class ContainerPODColumn implements TableColumn<stowage.Container, String> {
   String parseToString(String? value) => value ?? nullValue;
   //
   @override
-  stowage.Container copyRowWith(stowage.Container container, String text) =>
+  FreightContainer copyRowWith(FreightContainer container, String text) =>
       container;
   //
   @override
-  ValueRecord<String>? buildRecord(
-    stowage.Container container,
-    String Function(String text) toValue,
+  ValueRecord<String?>? buildRecord(
+    FreightContainer container,
+    String? Function(String text) toValue,
   ) =>
       null;
   //

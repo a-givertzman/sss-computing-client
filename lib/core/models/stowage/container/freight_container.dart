@@ -1,39 +1,46 @@
-import 'package:flutter/material.dart';
+import 'package:sss_computing_client/core/models/stowage/container/container_1a.dart';
 import 'package:sss_computing_client/core/models/stowage/container/container_1aa.dart';
+import 'package:sss_computing_client/core/models/stowage/container/container_1c.dart';
 import 'package:sss_computing_client/core/models/stowage/container/container_1cc.dart';
+import 'package:sss_computing_client/core/models/stowage/container/freight_container_port.dart';
+import 'package:sss_computing_client/core/models/stowage/container/freight_container_type.dart';
 ///
 /// Simple representation of freight container;
-abstract interface class Container {
+abstract interface class FreightContainer {
   ///
   /// Unique identifier of container.
   int get id;
   ///
-  /// Serial number of container.
+  /// TODO: add doc
   int get serial;
   ///
-  /// Size of container along the longitudinal axis, measured in mm.
-  int get width;
+  /// Size of container along the longitudinal axis, measured in m.
+  double get width;
   ///
-  /// Size of container along the transverse axis, measured in mm.
-  int get length;
+  /// Size of container along the transverse axis, measured in m.
+  double get length;
   ///
-  /// Size of container along the vertical axis, measured in mm.
-  int get height;
+  /// Size of container along the vertical axis, measured in m.
+  double get height;
   ///
-  /// Tare weight of container, measured in t;
+  /// Weight of empty container, measured in t.
   double get tareWeight;
   ///
-  /// Weight of cargo inside container, measured in t;
+  /// Weight of cargo inside container, measured in t.
   double get cargoWeight;
   ///
   /// Combined weight of container plus cargo, measured in t;
   double get grossWeight;
   ///
-  /// Type data of container in accordance with
-  /// [ISO 668](https://www.iso.org/ru/standard/76912.html).
-  ContainerType get type;
+  /// Type of container.
+  /// In accordance with [ISO 668](https://www.iso.org/ru/standard/76912.html)
+  FreightContainerType get type;
+  /// TODO
+  FreightContainerPort? get pol;
+  /// TODO
+  FreightContainerPort? get pod;
   ///
-  /// Creates a [Container] instance based on its [sizeCode],
+  /// Creates a [FreightContainer] instance based on its [sizeCode],
   /// as defined in [ISO 668](https://www.iso.org/ru/standard/76912.html).
   ///
   /// The [sizeCode] should be a string representing the container size and type
@@ -46,14 +53,26 @@ abstract interface class Container {
   /// The gross weight of container is calculated as the sum of these two weights.
   ///
   /// Throws an [ArgumentError] if the [sizeCode] is invalid.
-  factory Container.fromSizeCode(
+  factory FreightContainer.fromSizeCode(
     String sizeCode, {
     required int id,
-    int serial = 0,
+    required int serial,
     double tareWeight = 0.0,
     double cargoWeight = 0.0,
   }) =>
       switch (sizeCode.trim().toUpperCase()) {
+        '1A' => Container1A(
+            id: id,
+            serial: serial,
+            tareWeight: tareWeight,
+            cargoWeight: cargoWeight,
+          ),
+        '1C' => Container1C(
+            id: id,
+            serial: serial,
+            tareWeight: tareWeight,
+            cargoWeight: cargoWeight,
+          ),
         '1AA' => Container1AA(
             id: id,
             serial: serial,
@@ -68,19 +87,4 @@ abstract interface class Container {
           ),
         _ => throw ArgumentError(sizeCode, 'sizeCode'),
       };
-}
-///
-enum ContainerType {
-  ///
-  type1AA('1AA', 42, Colors.blue),
-  ///
-  type1CC('1CC', 22, Colors.green);
-  //
-  final String isoName;
-  //
-  final int lengthCode;
-  //
-  final Color color;
-  ///
-  const ContainerType(this.isoName, this.lengthCode, this.color);
 }

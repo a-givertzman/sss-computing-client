@@ -1,9 +1,10 @@
-import 'package:sss_computing_client/core/models/stowage/container/container.dart';
-
+import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
+import 'package:sss_computing_client/core/models/stowage/container/freight_container_port.dart';
+import 'package:sss_computing_client/core/models/stowage/container/freight_container_type.dart';
 ///
 /// 20 ft container with standard height,
 /// in accordance with [ISO 668](https://www.iso.org/ru/standard/76912.html)
-class Container1CC implements Container {
+class Container1CC implements FreightContainer {
   final double _tareWeight;
   final double _cargoWeight;
   //
@@ -12,7 +13,12 @@ class Container1CC implements Container {
   //
   @override
   final int serial;
-
+  //
+  @override
+  final FreightContainerPort? pol;
+  //
+  @override
+  final FreightContainerPort? pod;
   ///
   /// Creates 20 ft container with standard height.
   /// Gross weight of container is calculated
@@ -20,29 +26,31 @@ class Container1CC implements Container {
   const Container1CC({
     required this.id,
     required this.serial,
+    this.pol,
+    this.pod,
     double tareWeight = 0.0,
     double cargoWeight = 0.0,
   })  : _tareWeight = tareWeight,
         _cargoWeight = cargoWeight;
   //
   @override
-  int get width => 2438;
+  double get width => 2438 / 1000;
   //
   @override
-  int get length => 6058;
+  double get length => 6058 / 1000;
   //
   @override
-  int get height => 2591;
+  double get height => 2591 / 1000;
   //
   @override
   double get grossWeight => _tareWeight + _cargoWeight;
   //
   @override
-  ContainerType get type => ContainerType.type1CC;
+  double get tareWeight => _tareWeight;
   //
   @override
   double get cargoWeight => _cargoWeight;
   //
   @override
-  double get tareWeight => _tareWeight;
+  FreightContainerType get type => FreightContainerType.type1CC;
 }

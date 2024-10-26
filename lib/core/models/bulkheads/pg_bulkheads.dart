@@ -36,22 +36,24 @@ class PgBulkheads implements Bulkheads {
                 b.id AS "id",
                 b.project_id AS "projectId",
                 b.ship_id AS "shipId",
-                b.name AS "name"
+                b.name AS "name",
+                b.mass AS "mass",
+                bp.mass_shift_x AS "lcg",
+                bp.mass_shift_y AS "tcg",
+                bp.mass_shift_z AS "vcg"
             FROM
                 bulkhead AS b
+            LEFT JOIN
+                bulkhead_place AS bp ON
+                  b.id = bp.bulkhead_id AND
+                  b.ship_id = bp.ship_id AND
+                  b.project_id IS NOT DISTINCT FROM bp.project_id
             WHERE
                 b.ship_id = 1
             ORDER BY "id";
             """,
       ),
-      entryBuilder: (row) => JsonBulkhead(
-        json: {
-          'id': row['id'] as int,
-          'projectId': row['projectId'] as int?,
-          'shipId': row['shipId'] as int,
-          'name': row['name'] as String,
-        },
-      ),
+      entryBuilder: (row) => JsonBulkhead.fromRow(row),
     );
     return sqlAccess
         .fetch()
@@ -86,9 +88,18 @@ class PgBulkheads implements Bulkheads {
                 b.id AS "id",
                 b.project_id AS "projectId",
                 b.ship_id AS "shipId",
-                b.name AS "name"
+                b.name AS "name",
+                b.mass AS "mass",
+                bp.mass_shift_x AS "lcg",
+                bp.mass_shift_y AS "tcg",
+                bp.mass_shift_z AS "vcg"
             FROM
                 bulkhead AS b
+            LEFT JOIN
+                bulkhead_place AS bp ON
+                  b.id = bp.bulkhead_id AND
+                  b.ship_id = bp.ship_id AND
+                  b.project_id IS NOT DISTINCT FROM bp.project_id
             WHERE
                 b.ship_id = 1
                 AND (
@@ -105,14 +116,7 @@ class PgBulkheads implements Bulkheads {
             ORDER BY "id";
             """,
       ),
-      entryBuilder: (row) => JsonBulkhead(
-        json: {
-          'id': row['id'] as int,
-          'projectId': row['projectId'] as int?,
-          'shipId': row['shipId'] as int,
-          'name': row['name'] as String,
-        },
-      ),
+      entryBuilder: (row) => JsonBulkhead.fromRow(row),
     );
     return sqlAccess
         .fetch()
@@ -147,23 +151,25 @@ class PgBulkheads implements Bulkheads {
                 b.id AS "id",
                 b.project_id AS "projectId",
                 b.ship_id AS "shipId",
-                b.name AS "name"
+                b.name AS "name",
+                b.mass AS "mass",
+                bp.mass_shift_x AS "lcg",
+                bp.mass_shift_y AS "tcg",
+                bp.mass_shift_z AS "vcg"
             FROM
                 bulkhead AS b
+            LEFT JOIN
+                bulkhead_place AS bp ON
+                  b.id = bp.bulkhead_id AND
+                  b.ship_id = bp.ship_id AND
+                  b.project_id IS NOT DISTINCT FROM bp.project_id
             WHERE
                 b.ship_id = 1
                 AND b.id = $id
             ORDER BY "id";
             """,
       ),
-      entryBuilder: (row) => JsonBulkhead(
-        json: {
-          'id': row['id'] as int,
-          'projectId': row['projectId'] as int?,
-          'shipId': row['shipId'] as int,
-          'name': row['name'] as String,
-        },
-      ),
+      entryBuilder: (row) => JsonBulkhead.fromRow(row),
     );
     return sqlAccess
         .fetch()

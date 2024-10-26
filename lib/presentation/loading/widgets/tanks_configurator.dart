@@ -7,7 +7,6 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
-import 'package:sss_computing_client/core/models/cargo/cargo_use_max_mfs_record.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_all_cargos.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
 import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
@@ -22,13 +21,11 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_name_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_tcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_type_column.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_use_max_mfs_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_vcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_volume_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
-
 ///
 /// Configurator for ship tanks cargo.
 class TanksConfigurator extends StatefulWidget {
@@ -37,7 +34,6 @@ class TanksConfigurator extends StatefulWidget {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
-
   ///
   /// Creates configurator for ship tanks cargo.
   ///
@@ -62,7 +58,6 @@ class TanksConfigurator extends StatefulWidget {
   @override
   State<TanksConfigurator> createState() => _TanksConfiguratorState();
 }
-
 class _TanksConfiguratorState extends State<TanksConfigurator> {
   late List<Cargo> _cargos;
   Cargo? _selectedCargo;
@@ -71,14 +66,12 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
     _cargos = widget._cargos;
     super.initState();
   }
-
   @override
   void dispose() {
     _cargos = [];
     _selectedCargo = null;
     super.dispose();
   }
-
   //
   @override
   Widget build(BuildContext context) {
@@ -237,18 +230,6 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                 const CargoMFSXColumn(
                   useDefaultEditing: false,
                 ),
-                CargoUseMaxMfsColumn(
-                  buildRecord: (cargo, toValue) => CargoUseMaxMfsRecord(
-                    dbName: widget._dbName,
-                    apiAddress: ApiAddress(
-                      host: widget._apiAddress.host,
-                      port: widget._apiAddress.port,
-                    ),
-                    authToken: widget._authToken,
-                    id: cargo.id,
-                    toValue: toValue,
-                  ),
-                ),
               ],
               rows: _cargos,
             ),
@@ -257,7 +238,6 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
       ),
     );
   }
-
   //
   void _toggleCargo(Cargo? cargo) {
     if (cargo?.id != _selectedCargo?.id) {
@@ -270,7 +250,6 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
       _selectedCargo = null;
     });
   }
-
   //
   void _refetchCargo(Cargo oldCargo) {
     final id = oldCargo.id;
@@ -291,7 +270,6 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
           (_, __) => _showErrorMessage(const Localized('Unknown error').v),
         );
   }
-
   //
   void _updateCargo(Cargo newCargo) {
     final idx = _cargos.indexWhere((cargo) => cargo.id == newCargo.id);
@@ -305,7 +283,6 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
       ];
     });
   }
-
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;

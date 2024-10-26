@@ -9,7 +9,7 @@
     ],
     "Too few characters": [
         "Too few characters",
-        "Cлишком мало символов"
+        "Слишком мало символов"
     ],
     "Too many characters": [
         "Too many characters",
@@ -303,6 +303,14 @@
         "Ballast tanks",
         "Балластные цистерны"
     ],
+    "Lubricating oil tank": [
+        "Lubricating oil tank",
+        "Цистерны масла"
+    ],
+    "Fuel tank": [
+        "Fuel tank",
+        "Цистерны топлива"
+    ],
     "Stores tank": [
         "Storage tanks",
         "Цистерны запаса"
@@ -315,13 +323,17 @@
         "Hold",
         "Трюм"
     ],
-    "Fresh water": [
-        "Fresh water",
-        "Пресная вода"
+    "Fresh & drinking water tank": [
+        "Fresh & drinking water tank",
+        "Цистерны питьевой и пресной воды"
     ],
     "Acids and alkalis": [
         "Acids and alkalis",
         "Кислоты и щелочи"
+    ],
+    "Sundry tank": [
+        "Sundry tank",
+        "Цистерны грязных жидкостей"
     ],
     "Polluted liquids": [
         "Polluted liquids",
@@ -330,6 +342,10 @@
     "Oils and fuels": [
         "Oils and fuels",
         "Масла и горючие жидкости"
+    ],
+    "Urea tank": [
+        "Urea tank",
+        "Цистерны мочевины"
     ],
     "Other": [
         "Other",
@@ -441,7 +457,7 @@
     ],
     "to starboard": [
         "to starboard",
-        "на првый борт"
+        "на правый борт"
     ],
     "Stability criterions": [
         "Stability criterions",
@@ -449,7 +465,7 @@
     ],
     "Actual and limit values did not pass relation test": [
         "Actual and limit values did not pass relation test",
-        "Актуальное значение не соответствует заданному лимиту"
+        "Актуальное значение не соответствует, заданному с лимитом, отношению"
     ],
     "m^3": [
         "m³",

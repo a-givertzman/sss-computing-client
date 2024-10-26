@@ -3,6 +3,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/core/models/criterion/pg_draught_criterions.dart';
 import 'package:sss_computing_client/core/models/draft/draft.dart';
 import 'package:sss_computing_client/core/models/draft/pg_drafts.dart';
 import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
@@ -20,6 +21,7 @@ import 'package:sss_computing_client/core/widgets/scheme/scheme_layout.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_text.dart';
 import 'package:sss_computing_client/presentation/drafts/widgets/draft_type.dart';
 import 'package:sss_computing_client/presentation/drafts/widgets/draft_type_dropdown.dart';
+import 'package:sss_computing_client/presentation/stability/widgets/stability_criterions_list.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 ///
 /// Body of drafts page.
@@ -64,15 +66,15 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
     return FutureBuilderWidget(
       refreshStream: widget._appRefreshStream,
       onFuture: FieldRecord<PathProjections>(
-        tableName: 'ship_parameters',
-        fieldName: 'value',
-        dbName: widget._dbName,
         apiAddress: widget._apiAddress,
+        dbName: widget._dbName,
         authToken: widget._authToken,
+        tableName: 'ship_geometry',
+        fieldName: 'hull_beauty_svg',
         toValue: (value) => JsonSvgPathProjections(
           json: json.decode(value),
         ),
-        filter: {'key': 'hull_beauty_svg'},
+        filter: {'id': 1},
       ).fetch,
       caseData: (context, hullProjections, _) => FutureBuilderWidget(
         onFuture: PgDrafts(
@@ -91,112 +93,137 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
             padding: EdgeInsets.all(blockPadding),
             child: Column(
               children: [
-                Card(
-                  margin: EdgeInsets.zero,
-                  child: Padding(
-                    padding: EdgeInsets.all(padding),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              const Localized('Drafts').v,
-                              style: theme.textTheme.bodyLarge,
-                            ),
-                            SizedBox(
-                              width: 300.0,
-                              child: DraftTypeDropdown(
-                                initialValue: _draftType,
-                                onValueChanged: (value) => setState(() {
-                                  _draftType = value;
-                                }),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: padding),
-                        SchemeLayout(
-                          fit: BoxFit.contain,
-                          minX: -65.0,
-                          maxX: 65.0,
-                          minY: -15.0,
-                          maxY: 15.0,
-                          yAxisReversed: false,
-                          buildContent: (context, transform) => Stack(
+                Expanded(
+                  child: Card(
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              SchemeFigures(
-                                plane: FigurePlane.xy,
-                                figures: [
-                                  RectangularCuboidFigure(
-                                    paints: [
-                                      Paint()
-                                        ..color = Colors.blue.withOpacity(0.25)
-                                        ..style = PaintingStyle.fill,
-                                    ],
-                                    start: Vector3(-65.0, -15.0, 0.0),
-                                    end: Vector3(65.0, 15.0, 0.0),
-                                  ),
-                                  PathProjectionsFigure(
-                                    paints: [
-                                      Paint()
-                                        ..color = Colors.grey
-                                        ..style = PaintingStyle.fill,
-                                      Paint()
-                                        ..color = Colors.white
-                                        ..strokeWidth = 2.0
-                                        ..style = PaintingStyle.stroke,
-                                    ],
-                                    pathProjections: hullProjections,
-                                  ),
-                                  LineSegment3DFigure(
-                                    paints: [
-                                      Paint()
-                                        ..color = Colors.white
-                                        ..strokeWidth = 2.0
-                                        ..style = PaintingStyle.stroke,
-                                    ],
-                                    start: Vector3(-65.0, 0.0, 0.0),
-                                    end: Vector3(65.0, 0.0, 0.0),
-                                  ),
-                                ],
-                                layoutTransform: transform,
+                              Text(
+                                const Localized('Drafts').v,
+                                style: theme.textTheme.bodyLarge,
                               ),
-                              SchemeText(
-                                text: const Localized('PS').v,
-                                offset: const Offset(0.0, -15.0),
-                                alignment: const Alignment(0.0, 2.0),
-                                style: labelStyle,
-                                layoutTransform: transform,
-                              ),
-                              SchemeText(
-                                text: const Localized('SB').v,
-                                offset: const Offset(0.0, 15.0),
-                                alignment: const Alignment(0.0, -2.0),
-                                style: labelStyle,
-                                layoutTransform: transform,
-                              ),
-                              if (_draftType == DraftType.perpendicular)
-                                ..._buildPerpendicularDraftLabels(
-                                  heelTrim: heelTrim,
-                                  style: labelStyle,
-                                  layoutTransform: transform,
+                              SizedBox(
+                                width: 300.0,
+                                child: DraftTypeDropdown(
+                                  initialValue: _draftType,
+                                  onValueChanged: (value) => setState(() {
+                                    _draftType = value;
+                                  }),
                                 ),
-                              if (_draftType == DraftType.marks)
-                                ..._buildMarksDraftLabels(
-                                  drafts: drafts,
-                                  style: labelStyle,
-                                  layoutTransform: transform,
-                                ),
+                              ),
                             ],
                           ),
-                        ),
-                      ],
+                          SizedBox(height: padding),
+                          SchemeLayout(
+                            fit: BoxFit.contain,
+                            minX: -65.0,
+                            maxX: 65.0,
+                            minY: -15.0,
+                            maxY: 15.0,
+                            yAxisReversed: false,
+                            buildContent: (context, transform) => Stack(
+                              children: [
+                                SchemeFigures(
+                                  plane: FigurePlane.xy,
+                                  figures: [
+                                    RectangularCuboidFigure(
+                                      paints: [
+                                        Paint()
+                                          ..color =
+                                              Colors.blue.withOpacity(0.25)
+                                          ..style = PaintingStyle.fill,
+                                      ],
+                                      start: Vector3(-65.0, -15.0, 0.0),
+                                      end: Vector3(65.0, 15.0, 0.0),
+                                    ),
+                                    PathProjectionsFigure(
+                                      paints: [
+                                        Paint()
+                                          ..color = Colors.grey
+                                          ..style = PaintingStyle.fill,
+                                        Paint()
+                                          ..color = Colors.white
+                                          ..strokeWidth = 2.0
+                                          ..style = PaintingStyle.stroke,
+                                      ],
+                                      pathProjections: hullProjections,
+                                    ),
+                                    LineSegment3DFigure(
+                                      paints: [
+                                        Paint()
+                                          ..color = Colors.white
+                                          ..strokeWidth = 2.0
+                                          ..style = PaintingStyle.stroke,
+                                      ],
+                                      start: Vector3(-65.0, 0.0, 0.0),
+                                      end: Vector3(65.0, 0.0, 0.0),
+                                    ),
+                                  ],
+                                  layoutTransform: transform,
+                                ),
+                                SchemeText(
+                                  text: const Localized('PS').v,
+                                  offset: const Offset(0.0, -15.0),
+                                  alignment: const Alignment(0.0, 2.0),
+                                  style: labelStyle,
+                                  layoutTransform: transform,
+                                ),
+                                SchemeText(
+                                  text: const Localized('SB').v,
+                                  offset: const Offset(0.0, 15.0),
+                                  alignment: const Alignment(0.0, -2.0),
+                                  style: labelStyle,
+                                  layoutTransform: transform,
+                                ),
+                                if (_draftType == DraftType.perpendicular)
+                                  ..._buildPerpendicularDraftLabels(
+                                    heelTrim: heelTrim,
+                                    style: labelStyle,
+                                    layoutTransform: transform,
+                                  ),
+                                if (_draftType == DraftType.marks)
+                                  ..._buildMarksDraftLabels(
+                                    drafts: drafts,
+                                    style: labelStyle,
+                                    layoutTransform: transform,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                const Spacer(flex: 1),
+                SizedBox(height: blockPadding),
+                Expanded(
+                  child: FutureBuilderWidget(
+                    refreshStream: widget._appRefreshStream,
+                    onFuture: PgDraughtCriterions(
+                      dbName: widget._dbName,
+                      apiAddress: widget._apiAddress,
+                      authToken: widget._authToken,
+                    ).fetchAll,
+                    caseData: (context, criterions, _) {
+                      return Card(
+                        margin: EdgeInsets.zero,
+                        child: Padding(
+                          padding: EdgeInsets.all(padding),
+                          child: StabilityCriterionsList(
+                            criterions: criterions,
+                            title: const Localized('Критерии посадки').v,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 ///
 /// Object that holds data for [TextFormField] or [TextField].
 class FieldData<T> {
   final String id;
   final String label;
+  final FieldType fieldType;
   T _initialValue;
   final T Function(String text) _toValue;
   final String Function(T value) _toText;
@@ -32,15 +34,16 @@ class FieldData<T> {
     required T Function(String) toValue,
     required String Function(T) toText,
     required T initialValue,
-    required ValueRecord<T> record,
+    this.fieldType = FieldType.string,
+    ValueRecord<T>? record,
     Validator? validator,
     bool isSynced = false,
   })  : _toValue = toValue,
         _toText = toText,
         _initialValue = initialValue,
-        _record = record,
         _validator = validator,
         _isSynced = isSynced,
+        _record = record ?? _EmptyRecord(initialValue, toValue),
         _controller = TextEditingController(text: toText(initialValue));
   ///
   /// Initial content of the target field.
@@ -50,7 +53,7 @@ class FieldData<T> {
   TextEditingController get controller => _controller;
   ///
   /// Whether content of the target changed or not.
-  bool get isChanged => _toText(_initialValue) != _controller.text;
+  bool get isChanged => _initialValue != _toValue(controller.text);
   ///
   /// Whether content of the target synced with source or not.
   bool get isSynced => _isSynced;
@@ -67,6 +70,9 @@ class FieldData<T> {
   /// Pull data from the database through provided [record].
   Future<ResultF<T>> fetch() async {
     switch (await _record.fetch()) {
+      // case null:
+      //   _isSynced = true;
+      //   return Ok(_toValue(_controller.text));
       case Ok(:final value):
         refreshWith(_toText(value));
         _isSynced = true;
@@ -81,6 +87,10 @@ class FieldData<T> {
   Future<ResultF<T>> save() async {
     final text = controller.text;
     switch (await _record.persist(text)) {
+      // case null:
+      //   refreshWith(text);
+      //   _isSynced = true;
+      //   return Ok(_toValue(text));
       case Ok():
         refreshWith(text);
         _isSynced = true;
@@ -108,15 +118,32 @@ class FieldData<T> {
     ValueRecord<T>? record,
     Validator? validator,
     bool? isPersisted,
-  }) =>
-      FieldData<T>(
-        id: id,
-        label: label,
-        toValue: _toValue,
-        toText: _toText,
-        initialValue: initialValue ?? _initialValue,
-        record: record ?? _record,
-        validator: validator ?? _validator,
-        isSynced: isPersisted ?? _isSynced,
-      );
+  }) {
+    return FieldData<T>(
+      id: id,
+      label: label,
+      toValue: _toValue,
+      toText: _toText,
+      initialValue: initialValue ?? _initialValue,
+      record: record ?? _record,
+      validator: validator ?? _validator,
+      isSynced: isPersisted ?? _isSynced,
+    );
+  }
+}
+///
+final class _EmptyRecord<T> implements ValueRecord<T> {
+  T _initialValue;
+  final T Function(String text) _toValue;
+  ///
+  _EmptyRecord(this._initialValue, this._toValue);
+  @override
+  Future<ResultF<T>> fetch() {
+    return Future.value(Ok(_initialValue));
+  }
+  @override
+  Future<ResultF<T>> persist(String value) {
+    _initialValue = _toValue(value);
+    return Future.value(Ok(_initialValue));
+  }
 }

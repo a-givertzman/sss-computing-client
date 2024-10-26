@@ -44,15 +44,15 @@ class ShipDraughtsScheme extends StatelessWidget {
     return FutureBuilderWidget(
       refreshStream: _appRefreshStream,
       onFuture: FieldRecord<PathProjections>(
-        tableName: 'ship_parameters',
-        fieldName: 'value',
-        dbName: _dbName,
         apiAddress: _apiAddress,
+        dbName: _dbName,
         authToken: _authToken,
+        tableName: 'ship_geometry',
+        fieldName: 'hull_beauty_svg',
         toValue: (value) => JsonSvgPathProjections(
           json: json.decode(value),
         ),
-        filter: {'key': 'hull_beauty_svg'},
+        filter: {'id': 1},
       ).fetch,
       caseData: (context, hullProjections, _) {
         return FutureBuilderWidget(

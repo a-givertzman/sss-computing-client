@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkheads_page_body.dart';
-
 ///
 /// Page for configuration of bulkheads;
 class BulkheadsPage extends StatelessWidget {
   final void Function()? _onClose;
-
   ///
   /// Creates page for configuration of bulkheads.
   ///
@@ -22,11 +20,17 @@ class BulkheadsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        leading: BackButton(
-          onPressed: () {
-            navigator.pop();
-            _onClose?.call();
-          },
+        leading: Tooltip(
+          message: const Localized('Назад').v,
+          child: TooltipVisibility(
+            visible: false,
+            child: BackButton(
+              onPressed: () {
+                navigator.pop();
+                _onClose?.call();
+              },
+            ),
+          ),
         ),
         title: Text(const Localized('Grain bulkheads installation').v),
       ),

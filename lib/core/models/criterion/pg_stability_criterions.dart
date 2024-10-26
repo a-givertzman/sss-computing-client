@@ -33,28 +33,22 @@ class PgStabilityCriterions implements Criterions {
       sqlBuilder: (_, __) => Sql(
         sql: """
             SELECT
-              cs.title_rus AS "name",
-              cs.unit_rus::TEXT AS "unit",
-              cs.relation::TEXT AS "relation",
-              rs.result AS "value",
-              rs.target AS "limit"
+              c.title_rus AS "name",
+              u.symbol_rus AS "unit",
+              c.math_relation::TEXT AS "relation",
+              cv.actual_value AS "value",
+              cv.limit_value AS "limit"
             FROM
-              criterion_stability AS cs JOIN result_stability AS rs
-              ON rs.criterion_id = cs.id
-            WHERE rs.ship_id = 1
-            ORDER BY cs.id;
+              criterion AS c
+              JOIN criterion_values AS cv ON
+                cv.criterion_id = c.id
+              LEFT JOIN unit AS u ON
+                c.unit_id = u.id
+            WHERE cv.ship_id = 1 AND c.category_id = 1
+            ORDER BY c.id;
             """,
       ),
-      entryBuilder: (row) => JsonCriterion(
-        json: {
-          'name': row['name'] as String,
-          'value': row['value'] as double,
-          'limit': row['limit'] as double,
-          'relation': row['relation'] as String,
-          'unit': row['unit'] as String?,
-          'description': null,
-        },
-      ),
+      entryBuilder: (row) => JsonCriterion.fromRow(row),
     );
     return sqlAccess
         .fetch()

@@ -1,9 +1,14 @@
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:sss_computing_client/core/models/stowage/container/container.dart';
+import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
 ///
 /// Simple representation of stowage slot,
 /// a place where container can be loaded.
 abstract interface class Slot {
+  ///
+  /// Either [Slot] is active or not.
+  ///
+  /// TODO: complete doc
+  bool get isActive;
   ///
   /// Bay number of stowage slot,
   /// in accordance with stowage numbering system for rows
@@ -60,7 +65,15 @@ abstract interface class Slot {
   /// If slot is empty, [containerId] is `null`.
   int? get containerId;
   ///
-  /// Creates an empty stowage slot for the next tier above this slot.
+  /// Creates and returns a copy of this slot with [isActive] set to `true`.
+  Slot activate();
+  ///
+  /// Creates and returns a copy of this slot with [isActive] set to `false`.
+  ///
+  /// If any container is placed in this slot, it will be removed.
+  Slot deactivate();
+  ///
+  /// Creates and returns an empty stowage slot for the next tier above this slot.
   ///
   /// The [verticalSeparation] parameter specifies the vertical distance between
   /// this slot and the new slot. If [verticalSeparation] is `null`, the
@@ -79,9 +92,25 @@ abstract interface class Slot {
   ///
   /// Returns [Ok] with the new slot if container can be placed in this slot.
   ///
-  /// Returns [Err] if container cannot be placed in this slot
-  /// (e.g., the slot already contains a container).
-  ResultF<Slot> withContainer(Container container);
+  /// Returns [Err] if container cannot be placed in this slot.
+  /// (e.g., new slot exceeds the maximum height).
+  ResultF<Slot> withContainer(FreightContainer container);
+  ///
+  /// Adjust the [rightZ] coordinate of this slot to fit the given [height].
+  ///
+  /// Returns [Ok] with the new slot if the height can be adjusted.
+  ///
+  /// Returns [Err] if the height cannot be adjusted
+  /// (e.g., the slot already contains a container, or new slot exceeds the maximum height).
+  ResultF<Slot> resizeToHeight(double height);
+  ///
+  /// Shift [leftZ] and [rightZ] coordinate of this slot by the given [value].
+  ///
+  /// Returns [Ok] with the new slot if the slot can be shifted.
+  ///
+  /// Returns [Err] if the slot cannot be shifted
+  /// (e.g., new slot exceeds the maximum height).
+  ResultF<Slot> shiftByZ(double value);
   ///
   /// Creates a copy of this slot with the container removed.
   ///

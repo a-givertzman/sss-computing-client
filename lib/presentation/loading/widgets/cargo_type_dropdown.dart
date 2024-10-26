@@ -4,43 +4,28 @@ import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
 ///
 /// Widget for selecting type of [Cargo].
-class CargoTypeDropdown extends StatefulWidget {
+class CargoTypeDropdown extends StatelessWidget {
   final CargoType _initialValue;
+  final List<CargoType> _types;
   final void Function(CargoType)? _onTypeChanged;
   ///
   /// Creates widget for selecting type of [Cargo] from dropdown menu.
   const CargoTypeDropdown({
     super.key,
     required CargoType initialValue,
+    required List<CargoType> types,
     void Function(CargoType)? onTypeChanged,
   })  : _onTypeChanged = onTypeChanged,
+        _types = types,
         _initialValue = initialValue;
-  //
-  @override
-  State<CargoTypeDropdown> createState() => _CargoTypeDropdownState();
-}
-///
-class _CargoTypeDropdownState extends State<CargoTypeDropdown> {
-  late CargoType _selected;
-  //
-  @override
-  void initState() {
-    _selected = widget._initialValue;
-    super.initState();
-  }
   //
   @override
   Widget build(BuildContext context) {
     return PopupMenuButtonCustom<CargoType>(
-      onSelected: (value) {
-        setState(() {
-          _selected = value;
-        });
-        widget._onTypeChanged?.call(value);
-      },
-      initialValue: widget._initialValue,
+      onSelected: _onTypeChanged,
+      initialValue: _initialValue,
       itemBuilder: (context) => <PopupMenuItem<CargoType>>[
-        ...CargoType.values.map((type) => PopupMenuItem(
+        ..._types.map((type) => PopupMenuItem(
               value: type,
               child: Text(Localized(type.label).v),
             )),
@@ -55,7 +40,7 @@ class _CargoTypeDropdownState extends State<CargoTypeDropdown> {
             children: [
               Expanded(
                 child: Text(
-                  Localized(_selected.label).v,
+                  Localized(_initialValue.label).v,
                   overflow: TextOverflow.fade,
                   softWrap: false,
                 ),

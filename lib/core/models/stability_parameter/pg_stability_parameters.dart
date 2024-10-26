@@ -35,29 +35,23 @@ class PgStabilityParameters implements StabilityParameters {
             SELECT
               DISTINCT
               ph.title_rus AS "title",
-              ph.unit_rus::TEXT AS "unit",
+              u.symbol_rus::TEXT AS "unit",
               pd.ship_id AS "shipId",
               pd.project_id AS "projectId",
               pd.result AS "value"
             FROM
               parameter_head AS ph
               LEFT JOIN criterions_parameters AS cp ON ph.id = cp.parameter_id
-              LEFT JOIN criterion_stability AS cs ON cp.criterion_id = cs.id
+              LEFT JOIN criterion AS c ON cp.criterion_id = c.id
+              LEFT JOIN unit AS u ON ph.unit_id = u.id
               JOIN parameter_data AS pd ON ph.id = pd.parameter_id
             WHERE
-              (cp.criterion_id IS NOT NULL
-              OR cp.always_visible = TRUE) AND pd.ship_id = 1
+              (cp.criterion_id IS NOT NULL OR cp.always_visible = TRUE) AND
+              pd.ship_id = 1
             ORDER BY "title";
             """,
       ),
-      entryBuilder: (row) => JsonStabilityParameter(
-        json: {
-          'name': row['title'] as String,
-          'value': row['value'] as double,
-          'unit': row['unit'] as String?,
-          'description': null,
-        },
-      ),
+      entryBuilder: (row) => JsonStabilityParameter.fromRow(row),
     );
     return sqlAccess
         .fetch()
