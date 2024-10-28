@@ -26,7 +26,7 @@ class Calculation {
     return ApiRequest(
       authToken: _authToken,
       address: _apiAddress,
-      timeout: const Duration(seconds: 15),
+      timeout: const Duration(minutes: 1),
       query: ExecutableQuery(
         script: _scriptName,
         params: {},
@@ -36,17 +36,12 @@ class Calculation {
         .then<Result<void, Failure<String>>>(
           (result) => switch (result) {
             Ok(value: final reply) => _mapReply(reply),
-            Err(:final error) => () {
-                if (error.toString().startsWith('.fetch | socket error')) {
-                  return const Ok<void, Failure<String>>(null);
-                }
-                return Err<void, Failure<String>>(
-                  Failure(
-                    message: '$error',
-                    stackTrace: StackTrace.current,
-                  ),
-                );
-              }(),
+            Err(:final error) => Err<void, Failure<String>>(
+                Failure(
+                  message: '$error',
+                  stackTrace: StackTrace.current,
+                ),
+              ),
           },
         )
         .onError(
