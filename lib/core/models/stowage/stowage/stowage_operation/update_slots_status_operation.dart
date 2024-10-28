@@ -18,23 +18,24 @@ class UpdateSlotsStatusOperation implements StowageOperation {
   /// in accordance with [ISO 9711-1, 3.3](https://www.iso.org/ru/standard/17568.html)
   static const _nextTierStep = 2;
   ///
+  /// TODO
   final int _row;
   ///
+  /// TODO
   const UpdateSlotsStatusOperation({
     required int row,
   }) : _row = row;
   ///
-  /// Puts container to slot at specified position in [stowageCollection].
-  ///
-  /// Returns [Ok] if container successfully added to [stowageCollection],
-  /// and [Err] otherwise.
+  /// TODO
   @override
   ResultF<void> execute(StowageCollection collection) {
     final previousCollection = collection.copy();
     return _activateAllSlotsInRow(collection)
-        .and(_deactivateDanglingSlotsInRow(collection))
-        .and(_deactivateOverlappedOddSlots(collection))
-        .and(_deactivateOverlappedEvenSlots(collection))
+        .andThen((_) => _deactivateDanglingSlotsInRow(collection))
+        .andThen((_) => _deactivateOverlappedOddSlots(collection))
+        .andThen((_) => _deactivateOverlappedEvenSlots(collection))
+        .andThen((_) => _deactivateOddSlotsAboveEven(collection))
+        .andThen((_) => _deactivateEvenSlotsBelowOdd(collection))
         .inspectErr((_) => _restoreFromBackup(collection, previousCollection));
   }
   ///
@@ -58,13 +59,13 @@ class UpdateSlotsStatusOperation implements StowageOperation {
     _iterateBays(collection, sort: true).forEach(
       (bay) {
         _deactivateDanglingSlotsInRowBay(
-          bay,
+          bay.number,
           _minDeckTier,
           _maxDeckTier,
           collection,
         );
         _deactivateDanglingSlotsInRowBay(
-          bay,
+          bay.number,
           _minHoldTier,
           _maxHoldTier,
           collection,
@@ -163,6 +164,145 @@ class UpdateSlotsStatusOperation implements StowageOperation {
     return const Ok(null);
   }
   ///
+  /// TODO
+  ResultF<void> _deactivateOverlappingWithThirtyFtBays(
+    StowageCollection collection,
+  ) {
+    for (final bay in _iterateBays(collection)) {
+      final isAnyContainerInstalled = collection
+          .toFilteredSlotList(
+            row: _row,
+            bay: bay.number,
+          )
+          .any((s) => s.containerId != null);
+      if (!isAnyContainerInstalled) continue;
+      collection
+          .toFilteredSlotList(
+            row: _row,
+            shouldIncludeSlot: (s) => switch (bay.number.isOdd) {
+              true => s.bay == bay.number || s.bay == bay.number - 1,
+              false => s.bay == bay.number || s.bay == bay.number + 1,
+            },
+          )
+          .forEach((s) => collection.addSlot(s.deactivate()));
+    }
+    return const Ok(null);
+  }
+  ///
+  /// TODO
+  ResultF<void> _deactivateOddSlotsAboveEven(StowageCollection collection) {
+    for (final bay in _iterateBays(collection)) {
+      if (bay.number.isEven) {
+        _deactivateOddSlotsAboveEvenInBayTiers(
+          collection,
+          bay.number,
+          _minHoldTier,
+          _maxHoldTier,
+        );
+        _deactivateOddSlotsAboveEvenInBayTiers(
+          collection,
+          bay.number,
+          _minDeckTier,
+          _maxDeckTier,
+        );
+      }
+    }
+    return const Ok(null);
+  }
+  ///
+  /// TODO
+  ResultF<void> _deactivateOddSlotsAboveEvenInBayTiers(
+    StowageCollection collection,
+    int bay,
+    int minTier,
+    int maxTier,
+  ) {
+    for (final tier in _iterateTiers(
+      maxTier,
+      minTier: minTier,
+      ascending: true,
+    )) {
+      final currentSlot = collection.findSlot(
+        bay,
+        _row,
+        tier,
+      );
+      if (currentSlot?.containerId != null) {
+        collection
+            .toFilteredSlotList(
+              row: _row,
+              shouldIncludeSlot: (s) =>
+                  (s.bay == bay - 1 || s.bay == bay + 1) &&
+                  s.tier > tier &&
+                  s.tier <= maxTier &&
+                  s.isActive,
+            )
+            .forEach(
+              (s) => collection.addSlot(s.deactivate()),
+            );
+        break;
+      }
+    }
+    return const Ok(null);
+  }
+  ///
+  /// TODO
+  ResultF<void> _deactivateEvenSlotsBelowOdd(StowageCollection collection) {
+    for (final bay in _iterateBays(collection)) {
+      if (bay.number.isOdd) {
+        _deactivateEvenSlotsBelowOddInBayTiers(
+          collection,
+          bay.number,
+          _minHoldTier,
+          _maxHoldTier,
+        );
+        _deactivateEvenSlotsBelowOddInBayTiers(
+          collection,
+          bay.number,
+          _minDeckTier,
+          _maxDeckTier,
+        );
+      }
+    }
+    return const Ok(null);
+  }
+  ///
+  /// TODO
+  ResultF<void> _deactivateEvenSlotsBelowOddInBayTiers(
+    StowageCollection collection,
+    int bay,
+    int minTier,
+    int maxTier,
+  ) {
+    for (final tier in _iterateTiers(
+      maxTier,
+      minTier: minTier,
+      ascending: false,
+    )) {
+      final currentSlot = collection.findSlot(
+        bay,
+        _row,
+        tier,
+      );
+      if (currentSlot?.containerId != null) {
+        collection
+            .toFilteredSlotList(
+              row: _row,
+              shouldIncludeSlot: (s) =>
+                  (s.bay == bay - 1 || s.bay == bay + 1) &&
+                  s.tier < tier &&
+                  s.tier >= minTier &&
+                  s.isActive,
+            )
+            .forEach(
+              (s) => collection.addSlot(s.deactivate()),
+            );
+        break;
+      }
+    }
+    return const Ok(null);
+  }
+  ///
   /// Restores [collection] from [backup].
   void _restoreFromBackup(
     StowageCollection collection,
@@ -176,18 +316,18 @@ class UpdateSlotsStatusOperation implements StowageOperation {
   /// present in the stowage plan, sorted in descending order.
   ///
   /// TODO: update doc
-  Iterable<int> _iterateBays(
+  Iterable<({int number, bool isThirtyFt})> _iterateBays(
     StowageCollection collection, {
     bool sort = false,
   }) {
     final uniqueBays = collection
         .toFilteredSlotList()
         .map(
-          (slot) => slot.bay,
+          (slot) => (number: slot.bay, isThirtyFt: false),
         )
         .toSet()
         .toList();
-    if (sort) uniqueBays.sort((a, b) => b.compareTo(a));
+    if (sort) uniqueBays.sort((a, b) => b.number.compareTo(a.number));
     return uniqueBays;
   }
   ///
@@ -197,9 +337,13 @@ class UpdateSlotsStatusOperation implements StowageOperation {
   Iterable<int> _iterateTiers(
     int maxTier, {
     int minTier = _minHoldTier,
+    bool ascending = false,
   }) sync* {
     maxTier += maxTier.isOdd ? 1 : 0;
-    for (int tier = maxTier; tier >= minTier; tier -= _nextTierStep) {
+    final startingTier = ascending ? minTier : maxTier;
+    final endingTier = ascending ? maxTier : minTier;
+    final nextTierStep = ascending ? _nextTierStep : -_nextTierStep;
+    for (int tier = startingTier; tier >= endingTier; tier += nextTierStep) {
       yield tier;
     }
   }

@@ -29,7 +29,7 @@ class Calculation {
       timeout: const Duration(seconds: 15),
       query: ExecutableQuery(
         script: _scriptName,
-        params: {"message": "start"},
+        params: {},
       ),
     )
         .fetch()

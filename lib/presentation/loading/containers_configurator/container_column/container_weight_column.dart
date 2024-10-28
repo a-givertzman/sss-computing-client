@@ -1,21 +1,34 @@
+import 'package:ext_rw/ext_rw.dart' hide FieldType;
 import 'package:flutter/widgets.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/greater_than_or_equal_to.dart';
+import 'package:sss_computing_client/core/models/number_math_relation/less_than_or_equal_to.dart';
+import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
 import 'package:sss_computing_client/core/validation/number_math_relation_validation_case.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
+/// TODO:
 class ContainerWeightColumn implements TableColumn<FreightContainer, double> {
+  final ApiAddress _apiAddress;
+  final String _dbName;
+  final String _authToken;
   final bool _useDefaultEditing;
   ///
   const ContainerWeightColumn({
+    required ApiAddress apiAddress,
+    required String dbName,
+    required String authToken,
     bool useDefaultEditing = false,
-  }) : _useDefaultEditing = useDefaultEditing;
+  })  : _apiAddress = apiAddress,
+        _dbName = dbName,
+        _authToken = authToken,
+        _useDefaultEditing = useDefaultEditing;
   //
   @override
   String get key => 'weight';
@@ -77,6 +90,8 @@ class ContainerWeightColumn implements TableColumn<FreightContainer, double> {
         serial: container.serial,
         tareWeight: container.tareWeight,
         cargoWeight: parseToValue(text) - container.tareWeight,
+        polCode: container.pol?.code,
+        podCode: container.pod?.code,
       );
   //
   @override
@@ -85,16 +100,26 @@ class ContainerWeightColumn implements TableColumn<FreightContainer, double> {
     double Function(String text) toValue,
   ) =>
       ValidateValueRecord(
-        value: container.grossWeight,
         toValue: toValue,
-        validationCase: NumberMathRelationValidationCase<double>(
-          relation: const GreaterThanOrEqualTo(),
+        record: FieldRecord<double>(
+          apiAddress: _apiAddress,
+          dbName: _dbName,
+          authToken: _authToken,
+          tableName: 'container',
+          fieldName: 'mass',
+          filter: {'id': container.id},
           toValue: toValue,
-          secondValue: container.tareWeight,
-          customMessage: Localized(
-            'Gross weight must be greater than Tare weight: ${container.tareWeight} t',
-          ).v,
         ),
+        validator: Validator(cases: [
+          NumberMathRelationValidationCase<double>(
+            relation: const GreaterThanOrEqualTo(),
+            toValue: toValue,
+            secondValue: 2.4,
+            customMessage: Localized(
+              'Значение должно быть больше массы тары: ${parseToString(2.4)} т',
+            ).v,
+          ),
+        ]),
       );
   //
   @override
@@ -102,24 +127,26 @@ class ContainerWeightColumn implements TableColumn<FreightContainer, double> {
 }
 ///
 class ValidateValueRecord<T> implements ValueRecord<T> {
-  T value;
+  final ValueRecord<T> record;
   final T Function(String text) toValue;
-  final ValidationCase validationCase;
+  final Validator validator;
+  ///
   ValidateValueRecord({
-    required this.value,
+    required this.record,
     required this.toValue,
-    required this.validationCase,
+    required this.validator,
   });
   @override
-  Future<ResultF<T>> fetch() {
-    return Future.value(Ok(value));
-  }
+  Future<ResultF<T>> fetch() => record.fetch();
   @override
   Future<ResultF<T>> persist(String value) {
-    final validateResult = validationCase.isSatisfiedBy(value);
+    final validateResult = validator.editFieldValidator(value);
     return switch (validateResult) {
-      Ok() => Future.value(Ok(toValue(value))),
-      Err(:final error) => Future.value(Err(error)),
+      null => record.persist(value),
+      String error => Future.value(Err(Failure(
+          message: error,
+          stackTrace: StackTrace.current,
+        ))),
     };
   }
 }

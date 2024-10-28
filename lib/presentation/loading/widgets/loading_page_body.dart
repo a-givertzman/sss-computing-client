@@ -6,6 +6,7 @@ import 'package:sss_computing_client/core/models/cargo/pg_ballast_tanks.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_hold_cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_others.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_tanks.dart';
+import 'package:sss_computing_client/core/models/stowage/container/pg_freight_containers.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/pg_stowage_collection.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/tabs/tab_setting.dart';
@@ -153,10 +154,19 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
         TabSetting(
           label: const Localized('Containers').v,
           content: FutureBuilderWidget(
-            onFuture: pgStowageCollection.fetch,
-            caseData: (context, stowageCollection, _) => ContainersConfigurator(
-              stowageCollection: stowageCollection,
-              pgStowageCollection: pgStowageCollection,
+            onFuture: PgFreightContainers(
+              apiAddress: widget._apiAddress,
+              dbName: widget._dbName,
+              authToken: widget._authToken,
+            ).fetchAll,
+            caseData: (context, containers, _) => FutureBuilderWidget(
+              onFuture: pgStowageCollection.fetch,
+              caseData: (context, stowageCollection, _) =>
+                  ContainersConfigurator(
+                pgStowageCollection: pgStowageCollection,
+                stowageCollection: stowageCollection,
+                containers: containers,
+              ),
             ),
           ),
         ),

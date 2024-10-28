@@ -10,7 +10,6 @@ import 'package:sss_computing_client/core/models/figure/figure.dart';
 import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 import 'package:sss_computing_client/core/models/figure/rectangular_cuboid_figure.dart';
 import 'package:sss_computing_client/core/models/stowage/container/container_1aa.dart';
-import 'package:sss_computing_client/core/models/stowage/container/container_1cc.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container_port.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container_type.dart';
@@ -19,8 +18,6 @@ import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collect
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/pretty_print_plan.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/stowage_collection.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/stowage_map.dart';
-import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/del_container_operation.dart';
-import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/extensions/extension_boolean_operations.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/extensions/extension_transform.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_figure.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_layout.dart';
@@ -41,13 +38,16 @@ import 'package:vector_math/vector_math_64.dart' hide Colors;
 class ContainersConfigurator extends StatefulWidget {
   final PgStowageCollection _pgStowageCollection;
   final StowageCollection _stowagePlan;
+  final List<FreightContainer> _containers;
   ///
   const ContainersConfigurator({
     super.key,
     required PgStowageCollection pgStowageCollection,
     required StowageCollection stowageCollection,
+    required List<FreightContainer> containers,
   })  : _pgStowageCollection = pgStowageCollection,
-        _stowagePlan = stowageCollection;
+        _stowagePlan = stowageCollection,
+        _containers = containers;
   //
   @override
   State<ContainersConfigurator> createState() => _ContainersConfiguratorState();
@@ -61,11 +61,6 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
   late List<({int? odd, int? even})> _bayPairs;
   late List<Slot> _selectedSlots;
   late int? _selectedContainerId;
-  ///
-  late ApiAddress _apiAddress;
-  late String _dbName;
-  late String _authToken;
-  late PgStowageCollection _pgStowageCollection;
   (FreightContainerPort pol, FreightContainerPort pod) _genPorts() {
     final podToPol = {
       FreightContainerPort.AZOV: FreightContainerPort.MURMANSK,
@@ -80,35 +75,33 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
   //
   @override
   void initState() {
-    // _stowagePlan.toFilteredSlotList().map((s) => s.row).toSet().forEach(
-    //       (r) => UpdateSlotsStatusOperation(row: r).execute(_stowagePlan),
-    //     );
     _stowagePlan = widget._stowagePlan;
+    _containers = widget._containers;
     _itemScrollController = ItemScrollController();
     _itemPositionsListener = ItemPositionsListener.create();
     _bayPairs = _stowagePlan.iterateBayPairs().toList();
     //
-    _containers = List.generate(
-      50,
-      (index) {
-        final (pol, pod) = _genPorts();
-        return index.isOdd
-            ? Container1CC(
-                id: index,
-                serial: index,
-                tareWeight: 1.0,
-                pol: pol,
-                pod: pod,
-              )
-            : Container1AA(
-                id: index,
-                serial: index,
-                tareWeight: 1.0,
-                pol: pol,
-                pod: pod,
-              );
-      },
-    );
+    // _containers = List.generate(
+    //   50,
+    //   (index) {
+    //     final (pol, pod) = _genPorts();
+    //     return index.isOdd
+    //         ? Container1CC(
+    //             id: index,
+    //             serial: index,
+    //             tareWeight: 1.0,
+    //             pol: pol,
+    //             pod: pod,
+    //           )
+    //         : Container1AA(
+    //             id: index,
+    //             serial: index,
+    //             tareWeight: 1.0,
+    //             pol: pol,
+    //             pod: pod,
+    //           );
+    //   },
+    // );
     _selectedSlots = [];
     _selectedContainerId = null;
     super.initState();
@@ -166,7 +159,6 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
   }
   //
   void _putContainer() async {
-    final alreadyOccupiedSlot = _findSlotWithContainerId(_selectedContainerId);
     final container = _containers.firstWhereOrNull(
       (c) => c.id == _selectedContainerId,
     );
@@ -187,15 +179,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
       row: slot.row,
       tier: slot.tier,
     );
-    final delResult = switch (alreadyOccupiedSlot) {
-      null => const Ok<void, Failure>(null),
-      _ => DelContainerOperation(
-          bay: alreadyOccupiedSlot.bay,
-          row: alreadyOccupiedSlot.row,
-          tier: alreadyOccupiedSlot.tier,
-        ).execute(_stowagePlan),
-    };
-    putResult.and(delResult).inspect((_) {
+    putResult.inspect((_) {
       _selectedSlots.clear();
       setState(() {
         return;
@@ -203,9 +187,12 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     }).inspectErr((err) {
       if (mounted) {
         BottomMessage.error(
-          message: '$err',
+          message: '$err'.length < 200
+              ? '$err'
+              : '$err'.replaceRange(200, '$err'.length, '...'),
           displayDuration: const Duration(seconds: 5),
         ).show(context);
+        _selectedSlots.clear();
         setState(() {
           return;
         });
@@ -228,7 +215,9 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     }).inspectErr((err) {
       if (mounted) {
         BottomMessage.error(
-          message: '$err',
+          message: '$err'.length < 200
+              ? '$err'
+              : '$err'.replaceRange(200, '$err'.length, '...'),
           displayDuration: const Duration(seconds: 5),
         ).show(context);
         setState(() {
@@ -535,7 +524,15 @@ class ContainersTable extends StatelessWidget {
         const ContainerTypeColumn(),
         const ContainerCodeColumn(),
         const ContainerNameColumn(),
-        const ContainerWeightColumn(useDefaultEditing: true),
+        ContainerWeightColumn(
+          useDefaultEditing: true,
+          apiAddress: ApiAddress(
+            host: const Setting('api-host').toString(),
+            port: const Setting('api-port').toInt,
+          ),
+          dbName: const Setting('api-database').toString(),
+          authToken: const Setting('api-auth-token').toString(),
+        ),
         // ContainerSerialColumn(useDefaultEditing: true),
         const ContainerPOLIndicatorColumn(),
         const ContainerPOLColumn(),

@@ -59,6 +59,8 @@ abstract interface class FreightContainer {
     required int serial,
     double tareWeight = 0.0,
     double cargoWeight = 0.0,
+    String? polCode,
+    String? podCode,
   }) =>
       switch (sizeCode.trim().toUpperCase()) {
         '1A' => Container1A(
@@ -66,24 +68,40 @@ abstract interface class FreightContainer {
             serial: serial,
             tareWeight: tareWeight,
             cargoWeight: cargoWeight,
+            pol:
+                polCode != null ? FreightContainerPort.fromCode(polCode) : null,
+            pod:
+                podCode != null ? FreightContainerPort.fromCode(podCode) : null,
           ),
         '1C' => Container1C(
             id: id,
             serial: serial,
             tareWeight: tareWeight,
             cargoWeight: cargoWeight,
+            pol:
+                polCode != null ? FreightContainerPort.fromCode(polCode) : null,
+            pod:
+                podCode != null ? FreightContainerPort.fromCode(podCode) : null,
           ),
         '1AA' => Container1AA(
             id: id,
             serial: serial,
             tareWeight: tareWeight,
             cargoWeight: cargoWeight,
+            pol:
+                polCode != null ? FreightContainerPort.fromCode(polCode) : null,
+            pod:
+                podCode != null ? FreightContainerPort.fromCode(podCode) : null,
           ),
         '1CC' => Container1CC(
             id: id,
             serial: serial,
             tareWeight: tareWeight,
             cargoWeight: cargoWeight,
+            pol:
+                polCode != null ? FreightContainerPort.fromCode(polCode) : null,
+            pod:
+                podCode != null ? FreightContainerPort.fromCode(podCode) : null,
           ),
         _ => throw ArgumentError(sizeCode, 'sizeCode'),
       };

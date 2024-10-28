@@ -97,7 +97,11 @@ class AddContainerOperation implements StowageOperation {
     int tier,
     StowageCollection stowageCollection,
   ) {
-    final existingSlot = stowageCollection.findSlot(bay, row, tier);
+    final existingSlot = stowageCollection.findSlot(
+      bay,
+      row,
+      tier,
+    );
     if (existingSlot == null) {
       return Err(Failure(
         message: 'Slot to put container not found: ($bay, $row, $tier)',

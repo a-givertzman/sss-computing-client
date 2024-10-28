@@ -27,13 +27,15 @@ class DelContainerOperation implements StowageOperation {
   ResultF<void> execute(StowageCollection collection) {
     final previousCollection = collection.copy();
     return _delContainer(collection)
-        .and(_delContainer(collection))
-        .and(UpdateSlotsStatusOperation(row: _row).execute(collection))
+        .andThen(
+          (_) => _delContainer(collection),
+        )
+        .andThen(
+          (_) => UpdateSlotsStatusOperation(row: _row).execute(collection),
+        )
         .inspectErr(
-      (_) {
-        _restoreFromBackup(collection, previousCollection);
-      },
-    );
+          (_) => _restoreFromBackup(collection, previousCollection),
+        );
   }
   ///
   ResultF<void> _delContainer(StowageCollection collection) {

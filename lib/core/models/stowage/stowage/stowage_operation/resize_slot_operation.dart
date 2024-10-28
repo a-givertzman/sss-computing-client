@@ -56,11 +56,21 @@ class ResizeSlotOperation implements StowageOperation {
     final previousCollection = collection.copy();
     collection.removeAllSlots();
     return _copySameRowUnchangedSlots(collection, previousCollection)
-        .and(_copyOtherRowsUnchangedSlots(collection, previousCollection))
-        .and(_resizeSlots(collection))
-        .and(_copyChangedOddBaySlots(collection, previousCollection))
-        .and(_copyChangedEvenBaySlots(collection, previousCollection))
-        .inspectErr((_) => _restoreFromBackup(collection, previousCollection));
+        .andThen(
+          (_) => _copyOtherRowsUnchangedSlots(collection, previousCollection),
+        )
+        .andThen(
+          (_) => _resizeSlots(collection),
+        )
+        .andThen(
+          (_) => _copyChangedOddBaySlots(collection, previousCollection),
+        )
+        .andThen(
+          (_) => _copyChangedEvenBaySlots(collection, previousCollection),
+        )
+        .inspectErr(
+          (_) => _restoreFromBackup(collection, previousCollection),
+        );
   }
   ///
   /// Resize slot specified by [_bay], [_row], [_tier] and it paired slot
@@ -132,7 +142,7 @@ class ResizeSlotOperation implements StowageOperation {
         ),
       );
     }
-    return Ok(null);
+    return const Ok(null);
   }
   ///
   ResultF<void> _copyChangedOddBaySlots(
@@ -169,7 +179,7 @@ class ResizeSlotOperation implements StowageOperation {
         if (copyResult.isErr()) return copyResult;
       }
     }
-    return Ok(null);
+    return const Ok(null);
   }
   ///
   ResultF<void> _copyChangedEvenBaySlots(
@@ -210,7 +220,7 @@ class ResizeSlotOperation implements StowageOperation {
         if (copyResult.isErr()) return copyResult;
       }
     }
-    return Ok(null);
+    return const Ok(null);
   }
   ///
   /// Restores [collection] from [backup].
@@ -231,7 +241,11 @@ class ResizeSlotOperation implements StowageOperation {
     int tier,
     StowageCollection stowageCollection,
   ) {
-    final existingSlot = stowageCollection.findSlot(bay, row, tier);
+    final existingSlot = stowageCollection.findSlot(
+      bay,
+      row,
+      tier,
+    );
     if (existingSlot == null) {
       return Err(Failure(
         message: 'Slot to resize not found',

@@ -1,12 +1,16 @@
 import 'package:ext_rw/ext_rw.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
+import 'package:sss_computing_client/core/models/stowage/stowage/slot/slot.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/slot/standard_slot.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/stowage_collection.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/stowage_map.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/add_container_operation.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/del_container_operation.dart';
+import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/extensions/extension_boolean_operations.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/extensions/extension_transform.dart';
+import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/resize_slot_operation.dart';
 ///
 class PgStowageCollection {
   final String _dbName;
@@ -82,13 +86,26 @@ class PgStowageCollection {
     required int tier,
   }) async {
     final backup = _stowageCollection.copy();
-    final updateResult = AddContainerOperation(
+    final alreadyOccupiedSlot = _stowageCollection
+        .toFilteredSlotList(
+          shouldIncludeSlot: (s) => s.containerId == container.id,
+        )
+        .firstOrNull;
+    final putResult = AddContainerOperation(
       container: container,
       bay: bay,
       row: row,
       tier: tier,
     ).execute(_stowageCollection);
-    final saveResult = switch (updateResult) {
+    final delResult = switch (alreadyOccupiedSlot) {
+      null => const Ok<void, Failure>(null),
+      Slot(:final bay, :final row, :final tier) => DelContainerOperation(
+          bay: bay,
+          row: row,
+          tier: tier,
+        ).execute(_stowageCollection),
+    };
+    final saveResult = switch (putResult.and(delResult)) {
       Ok() => await _save(),
       Err(:final error) => Err(error),
     };
@@ -101,12 +118,12 @@ class PgStowageCollection {
     required int tier,
   }) async {
     final backup = _stowageCollection.copy();
-    final updateResult = DelContainerOperation(
+    final removeResult = DelContainerOperation(
       bay: bay,
       row: row,
       tier: tier,
     ).execute(_stowageCollection);
-    final saveResult = switch (updateResult) {
+    final saveResult = switch (removeResult) {
       Ok() => await _save(),
       Err(:final error) => Err(error),
     };

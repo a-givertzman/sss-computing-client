@@ -14,4 +14,9 @@ enum FreightContainerPort {
   final Color color;
   ///
   const FreightContainerPort(this.name, this.code, this.color);
+  ///
+  factory FreightContainerPort.fromCode(String value) => values.firstWhere(
+        (port) => port.code == value,
+        orElse: () => MURMANSK,
+      );
 }
