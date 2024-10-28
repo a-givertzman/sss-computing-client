@@ -36,12 +36,17 @@ class Calculation {
         .then<Result<void, Failure<String>>>(
           (result) => switch (result) {
             Ok(value: final reply) => _mapReply(reply),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
+            Err(:final error) => () {
+                if (error.toString().startsWith('.fetch | socket error')) {
+                  return const Ok<void, Failure<String>>(null);
+                }
+                return Err<void, Failure<String>>(
+                  Failure(
+                    message: '$error',
+                    stackTrace: StackTrace.current,
+                  ),
+                );
+              }(),
           },
         )
         .onError(
