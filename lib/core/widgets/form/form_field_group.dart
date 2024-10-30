@@ -6,7 +6,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/validation/validator_validation_case.dart';
-import 'package:sss_computing_client/core/widgets/form/cancelable_field.dart';
+import 'package:sss_computing_client/core/widgets/form/cancellable_text_field.dart';
 import 'package:sss_computing_client/core/widgets/form/compound_field_data_validation.dart';
 ///
 /// Group of fields for form.
@@ -113,12 +113,12 @@ class _FormFieldGroupState extends State<FormFieldGroup> {
     );
   }
   //
-  CancelableField _mapDataToField(FieldData data, {Failure? err}) {
+  CancellableTextField _mapDataToField(FieldData data, {Failure? err}) {
     final compoundValidationDataList = widget._compoundValidationCases.where(
       (validationCase) => validationCase.ownId == data.id,
     );
     final defaultValidator = data.validator;
-    return CancelableField(
+    return CancellableTextField(
       label: data.label,
       initialValue: data.toText(data.initialValue),
       controller: data.controller,

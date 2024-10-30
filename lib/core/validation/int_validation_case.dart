@@ -14,12 +14,10 @@ class IntValidationCase implements ValidationCase {
     if (value != null && intPattern.hasMatch(value)) {
       return const Ok(null);
     } else {
-      return Err(
-        Failure(
-          message: const Localized('Only integer numbers allowed').toString(),
-          stackTrace: StackTrace.current,
-        ),
-      );
+      return Err(Failure(
+        message: const Localized('Only integer numbers allowed').toString(),
+        stackTrace: StackTrace.current,
+      ));
     }
   }
 }

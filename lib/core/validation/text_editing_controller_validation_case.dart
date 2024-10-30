@@ -28,11 +28,9 @@ class TextEditingControllerValidationCase implements ValidationCase {
   @override
   ResultF<void> isSatisfiedBy(String? value) {
     if (value != null) return _compareValues(value, _controller.text);
-    return Err(
-      Failure(
-        message: const Localized('Value is required').v,
-        stackTrace: StackTrace.current,
-      ),
-    );
+    return Err(Failure(
+      message: const Localized('Value is required').v,
+      stackTrace: StackTrace.current,
+    ));
   }
 }

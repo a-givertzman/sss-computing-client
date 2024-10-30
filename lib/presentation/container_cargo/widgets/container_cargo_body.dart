@@ -8,7 +8,18 @@ import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/check_digit.dart';
 import 'package:sss_computing_client/core/widgets/form/async_action_button.dart';
+import 'package:sss_computing_client/core/widgets/form/cancellable_custom_field.dart';
 import 'package:sss_computing_client/core/widgets/form/form_field_group.dart';
+enum ColorLabel {
+  blue('Blue', Colors.blue),
+  pink('Pink', Colors.pink),
+  green('Green', Colors.green),
+  yellow('Orange', Colors.orange),
+  grey('Grey', Colors.grey);
+  const ColorLabel(this.label, this.color);
+  final String label;
+  final Color color;
+}
 ///
 class ContainerCargoBody extends StatefulWidget {
   final Future<ResultF<List<FieldData>>> Function(List<FieldData>) _onSave;
@@ -104,174 +115,205 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
     return Center(
       child: Padding(
         padding: EdgeInsets.all(blockPadding),
-        child: Column(
-          children: [
-            Flexible(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    child: FormFieldGroup(
-                      name: const Localized('Mass').v,
-                      fieldDataList: _fieldDataList
-                          .where((fd) => fd.id.contains('mass'))
-                          .toList(),
-                      onCancelled: () => setState(() {
-                        return;
-                      }),
-                      onChanged: () => setState(() {
-                        return;
-                      }),
-                      onSaved: () => setState(() {
-                        return;
-                      }),
-                      onSubmitted: isFormValid ? _trySaveData : null,
-                    ),
-                  ),
-                  SizedBox(width: blockPadding),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const SizedBox(height: 44.0),
-                        ReadOnlyField(
-                          label: const Localized('Max net mass').v,
-                          toListen: _fieldDataList
-                              .where(
-                                (fd) =>
-                                    fd.id == 'max_gross_mass' ||
-                                    fd.id == 'tare_mass',
-                              )
-                              .map((fd) => fd.controller)
-                              .toList(),
-                          getValue: () {
-                            final maxGrossMassData = _fieldDataList.firstWhere(
-                              (fieldData) => fieldData.id == 'max_gross_mass',
-                            );
-                            final tareMassData = _fieldDataList.firstWhere(
-                              (fieldData) => fieldData.id == 'tare_mass',
-                            );
-                            return (maxGrossMassData.toValue(
-                                        maxGrossMassData.controller.text) -
-                                    tareMassData
-                                        .toValue(tareMassData.controller.text))
-                                .toStringAsFixed(2);
-                          },
-                        ),
-                        ReadOnlyField(
-                          label: const Localized('Net mass').v,
-                          toListen: _fieldDataList
-                              .where(
-                                (fd) =>
-                                    fd.id == 'gross_mass' ||
-                                    fd.id == 'tare_mass',
-                              )
-                              .map((fd) => fd.controller)
-                              .toList(),
-                          getValue: () {
-                            final grossMassData = _fieldDataList.firstWhere(
-                              (fieldData) => fieldData.id == 'gross_mass',
-                            );
-                            final tareMassData = _fieldDataList.firstWhere(
-                              (fieldData) => fieldData.id == 'tare_mass',
-                            );
-                            return (grossMassData.toValue(
-                                        grossMassData.controller.text) -
-                                    tareMassData
-                                        .toValue(tareMassData.controller.text))
-                                .toStringAsFixed(2);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Flexible(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    child: FormFieldGroup(
-                      name: const Localized('Name').v,
-                      fieldDataList: _fieldDataList
-                          .where((fd) => [
-                                'type_code',
-                                'owner_code',
-                                'serial_number',
-                              ].any((id) => fd.id == id))
-                          .toList(),
-                      onCancelled: () => setState(() {
-                        return;
-                      }),
-                      onChanged: () => setState(() {
-                        return;
-                      }),
-                      onSaved: () => setState(() {
-                        return;
-                      }),
-                      onSubmitted: isFormValid ? _trySaveData : null,
-                    ),
-                  ),
-                  SizedBox(width: blockPadding),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const SizedBox(height: 44.0),
-                        ReadOnlyField(
-                          label: const Localized('Container code').v,
-                          toListen: _fieldDataList
-                              .where(
-                                (fd) =>
-                                    fd.id == 'serial_number' ||
-                                    fd.id == 'owner_code',
-                              )
-                              .map((fd) => fd.controller)
-                              .toList(),
-                          getValue: () {
-                            final serialNumberData = _fieldDataList.firstWhere(
-                              (fieldData) => fieldData.id == 'serial_number',
-                            );
-                            final ownerCodeData = _fieldDataList.firstWhere(
-                              (fieldData) => fieldData.id == 'owner_code',
-                            );
-                            final containerCode = [
-                              '${ownerCodeData.toValue(ownerCodeData.controller.text)}',
-                              'U',
-                              serialNumberData.toText(serialNumberData
-                                  .toValue(serialNumberData.controller.text)),
-                            ].join(' ');
-                            final checkDigit = switch (
-                                CheckDigit.fromContainerCode(containerCode)
-                                    .value()) {
-                              Ok(:final value) => '$value',
-                              Err(:final error) => '$error',
-                            };
-                            return '$containerCode $checkDigit';
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Spacer(),
-            Center(
-              child: AsyncActionButton(
-                height: 32.0,
-                label: const Localized('Save (In dev)').v,
-                onPressed: null,
-              ),
-            ),
-          ],
+        child: CancellableCustomField(
+          controller: TextEditingController(),
+          label: 'POL',
+          initialValue: '',
+          validator: const Validator(cases: [
+            MinLengthValidationCase(16),
+          ]),
+          buildCustomField: (value, updateValue) => DropdownMenu<String>(
+            initialSelection: value,
+            requestFocusOnTap: true,
+            onSelected: (String? color) {
+              updateValue(color ?? '');
+            },
+            dropdownMenuEntries: ColorLabel.values
+                .map<DropdownMenuEntry<String>>((ColorLabel color) {
+              return DropdownMenuEntry<String>(
+                value: color.toString(),
+                label: color.label,
+                enabled: color.label != 'Grey',
+                style: MenuItemButton.styleFrom(
+                  foregroundColor: color.color,
+                ),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
+    // return Center(
+    //   child: Padding(
+    //     padding: EdgeInsets.all(blockPadding),
+    //     child: Column(
+    //       children: [
+    //         Flexible(
+    //           child: Row(
+    //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //             children: [
+    //               Expanded(
+    //                 child: FormFieldGroup(
+    //                   name: const Localized('Mass').v,
+    //                   fieldDataList: _fieldDataList
+    //                       .where((fd) => fd.id.contains('mass'))
+    //                       .toList(),
+    //                   onCancelled: () => setState(() {
+    //                     return;
+    //                   }),
+    //                   onChanged: () => setState(() {
+    //                     return;
+    //                   }),
+    //                   onSaved: () => setState(() {
+    //                     return;
+    //                   }),
+    //                   onSubmitted: isFormValid ? _trySaveData : null,
+    //                 ),
+    //               ),
+    //               SizedBox(width: blockPadding),
+    //               Expanded(
+    //                 child: Column(
+    //                   mainAxisAlignment: MainAxisAlignment.start,
+    //                   crossAxisAlignment: CrossAxisAlignment.stretch,
+    //                   children: [
+    //                     const SizedBox(height: 44.0),
+    //                     ReadOnlyField(
+    //                       label: const Localized('Max net mass').v,
+    //                       toListen: _fieldDataList
+    //                           .where(
+    //                             (fd) =>
+    //                                 fd.id == 'max_gross_mass' ||
+    //                                 fd.id == 'tare_mass',
+    //                           )
+    //                           .map((fd) => fd.controller)
+    //                           .toList(),
+    //                       getValue: () {
+    //                         final maxGrossMassData = _fieldDataList.firstWhere(
+    //                           (fieldData) => fieldData.id == 'max_gross_mass',
+    //                         );
+    //                         final tareMassData = _fieldDataList.firstWhere(
+    //                           (fieldData) => fieldData.id == 'tare_mass',
+    //                         );
+    //                         return (maxGrossMassData.toValue(
+    //                                     maxGrossMassData.controller.text) -
+    //                                 tareMassData
+    //                                     .toValue(tareMassData.controller.text))
+    //                             .toStringAsFixed(2);
+    //                       },
+    //                     ),
+    //                     ReadOnlyField(
+    //                       label: const Localized('Net mass').v,
+    //                       toListen: _fieldDataList
+    //                           .where(
+    //                             (fd) =>
+    //                                 fd.id == 'gross_mass' ||
+    //                                 fd.id == 'tare_mass',
+    //                           )
+    //                           .map((fd) => fd.controller)
+    //                           .toList(),
+    //                       getValue: () {
+    //                         final grossMassData = _fieldDataList.firstWhere(
+    //                           (fieldData) => fieldData.id == 'gross_mass',
+    //                         );
+    //                         final tareMassData = _fieldDataList.firstWhere(
+    //                           (fieldData) => fieldData.id == 'tare_mass',
+    //                         );
+    //                         return (grossMassData.toValue(
+    //                                     grossMassData.controller.text) -
+    //                                 tareMassData
+    //                                     .toValue(tareMassData.controller.text))
+    //                             .toStringAsFixed(2);
+    //                       },
+    //                     ),
+    //                   ],
+    //                 ),
+    //               ),
+    //             ],
+    //           ),
+    //         ),
+    //         Flexible(
+    //           child: Row(
+    //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //             children: [
+    //               Expanded(
+    //                 child: FormFieldGroup(
+    //                   name: const Localized('Name').v,
+    //                   fieldDataList: _fieldDataList
+    //                       .where((fd) => [
+    //                             'type_code',
+    //                             'owner_code',
+    //                             'serial_number',
+    //                           ].any((id) => fd.id == id))
+    //                       .toList(),
+    //                   onCancelled: () => setState(() {
+    //                     return;
+    //                   }),
+    //                   onChanged: () => setState(() {
+    //                     return;
+    //                   }),
+    //                   onSaved: () => setState(() {
+    //                     return;
+    //                   }),
+    //                   onSubmitted: isFormValid ? _trySaveData : null,
+    //                 ),
+    //               ),
+    //               SizedBox(width: blockPadding),
+    //               Expanded(
+    //                 child: Column(
+    //                   mainAxisAlignment: MainAxisAlignment.start,
+    //                   crossAxisAlignment: CrossAxisAlignment.stretch,
+    //                   children: [
+    //                     const SizedBox(height: 44.0),
+    //                     ReadOnlyField(
+    //                       label: const Localized('Container code').v,
+    //                       toListen: _fieldDataList
+    //                           .where(
+    //                             (fd) =>
+    //                                 fd.id == 'serial_number' ||
+    //                                 fd.id == 'owner_code',
+    //                           )
+    //                           .map((fd) => fd.controller)
+    //                           .toList(),
+    //                       getValue: () {
+    //                         final serialNumberData = _fieldDataList.firstWhere(
+    //                           (fieldData) => fieldData.id == 'serial_number',
+    //                         );
+    //                         final ownerCodeData = _fieldDataList.firstWhere(
+    //                           (fieldData) => fieldData.id == 'owner_code',
+    //                         );
+    //                         final containerCode = [
+    //                           '${ownerCodeData.toValue(ownerCodeData.controller.text)}',
+    //                           'U',
+    //                           serialNumberData.toText(serialNumberData
+    //                               .toValue(serialNumberData.controller.text)),
+    //                         ].join(' ');
+    //                         final checkDigit = switch (
+    //                             CheckDigit.fromContainerCode(containerCode)
+    //                                 .value()) {
+    //                           Ok(:final value) => '$value',
+    //                           Err(:final error) => '$error',
+    //                         };
+    //                         return '$containerCode $checkDigit';
+    //                       },
+    //                     ),
+    //                   ],
+    //                 ),
+    //               ),
+    //             ],
+    //           ),
+    //         ),
+    //         const Spacer(),
+    //         Center(
+    //           child: AsyncActionButton(
+    //             height: 32.0,
+    //             label: const Localized('Save (In dev)').v,
+    //             onPressed: null,
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
   ///
   bool _isAnyFieldChanged() => _fieldDataList

@@ -10,12 +10,12 @@ class FieldData<T> {
   final String id;
   final String label;
   final FieldType fieldType;
-  T _initialValue;
   final T Function(String text) _toValue;
   final String Function(T value) _toText;
   final ValueRecord<T> _record;
   final TextEditingController _controller;
   final Validator? _validator;
+  T _initialValue;
   bool _isSynced;
   ///
   /// Creates object that holds data for [TextFormField] or [TextField].
@@ -117,7 +117,7 @@ class FieldData<T> {
     T? initialValue,
     ValueRecord<T>? record,
     Validator? validator,
-    bool? isPersisted,
+    bool? isSynced,
   }) {
     return FieldData<T>(
       id: id,
@@ -127,7 +127,7 @@ class FieldData<T> {
       initialValue: initialValue ?? _initialValue,
       record: record ?? _record,
       validator: validator ?? _validator,
-      isSynced: isPersisted ?? _isSynced,
+      isSynced: isSynced ?? _isSynced,
     );
   }
 }

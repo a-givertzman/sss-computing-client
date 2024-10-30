@@ -14,12 +14,10 @@ class RealValidationCase implements ValidationCase {
     if (value != null && realPattern.hasMatch(value)) {
       return const Ok(null);
     } else {
-      return Err(
-        Failure(
-          message: const Localized('Only real numbers allowed').toString(),
-          stackTrace: StackTrace.current,
-        ),
-      );
+      return Err(Failure(
+        message: const Localized('Only real numbers allowed').toString(),
+        stackTrace: StackTrace.current,
+      ));
     }
   }
 }
