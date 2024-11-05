@@ -35,9 +35,9 @@ class PutContainerOperation implements StowageOperation {
         _row = row,
         _tier = tier;
   ///
-  /// Puts container to slot at specified position in [stowageCollection].
+  /// Puts container to slot at specified position in [collection].
   ///
-  /// Returns [Ok] if container successfully added to [stowageCollection],
+  /// Returns [Ok] if container successfully added to [collection],
   /// and [Err] otherwise.
   @override
   ResultF<void> execute(StowageCollection collection) {

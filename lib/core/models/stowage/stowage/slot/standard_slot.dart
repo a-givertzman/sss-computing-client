@@ -201,7 +201,7 @@ class StandardSlot implements Slot {
     final rightZAdjusted = leftZ + container.height;
     if (rightZAdjusted > maxHeight) {
       return Err(Failure(
-        message: 'Slot with container must not exceed $maxHeight m.',
+        message: 'Slot with container must not exceed max height.',
         stackTrace: StackTrace.current,
       ));
     }
@@ -270,9 +270,9 @@ class StandardSlot implements Slot {
         stackTrace: StackTrace.current,
       ));
     }
-    if (rightZAdjusted > maxHeight) {
+    if (rightZAdjusted > maxHeight && containerId != null) {
       return Err(Failure(
-        message: 'Slot exceeds $maxHeight m.',
+        message: 'Slot with container must not exceed max height.',
         stackTrace: StackTrace.current,
       ));
     }
@@ -304,9 +304,9 @@ class StandardSlot implements Slot {
   ResultF<Slot> shiftByZ(double value) {
     final leftZAdjusted = leftZ + value;
     final rightZAdjusted = rightZ + value;
-    if (rightZAdjusted > maxHeight) {
+    if (rightZAdjusted > maxHeight && containerId != null) {
       return Err(Failure(
-        message: 'Slot exceeds $maxHeight m.',
+        message: 'Slot with container must not exceed max height.',
         stackTrace: StackTrace.current,
       ));
     }

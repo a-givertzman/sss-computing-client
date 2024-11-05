@@ -5,6 +5,7 @@ import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operati
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/extensions/extension_transform.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/stowage_operation.dart';
 ///
+/// Operation that updates stowage slots status.
 class UpdateSlotsStatusOperation implements StowageOperation {
   /// Minimum possible tier number for hold.
   static const int _minHoldTier = 2;
@@ -17,16 +18,21 @@ class UpdateSlotsStatusOperation implements StowageOperation {
   /// Numbering step between two sibling tiers of standard height,
   /// in accordance with [ISO 9711-1, 3.3](https://www.iso.org/ru/standard/17568.html)
   static const _nextTierStep = 2;
-  ///
-  /// TODO
+  /// Row to update.
   final int _row;
   ///
-  /// TODO
+  /// Creates operation that updates stowage slots status in specified [row].
   const UpdateSlotsStatusOperation({
     required int row,
   }) : _row = row;
   ///
-  /// TODO
+  /// Updates stowage slots status in [collection] at specified [row].
+  ///
+  /// Activate and deactivate slots in [collection]:
+  /// - deactivate all dangling slots (no slots with containers above).
+  /// - deactivate all overlapped slots (slot overlaps other slot with container).
+  /// - deactivate all odd slots above even slots with containers.
+  /// - deactivate all even slots below odd slots with containers.
   @override
   ResultF<void> execute(StowageCollection collection) {
     final previousCollection = collection.copy();
