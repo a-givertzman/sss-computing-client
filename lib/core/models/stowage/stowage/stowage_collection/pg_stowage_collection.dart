@@ -6,18 +6,23 @@ import 'package:sss_computing_client/core/models/stowage/stowage/slot/slot.dart'
 import 'package:sss_computing_client/core/models/stowage/stowage/slot/standard_slot.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/stowage_collection.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/stowage_map.dart';
-import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/add_container_operation.dart';
-import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/del_container_operation.dart';
+import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/put_container_operation.dart';
+import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/remove_container_operation.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/extensions/extension_boolean_operations.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/extensions/extension_transform.dart';
-import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/resize_slot_operation.dart';
 ///
+/// [StowageCollection] stored in Postgres DB.
 class PgStowageCollection {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
   final StowageCollection _stowageCollection;
   ///
+  /// Creates [StowageCollection] stored in Postgres DB.
+  ///
+  /// [dbName] - name of Postgres DB.
+  /// [apiAddress] - address of api-server.
+  /// [authToken] - authentication token for api-server.
   PgStowageCollection({
     required String dbName,
     required ApiAddress apiAddress,
@@ -27,6 +32,7 @@ class PgStowageCollection {
         _authToken = authToken,
         _stowageCollection = StowageMap.empty();
   ///
+  /// Fetches and returns [StowageCollection].
   Future<ResultF<StowageCollection>> fetch() async {
     final sqlAccess = SqlAccess(
       database: _dbName,
@@ -51,22 +57,7 @@ class PgStowageCollection {
         FROM container_slot AS cs
         ORDER BY id;
         '''),
-      entryBuilder: (row) => StandardSlot(
-        containerId: row['containerId'] as int?,
-        bay: row['bay'] as int,
-        row: row['row'] as int,
-        tier: row['tier'] as int,
-        leftX: row['leftX'] as double,
-        rightX: row['rightX'] as double,
-        leftY: row['leftY'] as double,
-        rightY: row['rightY'] as double,
-        leftZ: row['leftZ'] as double,
-        rightZ: row['rightZ'] as double,
-        minHeight: row['minHeight'] as double,
-        maxHeight: row['maxHeight'] as double,
-        minVerticalSeparation: row['minVerticalSeparation'] as double,
-        isActive: row['isActive'] as bool,
-      ),
+      entryBuilder: (row) => StandardSlot.fromRow(row),
     );
     return sqlAccess.fetch().then(
           (result) => result.map(
@@ -79,6 +70,9 @@ class PgStowageCollection {
         );
   }
   ///
+  /// Puts [container] to slot at specified position in [StowageCollection].
+  ///
+  /// Position is specified by [bay], [row] and [tier].
   Future<ResultF<void>> putContainer({
     required FreightContainer container,
     required int bay,
@@ -86,20 +80,20 @@ class PgStowageCollection {
     required int tier,
   }) async {
     final backup = _stowageCollection.copy();
-    final alreadyOccupiedSlot = _stowageCollection
-        .toFilteredSlotList(
-          shouldIncludeSlot: (s) => s.containerId == container.id,
-        )
-        .firstOrNull;
-    final putResult = AddContainerOperation(
+    final putResult = PutContainerOperation(
       container: container,
       bay: bay,
       row: row,
       tier: tier,
     ).execute(_stowageCollection);
+    final alreadyOccupiedSlot = backup
+        .toFilteredSlotList(
+          shouldIncludeSlot: (s) => s.containerId == container.id,
+        )
+        .firstOrNull;
     final delResult = switch (alreadyOccupiedSlot) {
       null => const Ok<void, Failure>(null),
-      Slot(:final bay, :final row, :final tier) => DelContainerOperation(
+      Slot(:final bay, :final row, :final tier) => RemoveContainerOperation(
           bay: bay,
           row: row,
           tier: tier,
@@ -109,16 +103,21 @@ class PgStowageCollection {
       Ok() => await _save(),
       Err(:final error) => Err(error),
     };
-    return saveResult.inspectErr((_) => _restoreFrom(backup));
+    return saveResult.inspectErr(
+      (_) => _restoreFrom(backup),
+    );
   }
   ///
+  /// Removes container from specified slot in [StowageCollection].
+  ///
+  /// Position is specified by [bay], [row] and [tier].
   Future<ResultF<void>> removeContainer({
     required int bay,
     required int row,
     required int tier,
   }) async {
     final backup = _stowageCollection.copy();
-    final removeResult = DelContainerOperation(
+    final removeResult = RemoveContainerOperation(
       bay: bay,
       row: row,
       tier: tier,
@@ -127,7 +126,9 @@ class PgStowageCollection {
       Ok() => await _save(),
       Err(:final error) => Err(error),
     };
-    return saveResult.inspectErr((_) => _restoreFrom(backup));
+    return saveResult.inspectErr(
+      (_) => _restoreFrom(backup),
+    );
   }
   ///
   Future<ResultF<void>> _save() {

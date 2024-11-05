@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
@@ -5,26 +6,26 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
+import 'package:sss_computing_client/core/models/number_math_relation/greater_than_or_equal_to.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
-import 'package:sss_computing_client/core/models/stowage/stowage/check_digit.dart';
+import 'package:sss_computing_client/core/models/stowage/container/freight_container_type.dart';
+import 'package:sss_computing_client/core/models/stowage/voyage/waypoint.dart';
+import 'package:sss_computing_client/core/validation/int_validation_case.dart';
+import 'package:sss_computing_client/core/validation/number_math_relation_validation_case.dart';
+import 'package:sss_computing_client/core/validation/real_validation_case.dart';
+import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/form/async_action_button.dart';
-import 'package:sss_computing_client/core/widgets/form/cancellable_custom_field.dart';
+import 'package:sss_computing_client/core/widgets/form/compound_field_data_validation.dart';
 import 'package:sss_computing_client/core/widgets/form/form_field_group.dart';
-enum ColorLabel {
-  blue('Blue', Colors.blue),
-  pink('Pink', Colors.pink),
-  green('Green', Colors.green),
-  yellow('Orange', Colors.orange),
-  grey('Grey', Colors.grey);
-  const ColorLabel(this.label, this.color);
-  final String label;
-  final Color color;
-}
+import 'package:sss_computing_client/presentation/container_cargo/widgets/container_size_code_dropdown.dart';
+import 'package:sss_computing_client/presentation/container_cargo/widgets/date_format_extenstion.dart';
+import 'package:sss_computing_client/presentation/container_cargo/widgets/read_only_text_field.dart';
+import 'package:sss_computing_client/presentation/container_cargo/widgets/voyage_waypoint_dropdown.dart';
 ///
 class ContainerCargoBody extends StatefulWidget {
   final Future<ResultF<List<FieldData>>> Function(List<FieldData>) _onSave;
+  final List<Waypoint> _waypoints;
   final FreightContainer? _container;
-  final bool _fetchData;
   ///
   /// TODO: update doc
   ///
@@ -35,74 +36,233 @@ class ContainerCargoBody extends StatefulWidget {
   const ContainerCargoBody({
     super.key,
     required Future<ResultF<List<FieldData>>> Function(List<FieldData>) onSave,
+    required List<Waypoint> waypoints,
     FreightContainer? container,
-    bool fetchData = false,
   })  : _onSave = onSave,
-        _container = container,
-        _fetchData = fetchData;
+        _waypoints = waypoints,
+        _container = container;
   //
   @override
   State<ContainerCargoBody> createState() => _ContainerCargoBodyState();
 }
 ///
 class _ContainerCargoBodyState extends State<ContainerCargoBody> {
-  late final List<FieldData> _fieldDataList;
+  late final Map<String, FieldData> _fieldDataList;
   final _formKey = GlobalKey<FormState>();
   late bool _isSaving;
   //
   @override
+  // ignore: long-method
   void initState() {
     _isSaving = false;
-    _fieldDataList = [
-      FieldData<double>(
-        id: 'max_gross_mass',
+    _fieldDataList = {
+      'maxGrossWeight': FieldData<double>(
+        id: 'maxGrossWeight',
         label: const Localized('Max gross mass').v,
         toValue: (text) => double.tryParse(text) ?? 0.0,
         toText: (value) => value.toStringAsFixed(2),
-        initialValue: 30.48,
+        initialValue: 36.00,
+        validator: Validator(cases: [
+          const RequiredValidationCase(),
+          const RealValidationCase(),
+          NumberMathRelationValidationCase(
+            relation: const GreaterThanOrEqualTo(),
+            secondValue: 0.0,
+            toValue: (text) => double.tryParse(text) ?? 0.0,
+            customMessage: const Localized(
+              'Max gross mass cannot be negative',
+            ).v,
+          ),
+        ]),
       ),
-      FieldData<double>(
-        id: 'gross_mass',
+      'grossWeight': FieldData<double>(
+        id: 'grossWeight',
         label: const Localized('Gross mass').v,
         toValue: (text) => double.tryParse(text) ?? 0.0,
         toText: (value) => value.toStringAsFixed(2),
         initialValue: widget._container?.grossWeight ?? 0.0,
+        validator: Validator(cases: [
+          const RequiredValidationCase(),
+          const RealValidationCase(),
+          NumberMathRelationValidationCase(
+            relation: const GreaterThanOrEqualTo(),
+            secondValue: 0.0,
+            toValue: (text) => double.tryParse(text) ?? 0.0,
+            customMessage: const Localized(
+              'Gross mass cannot be negative',
+            ).v,
+          ),
+        ]),
       ),
-      FieldData<double>(
-        id: 'tare_mass',
+      'tareWeight': FieldData<double>(
+        id: 'tareWeight',
         label: const Localized('Tare mass').v,
         toValue: (text) => double.tryParse(text) ?? 0.0,
         toText: (value) => value.toStringAsFixed(2),
         initialValue: widget._container?.tareWeight ?? 0.0,
+        validator: Validator(cases: [
+          const RequiredValidationCase(),
+          const RealValidationCase(),
+          NumberMathRelationValidationCase(
+            relation: const GreaterThanOrEqualTo(),
+            secondValue: 0.0,
+            toValue: (text) => double.tryParse(text) ?? 0.0,
+            customMessage: const Localized(
+              'Tare mass cannot be negative',
+            ).v,
+          ),
+        ]),
       ),
-      FieldData<String>(
-        id: 'type_code',
+      'typeCode': FieldData<String>(
+        id: 'typeCode',
         label: const Localized('Type code').v,
         toValue: (text) => text,
         toText: (value) => value,
         initialValue: 'GP',
+        validator: const Validator(cases: [
+          RequiredValidationCase(),
+          MinLengthValidationCase(2),
+          MaxLengthValidationCase(2),
+        ]),
       ),
-      FieldData<String>(
-        id: 'owner_code',
+      'ownerCode': FieldData<String>(
+        id: 'ownerCode',
         label: const Localized('Owner code').v,
         toValue: (text) => text,
         toText: (value) => value,
         initialValue: 'OWN',
+        validator: const Validator(cases: [
+          RequiredValidationCase(),
+          MinLengthValidationCase(3),
+          MaxLengthValidationCase(3),
+        ]),
       ),
-      FieldData<int>(
-        id: 'serial_number',
+      'serialCode': FieldData<int>(
+        id: 'serialCode',
         label: const Localized('Serial number').v,
         toValue: (text) => int.tryParse(text) ?? 0,
         toText: (value) => '$value'.padLeft(6, '0'),
-        initialValue: widget._container?.serial ?? 0,
+        initialValue: widget._container?.serialCode ?? 0,
+        validator: const Validator(cases: [
+          IntValidationCase(),
+          RequiredValidationCase(),
+          MinLengthValidationCase(6),
+          MaxLengthValidationCase(6),
+        ]),
       ),
-    ];
+      'checkDigit': FieldData<int>(
+        id: 'checkDigit',
+        label: const Localized('Check digit').v,
+        toValue: (text) => int.tryParse(text) ?? 0,
+        toText: (value) => '$value',
+        initialValue: 0, // TODO
+        validator: const Validator(cases: [
+          IntValidationCase(),
+          RequiredValidationCase(),
+          MinLengthValidationCase(1),
+          MaxLengthValidationCase(1),
+        ]),
+      ),
+      'lengthCode': FieldData<String>(
+        id: 'lengthCode',
+        label: const Localized('Length').v,
+        toValue: (text) => text,
+        toText: (value) => value,
+        initialValue: widget._container?.type.sizeCode[0] ?? '2',
+        buildFormField: (value, updateValue) => ContainerSizeCodeDropdown(
+          initialValue: value,
+          onTypeChanged: updateValue,
+          codeIndex: 0,
+          formatCode: (code) => switch (code) {
+            '2' => const Localized('20ft').v,
+            '3' => const Localized('30ft').v,
+            '4' => const Localized('40ft').v,
+            _ => const Localized('Unknown length code').v,
+          },
+        ),
+      ),
+      'heightCode': FieldData<String>(
+        id: 'heightCode',
+        label: const Localized('Height').v,
+        toValue: (text) => text,
+        toText: (value) => value,
+        initialValue: widget._container?.type.sizeCode[1] ?? '2',
+        buildFormField: (value, updateValue) => ContainerSizeCodeDropdown(
+          initialValue: value,
+          onTypeChanged: updateValue,
+          codeIndex: 1,
+          formatCode: (code) => switch (code) {
+            '0' => const Localized('Low standard').v,
+            '2' => const Localized('Standard').v,
+            '5' => const Localized('High cube').v,
+            _ => const Localized('Unknown height code').v,
+          },
+        ),
+      ),
+      'pol': FieldData<Waypoint?>(
+        id: 'pol',
+        label: const Localized('POL').v,
+        toValue: (text) =>
+            widget._waypoints.firstWhereOrNull((w) => w.portCode == text),
+        toText: (value) => value?.portCode ?? '–',
+        initialValue: widget._waypoints
+            .sorted(
+              (a, b) => a.eta.compareTo(b.eta),
+            )
+            .firstOrNull,
+        buildFormField: (value, updateValue) => VoyageWaypointDropdown(
+          initialValue: widget._waypoints.firstWhereOrNull(
+            (w) => w.portCode == value,
+          ),
+          values: widget._waypoints,
+          onWaypointChanged: (w) => updateValue(w.portCode),
+        ),
+      ),
+      'pod': FieldData<Waypoint?>(
+        id: 'pod',
+        label: const Localized('POD').v,
+        toValue: (text) =>
+            widget._waypoints.firstWhereOrNull((w) => w.portCode == text),
+        toText: (value) => value?.portCode ?? '–',
+        initialValue: widget._waypoints
+            .sorted(
+              (a, b) => a.eta.compareTo(b.eta),
+            )
+            .lastOrNull,
+        buildFormField: (value, updateValue) => VoyageWaypointDropdown(
+          initialValue: widget._waypoints.firstWhereOrNull(
+            (w) => w.portCode == value,
+          ),
+          values: widget._waypoints,
+          onWaypointChanged: (w) => updateValue(w.portCode),
+        ),
+      ),
+      'containersNumber': FieldData<int>(
+        id: 'containersNumber',
+        label: const Localized('Number of containers').v,
+        toValue: (text) => int.tryParse(text) ?? 1,
+        toText: (value) => '$value',
+        initialValue: 1,
+        validator: Validator(cases: [
+          const RequiredValidationCase(),
+          const IntValidationCase(),
+          NumberMathRelationValidationCase(
+            relation: const GreaterThanOrEqualTo(),
+            secondValue: 0,
+            toValue: (text) => int.tryParse(text) ?? 0,
+            customMessage: const Localized(
+              'Number of containers cannot be negative',
+            ).v,
+          ),
+        ]),
+      ),
+    };
     super.initState();
   }
   //
   @override
   void dispose() {
-    for (final fieldData in _fieldDataList) {
+    for (final fieldData in _fieldDataList.values) {
       fieldData.controller.dispose();
     }
     super.dispose();
@@ -110,227 +270,399 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
   //
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final blockPadding = const Setting('blockPadding').toDouble;
-    final isFormValid = _isFormValid();
+    final formWidth = const Setting('formStandardWidth').toDouble;
     return Center(
       child: Padding(
         padding: EdgeInsets.all(blockPadding),
-        child: CancellableCustomField(
-          controller: TextEditingController(),
-          label: 'POL',
-          initialValue: '',
-          validator: const Validator(cases: [
-            MinLengthValidationCase(16),
-          ]),
-          buildCustomField: (value, updateValue) => DropdownMenu<String>(
-            initialSelection: value,
-            requestFocusOnTap: true,
-            onSelected: (String? color) {
-              updateValue(color ?? '');
-            },
-            dropdownMenuEntries: ColorLabel.values
-                .map<DropdownMenuEntry<String>>((ColorLabel color) {
-              return DropdownMenuEntry<String>(
-                value: color.toString(),
-                label: color.label,
-                enabled: color.label != 'Grey',
-                style: MenuItemButton.styleFrom(
-                  foregroundColor: color.color,
+        child: SizedBox(
+          width: formWidth * 2,
+          child: Stack(
+            children: [
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Flexible(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            child: FormFieldGroup(
+                              nameAlignment: TextAlign.left,
+                              name: '${const Localized('Size and type').v}:',
+                              fieldDataList: [
+                                _fieldDataList['lengthCode']!,
+                                _fieldDataList['heightCode']!,
+                                _fieldDataList['typeCode']!,
+                              ],
+                              onCancelled: () => setState(() {
+                                return;
+                              }),
+                              onChanged: () => setState(() {
+                                return;
+                              }),
+                              onSaved: () => setState(() {
+                                return;
+                              }),
+                              onSubmitted: _isFormValid() ? _trySaveData : null,
+                            ),
+                          ),
+                          SizedBox(width: blockPadding),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const SizedBox(height: 44.0),
+                                ReadOnlyTextField(
+                                  label: const Localized('Iso code').v,
+                                  toListen: [
+                                    _fieldDataList['lengthCode']!.controller,
+                                    _fieldDataList['heightCode']!.controller,
+                                  ],
+                                  getValue: () {
+                                    final lengthCodeData =
+                                        _fieldDataList['lengthCode']!;
+                                    final heightCodeData =
+                                        _fieldDataList['heightCode']!;
+                                    return FreightContainerType.values
+                                            .firstWhereOrNull((v) =>
+                                                v.sizeCode ==
+                                                '${lengthCodeData.controller.text}${heightCodeData.controller.text}')
+                                            ?.isoCode ??
+                                        const Localized('Unknown size').v;
+                                  },
+                                ),
+                                ReadOnlyTextField(
+                                  label: const Localized('Size code').v,
+                                  toListen: [
+                                    _fieldDataList['lengthCode']!.controller,
+                                    _fieldDataList['heightCode']!.controller,
+                                  ],
+                                  getValue: () {
+                                    final lengthCodeData =
+                                        _fieldDataList['lengthCode']!;
+                                    final heightCodeData =
+                                        _fieldDataList['heightCode']!;
+                                    return '${lengthCodeData.controller.text}${heightCodeData.controller.text}';
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Flexible(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            child: FormFieldGroup(
+                              nameAlignment: TextAlign.left,
+                              name: '${const Localized('Mass').v}:',
+                              fieldDataList: [
+                                _fieldDataList['grossWeight']!,
+                                _fieldDataList['maxGrossWeight']!,
+                                _fieldDataList['tareWeight']!,
+                              ],
+                              onCancelled: () => setState(() {
+                                return;
+                              }),
+                              onChanged: () => setState(() {
+                                return;
+                              }),
+                              onSaved: () => setState(() {
+                                return;
+                              }),
+                              onSubmitted: _isFormValid() ? _trySaveData : null,
+                              compoundValidationCases: [
+                                CompoundFieldDataValidation(
+                                  ownId: 'maxGrossWeight',
+                                  otherId: 'grossWeight',
+                                  validateValues: (maxGrossMass, grossMass) =>
+                                      (double.tryParse(maxGrossMass) ?? 0.0) >=
+                                              (double.tryParse(grossMass) ??
+                                                  0.0)
+                                          ? const Ok(null)
+                                          : Err(Failure(
+                                              message: const Localized(
+                                                'Max gross mass must be greater than or equal to gross mass',
+                                              ).v,
+                                              stackTrace: StackTrace.current,
+                                            )),
+                                ),
+                                CompoundFieldDataValidation(
+                                  ownId: 'grossWeight',
+                                  otherId: 'tareWeight',
+                                  validateValues: (maxGrossMass, grossMass) =>
+                                      (double.tryParse(maxGrossMass) ?? 0.0) >=
+                                              (double.tryParse(grossMass) ??
+                                                  0.0)
+                                          ? const Ok(null)
+                                          : Err(Failure(
+                                              message: const Localized(
+                                                'Gross mass must be greater than or equal to tare mass',
+                                              ).v,
+                                              stackTrace: StackTrace.current,
+                                            )),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: blockPadding),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const SizedBox(height: 44.0),
+                                ReadOnlyTextField(
+                                  label: const Localized('Net mass').v,
+                                  toListen: [
+                                    _fieldDataList['grossWeight']!.controller,
+                                    _fieldDataList['tareWeight']!.controller,
+                                  ],
+                                  getValue: () {
+                                    final grossMassData =
+                                        _fieldDataList['grossWeight']!;
+                                    final tareMassData =
+                                        _fieldDataList['tareWeight']!;
+                                    return (grossMassData.toValue(
+                                              grossMassData.controller.text,
+                                            ) -
+                                            tareMassData.toValue(
+                                              tareMassData.controller.text,
+                                            ))
+                                        .toStringAsFixed(2);
+                                  },
+                                ),
+                                ReadOnlyTextField(
+                                  label: const Localized('Max net mass').v,
+                                  toListen: [
+                                    _fieldDataList['maxGrossWeight']!
+                                        .controller,
+                                    _fieldDataList['tareWeight']!.controller,
+                                  ],
+                                  getValue: () {
+                                    final maxGrossMassData =
+                                        _fieldDataList['maxGrossWeight']!;
+                                    final tareMassData =
+                                        _fieldDataList['tareWeight']!;
+                                    return (maxGrossMassData.toValue(
+                                              maxGrossMassData.controller.text,
+                                            ) -
+                                            tareMassData.toValue(
+                                              tareMassData.controller.text,
+                                            ))
+                                        .toStringAsFixed(2);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Flexible(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            child: FormFieldGroup(
+                              nameAlignment: TextAlign.left,
+                              name: '${const Localized('Name').v}:',
+                              fieldDataList: [
+                                _fieldDataList['ownerCode']!,
+                                _fieldDataList['serialCode']!,
+                                _fieldDataList['checkDigit']!,
+                              ],
+                              onCancelled: () => setState(() {
+                                return;
+                              }),
+                              onChanged: () => setState(() {
+                                return;
+                              }),
+                              onSaved: () => setState(() {
+                                return;
+                              }),
+                              onSubmitted: _isFormValid() ? _trySaveData : null,
+                            ),
+                          ),
+                          SizedBox(width: blockPadding),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const SizedBox(height: 44.0),
+                                ReadOnlyTextField(
+                                  label: const Localized('Container code').v,
+                                  toListen: [
+                                    _fieldDataList['ownerCode']!.controller,
+                                    _fieldDataList['serialCode']!.controller,
+                                    _fieldDataList['checkDigit']!.controller,
+                                  ],
+                                  getValue: () {
+                                    final serialNumberData =
+                                        _fieldDataList['serialCode']!;
+                                    final ownerCodeData =
+                                        _fieldDataList['ownerCode']!;
+                                    final checkDigitData =
+                                        _fieldDataList['checkDigit']!;
+                                    final containerCode = [
+                                      ownerCodeData.controller.text,
+                                      'U',
+                                      serialNumberData.controller.text,
+                                      checkDigitData.controller.text,
+                                    ].join(' ');
+                                    return containerCode;
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Flexible(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            child: FormFieldGroup(
+                              nameAlignment: TextAlign.left,
+                              name: '${const Localized('Way').v}:',
+                              fieldDataList: [
+                                _fieldDataList['pol']!,
+                                _fieldDataList['pod']!,
+                              ],
+                              onCancelled: () => setState(() {
+                                return;
+                              }),
+                              onChanged: () => setState(() {
+                                return;
+                              }),
+                              onSaved: () => setState(() {
+                                return;
+                              }),
+                              onSubmitted: _isFormValid() ? _trySaveData : null,
+                              compoundValidationCases: [
+                                CompoundFieldDataValidation(
+                                  ownId: 'pol',
+                                  otherId: 'pod',
+                                  validateValues: (pol, pod) => widget
+                                              ._waypoints
+                                              .firstWhere(
+                                                  (w) => w.portCode == pol)
+                                              .etd
+                                              .compareTo(widget._waypoints
+                                                  .firstWhere(
+                                                    (w) => w.portCode == pod,
+                                                  )
+                                                  .etd) ==
+                                          -1
+                                      ? const Ok(null)
+                                      : Err(Failure(
+                                          message: const Localized(
+                                            'POD must be after POL',
+                                          ).v,
+                                          stackTrace: StackTrace.current,
+                                        )),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: blockPadding),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 44.0),
+                                ReadOnlyTextField(
+                                  label: const Localized('POL timing').v,
+                                  toListen: [_fieldDataList['pol']!.controller],
+                                  getValue: () {
+                                    final polData = _fieldDataList['pol']!;
+                                    final pol =
+                                        polData.toValue(polData.controller.text)
+                                            as Waypoint;
+                                    return '${pol.eta.formatRU()} – ${pol.etd.formatRU()}';
+                                  },
+                                ),
+                                ReadOnlyTextField(
+                                  label: const Localized('POD timing').v,
+                                  toListen: [_fieldDataList['pod']!.controller],
+                                  getValue: () {
+                                    final podData = _fieldDataList['pod']!;
+                                    final pod =
+                                        podData.toValue(podData.controller.text)
+                                            as Waypoint;
+                                    return '${pod.eta.formatRU()} – ${pod.etd.formatRU()}';
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 100.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 150.0,
+                            child: FormFieldGroup(
+                              fieldDataList: [
+                                _fieldDataList['containersNumber']!,
+                              ],
+                              onCancelled: () => setState(() {
+                                return;
+                              }),
+                              onChanged: () => setState(() {
+                                return;
+                              }),
+                              onSaved: () => setState(() {
+                                return;
+                              }),
+                              onSubmitted: _isFormValid() ? _trySaveData : null,
+                            ),
+                          ),
+                          AsyncActionButton(
+                            height: 32.0,
+                            label: const Localized('Save').v,
+                            onPressed: _isFormValid() ? _trySaveData : null,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            }).toList(),
+              ),
+              if (_isSaving)
+                Container(
+                  color: theme.colorScheme.surface.withOpacity(0.75),
+                ),
+            ],
           ),
         ),
       ),
     );
-    // return Center(
-    //   child: Padding(
-    //     padding: EdgeInsets.all(blockPadding),
-    //     child: Column(
-    //       children: [
-    //         Flexible(
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //             children: [
-    //               Expanded(
-    //                 child: FormFieldGroup(
-    //                   name: const Localized('Mass').v,
-    //                   fieldDataList: _fieldDataList
-    //                       .where((fd) => fd.id.contains('mass'))
-    //                       .toList(),
-    //                   onCancelled: () => setState(() {
-    //                     return;
-    //                   }),
-    //                   onChanged: () => setState(() {
-    //                     return;
-    //                   }),
-    //                   onSaved: () => setState(() {
-    //                     return;
-    //                   }),
-    //                   onSubmitted: isFormValid ? _trySaveData : null,
-    //                 ),
-    //               ),
-    //               SizedBox(width: blockPadding),
-    //               Expanded(
-    //                 child: Column(
-    //                   mainAxisAlignment: MainAxisAlignment.start,
-    //                   crossAxisAlignment: CrossAxisAlignment.stretch,
-    //                   children: [
-    //                     const SizedBox(height: 44.0),
-    //                     ReadOnlyField(
-    //                       label: const Localized('Max net mass').v,
-    //                       toListen: _fieldDataList
-    //                           .where(
-    //                             (fd) =>
-    //                                 fd.id == 'max_gross_mass' ||
-    //                                 fd.id == 'tare_mass',
-    //                           )
-    //                           .map((fd) => fd.controller)
-    //                           .toList(),
-    //                       getValue: () {
-    //                         final maxGrossMassData = _fieldDataList.firstWhere(
-    //                           (fieldData) => fieldData.id == 'max_gross_mass',
-    //                         );
-    //                         final tareMassData = _fieldDataList.firstWhere(
-    //                           (fieldData) => fieldData.id == 'tare_mass',
-    //                         );
-    //                         return (maxGrossMassData.toValue(
-    //                                     maxGrossMassData.controller.text) -
-    //                                 tareMassData
-    //                                     .toValue(tareMassData.controller.text))
-    //                             .toStringAsFixed(2);
-    //                       },
-    //                     ),
-    //                     ReadOnlyField(
-    //                       label: const Localized('Net mass').v,
-    //                       toListen: _fieldDataList
-    //                           .where(
-    //                             (fd) =>
-    //                                 fd.id == 'gross_mass' ||
-    //                                 fd.id == 'tare_mass',
-    //                           )
-    //                           .map((fd) => fd.controller)
-    //                           .toList(),
-    //                       getValue: () {
-    //                         final grossMassData = _fieldDataList.firstWhere(
-    //                           (fieldData) => fieldData.id == 'gross_mass',
-    //                         );
-    //                         final tareMassData = _fieldDataList.firstWhere(
-    //                           (fieldData) => fieldData.id == 'tare_mass',
-    //                         );
-    //                         return (grossMassData.toValue(
-    //                                     grossMassData.controller.text) -
-    //                                 tareMassData
-    //                                     .toValue(tareMassData.controller.text))
-    //                             .toStringAsFixed(2);
-    //                       },
-    //                     ),
-    //                   ],
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //         Flexible(
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //             children: [
-    //               Expanded(
-    //                 child: FormFieldGroup(
-    //                   name: const Localized('Name').v,
-    //                   fieldDataList: _fieldDataList
-    //                       .where((fd) => [
-    //                             'type_code',
-    //                             'owner_code',
-    //                             'serial_number',
-    //                           ].any((id) => fd.id == id))
-    //                       .toList(),
-    //                   onCancelled: () => setState(() {
-    //                     return;
-    //                   }),
-    //                   onChanged: () => setState(() {
-    //                     return;
-    //                   }),
-    //                   onSaved: () => setState(() {
-    //                     return;
-    //                   }),
-    //                   onSubmitted: isFormValid ? _trySaveData : null,
-    //                 ),
-    //               ),
-    //               SizedBox(width: blockPadding),
-    //               Expanded(
-    //                 child: Column(
-    //                   mainAxisAlignment: MainAxisAlignment.start,
-    //                   crossAxisAlignment: CrossAxisAlignment.stretch,
-    //                   children: [
-    //                     const SizedBox(height: 44.0),
-    //                     ReadOnlyField(
-    //                       label: const Localized('Container code').v,
-    //                       toListen: _fieldDataList
-    //                           .where(
-    //                             (fd) =>
-    //                                 fd.id == 'serial_number' ||
-    //                                 fd.id == 'owner_code',
-    //                           )
-    //                           .map((fd) => fd.controller)
-    //                           .toList(),
-    //                       getValue: () {
-    //                         final serialNumberData = _fieldDataList.firstWhere(
-    //                           (fieldData) => fieldData.id == 'serial_number',
-    //                         );
-    //                         final ownerCodeData = _fieldDataList.firstWhere(
-    //                           (fieldData) => fieldData.id == 'owner_code',
-    //                         );
-    //                         final containerCode = [
-    //                           '${ownerCodeData.toValue(ownerCodeData.controller.text)}',
-    //                           'U',
-    //                           serialNumberData.toText(serialNumberData
-    //                               .toValue(serialNumberData.controller.text)),
-    //                         ].join(' ');
-    //                         final checkDigit = switch (
-    //                             CheckDigit.fromContainerCode(containerCode)
-    //                                 .value()) {
-    //                           Ok(:final value) => '$value',
-    //                           Err(:final error) => '$error',
-    //                         };
-    //                         return '$containerCode $checkDigit';
-    //                       },
-    //                     ),
-    //                   ],
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //         const Spacer(),
-    //         Center(
-    //           child: AsyncActionButton(
-    //             height: 32.0,
-    //             label: const Localized('Save (In dev)').v,
-    //             onPressed: null,
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
-  ///
-  bool _isAnyFieldChanged() => _fieldDataList
-      .where(
-        (data) => data.isChanged,
-      )
-      .isNotEmpty;
   ///
   void _updateFieldsWithNewData(List<FieldData> newFields) {
     final newValues = {
       for (final field in newFields) field.id: field.controller.text,
     };
-    _fieldDataList.where((field) => newValues.containsKey(field.id)).forEach(
+    _fieldDataList.values
+        .where((field) => newValues.containsKey(field.id))
+        .forEach(
       (field) {
         final newValue = newValues[field.id]!;
         field.refreshWith(newValue);
-        field.controller.text = newValue;
       },
     );
   }
@@ -340,7 +672,7 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
       _isSaving = true;
     });
     final onSave = widget._onSave;
-    switch (await onSave(_fieldDataList)) {
+    switch (await onSave(_fieldDataList.values.toList())) {
       case Ok(value: final newFields):
         _updateFieldsWithNewData(newFields);
         _formKey.currentState?.save();
@@ -358,63 +690,5 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
   void _showErrorMessage(String message) {
     if (!mounted) return;
     BottomMessage.error(message: message).show(context);
-  }
-}
-///
-class ReadOnlyField extends StatefulWidget {
-  final String _label;
-  final String Function() _getValue;
-  final List<TextEditingController> _toListen;
-  ///
-  const ReadOnlyField({
-    super.key,
-    required String label,
-    required String Function() getValue,
-    List<TextEditingController> toListen = const [],
-  })  : _label = label,
-        _getValue = getValue,
-        _toListen = toListen;
-  ///
-  @override
-  State<ReadOnlyField> createState() => _ReadOnlyFieldState();
-}
-class _ReadOnlyFieldState extends State<ReadOnlyField> {
-  late TextEditingController _controller;
-  late List<TextEditingController> _toListen;
-  //
-  void onValueChange() {
-    _controller.text = widget._getValue();
-  }
-  //
-  @override
-  void initState() {
-    _toListen = widget._toListen;
-    _controller = TextEditingController(text: widget._getValue());
-    for (final controller in _toListen) {
-      controller.addListener(onValueChange);
-    }
-    super.initState();
-  }
-  //
-  @override
-  void dispose() {
-    _controller.dispose();
-    for (final controller in _toListen) {
-      controller.removeListener(onValueChange);
-    }
-    super.dispose();
-  }
-  //
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      canRequestFocus: false,
-      mouseCursor: SystemMouseCursors.basic,
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: widget._label,
-      ),
-      controller: _controller,
-    );
   }
 }

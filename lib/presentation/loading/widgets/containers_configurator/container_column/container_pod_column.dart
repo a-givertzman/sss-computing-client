@@ -1,28 +1,35 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
+import 'package:sss_computing_client/core/models/stowage/voyage/waypoint.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
-class ContainerCodeColumn implements TableColumn<FreightContainer, String?> {
-  const ContainerCodeColumn();
+/// TODO
+class ContainerPODColumn implements TableColumn<FreightContainer, String?> {
+  final List<Waypoint> _waypoints;
+  ///
+  const ContainerPODColumn({
+    List<Waypoint> waypoints = const [],
+  }) : _waypoints = waypoints;
   //
   @override
-  String get key => 'code';
+  String get key => 'pod';
   //
   @override
   FieldType get type => FieldType.string;
   //
   @override
-  String get name => const Localized('Code').v;
+  String get name => const Localized('POD').v;
   //
   @override
   String get nullValue => '—';
   //
   @override
-  String? get defaultValue => '';
+  String get defaultValue => nullValue;
   //
   @override
   Alignment get headerAlignment => Alignment.centerLeft;
@@ -34,7 +41,7 @@ class ContainerCodeColumn implements TableColumn<FreightContainer, String?> {
   double? get grow => null;
   //
   @override
-  double? get width => 75.0;
+  double? get width => 150.0;
   //
   @override
   bool get useDefaultEditing => false;
@@ -47,19 +54,19 @@ class ContainerCodeColumn implements TableColumn<FreightContainer, String?> {
   //
   @override
   String? extractValue(FreightContainer container) =>
-      '${container.type.lengthCode} GP';
+      _waypoints
+          .firstWhereOrNull((w) => w.id == container.podWaypointId)
+          ?.portCode ??
+      nullValue;
   //
   @override
-  String? parseToValue(String text) => text;
+  String parseToValue(String text) => text;
   //
   @override
   String parseToString(String? value) => value ?? nullValue;
   //
   @override
-  FreightContainer copyRowWith(
-    FreightContainer container,
-    String text,
-  ) =>
+  FreightContainer copyRowWith(FreightContainer container, String text) =>
       container;
   //
   @override

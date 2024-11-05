@@ -4,16 +4,14 @@ import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
-import 'package:sss_computing_client/core/models/stowage/container/freight_container_port.dart';
+import 'package:sss_computing_client/core/models/stowage/container/freight_container_type.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
-class ContainerPODIndictorColumn
-    implements TableColumn<FreightContainer, String?> {
-  ///
-  const ContainerPODIndictorColumn();
+class ContainerTypeColumn implements TableColumn<FreightContainer, String> {
+  const ContainerTypeColumn();
   //
   @override
-  String get key => 'pod';
+  String get key => 'type';
   //
   @override
   FieldType get type => FieldType.string;
@@ -49,7 +47,7 @@ class ContainerPODIndictorColumn
   Validator? get validator => null;
   //
   @override
-  String? extractValue(FreightContainer container) => container.pod?.code;
+  String extractValue(FreightContainer container) => container.type.isoCode;
   //
   @override
   String parseToValue(String text) => text;
@@ -58,43 +56,45 @@ class ContainerPODIndictorColumn
   String parseToString(String? value) => value ?? nullValue;
   //
   @override
-  FreightContainer copyRowWith(FreightContainer container, String text) =>
+  FreightContainer copyRowWith(
+    FreightContainer container,
+    String text,
+  ) =>
       container;
   //
   @override
-  ValueRecord<String?>? buildRecord(
+  ValueRecord<String>? buildRecord(
     FreightContainer container,
     String? Function(String text) toValue,
   ) =>
       null;
   //
   @override
-  Widget? buildCell(context, container, updateValue) =>
-      _ContainerPortWidget(port: container.pod);
+  Widget? buildCell(context, container, updateValue) => _ContainerTypeWidget(
+        type: container.type,
+      );
 }
 ///
-class _ContainerPortWidget extends StatelessWidget {
-  final FreightContainerPort? _port;
+class _ContainerTypeWidget extends StatelessWidget {
+  final FreightContainerType _type;
   ///
-  const _ContainerPortWidget({
-    required FreightContainerPort? port,
-  }) : _port = port;
+  const _ContainerTypeWidget({
+    required FreightContainerType type,
+  }) : _type = type;
   //
   @override
   Widget build(BuildContext context) {
-    return _port != null
-        ? Tooltip(
-            message: Localized(_port.name).v,
-            child: Container(
-              margin: const EdgeInsets.symmetric(
-                vertical: 2.0,
-              ),
-              decoration: BoxDecoration(
-                color: _port.color,
-                borderRadius: const BorderRadius.all(Radius.circular(2.0)),
-              ),
-            ),
-          )
-        : const SizedBox();
+    return Tooltip(
+      message: Localized(_type.isoCode).v,
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+          vertical: 2.0,
+        ),
+        decoration: BoxDecoration(
+          color: _type.color,
+          borderRadius: const BorderRadius.all(Radius.circular(2.0)),
+        ),
+      ),
+    );
   }
 }

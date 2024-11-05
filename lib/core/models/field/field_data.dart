@@ -15,6 +15,10 @@ class FieldData<T> {
   final ValueRecord<T> _record;
   final TextEditingController _controller;
   final Validator? _validator;
+  final Widget Function(
+    String value,
+    void Function(String) updateValue,
+  )? _buildFormField;
   T _initialValue;
   bool _isSynced;
   ///
@@ -38,19 +42,32 @@ class FieldData<T> {
     ValueRecord<T>? record,
     Validator? validator,
     bool isSynced = false,
+    Widget Function(
+      String value,
+      void Function(String) updateValue,
+    )? buildFormField,
   })  : _toValue = toValue,
         _toText = toText,
         _initialValue = initialValue,
         _validator = validator,
         _isSynced = isSynced,
         _record = record ?? _EmptyRecord(initialValue, toValue),
-        _controller = TextEditingController(text: toText(initialValue));
+        _controller = TextEditingController(text: toText(initialValue)),
+        _buildFormField = buildFormField;
   ///
   /// Initial content of the target field.
   T get initialValue => _initialValue;
   ///
-  /// Controller for FormField's.
+  /// Controller for [FormField].
   TextEditingController get controller => _controller;
+  ///
+  /// Returns function to build custom [FormField]
+  /// using current value of [controller] and
+  /// callback to update it.
+  Widget Function(
+    String value,
+    void Function(String) updateValue,
+  )? get buildFormField => _buildFormField;
   ///
   /// Whether content of the target changed or not.
   bool get isChanged => _initialValue != _toValue(controller.text);
@@ -70,9 +87,6 @@ class FieldData<T> {
   /// Pull data from the database through provided [record].
   Future<ResultF<T>> fetch() async {
     switch (await _record.fetch()) {
-      // case null:
-      //   _isSynced = true;
-      //   return Ok(_toValue(_controller.text));
       case Ok(:final value):
         refreshWith(_toText(value));
         _isSynced = true;
@@ -87,10 +101,6 @@ class FieldData<T> {
   Future<ResultF<T>> save() async {
     final text = controller.text;
     switch (await _record.persist(text)) {
-      // case null:
-      //   refreshWith(text);
-      //   _isSynced = true;
-      //   return Ok(_toValue(text));
       case Ok():
         refreshWith(text);
         _isSynced = true;
@@ -101,13 +111,13 @@ class FieldData<T> {
     }
   }
   ///
-  /// Sets [initialaValue] and [controller] text to provided one.
+  /// Updates [initialValue] and [controller] text using provided [text] value.
   void refreshWith(String text) {
     _controller.text = text;
     _initialValue = _toValue(text);
   }
   ///
-  /// Set current [value] to its initial state.
+  /// Set current [controller] to its initial state.
   void cancel() {
     _controller.text = _toText(_initialValue);
   }
@@ -128,10 +138,13 @@ class FieldData<T> {
       record: record ?? _record,
       validator: validator ?? _validator,
       isSynced: isSynced ?? _isSynced,
+      buildFormField: _buildFormField,
     );
   }
 }
 ///
+/// Default [ValueRecord] for [FieldData]
+/// that does not store value in any source.
 final class _EmptyRecord<T> implements ValueRecord<T> {
   T _initialValue;
   final T Function(String text) _toValue;

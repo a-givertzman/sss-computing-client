@@ -10,7 +10,7 @@ class DraftTypeDropdown extends StatelessWidget {
   ///
   /// Creates dropdown for selecting [DraftType] value.
   ///
-  ///   [intialValue] – starting value of dropdown.
+  ///   [initialValue] – starting value of dropdown.
   ///   [onValueChanged] – callback that will be called on value changed.
   const DraftTypeDropdown({
     super.key,

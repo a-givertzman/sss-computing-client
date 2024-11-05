@@ -15,8 +15,8 @@ class JsonBulkhead implements Bulkhead {
   /// ```json
   /// {
   ///   "id": 1, // int
-  ///   "project_id": 1, // int?
-  ///   "ship_id": 1, // int
+  ///   "projectId": 1, // int?
+  ///   "shipId": 1, // int
   ///   "name": "Bulkhead #1", // String
   ///   "mass": 5.0 // double?
   ///   "lcg": 0.0 // double?

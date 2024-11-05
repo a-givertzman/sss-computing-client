@@ -9,9 +9,14 @@ import 'package:sss_computing_client/core/validation/int_validation_case.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/form/suffix_icon.dart';
 ///
+/// TODO
 class CancellableCustomField extends StatefulWidget {
   final TextEditingController _controller;
   final String _label;
+  final Widget Function(
+    String value,
+    void Function(String) updateValue,
+  ) _buildCustomField;
   final FieldType _fieldType;
   final String _initialValue;
   final String? _sendError;
@@ -19,15 +24,16 @@ class CancellableCustomField extends StatefulWidget {
   final void Function(String)? _onCancelled;
   final Future<ResultF<String>> Function(String?)? _onSaved;
   final Validator? _validator;
-  final Widget Function(
-    String value,
-    void Function(String) updateValue,
-  ) _buildCustomField;
   ///
+  /// TODO
   const CancellableCustomField({
     super.key,
     required TextEditingController controller,
     required String label,
+    required Widget Function(
+      String value,
+      void Function(String) updateValue,
+    ) buildCustomField,
     FieldType fieldType = FieldType.string,
     String initialValue = '',
     String? sendError,
@@ -35,10 +41,6 @@ class CancellableCustomField extends StatefulWidget {
     void Function(String)? onChanged,
     void Function(String)? onCancelled,
     Future<ResultF<String>> Function(String?)? onSaved,
-    required Widget Function(
-      String value,
-      void Function(String) updateValue,
-    ) buildCustomField,
   })  : _controller = controller,
         _label = label,
         _sendError = sendError,
@@ -64,6 +66,9 @@ class _CancellableCustomFieldState extends State<CancellableCustomField> {
   @override
   void initState() {
     _controller = widget._controller;
+    _initialValue = widget._initialValue;
+    _controller.text = _initialValue;
+    _sendError = widget._sendError;
     _validator = widget._validator ??
         Validator(
           cases: switch (widget._fieldType) {
@@ -79,8 +84,6 @@ class _CancellableCustomFieldState extends State<CancellableCustomField> {
               ],
           },
         );
-    _initialValue = widget._initialValue;
-    _sendError = widget._sendError;
     super.initState();
   }
   //
@@ -88,61 +91,55 @@ class _CancellableCustomFieldState extends State<CancellableCustomField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final suffixIconSize = IconTheme.of(context).size;
-    final blockPadding = const Setting('blockPadding').toDouble;
-    return Row(children: [
-      Expanded(
-        child: FormField<String>(
-          initialValue: _initialValue,
-          validator: _handleValueValidate,
-          autovalidateMode: AutovalidateMode.always,
-          onSaved: _handleValueSave,
-          builder: (state) => _CustomFieldContent(
-            label: widget._label,
-            errorMessage: state.hasError ? state.errorText : null,
-            child: widget._buildCustomField(
-              state.value ?? '',
-              (value) {
-                state.didChange(value);
-                _handleValueChange(value);
-              },
+    return FormField<String>(
+      initialValue: _initialValue,
+      validator: _handleValueValidate,
+      autovalidateMode: AutovalidateMode.always,
+      onSaved: _handleValueSave,
+      builder: (state) => _CustomFieldContent(
+        label: widget._label,
+        errorMessage: state.hasError ? state.errorText : null,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // clear button
+            ConditionalSuffixIcon(
+              size: suffixIconSize,
+              isVisible: _initialValue != _controller.text,
+              visibleChild: InkWell(
+                onTap: () => _handleValueCancel(state.didChange),
+                customBorder: const CircleBorder(),
+                child: Icon(
+                  Icons.clear,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-      SizedBox(
-        width: blockPadding,
-        height: suffixIconSize,
-      ),
-      // clear button
-      ConditionalSuffixIcon(
-        size: suffixIconSize,
-        isVisible: _initialValue != _controller.text,
-        visibleChild: InkWell(
-          onTap: _handleValueCancel,
-          customBorder: const CircleBorder(),
-          child: Icon(
-            Icons.clear,
-            color: theme.colorScheme.primary,
-          ),
-        ),
-      ),
-      // process indicator with optional error
-      ConditionalSuffixIcon(
-        size: suffixIconSize,
-        isVisible: _isInProcess,
-        visibleChild: const CupertinoActivityIndicator(),
-        invisibleChild: ConditionalSuffixIcon(
-          isVisible: _sendError != null,
-          visibleChild: Tooltip(
-            message: _sendError ?? '',
-            child: Icon(
-              Icons.info_outline,
-              color: theme.colorScheme.error,
+            // process indicator with optional error
+            ConditionalSuffixIcon(
+              size: suffixIconSize,
+              isVisible: _isInProcess,
+              visibleChild: const CupertinoActivityIndicator(),
+              invisibleChild: ConditionalSuffixIcon(
+                isVisible: _sendError != null,
+                visibleChild: Tooltip(
+                  message: _sendError ?? '',
+                  child: Icon(
+                    Icons.info_outline,
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
+        ),
+        child: widget._buildCustomField(
+          state.value ?? _initialValue,
+          (value) => _handleValueChange(value, state.didChange),
         ),
       ),
-    ]);
+    );
   }
   //
   String? _handleValueValidate(String? value) {
@@ -151,25 +148,11 @@ class _CancellableCustomFieldState extends State<CancellableCustomField> {
     return Localized(validateError).v;
   }
   //
-  void _handleValueChange(String value) {
-    widget._onChanged?.call(value);
-    _controller.text = value;
-    setState(() {
-      return;
-    });
-  }
-  //
-  void _handleValueCancel() {
-    widget._onCancelled?.call(_controller.text);
-    _controller.text = _initialValue;
-    setState(() {
-      _sendError = null;
-    });
-  }
-  //
   void _handleValueSave(String? value) {
     final onSaved = widget._onSaved;
-    if (_initialValue == _controller.text || onSaved == null) return;
+    if (_isInProcess || _initialValue == _controller.text || onSaved == null) {
+      return;
+    }
     setState(() {
       _isInProcess = true;
       _sendError = null;
@@ -178,36 +161,65 @@ class _CancellableCustomFieldState extends State<CancellableCustomField> {
         .call(value)
         .then(
           (result) => switch (result) {
-            Ok() => setState(() {
+            Ok() => setStateInAsyncGap(() {
                 _initialValue = _controller.text;
               }),
-            Err(:final error) => setState(() {
+            Err(:final error) => setStateInAsyncGap(() {
                 _sendError = '${error.message}';
               }),
           },
         )
         .catchError(
-          (error) => setState(() {
+          (error) => setStateInAsyncGap(() {
             _sendError = '$error';
           }),
         )
         .whenComplete(
-          () => setState(() {
+          () => setStateInAsyncGap(() {
             _isInProcess = false;
           }),
         );
+  }
+  //
+  void setStateInAsyncGap(void Function() updateState) {
+    if (!mounted) return;
+    updateState();
+    setState(() {
+      return;
+    });
+  }
+  //
+  void _handleValueChange(String value, void Function(String?) updateValue) {
+    updateValue(value);
+    _controller.text = value;
+    widget._onChanged?.call(value);
+    setState(() {
+      return;
+    });
+  }
+  //
+  void _handleValueCancel(void Function(String?) updateValue) {
+    widget._onCancelled?.call(_controller.text);
+    updateValue(_initialValue);
+    _controller.text = _initialValue;
+    setState(() {
+      _sendError = null;
+    });
   }
 }
 class _CustomFieldContent extends StatelessWidget {
   final Widget _child;
   final String _label;
+  final Widget? _trailing;
   final String? _errorMessage;
   const _CustomFieldContent({
     required Widget child,
     required String label,
+    Widget? trailing,
     String? errorMessage,
   })  : _child = child,
         _label = label,
+        _trailing = trailing,
         _errorMessage = errorMessage;
   //
   @override
@@ -219,16 +231,27 @@ class _CustomFieldContent extends StatelessWidget {
         ? theme.colorScheme.error
         : theme.colorScheme.onSurface;
     final errorMessage = _errorMessage;
+    final trailing = _trailing;
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
           _label,
-          style: textTheme.bodyLarge?.copyWith(color: labelColor),
+          style: textTheme.bodySmall?.copyWith(color: labelColor),
         ),
         SizedBox(height: padding),
-        _child,
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(child: _child),
+            if (trailing != null)
+              Padding(
+                padding: EdgeInsets.only(left: padding),
+                child: trailing,
+              ),
+          ],
+        ),
         SizedBox(height: padding),
         if (errorMessage != null)
           Text(

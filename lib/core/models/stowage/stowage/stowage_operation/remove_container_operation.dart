@@ -7,7 +7,7 @@ import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operati
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/stowage_operation.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/update_slots_status_operation.dart';
 ///
-class DelContainerOperation implements StowageOperation {
+class RemoveContainerOperation implements StowageOperation {
   /// Bay number of slot where container should be put.
   final int _bay;
   /// Row number of slot where container should be put.
@@ -15,7 +15,7 @@ class DelContainerOperation implements StowageOperation {
   /// Tier number of slot where container should be put.
   final int _tier;
   ///
-  const DelContainerOperation({
+  const RemoveContainerOperation({
     required int bay,
     required int row,
     required int tier,

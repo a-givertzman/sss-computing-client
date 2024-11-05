@@ -4,6 +4,7 @@ import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
+import 'package:sss_computing_client/core/models/stowage/container/json_freight_container.dart';
 import 'package:sss_computing_client/core/validation/int_validation_case.dart';
 import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
@@ -58,7 +59,7 @@ class ContainerSerialColumn implements TableColumn<FreightContainer, int> {
       );
   //
   @override
-  int extractValue(FreightContainer container) => container.serial;
+  int extractValue(FreightContainer container) => container.serialCode;
   //
   @override
   int parseToValue(String text) => int.parse(text);
@@ -69,14 +70,10 @@ class ContainerSerialColumn implements TableColumn<FreightContainer, int> {
   }
   //
   @override
-  FreightContainer copyRowWith(FreightContainer container, String text) =>
-      FreightContainer.fromSizeCode(
-        container.type.isoName,
-        id: container.id,
-        tareWeight: container.tareWeight,
-        cargoWeight: container.cargoWeight,
-        serial: parseToValue(text),
-      );
+  FreightContainer copyRowWith(FreightContainer container, String text) {
+    final newContainerData = container.asMap()..['serial'] = parseToValue(text);
+    return JsonFreightContainer.fromRow(newContainerData);
+  }
   //
   @override
   ValueRecord<int>? buildRecord(

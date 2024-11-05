@@ -7,5 +7,7 @@
     "api-auth-token": "cma-ysz-api-auth-token",
     "api-database": "sss-computing",
     "comment": "db / stdout",
-    "report": "db"
+    "report": "db",
+    "formStandardWidth": 425.0,
+    "standardElementOpacity": 0.75
 }

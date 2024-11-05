@@ -9,6 +9,7 @@ import 'package:sss_computing_client/core/models/number_math_relation/less_than_
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
+import 'package:sss_computing_client/core/models/stowage/container/json_freight_container.dart';
 import 'package:sss_computing_client/core/validation/number_math_relation_validation_case.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
@@ -83,16 +84,11 @@ class ContainerWeightColumn implements TableColumn<FreightContainer, double> {
   }
   //
   @override
-  FreightContainer copyRowWith(FreightContainer container, String text) =>
-      FreightContainer.fromSizeCode(
-        container.type.isoName,
-        id: container.id,
-        serial: container.serial,
-        tareWeight: container.tareWeight,
-        cargoWeight: parseToValue(text) - container.tareWeight,
-        polCode: container.pol?.code,
-        podCode: container.pod?.code,
-      );
+  FreightContainer copyRowWith(FreightContainer container, String text) {
+    final newContainerData = container.asMap()
+      ..['grossWeight'] = parseToValue(text);
+    return JsonFreightContainer.fromRow(newContainerData);
+  }
   //
   @override
   ValueRecord<double>? buildRecord(
@@ -106,7 +102,7 @@ class ContainerWeightColumn implements TableColumn<FreightContainer, double> {
           dbName: _dbName,
           authToken: _authToken,
           tableName: 'container',
-          fieldName: 'mass',
+          fieldName: 'gross_mass',
           filter: {'id': container.id},
           toValue: toValue,
         ),
@@ -114,10 +110,18 @@ class ContainerWeightColumn implements TableColumn<FreightContainer, double> {
           NumberMathRelationValidationCase<double>(
             relation: const GreaterThanOrEqualTo(),
             toValue: toValue,
-            secondValue: 2.4,
-            customMessage: Localized(
-              'Значение должно быть больше массы тары: ${parseToString(2.4)} т',
-            ).v,
+            secondValue: container.tareWeight,
+            customMessage: '${const Localized(
+              'Value must be greater than or equal to the tare weight',
+            ).v} ${container.tareWeight} ${const Localized('t').v}',
+          ),
+          NumberMathRelationValidationCase<double>(
+            relation: const LessThanOrEqualTo(),
+            toValue: toValue,
+            secondValue: container.maxGrossWeight,
+            customMessage: '${const Localized(
+              'Value must be less than or equal to the max gross weight',
+            ).v} ${container.maxGrossWeight} ${const Localized('t').v}',
           ),
         ]),
       );
@@ -126,6 +130,7 @@ class ContainerWeightColumn implements TableColumn<FreightContainer, double> {
   Widget? buildCell(context, cargo, updateValue) => null;
 }
 ///
+/// TODO
 class ValidateValueRecord<T> implements ValueRecord<T> {
   final ValueRecord<T> record;
   final T Function(String text) toValue;
@@ -136,8 +141,10 @@ class ValidateValueRecord<T> implements ValueRecord<T> {
     required this.toValue,
     required this.validator,
   });
+  //
   @override
   Future<ResultF<T>> fetch() => record.fetch();
+  //
   @override
   Future<ResultF<T>> persist(String value) {
     final validateResult = validator.editFieldValidator(value);

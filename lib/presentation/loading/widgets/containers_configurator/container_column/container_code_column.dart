@@ -6,24 +6,30 @@ import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
-class ContainerPODColumn implements TableColumn<FreightContainer, String?> {
+/// [TableColumn] for [FreightContainer] code.
+///
+/// Displays size code and type code of [FreightContainer].
+class ContainerCodeColumn implements TableColumn<FreightContainer, String?> {
   ///
-  const ContainerPODColumn();
+  /// Creates [TableColumn] for [FreightContainer] code.
+  ///
+  /// Displays size code and type code of [FreightContainer].
+  const ContainerCodeColumn();
   //
   @override
-  String get key => 'pod';
+  String get key => 'code';
   //
   @override
   FieldType get type => FieldType.string;
   //
   @override
-  String get name => const Localized('POD').v;
+  String get name => const Localized('Code').v;
   //
   @override
   String get nullValue => '—';
   //
   @override
-  String get defaultValue => nullValue;
+  String? get defaultValue => '';
   //
   @override
   Alignment get headerAlignment => Alignment.centerLeft;
@@ -35,7 +41,7 @@ class ContainerPODColumn implements TableColumn<FreightContainer, String?> {
   double? get grow => null;
   //
   @override
-  double? get width => 150.0;
+  double? get width => 75.0;
   //
   @override
   bool get useDefaultEditing => false;
@@ -47,16 +53,20 @@ class ContainerPODColumn implements TableColumn<FreightContainer, String?> {
   Validator? get validator => null;
   //
   @override
-  String? extractValue(FreightContainer container) => container.pod?.code;
+  String? extractValue(FreightContainer container) =>
+      '${container.type.sizeCode} ${container.typeCode}';
   //
   @override
-  String parseToValue(String text) => text;
+  String? parseToValue(String text) => text;
   //
   @override
   String parseToString(String? value) => value ?? nullValue;
   //
   @override
-  FreightContainer copyRowWith(FreightContainer container, String text) =>
+  FreightContainer copyRowWith(
+    FreightContainer container,
+    String text,
+  ) =>
       container;
   //
   @override

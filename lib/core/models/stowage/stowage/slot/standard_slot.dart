@@ -82,6 +82,42 @@ class StandardSlot implements Slot {
     required this.minVerticalSeparation,
     this.containerId,
   });
+  ///
+  /// Creates a stowage slot from sql [row] with
+  /// following format:
+  /// ```json
+  /// {
+  ///   "containerId": 1, // int
+  ///   "bay": 1, // int
+  ///   "row": 1, // int
+  ///   "tier": 1, // int
+  ///   "leftX": 0.0, // double
+  ///   "rightX": 1.0, // double
+  ///   "leftY": 0.0, // double
+  ///   "rightY": 1.0, // double
+  ///   "leftZ": 0.0, // double
+  ///   "rightZ": 1.0, // double
+  ///   "minHeight": 0.0, // double
+  ///   "maxHeight": 12.59, // double
+  ///   "minVerticalSeparation": 0.0, // double
+  ///   "isActive": true, // bool
+  /// }
+  factory StandardSlot.fromRow(Map<String, dynamic> row) => StandardSlot(
+        containerId: row['containerId'] as int?,
+        bay: row['bay'] as int,
+        row: row['row'] as int,
+        tier: row['tier'] as int,
+        leftX: row['leftX'] as double,
+        rightX: row['rightX'] as double,
+        leftY: row['leftY'] as double,
+        rightY: row['rightY'] as double,
+        leftZ: row['leftZ'] as double,
+        rightZ: row['rightZ'] as double,
+        minHeight: row['minHeight'] as double,
+        maxHeight: row['maxHeight'] as double,
+        minVerticalSeparation: row['minVerticalSeparation'] as double,
+        isActive: row['isActive'] as bool,
+      );
   //
   @override
   Slot activate() {
@@ -291,11 +327,4 @@ class StandardSlot implements Slot {
       containerId: containerId,
     ));
   }
-  //
-  @override
-  String toString() => '''
-Key: ${'$bay'.padLeft(2, '0')}${'$row'.padLeft(2, '0')}${'$tier'.padLeft(2, '0')}
-Installed container: $containerId
-Is active: $isActive
-''';
 }

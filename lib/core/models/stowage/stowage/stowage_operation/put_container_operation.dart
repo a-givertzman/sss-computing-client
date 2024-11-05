@@ -11,7 +11,7 @@ import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operati
 ///
 /// Operation that puts container to stowage slot
 /// at specified position.
-class AddContainerOperation implements StowageOperation {
+class PutContainerOperation implements StowageOperation {
   /// The container to be put to stowage slot.
   final FreightContainer _container;
   /// Bay number of slot where container should be put.
@@ -25,7 +25,7 @@ class AddContainerOperation implements StowageOperation {
   /// at specified position.
   ///
   /// The [bay], [row] and [tier] numbers specify location of slot.
-  const AddContainerOperation({
+  const PutContainerOperation({
     required FreightContainer container,
     required int bay,
     required int row,

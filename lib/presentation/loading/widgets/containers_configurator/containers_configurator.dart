@@ -9,99 +9,79 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
 import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 import 'package:sss_computing_client/core/models/figure/rectangular_cuboid_figure.dart';
-import 'package:sss_computing_client/core/models/stowage/container/container_1aa.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
-import 'package:sss_computing_client/core/models/stowage/container/freight_container_port.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container_type.dart';
+import 'package:sss_computing_client/core/models/stowage/container/freight_containers.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/slot/slot.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/pg_stowage_collection.dart';
-import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/pretty_print_plan.dart';
+import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/stowage_collection_iterate_extension.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/stowage_collection.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/stowage_map.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_operation/extensions/extension_transform.dart';
+import 'package:sss_computing_client/core/models/stowage/voyage/waypoint.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_figure.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_layout.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_text.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
 import 'package:sss_computing_client/presentation/container_cargo/container_cargo_page.dart';
-import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_code_column.dart';
-import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_name_column.dart';
-import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_pod_column.dart';
-import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_pod_indicator_column.dart';
-import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_pol_column.dart';
-import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_pol_indicator_column.dart';
-import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_slot_column.dart';
-import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_type_column.dart';
-import 'package:sss_computing_client/presentation/loading/containers_configurator/container_column/container_weight_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_code_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_name_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_pod_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_pod_indicator_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_pol_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_pol_indicator_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_slot_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_type_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_weight_column.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 ///
+/// TODO
 class ContainersConfigurator extends StatefulWidget {
   final PgStowageCollection _pgStowageCollection;
+  final FreightContainers _freightContainersCollection;
   final StowageCollection _stowagePlan;
   final List<FreightContainer> _containers;
+  final List<Waypoint> _waypoints;
+  final void Function() _fireRefreshEvent;
   ///
   const ContainersConfigurator({
     super.key,
     required PgStowageCollection pgStowageCollection,
+    required FreightContainers freightContainersCollection,
     required StowageCollection stowageCollection,
     required List<FreightContainer> containers,
+    required List<Waypoint> waypoints,
+    required void Function() fireRefreshEvent,
   })  : _pgStowageCollection = pgStowageCollection,
+        _freightContainersCollection = freightContainersCollection,
         _stowagePlan = stowageCollection,
-        _containers = containers;
+        _containers = containers,
+        _waypoints = waypoints,
+        _fireRefreshEvent = fireRefreshEvent;
   //
   @override
   State<ContainersConfigurator> createState() => _ContainersConfiguratorState();
 }
+//
 class _ContainersConfiguratorState extends State<ContainersConfigurator> {
   late final StowageCollection _stowagePlan;
   late final List<FreightContainer> _containers;
+  late final List<Waypoint> _waypoints;
   late final ItemScrollController _itemScrollController;
   late final ItemPositionsListener _itemPositionsListener;
   /// For testing
   late List<({int? odd, int? even})> _bayPairs;
   late List<Slot> _selectedSlots;
   late int? _selectedContainerId;
-  (FreightContainerPort pol, FreightContainerPort pod) _genPorts() {
-    final podToPol = {
-      FreightContainerPort.AZOV: FreightContainerPort.MURMANSK,
-      FreightContainerPort.ASTRAKHAN: FreightContainerPort.ST_PETERSBURG,
-      FreightContainerPort.ARKHANGELSK: FreightContainerPort.ST_PETERSBURG,
-    };
-    final pods = FreightContainerPort.values.toList().sublist(2, 5)..shuffle();
-    final pod = pods.first;
-    final pol = podToPol[pod]!;
-    return (pol, pod);
-  }
   //
   @override
   void initState() {
     _stowagePlan = widget._stowagePlan;
     _containers = widget._containers;
+    _waypoints = widget._waypoints;
     _itemScrollController = ItemScrollController();
     _itemPositionsListener = ItemPositionsListener.create();
     _bayPairs = _stowagePlan.iterateBayPairs().toList();
-    //
-    // _containers = List.generate(
-    //   50,
-    //   (index) {
-    //     final (pol, pod) = _genPorts();
-    //     return index.isOdd
-    //         ? Container1CC(
-    //             id: index,
-    //             serial: index,
-    //             tareWeight: 1.0,
-    //             pol: pol,
-    //             pod: pod,
-    //           )
-    //         : Container1AA(
-    //             id: index,
-    //             serial: index,
-    //             tareWeight: 1.0,
-    //             pol: pol,
-    //             pod: pod,
-    //           );
-    //   },
-    // );
     _selectedSlots = [];
     _selectedContainerId = null;
     super.initState();
@@ -165,9 +145,11 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     if (container == null) return;
     final slot =
         _selectedSlots.firstWhereOrNull((s) => switch (container.type) {
+              FreightContainerType.type1AAA ||
               FreightContainerType.type1AA ||
               FreightContainerType.type1A =>
                 s.bay.isEven && s.isActive,
+              FreightContainerType.type1CCC ||
               FreightContainerType.type1CC ||
               FreightContainerType.type1C =>
                 s.bay.isOdd && s.isActive,
@@ -235,9 +217,11 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
         ?.type;
     if (selectedContainerType == null) return true;
     return switch (selectedContainerType) {
+      FreightContainerType.type1AAA ||
       FreightContainerType.type1AA ||
       FreightContainerType.type1A =>
         slot.bay.isEven || slot.containerId != null,
+      FreightContainerType.type1CCC ||
       FreightContainerType.type1CC ||
       FreightContainerType.type1C =>
         slot.bay.isOdd || slot.containerId != null,
@@ -356,13 +340,17 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
                 onPressed: _handleContainerAdd,
               ),
               SizedBox(width: blockPadding),
-              const IconButton.filled(
-                icon: Icon(Icons.remove_rounded),
-                onPressed: null,
+              IconButton.filled(
+                tooltip: const Localized('Delete container').v,
+                icon: const Icon(Icons.remove_rounded),
+                onPressed: switch (_selectedContainerId) {
+                  final int id => () => _handleContainerDelete(id),
+                  _ => null,
+                },
               ),
               SizedBox(width: blockPadding),
               IconButton.filled(
-                tooltip: const Localized('Погрузить контейнер').v,
+                tooltip: const Localized('Load container').v,
                 icon: const Icon(Icons.file_download_outlined),
                 onPressed:
                     (_selectedContainerId != null && _selectedSlots.isNotEmpty)
@@ -371,7 +359,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
               ),
               SizedBox(width: blockPadding),
               IconButton.filled(
-                tooltip: const Localized('Выгрузить контейнер').v,
+                tooltip: const Localized('Unload container').v,
                 icon: const Icon(Icons.file_upload_outlined),
                 onPressed: (_selectedSlots.isNotEmpty &&
                         _selectedSlots.any((s) => s.containerId != null))
@@ -384,6 +372,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
           Expanded(
             child: ContainersTable(
               containers: _containers,
+              waypoints: _waypoints,
               collection: _stowagePlan,
               selectedId: _selectedContainerId,
               onRowUpdate: (container) {
@@ -430,22 +419,59 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
       MaterialPageRoute(
         builder: (context) => ContainerCargoPage(
           label: const Localized('Containers').v,
-          container: const Container1AA(id: 1, serial: 1),
           onClose: navigator.pop,
-          // onSave: (fieldsData) async => Ok(fieldsData.map((fd) {
-          //   fd.save();
-          //   return fd;
-          // }).toList()),
-          onSave: (fieldsData) async {
-            for (final fd in fieldsData) {
-              fd.save();
+          onSave: (container, number) async {
+            switch (await widget._freightContainersCollection.addAll(
+              List.generate(
+                number,
+                (_) => container,
+              ),
+            )) {
+              case Ok():
+                navigator.pop();
+                widget._fireRefreshEvent();
+                return const Ok(null);
+              case Err(:final error):
+                _showErrorMessage(error.message);
+                return Err(error);
             }
-            return Ok(fieldsData);
           },
         ),
         maintainState: false,
       ),
     );
+  }
+  //
+  void _handleContainerDelete(int containerId) async {
+    final isContainerLoaded = _stowagePlan
+        .toFilteredSlotList(
+          shouldIncludeSlot: (s) => s.containerId == containerId,
+        )
+        .isNotEmpty;
+    if (isContainerLoaded) {
+      _showErrorMessage(const Localized(
+        'Cannot delete container that is loaded into slot',
+      ).v);
+      return;
+    }
+    switch (await widget._freightContainersCollection.removeById(
+      containerId,
+    )) {
+      case Ok():
+        _containers.removeWhere((c) => c.id == containerId);
+        _selectedContainerId = null;
+        setState(() {
+          return;
+        });
+      case Err(:final error):
+        const Log('Remove cargo').error(error);
+        _showErrorMessage(error.message);
+    }
+  }
+  //
+  void _showErrorMessage(String message) {
+    if (!mounted) return;
+    BottomMessage.error(message: message).show(context);
   }
 }
 ///
@@ -501,6 +527,7 @@ class BayPairsNumber extends StatelessWidget {
 ///
 class ContainersTable extends StatelessWidget {
   final List<FreightContainer> containers;
+  final List<Waypoint> waypoints;
   final StowageCollection collection;
   final void Function(FreightContainer container)? onRowUpdate;
   final void Function(FreightContainer container)? onRowTap;
@@ -510,6 +537,7 @@ class ContainersTable extends StatelessWidget {
   const ContainersTable({
     super.key,
     required this.containers,
+    required this.waypoints,
     required this.collection,
     this.onRowUpdate,
     this.onRowTap,
@@ -534,10 +562,10 @@ class ContainersTable extends StatelessWidget {
           authToken: const Setting('api-auth-token').toString(),
         ),
         // ContainerSerialColumn(useDefaultEditing: true),
-        const ContainerPOLIndicatorColumn(),
-        const ContainerPOLColumn(),
-        const ContainerPODIndictorColumn(),
-        const ContainerPODColumn(),
+        ContainerPOLIndicatorColumn(waypoints: waypoints),
+        ContainerPOLColumn(waypoints: waypoints),
+        ContainerPODIndictorColumn(waypoints: waypoints),
+        ContainerPODColumn(waypoints: waypoints),
         ContainerSlotColumn(collection: collection),
       ],
       selectedRow: containers.firstWhereOrNull((c) => c.id == selectedId),

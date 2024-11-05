@@ -8,10 +8,11 @@ import 'package:sss_computing_client/core/models/cargo/pg_stores_others.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_tanks.dart';
 import 'package:sss_computing_client/core/models/stowage/container/pg_freight_containers.dart';
 import 'package:sss_computing_client/core/models/stowage/stowage/stowage_collection/pg_stowage_collection.dart';
+import 'package:sss_computing_client/core/models/stowage/voyage/pg_waypoints.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/tabs/tab_setting.dart';
 import 'package:sss_computing_client/core/widgets/tabs/tabs_view_widget.dart';
-import 'package:sss_computing_client/presentation/loading/containers_configurator/containers_configurator.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/containers_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/hold_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/other_stores_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/store_tanks_configurator.dart';
@@ -154,18 +155,34 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
         TabSetting(
           label: const Localized('Containers').v,
           content: FutureBuilderWidget(
+            refreshStream: widget._appRefreshStream,
             onFuture: PgFreightContainers(
               apiAddress: widget._apiAddress,
               dbName: widget._dbName,
               authToken: widget._authToken,
             ).fetchAll,
             caseData: (context, containers, _) => FutureBuilderWidget(
+              refreshStream: widget._appRefreshStream,
               onFuture: pgStowageCollection.fetch,
-              caseData: (context, stowageCollection, _) =>
-                  ContainersConfigurator(
-                pgStowageCollection: pgStowageCollection,
-                stowageCollection: stowageCollection,
-                containers: containers,
+              caseData: (context, stowageCollection, _) => FutureBuilderWidget(
+                refreshStream: widget._appRefreshStream,
+                onFuture: PgWaypoints(
+                  apiAddress: widget._apiAddress,
+                  dbName: widget._dbName,
+                  authToken: widget._authToken,
+                ).fetchAll,
+                caseData: (context, waypoints, _) => ContainersConfigurator(
+                  pgStowageCollection: pgStowageCollection,
+                  freightContainersCollection: PgFreightContainers(
+                    apiAddress: widget._apiAddress,
+                    dbName: widget._dbName,
+                    authToken: widget._authToken,
+                  ),
+                  stowageCollection: stowageCollection,
+                  containers: containers,
+                  waypoints: waypoints,
+                  fireRefreshEvent: widget._fireRefreshEvent,
+                ),
               ),
             ),
           ),
