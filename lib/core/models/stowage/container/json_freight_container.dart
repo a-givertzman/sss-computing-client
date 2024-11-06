@@ -26,8 +26,6 @@ class JsonFreightContainer implements FreightContainer {
   ///   "tareWeight": 100.0, // double
   ///   "polWaypointId": 1, // int?
   ///   "podWaypointId": 2, // int?
-  ///   "polWaypointOrder": 1, // int?
-  ///   "podWaypointOrder": 2, // int?
   /// }
   factory JsonFreightContainer.fromRow(Map<String, dynamic> row) =>
       JsonFreightContainer(
@@ -43,8 +41,6 @@ class JsonFreightContainer implements FreightContainer {
           'tareWeight': row['tareWeight'] as double,
           'polWaypointId': row['polWaypointId'] as int?,
           'podWaypointId': row['podWaypointId'] as int?,
-          'polWaypointOrder': row['polWaypointOrder'] as int?,
-          'podWaypointOrder': row['podWaypointOrder'] as int?,
         },
       );
   //
@@ -102,12 +98,6 @@ class JsonFreightContainer implements FreightContainer {
   int? get podWaypointId => _json['podWaypointId'];
   //
   @override
-  int? get polWaypointOrder => _json['polWaypointOrder'];
-  //
-  @override
-  int? get podWaypointOrder => _json['podWaypointOrder'];
-  //
-  @override
   Map<String, dynamic> asMap() => {
         'id': id,
         'isoCode': type.isoCode,
@@ -120,7 +110,5 @@ class JsonFreightContainer implements FreightContainer {
         'tareWeight': tareWeight,
         'polWaypointId': polWaypointId,
         'podWaypointId': podWaypointId,
-        'polWaypointOrder': polWaypointOrder,
-        'podWaypointOrder': podWaypointOrder,
       };
 }

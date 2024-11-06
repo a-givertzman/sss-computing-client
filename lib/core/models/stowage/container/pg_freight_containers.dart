@@ -161,19 +161,17 @@ class PgFreightContainers implements FreightContainers {
     FreightContainer newData,
     FreightContainer oldData,
   ) async {
-    final validateWeightsError = _validateWeights(newData);
-    if (validateWeightsError != null) {
-      return Err(Failure(
-        message: validateWeightsError,
-        stackTrace: StackTrace.current,
-      ));
+    final weightsError = _validateWeights(newData);
+    if (weightsError != null) {
+      return Err(
+        Failure(message: weightsError, stackTrace: StackTrace.current),
+      );
     }
-    final validateVoyageWaypointsError = _validateVoyageWaypoints(newData);
-    if (validateVoyageWaypointsError != null) {
-      return Err(Failure(
-        message: validateVoyageWaypointsError,
-        stackTrace: StackTrace.current,
-      ));
+    final voyageWaypointsError = await _validateVoyageWaypoints(newData);
+    if (voyageWaypointsError != null) {
+      return Err(
+        Failure(message: voyageWaypointsError, stackTrace: StackTrace.current),
+      );
     }
     final sqlAccess = SqlAccess(
       address: _apiAddress,
@@ -238,13 +236,40 @@ class PgFreightContainers implements FreightContainers {
     return null;
   }
   //
-  String? _validateVoyageWaypoints(FreightContainer container) {
+  Future<String?> _validateVoyageWaypoints(FreightContainer container) async {
     final polWaypointId = container.polWaypointId;
     final podWaypointId = container.podWaypointId;
     if (polWaypointId == null || podWaypointId == null) return null;
-    if (polWaypointId >= podWaypointId) {
-      return const Localized('POL must be before POD in voyage').v;
-    }
-    return null;
+    final sqlAccess = SqlAccess(
+      address: _apiAddress,
+      database: _dbName,
+      authToken: _authToken ?? '',
+      sqlBuilder: (_, __) => Sql(sql: '''
+        WITH waypoint_order AS (
+          SELECT
+            row_number() OVER (ORDER BY w.eta ASC, w.eta ASC) AS "order",
+            w.id AS "id"
+          FROM waypoint AS w
+        )
+        SELECT
+          (SELECT wo.order FROM waypoint_order AS wo WHERE id IS NOT DISTINCT FROM $polWaypointId) AS "polOrder",
+          (SELECT wo.order FROM waypoint_order AS wo WHERE id IS NOT DISTINCT FROM $podWaypointId) AS "podOrder";
+      '''),
+      entryBuilder: (row) => row,
+    );
+    return sqlAccess
+        .fetch()
+        .then((result) => switch (result) {
+              Ok(value: final rows) => () {
+                  return rows.firstOrNull?['polOrder'] <
+                          rows.firstOrNull?['podOrder']
+                      ? null
+                      : const Localized('POL must be before POD').v;
+                }(),
+              Err() => const Localized('Check of POL and POD order fails.').v,
+            })
+        .catchError(
+          (_) => const Localized('Check of POL and POD order fails.').v,
+        );
   }
 }
