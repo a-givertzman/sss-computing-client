@@ -6,22 +6,6 @@ class JsonFreightContainer implements FreightContainer {
   final Map<String, dynamic> _json;
   ///
   /// Creates [FreightContainer] that parse itself from [json] map.
-  ///
-  /// Json must be following format:
-  ///
-  /// ```json
-  /// {
-  ///   "id": 1, // int
-  ///   "serialCode": 123, // int
-  ///   "typeCode": "GP", // String
-  ///   "ownerCode": "OWN", // String
-  ///   "checkDigit": 1, // int
-  ///   "maxGrossWeight": 1000.0, // double
-  ///   "grossWeight": 900.0, // double
-  ///   "tareWeight": 100.0, // double
-  ///   "polWaypointId": 1, // int?
-  ///   "podWaypointId": 2, // int?
-  /// }
   const JsonFreightContainer({
     required Map<String, dynamic> json,
   }) : _json = json;
@@ -42,6 +26,8 @@ class JsonFreightContainer implements FreightContainer {
   ///   "tareWeight": 100.0, // double
   ///   "polWaypointId": 1, // int?
   ///   "podWaypointId": 2, // int?
+  ///   "polWaypointOrder": 1, // int?
+  ///   "podWaypointOrder": 2, // int?
   /// }
   factory JsonFreightContainer.fromRow(Map<String, dynamic> row) =>
       JsonFreightContainer(
@@ -57,6 +43,8 @@ class JsonFreightContainer implements FreightContainer {
           'tareWeight': row['tareWeight'] as double,
           'polWaypointId': row['polWaypointId'] as int?,
           'podWaypointId': row['podWaypointId'] as int?,
+          'polWaypointOrder': row['polWaypointOrder'] as int?,
+          'podWaypointOrder': row['podWaypointOrder'] as int?,
         },
       );
   //
@@ -95,7 +83,7 @@ class JsonFreightContainer implements FreightContainer {
         '1C' => FreightContainerType.type1C,
         '1CC' => FreightContainerType.type1CC,
         '1CCC' => FreightContainerType.type1CCC,
-        _ => FreightContainerType.type1A,
+        _ => FreightContainerType.type1AA,
       };
   //
   @override
@@ -114,6 +102,12 @@ class JsonFreightContainer implements FreightContainer {
   int? get podWaypointId => _json['podWaypointId'];
   //
   @override
+  int? get polWaypointOrder => _json['polWaypointOrder'];
+  //
+  @override
+  int? get podWaypointOrder => _json['podWaypointOrder'];
+  //
+  @override
   Map<String, dynamic> asMap() => {
         'id': id,
         'isoCode': type.isoCode,
@@ -126,5 +120,7 @@ class JsonFreightContainer implements FreightContainer {
         'tareWeight': tareWeight,
         'polWaypointId': polWaypointId,
         'podWaypointId': podWaypointId,
+        'polWaypointOrder': polWaypointOrder,
+        'podWaypointOrder': podWaypointOrder,
       };
 }

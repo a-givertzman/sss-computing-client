@@ -9,14 +9,14 @@ import 'package:sss_computing_client/core/validation/int_validation_case.dart';
 import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
-/// [TableColumn] for [FreightContainer] serial code.
-class ContainerSerialColumn implements TableColumn<FreightContainer, int> {
+/// [TableColumn] for [FreightContainer] check digit.
+class ContainerCheckDigitColumn implements TableColumn<FreightContainer, int> {
   ///
-  /// Creates [TableColumn] for [FreightContainer] serial code.
-  const ContainerSerialColumn();
+  /// Creates [TableColumn] for [FreightContainer] check digit.
+  const ContainerCheckDigitColumn();
   //
   @override
-  String get key => 'serialCode';
+  String get key => 'checkDigit';
   //
   @override
   FieldType get type => FieldType.int;
@@ -40,7 +40,7 @@ class ContainerSerialColumn implements TableColumn<FreightContainer, int> {
   double? get grow => null;
   //
   @override
-  double? get width => 120.0;
+  double? get width => 75.0;
   //
   @override
   bool get useDefaultEditing => true;
@@ -52,27 +52,25 @@ class ContainerSerialColumn implements TableColumn<FreightContainer, int> {
   Validator? get validator => const Validator(
         cases: [
           RequiredValidationCase(),
-          MinLengthValidationCase(6),
-          MaxLengthValidationCase(6),
+          MinLengthValidationCase(1),
+          MaxLengthValidationCase(1),
           IntValidationCase(),
         ],
       );
   //
   @override
-  int extractValue(FreightContainer container) => container.serialCode;
+  int extractValue(FreightContainer container) => container.checkDigit;
   //
   @override
   int parseToValue(String text) => int.parse(text);
   //
   @override
-  String parseToString(int value) {
-    return '$value'.padLeft(6, '0');
-  }
+  String parseToString(int value) => '$value';
   //
   @override
   FreightContainer copyRowWith(FreightContainer container, String text) {
     final newContainerData = container.asMap()
-      ..['serialCode'] = parseToValue(text);
+      ..['checkDigit'] = parseToValue(text);
     return JsonFreightContainer.fromRow(newContainerData);
   }
   //

@@ -3,14 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container_type.dart';
 ///
-/// TODO
+/// Dropdown for selecting [FreightContainerType] length or height code.
 class ContainerSizeCodeDropdown extends StatelessWidget {
   final String _initialValue;
   final int _codeIndex;
   final String Function(String code)? _formatCode;
   final void Function(String)? _onTypeChanged;
   ///
-  /// TODO
+  /// Creates a dropdown for selecting [FreightContainerType] length or height code.
+  ///
+  /// * [initialValue] - initial value.
+  /// * [codeIndex] - if 0 - length code, if 1 - height code.
+  /// * [formatCode] - function for formatting code.
+  /// * [onTypeChanged] - callback that is called when value is changed.
   const ContainerSizeCodeDropdown({
     super.key,
     required String initialValue,

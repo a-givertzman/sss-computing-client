@@ -5,7 +5,6 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/widgets/activate_on_tap_builder_widget.dart';
-
 ///
 /// Field that can be edited after activation by tap
 class EditOnTapCell extends StatefulWidget {
@@ -18,7 +17,6 @@ class EditOnTapCell extends StatefulWidget {
   final void Function(String)? _onCancel;
   final Validator? _validator;
   final Widget _child;
-
   ///
   /// Creates [EditOnTapCell] that can be edited
   /// after activation by tap
@@ -42,12 +40,10 @@ class EditOnTapCell extends StatefulWidget {
         _textColor = textColor,
         _initialValue = initialValue,
         _child = child;
-
   ///
   @override
   State<EditOnTapCell> createState() => _EditOnTapCellState();
 }
-
 ///
 class _EditOnTapCellState extends State<EditOnTapCell> {
   TextEditingController? _controller;
@@ -61,14 +57,12 @@ class _EditOnTapCellState extends State<EditOnTapCell> {
     _isInProcess = false;
     super.initState();
   }
-
   //
   @override
   void dispose() {
     _handleEditingEnd();
     super.dispose();
   }
-
   ///
   @override
   Widget build(BuildContext context) {
@@ -112,7 +106,6 @@ class _EditOnTapCellState extends State<EditOnTapCell> {
           )),
     );
   }
-
   //
   void _handleEditingStart() {
     _controller = TextEditingController(text: widget._initialValue);
@@ -123,7 +116,6 @@ class _EditOnTapCellState extends State<EditOnTapCell> {
     _focusNode = FocusNode();
     _focusNode?.requestFocus();
   }
-
   ///
   void _handleEditingEnd() {
     _controller?.dispose();
@@ -133,7 +125,6 @@ class _EditOnTapCellState extends State<EditOnTapCell> {
     _validationError = null;
     _error = null;
   }
-
   ///
   Future<ResultF<void>> _handleValueSave(String value) async {
     if (_validationError != null) {
@@ -167,7 +158,6 @@ class _EditOnTapCellState extends State<EditOnTapCell> {
         return Err(error);
     }
   }
-
   ///
   void _handleValueChange(String value) {
     if (_error != null) {
@@ -182,7 +172,6 @@ class _EditOnTapCellState extends State<EditOnTapCell> {
       });
     }
   }
-
   //
   List<Widget> _buildActions(double iconSize, void Function() deactivate) {
     if (_isInProcess) {
@@ -200,7 +189,6 @@ class _EditOnTapCellState extends State<EditOnTapCell> {
       if (!_isInProcess && _error != null) _buildErrorIndicator(iconSize),
     ];
   }
-
   //
   Widget _buildSaveButton(double iconSize, void Function() deactivate) =>
       SizedBox(
@@ -241,7 +229,8 @@ class _EditOnTapCellState extends State<EditOnTapCell> {
         width: iconSize,
         height: iconSize,
         child: Tooltip(
-          message: _validationError,
+          message:
+              _validationError != null ? Localized(_validationError!).v : '',
           child: Icon(
             Icons.warning_rounded,
             color: widget._errorColor,

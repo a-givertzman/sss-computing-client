@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
@@ -24,12 +23,13 @@ import 'package:sss_computing_client/core/widgets/scheme/scheme_layout.dart';
 import 'package:sss_computing_client/core/widgets/scheme/scheme_text.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
 import 'package:sss_computing_client/presentation/container_cargo/container_cargo_page.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_check_digit_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_code_column.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_name_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_type_code_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_owner_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_pod_column.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_pod_indicator_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_pol_column.dart';
-import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_pol_indicator_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_serial_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_slot_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_type_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_weight_column.dart';
@@ -93,139 +93,6 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
           shouldIncludeSlot: (s) => s.containerId == containerId,
         )
         .firstOrNull;
-  }
-  //
-  bool _isFlyoverSlot(Slot slot) {
-    if (slot.containerId != null) return false;
-    final upperSlot = _stowagePlan.findSlot(slot.bay, slot.row, slot.tier + 2);
-    if (upperSlot == null || !upperSlot.isActive) return false;
-    return true;
-  }
-  //
-  void _onContainerSelected(FreightContainer container) {
-    _selectedContainerId = container.id;
-    final slotWithContainer = _findSlotWithContainerId(container.id);
-    if (slotWithContainer != null) {
-      _onSlotSelected(
-        slotWithContainer.bay,
-        slotWithContainer.row,
-        slotWithContainer.tier,
-      );
-    }
-    setState(() {
-      return;
-    });
-  }
-  //
-  void _onSlotSelected(int bay, int row, int tier) {
-    _selectedSlots = _stowagePlan.toFilteredSlotList(
-      row: row,
-      tier: tier,
-      shouldIncludeSlot: (slot) {
-        if (bay.isOdd) {
-          return slot.bay == bay || slot.bay == bay - 1;
-        } else {
-          return slot.bay == bay || slot.bay == bay + 1;
-        }
-      },
-    );
-    final containerIdInSlot = _selectedSlots
-        .firstWhereOrNull((s) => s.containerId != null)
-        ?.containerId;
-    if (containerIdInSlot != null) _selectedContainerId = containerIdInSlot;
-    setState(() {
-      return;
-    });
-  }
-  //
-  void _putContainer() async {
-    final container = _containers.firstWhereOrNull(
-      (c) => c.id == _selectedContainerId,
-    );
-    if (container == null) return;
-    final slot =
-        _selectedSlots.firstWhereOrNull((s) => switch (container.type) {
-              FreightContainerType.type1AAA ||
-              FreightContainerType.type1AA ||
-              FreightContainerType.type1A =>
-                s.bay.isEven && s.isActive,
-              FreightContainerType.type1CCC ||
-              FreightContainerType.type1CC ||
-              FreightContainerType.type1C =>
-                s.bay.isOdd && s.isActive,
-            });
-    if (slot == null) return;
-    final putResult = await widget._pgStowageCollection.putContainer(
-      container: container,
-      bay: slot.bay,
-      row: slot.row,
-      tier: slot.tier,
-    );
-    putResult.inspect((_) {
-      _selectedSlots.clear();
-      setState(() {
-        return;
-      });
-    }).inspectErr((err) {
-      if (mounted) {
-        BottomMessage.error(
-          message: '$err'.length < 200
-              ? '$err'
-              : '$err'.replaceRange(200, '$err'.length, '...'),
-          displayDuration: const Duration(seconds: 5),
-        ).show(context);
-        _selectedSlots.clear();
-        setState(() {
-          return;
-        });
-      }
-    });
-  }
-  void _removeContainer() async {
-    final slot = _selectedSlots.firstWhereOrNull((s) => s.containerId != null);
-    if (slot == null) return;
-    final removeResult = await widget._pgStowageCollection.removeContainer(
-      bay: slot.bay,
-      row: slot.row,
-      tier: slot.tier,
-    );
-    removeResult.inspect((_) {
-      _selectedSlots.clear();
-      setState(() {
-        return;
-      });
-    }).inspectErr((err) {
-      if (mounted) {
-        BottomMessage.error(
-          message: '$err'.length < 200
-              ? '$err'
-              : '$err'.replaceRange(200, '$err'.length, '...'),
-          displayDuration: const Duration(seconds: 5),
-        ).show(context);
-        setState(() {
-          return;
-        });
-      }
-    });
-  }
-  bool _filterSlotsByContainerSelected(Slot slot) {
-    if (_selectedContainerId == null) return true;
-    final selectedContainerType = _containers
-        .firstWhereOrNull(
-          (c) => c.id == _selectedContainerId,
-        )
-        ?.type;
-    if (selectedContainerType == null) return true;
-    return switch (selectedContainerType) {
-      FreightContainerType.type1AAA ||
-      FreightContainerType.type1AA ||
-      FreightContainerType.type1A =>
-        slot.bay.isEven || slot.containerId != null,
-      FreightContainerType.type1CCC ||
-      FreightContainerType.type1CC ||
-      FreightContainerType.type1C =>
-        slot.bay.isOdd || slot.containerId != null,
-    };
   }
   //
   @override
@@ -362,7 +229,9 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
                 tooltip: const Localized('Unload container').v,
                 icon: const Icon(Icons.file_upload_outlined),
                 onPressed: (_selectedSlots.isNotEmpty &&
-                        _selectedSlots.any((s) => s.containerId != null))
+                        _selectedSlots.any(
+                          (s) => s.containerId != null,
+                        ))
                     ? _removeContainer
                     : null,
               ),
@@ -375,14 +244,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
               waypoints: _waypoints,
               collection: _stowagePlan,
               selectedId: _selectedContainerId,
-              onRowUpdate: (container) {
-                setState(() {
-                  final index = _containers.indexWhere(
-                    (c) => c.id == container.id,
-                  );
-                  _containers[index] = container;
-                });
-              },
+              onRowUpdate: _onTableRowUpdate,
               onRowTap: (container) => setState(() {
                 if (container.id == _selectedContainerId) {
                   _selectedContainerId = null;
@@ -469,9 +331,168 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     }
   }
   //
+  void _onTableRowUpdate(newContainer, oldContainer) {
+    widget._freightContainersCollection.update(newContainer, oldContainer).then(
+      (result) {
+        switch (result) {
+          case Ok():
+            final index = _containers.indexWhere(
+              (c) => c.id == newContainer.id,
+            );
+            _containers[index] = newContainer;
+            if (mounted) {
+              setState(() {
+                return;
+              });
+            }
+          case Err(:final error):
+            _showErrorMessage(error.message);
+        }
+      },
+    );
+  }
+  //
+  bool _isFlyoverSlot(Slot slot) {
+    if (slot.containerId != null) return false;
+    final upperSlot = _stowagePlan.findSlot(slot.bay, slot.row, slot.tier + 2);
+    if (upperSlot == null || !upperSlot.isActive) return false;
+    return true;
+  }
+  //
+  void _onContainerSelected(FreightContainer container) {
+    _selectedContainerId = container.id;
+    final slotWithContainer = _findSlotWithContainerId(container.id);
+    if (slotWithContainer != null) {
+      _onSlotSelected(
+        slotWithContainer.bay,
+        slotWithContainer.row,
+        slotWithContainer.tier,
+      );
+    }
+    setState(() {
+      return;
+    });
+  }
+  //
+  void _onSlotSelected(int bay, int row, int tier) {
+    _selectedSlots = _stowagePlan.toFilteredSlotList(
+      row: row,
+      tier: tier,
+      shouldIncludeSlot: (slot) {
+        if (bay.isOdd) {
+          return slot.bay == bay || slot.bay == bay - 1;
+        } else {
+          return slot.bay == bay || slot.bay == bay + 1;
+        }
+      },
+    );
+    final containerIdInSlot = _selectedSlots
+        .firstWhereOrNull((s) => s.containerId != null)
+        ?.containerId;
+    if (containerIdInSlot != null) _selectedContainerId = containerIdInSlot;
+    setState(() {
+      return;
+    });
+  }
+  //
+  void _putContainer() async {
+    final container = _containers.firstWhereOrNull(
+      (c) => c.id == _selectedContainerId,
+    );
+    if (container == null) return;
+    final slot =
+        _selectedSlots.firstWhereOrNull((s) => switch (container.type) {
+              FreightContainerType.type1AAA ||
+              FreightContainerType.type1AA ||
+              FreightContainerType.type1A =>
+                s.bay.isEven && s.isActive,
+              FreightContainerType.type1CCC ||
+              FreightContainerType.type1CC ||
+              FreightContainerType.type1C =>
+                s.bay.isOdd && s.isActive,
+            });
+    if (slot == null) return;
+    final putResult = await widget._pgStowageCollection.putContainer(
+      container: container,
+      bay: slot.bay,
+      row: slot.row,
+      tier: slot.tier,
+    );
+    putResult.inspect((_) {
+      _selectedSlots.clear();
+      setState(() {
+        return;
+      });
+    }).inspectErr((err) {
+      if (mounted) {
+        BottomMessage.error(
+          message: '$err'.length < 200
+              ? '$err'
+              : '$err'.replaceRange(200, '$err'.length, '...'),
+          displayDuration: const Duration(seconds: 5),
+        ).show(context);
+        _selectedSlots.clear();
+        setState(() {
+          return;
+        });
+      }
+    });
+  }
+  //
+  void _removeContainer() async {
+    final slot = _selectedSlots.firstWhereOrNull((s) => s.containerId != null);
+    if (slot == null) return;
+    final removeResult = await widget._pgStowageCollection.removeContainer(
+      bay: slot.bay,
+      row: slot.row,
+      tier: slot.tier,
+    );
+    removeResult.inspect((_) {
+      _selectedSlots.clear();
+      setState(() {
+        return;
+      });
+    }).inspectErr((err) {
+      if (mounted) {
+        BottomMessage.error(
+          message: '$err'.length < 200
+              ? '$err'
+              : '$err'.replaceRange(200, '$err'.length, '...'),
+          displayDuration: const Duration(seconds: 5),
+        ).show(context);
+        setState(() {
+          return;
+        });
+      }
+    });
+  }
+  //
+  bool _filterSlotsByContainerSelected(Slot slot) {
+    if (_selectedContainerId == null) return true;
+    final selectedContainerType = _containers
+        .firstWhereOrNull(
+          (c) => c.id == _selectedContainerId,
+        )
+        ?.type;
+    if (selectedContainerType == null) return true;
+    return switch (selectedContainerType) {
+      FreightContainerType.type1AAA ||
+      FreightContainerType.type1AA ||
+      FreightContainerType.type1A =>
+        slot.bay.isEven || slot.containerId != null,
+      FreightContainerType.type1CCC ||
+      FreightContainerType.type1CC ||
+      FreightContainerType.type1C =>
+        slot.bay.isOdd || slot.containerId != null,
+    };
+  }
+  //
   void _showErrorMessage(String message) {
     if (!mounted) return;
-    BottomMessage.error(message: message).show(context);
+    BottomMessage.error(
+      message: message,
+      displayDuration: const Duration(milliseconds: 2500),
+    ).show(context);
   }
 }
 ///
@@ -526,52 +547,52 @@ class BayPairsNumber extends StatelessWidget {
 }
 ///
 class ContainersTable extends StatelessWidget {
-  final List<FreightContainer> containers;
-  final List<Waypoint> waypoints;
-  final StowageCollection collection;
-  final void Function(FreightContainer container)? onRowUpdate;
-  final void Function(FreightContainer container)? onRowTap;
-  final void Function(FreightContainer container)? onRowDoubleTap;
-  final int? selectedId;
+  final List<FreightContainer> _containers;
+  final List<Waypoint> _waypoints;
+  final StowageCollection _collection;
+  final void Function(
+    FreightContainer oldContainer,
+    FreightContainer newContainer,
+  )? onRowUpdate;
+  final void Function(FreightContainer container)? _onRowTap;
+  final void Function(FreightContainer container)? _onRowDoubleTap;
+  final int? _selectedId;
   ///
   const ContainersTable({
     super.key,
-    required this.containers,
-    required this.waypoints,
-    required this.collection,
+    required List<FreightContainer> containers,
+    required List<Waypoint> waypoints,
+    required StowageCollection collection,
     this.onRowUpdate,
-    this.onRowTap,
-    this.onRowDoubleTap,
-    this.selectedId,
-  });
+    void Function(FreightContainer)? onRowTap,
+    void Function(FreightContainer)? onRowDoubleTap,
+    int? selectedId,
+  })  : _containers = containers,
+        _waypoints = waypoints,
+        _collection = collection,
+        _onRowTap = onRowTap,
+        _onRowDoubleTap = onRowDoubleTap,
+        _selectedId = selectedId;
   //
   @override
   Widget build(BuildContext context) {
     return EditingTable<FreightContainer>(
       columns: [
         const ContainerTypeColumn(),
+        const ContainerTypeCodeColumn(),
+        const ContainerOwnerColumn(),
         const ContainerCodeColumn(),
-        const ContainerNameColumn(),
-        ContainerWeightColumn(
-          useDefaultEditing: true,
-          apiAddress: ApiAddress(
-            host: const Setting('api-host').toString(),
-            port: const Setting('api-port').toInt,
-          ),
-          dbName: const Setting('api-database').toString(),
-          authToken: const Setting('api-auth-token').toString(),
-        ),
-        // ContainerSerialColumn(useDefaultEditing: true),
-        ContainerPOLIndicatorColumn(waypoints: waypoints),
-        ContainerPOLColumn(waypoints: waypoints),
-        ContainerPODIndictorColumn(waypoints: waypoints),
-        ContainerPODColumn(waypoints: waypoints),
-        ContainerSlotColumn(collection: collection),
+        const ContainerSerialColumn(),
+        const ContainerCheckDigitColumn(),
+        const ContainerWeightColumn(),
+        ContainerPOLColumn(waypoints: _waypoints),
+        ContainerPODColumn(waypoints: _waypoints),
+        ContainerSlotColumn(collection: _collection),
       ],
-      selectedRow: containers.firstWhereOrNull((c) => c.id == selectedId),
-      onRowTap: onRowTap,
-      onRowDoubleTap: onRowDoubleTap,
-      rows: containers,
+      selectedRow: _containers.firstWhereOrNull((c) => c.id == _selectedId),
+      onRowTap: _onRowTap,
+      onRowDoubleTap: _onRowDoubleTap,
+      rows: _containers,
       onRowUpdate: onRowUpdate,
     );
   }
@@ -906,29 +927,44 @@ class StowagePlanNumberingData {
       };
 }
 ///
+/// [Figure] for displaying slot.
 class BaySlotFigure {
-  final bool isSelected;
-  final bool isFlyover;
+  /// Indicates that slot is selected.
+  static const selectedColor = Colors.amber;
+  /// Indicates that slot is flyover.
+  static const flyoverColor = Colors.brown;
+  /// Indicates that slot is occupied.
+  static const occupiedColor = Colors.white;
+  /// Indicates that slot is empty.
+  static const emptyColor = Color.fromARGB(255, 113, 113, 113);
+  final bool _isSelected;
+  final bool _isFlyover;
   ///
+  /// Creates [Figure] for displaying slot.
+  ///
+  /// * [isSelected] - indicates that slot is selected.
+  /// * [isFlyover] - indicates that slot is flyover.
   const BaySlotFigure({
-    this.isSelected = false,
-    this.isFlyover = false,
-  });
+    bool isSelected = false,
+    bool isFlyover = false,
+  })  : _isSelected = isSelected,
+        _isFlyover = isFlyover;
   ///
+  /// Returns [Figure] that displays slot.
   Figure slotFigure(Slot slot) {
-    final strokeColor = isSelected
-        ? Colors.amber
+    final strokeColor = _isSelected
+        ? selectedColor
         : slot.containerId != null
-            ? Colors.white
-            : const Color.fromARGB(255, 113, 113, 113);
-    final fillColor = isFlyover
-        ? Colors.brown
+            ? occupiedColor
+            : emptyColor;
+    final fillColor = _isFlyover
+        ? flyoverColor
         : slot.bay.isEven
-            ? Colors.blue
-            : Colors.green;
+            ? FreightContainerType.type1A.color
+            : FreightContainerType.type1C.color;
     return RectangularCuboidFigure(
       paints: [
-        if (slot.containerId != null || isFlyover)
+        if (slot.containerId != null || _isFlyover)
           Paint()
             ..color = fillColor.withOpacity(0.75)
             ..style = PaintingStyle.fill,
@@ -942,6 +978,7 @@ class BaySlotFigure {
     );
   }
   ///
+  /// Returns [Figure] that displays slot limits.
   Figure limitFigure(Slot slot, Color color) {
     return RectangularCuboidFigure(
       paints: [

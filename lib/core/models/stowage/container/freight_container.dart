@@ -46,8 +46,14 @@ abstract interface class FreightContainer {
   /// ID of pol (port of loading) [Waypoint].
   int? get polWaypointId;
   ///
+  /// Order of pol (port of loading) [Waypoint] in voyage.
+  int? get polWaypointOrder;
+  ///
   /// ID of pod (port of departure) [Waypoint].
   int? get podWaypointId;
+  ///
+  /// Order of pod (port of departure) [Waypoint] in voyage.
+  int? get podWaypointOrder;
   ///
   /// Returns container as a [Map].
   Map<String, dynamic> asMap();

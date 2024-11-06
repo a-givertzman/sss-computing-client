@@ -155,4 +155,96 @@ class PgFreightContainers implements FreightContainers {
           )),
         );
   }
+  //
+  @override
+  Future<Result<void, Failure<String>>> update(
+    FreightContainer newData,
+    FreightContainer oldData,
+  ) async {
+    final validateWeightsError = _validateWeights(newData);
+    if (validateWeightsError != null) {
+      return Err(Failure(
+        message: validateWeightsError,
+        stackTrace: StackTrace.current,
+      ));
+    }
+    final validateVoyageWaypointsError = _validateVoyageWaypoints(newData);
+    if (validateVoyageWaypointsError != null) {
+      return Err(Failure(
+        message: validateVoyageWaypointsError,
+        stackTrace: StackTrace.current,
+      ));
+    }
+    final sqlAccess = SqlAccess(
+      address: _apiAddress,
+      database: _dbName,
+      authToken: _authToken ?? '',
+      sqlBuilder: (_, __) => Sql(sql: '''
+        UPDATE
+          container
+        SET
+          iso_code = '${newData.type.isoCode}',
+          serial_code = ${newData.serialCode},
+          type_code = '${newData.typeCode}',
+          owner_code = '${newData.ownerCode}',
+          check_digit = ${newData.checkDigit},
+          gross_mass = ${newData.grossWeight},
+          max_gross_mass = ${newData.maxGrossWeight},
+          tare_mass = ${newData.tareWeight},
+          pol_waypoint_id = ${newData.polWaypointId ?? 'NULL'},
+          pod_waypoint_id = ${newData.podWaypointId ?? 'NULL'}
+        WHERE id = ${oldData.id};
+      '''),
+      entryBuilder: (row) => row,
+    );
+    return sqlAccess
+        .fetch()
+        .then<Result<void, Failure<String>>>(
+          (result) => switch (result) {
+            Ok() => const Ok(null),
+            Err(:final error) => Err(Failure(
+                message: '$error',
+                stackTrace: StackTrace.current,
+              )),
+          },
+        )
+        .onError(
+          (error, stackTrace) => Err(Failure(
+            message: '$error',
+            stackTrace: stackTrace,
+          )),
+        );
+  }
+  //
+  String? _validateWeights(FreightContainer container) {
+    if (container.grossWeight > container.maxGrossWeight) {
+      return '${const Localized(
+        'Container gross weight must be less than or equal to max gross weight',
+      ).v} – ${container.maxGrossWeight}${const Localized('t').v}';
+    }
+    if (container.grossWeight < container.tareWeight) {
+      return '${const Localized(
+        'Container gross weight must be greater than or equal to tare weight',
+      ).v} – ${container.tareWeight}${const Localized('t').v}';
+    }
+    if (container.cargoWeight < 0 ||
+        container.tareWeight < 0 ||
+        container.grossWeight < 0 ||
+        container.maxGrossWeight < 0) {
+      return const Localized(
+        'Container weights must be greater than or equal to 0',
+      ).v;
+    }
+    return null;
+  }
+  //
+  String? _validateVoyageWaypoints(FreightContainer container) {
+    final polWaypointId = container.polWaypointId;
+    final podWaypointId = container.podWaypointId;
+    if (polWaypointId == null || podWaypointId == null) return null;
+    if (polWaypointId >= podWaypointId) {
+      return const Localized('POL must be before POD in voyage').v;
+    }
+    return null;
+  }
 }

@@ -10,9 +10,9 @@ class ReadOnlyTextField extends StatefulWidget {
   /// Creates read only text field that display some value based on
   /// other text fields values.
   ///
-  /// [label] - label for text field.
-  /// [getValue] - function that returns value to display.
-  /// [toListen] - list of text controllers to listen changes.
+  /// * [label] - label for text field.
+  /// * [getValue] - function that returns value to display.
+  /// * [toListen] - list of text controllers to listen changes.
   const ReadOnlyTextField({
     super.key,
     required String label,

@@ -5,30 +5,29 @@ import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
 import 'package:sss_computing_client/core/models/stowage/container/json_freight_container.dart';
-import 'package:sss_computing_client/core/validation/int_validation_case.dart';
 import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
-/// [TableColumn] for [FreightContainer] serial code.
-class ContainerSerialColumn implements TableColumn<FreightContainer, int> {
+/// [TableColumn] for [FreightContainer] owner code.
+class ContainerOwnerColumn implements TableColumn<FreightContainer, String> {
   ///
-  /// Creates [TableColumn] for [FreightContainer] serial code.
-  const ContainerSerialColumn();
+  /// Creates [TableColumn] for [FreightContainer] owner code.
+  const ContainerOwnerColumn();
   //
   @override
-  String get key => 'serialCode';
+  String get key => 'ownerCode';
   //
   @override
   FieldType get type => FieldType.int;
   //
   @override
-  String get name => const Localized('').v;
+  String get name => const Localized('Name').v;
   //
   @override
   String get nullValue => '—';
   //
   @override
-  int get defaultValue => 0;
+  String get defaultValue => 'OWN';
   //
   @override
   Alignment get headerAlignment => Alignment.centerLeft;
@@ -40,7 +39,7 @@ class ContainerSerialColumn implements TableColumn<FreightContainer, int> {
   double? get grow => null;
   //
   @override
-  double? get width => 120.0;
+  double? get width => 100.0;
   //
   @override
   bool get useDefaultEditing => true;
@@ -52,34 +51,31 @@ class ContainerSerialColumn implements TableColumn<FreightContainer, int> {
   Validator? get validator => const Validator(
         cases: [
           RequiredValidationCase(),
-          MinLengthValidationCase(6),
-          MaxLengthValidationCase(6),
-          IntValidationCase(),
+          MinLengthValidationCase(3),
+          MaxLengthValidationCase(3),
         ],
       );
   //
   @override
-  int extractValue(FreightContainer container) => container.serialCode;
+  String extractValue(FreightContainer container) => container.ownerCode;
   //
   @override
-  int parseToValue(String text) => int.parse(text);
+  String parseToValue(String text) => text;
   //
   @override
-  String parseToString(int value) {
-    return '$value'.padLeft(6, '0');
-  }
+  String parseToString(String value) => value;
   //
   @override
   FreightContainer copyRowWith(FreightContainer container, String text) {
     final newContainerData = container.asMap()
-      ..['serialCode'] = parseToValue(text);
+      ..['ownerCode'] = parseToValue(text);
     return JsonFreightContainer.fromRow(newContainerData);
   }
   //
   @override
-  ValueRecord<int>? buildRecord(
+  ValueRecord<String>? buildRecord(
     FreightContainer container,
-    int Function(String text) toValue,
+    String Function(String text) toValue,
   ) =>
       null;
   //

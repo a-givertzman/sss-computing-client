@@ -1,14 +1,18 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
+import 'package:sss_computing_client/core/models/stowage/container/json_freight_container.dart';
 import 'package:sss_computing_client/core/models/stowage/voyage/waypoint.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
+import 'package:sss_computing_client/presentation/container_cargo/widgets/voyage_waypoint_dropdown.dart';
+import 'package:sss_computing_client/presentation/container_cargo/widgets/voyage_waypoint_preview.dart';
 ///
-class ContainerPOLColumn implements TableColumn<FreightContainer, String?> {
+class ContainerPOLColumn implements TableColumn<FreightContainer, int?> {
   final List<Waypoint> _waypoints;
   ///
   const ContainerPOLColumn({
@@ -19,7 +23,7 @@ class ContainerPOLColumn implements TableColumn<FreightContainer, String?> {
   String get key => 'pol';
   //
   @override
-  FieldType get type => FieldType.string;
+  FieldType get type => FieldType.int;
   //
   @override
   String get name => const Localized('POL').v;
@@ -28,7 +32,7 @@ class ContainerPOLColumn implements TableColumn<FreightContainer, String?> {
   String get nullValue => '—';
   //
   @override
-  String get defaultValue => nullValue;
+  int? get defaultValue => null;
   //
   @override
   Alignment get headerAlignment => Alignment.centerLeft;
@@ -52,29 +56,52 @@ class ContainerPOLColumn implements TableColumn<FreightContainer, String?> {
   Validator? get validator => null;
   //
   @override
-  String? extractValue(FreightContainer container) =>
-      _waypoints
-          .firstWhereOrNull((w) => w.id == container.polWaypointId)
-          ?.portCode ??
-      nullValue;
+  int? extractValue(FreightContainer container) => container.polWaypointId;
   //
   @override
-  String parseToValue(String text) => text;
+  int? parseToValue(String text) => int.tryParse(text);
   //
   @override
-  String parseToString(String? value) => value ?? nullValue;
+  String parseToString(int? value) =>
+      value != null ? value.toString() : nullValue;
   //
   @override
-  FreightContainer copyRowWith(FreightContainer container, String text) =>
-      container;
+  FreightContainer copyRowWith(FreightContainer container, String text) {
+    final newContainerData = container.asMap()
+      ..['polWaypointId'] = parseToValue(text);
+    return JsonFreightContainer.fromRow(newContainerData);
+  }
   //
   @override
-  ValueRecord<String?>? buildRecord(
+  ValueRecord<int?>? buildRecord(
     FreightContainer container,
-    String? Function(String text) toValue,
+    int? Function(String text) toValue,
   ) =>
       null;
   //
   @override
-  Widget? buildCell(context, cargo, updateValue) => null;
+  Widget? buildCell(
+    context,
+    container,
+    updateValue,
+  ) =>
+      VoyageWaypointDropdown(
+        values: _waypoints,
+        initialValue: _waypoints.firstWhereOrNull(
+          (w) => w.id == container.polWaypointId,
+        ),
+        onWaypointChanged: (w) => updateValue(
+          parseToString(w.id),
+        ),
+        buildCustomButton: (onTap) => GestureDetector(
+          onTap: onTap,
+          child: VoyageWaypointPreview(
+            waypoint: _waypoints.firstWhereOrNull(
+              (w) => w.id == container.polWaypointId,
+            ),
+          ),
+        ),
+        dropdownBackgroundColor: Theme.of(context).colorScheme.surface,
+        waypointLabelColor: Theme.of(context).colorScheme.onSurface,
+      );
 }

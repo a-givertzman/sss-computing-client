@@ -29,7 +29,6 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/hold_cargo_shiftable_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
-
 ///
 /// Configurator for ship hold cargo.
 class HoldConfigurator extends StatefulWidget {
@@ -39,7 +38,6 @@ class HoldConfigurator extends StatefulWidget {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
-
   ///
   /// Creates configurator for ship hold cargo.
   ///
@@ -68,7 +66,6 @@ class HoldConfigurator extends StatefulWidget {
   @override
   State<HoldConfigurator> createState() => _HoldConfiguratorState();
 }
-
 class _HoldConfiguratorState extends State<HoldConfigurator> {
   late List<Cargo> _cargos;
   Cargo? _selectedCargo;
@@ -77,7 +74,6 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
     _cargos = widget._cargos;
     super.initState();
   }
-
   //
   @override
   Widget build(BuildContext context) {
@@ -164,7 +160,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
             child: EditingTable(
               selectedRow: _selectedCargo,
               onRowTap: _toggleCargo,
-              onRowUpdate: _refetchCargo,
+              onRowUpdate: (_, oldCargo) => _refetchCargo(oldCargo),
               columns: [
                 const CargoTypeColumn(),
                 CargoNameColumn(
@@ -269,7 +265,6 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
       ),
     );
   }
-
   //
   void _toggleCargo(Cargo? cargo) {
     if (cargo?.id != _selectedCargo?.id) {
@@ -282,7 +277,6 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
       _selectedCargo = null;
     });
   }
-
   //
   void _refetchCargo(Cargo oldCargo) {
     final id = oldCargo.id;
@@ -303,7 +297,6 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
           (_, __) => _showErrorMessage(const Localized('Unknown error').v),
         );
   }
-
   //
   void _updateCargo(Cargo newCargo) {
     final idx = _cargos.indexWhere((cargo) => cargo.id == newCargo.id);
@@ -317,7 +310,6 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
       ];
     });
   }
-
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;

@@ -24,7 +24,6 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
 import 'package:sss_computing_client/presentation/other_stores_cargo/other_stores_cargo_page.dart';
-
 ///
 /// Configurator for ship other stores cargo.
 class OtherStoresConfigurator extends StatefulWidget {
@@ -34,7 +33,6 @@ class OtherStoresConfigurator extends StatefulWidget {
   final ApiAddress _apiAddress;
   final String _dbName;
   final String? _authToken;
-
   ///
   /// Creates configurator for ship other stores cargo.
   ///
@@ -64,7 +62,6 @@ class OtherStoresConfigurator extends StatefulWidget {
   State<OtherStoresConfigurator> createState() =>
       _OtherStoresConfiguratorState();
 }
-
 class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
   late List<Cargo> _cargos;
   Cargo? _selectedCargo;
@@ -73,7 +70,6 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
     _cargos = widget._cargos;
     super.initState();
   }
-
   //
   @override
   Widget build(BuildContext context) {
@@ -169,7 +165,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
             child: EditingTable(
               selectedRow: _selectedCargo,
               onRowTap: _toggleCargo,
-              onRowUpdate: _refetchCargo,
+              onRowUpdate: (_, oldCargo) => _refetchCargo(oldCargo),
               columns: [
                 const CargoTypeColumn(),
                 CargoNameColumn(
@@ -255,7 +251,6 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
       ),
     );
   }
-
   //
   void _toggleCargo(Cargo? cargo) {
     if (cargo?.id != _selectedCargo?.id) {
@@ -268,7 +263,6 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
       _selectedCargo = null;
     });
   }
-
   //
   void _refetchCargo(Cargo oldCargo) {
     final id = oldCargo.id;
@@ -289,7 +283,6 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
           (_, __) => _showErrorMessage(const Localized('Unknown error').v),
         );
   }
-
   //
   void _updateCargo(Cargo newCargo) {
     final idx = _cargos.indexWhere((cargo) => cargo.id == newCargo.id);
@@ -303,7 +296,6 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
       ];
     });
   }
-
   //
   void _handleCargoAdd() {
     final navigator = Navigator.of(context);
@@ -336,7 +328,6 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
       ),
     );
   }
-
   //
   void _handleCargoRemove(Cargo cargo) async {
     switch (await PgStoresOthers(
@@ -351,7 +342,6 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
         _showErrorMessage(error.message);
     }
   }
-
   //
   void _handleCargoEdit(Cargo cargo) {
     final navigator = Navigator.of(context);
@@ -401,7 +391,6 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
       ),
     );
   }
-
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;

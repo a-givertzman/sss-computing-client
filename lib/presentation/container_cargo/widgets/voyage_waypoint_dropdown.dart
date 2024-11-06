@@ -1,82 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/stowage/voyage/waypoint.dart';
+import 'package:sss_computing_client/presentation/container_cargo/widgets/voyage_waypoint_preview.dart';
 ///
-/// TODO
+/// Dropdown for selecting [Waypoint] value.
 class VoyageWaypointDropdown extends StatelessWidget {
   final Waypoint? _initialValue;
   final List<Waypoint> _values;
   final void Function(Waypoint)? _onWaypointChanged;
+  final Widget Function(void Function()? onTap)? _buildCustomButton;
+  final Color? _dropdownBackgroundColor;
+  final Color? _waypointLabelColor;
   ///
-  /// TODO
+  /// Creates dropdown for selecting [Waypoint] value.
+  ///
+  /// * [values] - list of available [Waypoint] values.
+  /// * [initialValue] - [Waypoint] that will be selected by default.
+  /// * [onWaypointChanged] - callback that will be called when [Waypoint] is changed.
+  /// * [buildCustomButton] - callback that will be called to build custom button.
+  /// * [dropdownBackgroundColor] - background color of dropdown.
+  /// * [waypointLabelColor] - color for [Waypoint] label.
   const VoyageWaypointDropdown({
     super.key,
     required List<Waypoint> values,
     Waypoint? initialValue,
     void Function(Waypoint)? onWaypointChanged,
+    Widget Function(void Function()? onTap)? buildCustomButton,
+    Color? dropdownBackgroundColor,
+    Color? waypointLabelColor,
   })  : _initialValue = initialValue,
         _values = values,
-        _onWaypointChanged = onWaypointChanged;
+        _onWaypointChanged = onWaypointChanged,
+        _buildCustomButton = buildCustomButton,
+        _dropdownBackgroundColor = dropdownBackgroundColor,
+        _waypointLabelColor = waypointLabelColor;
   //
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final dropdownBackgroundColor =
+        _dropdownBackgroundColor ?? theme.colorScheme.surface;
+    final waypointLabelColor =
+        _waypointLabelColor ?? theme.colorScheme.onSurface;
     return PopupMenuButtonCustom<Waypoint>(
-      color: theme.colorScheme.surface,
+      color: dropdownBackgroundColor,
       onSelected: _onWaypointChanged,
       initialValue: _initialValue,
       itemBuilder: (context) => <PopupMenuItem<Waypoint>>[
         ..._values.map((v) => PopupMenuItem(
               value: v,
-              child: _WaypointPreview(v),
+              child: VoyageWaypointPreview(
+                waypoint: v,
+                color: waypointLabelColor,
+              ),
             )),
       ],
-      customButtonBuilder: (onTap) => FilledButton(
-        onPressed: onTap,
-        iconAlignment: IconAlignment.end,
-        child: Row(
-          children: [
-            Expanded(child: _WaypointPreview(_initialValue)),
-            const Icon(Icons.arrow_drop_down_outlined),
-          ],
-        ),
-      ),
+      customButtonBuilder: (onTap) =>
+          _buildCustomButton?.call(onTap) ??
+          FilledButton(
+            onPressed: onTap,
+            iconAlignment: IconAlignment.end,
+            child: Row(
+              children: [
+                Expanded(child: VoyageWaypointPreview(waypoint: _initialValue)),
+                const Icon(Icons.arrow_drop_down_outlined),
+              ],
+            ),
+          ),
     );
-  }
-}
-///
-class _WaypointPreview extends StatelessWidget {
-  final Waypoint? _waypoint;
-  ///
-  const _WaypointPreview(this._waypoint);
-  @override
-  Widget build(BuildContext context) {
-    final padding = const Setting('padding').toDouble;
-    final waypoint = _waypoint;
-    return waypoint == null
-        ? const Text('-')
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: 12.0,
-                height: 24.0,
-                margin: const EdgeInsets.symmetric(vertical: 2.0),
-                decoration: BoxDecoration(
-                  color: waypoint.color,
-                  borderRadius: const BorderRadius.all(Radius.circular(2.0)),
-                ),
-              ),
-              SizedBox(width: padding),
-              Expanded(
-                child: Text(
-                  waypoint.portCode,
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                ),
-              ),
-            ],
-          );
   }
 }

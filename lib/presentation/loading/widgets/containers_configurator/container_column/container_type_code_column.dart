@@ -6,24 +6,25 @@ import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/models/stowage/container/freight_container.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
-/// [TableColumn] for [FreightContainer] name.
+/// [TableColumn] for [FreightContainer] type code.
 ///
-/// Displays name of [FreightContainer].
-class ContainerNameColumn implements TableColumn<FreightContainer, String?> {
+/// Displays size code and type code of [FreightContainer].
+class ContainerTypeCodeColumn
+    implements TableColumn<FreightContainer, String?> {
   ///
-  /// Creates [TableColumn] for [FreightContainer] name.
+  /// Creates [TableColumn] for [FreightContainer] type code.
   ///
-  /// Displays name of [FreightContainer].
-  const ContainerNameColumn();
+  /// Displays size code and type code of [FreightContainer].
+  const ContainerTypeCodeColumn();
   //
   @override
-  String get key => 'name';
+  String get key => 'code';
   //
   @override
   FieldType get type => FieldType.string;
   //
   @override
-  String get name => const Localized('Name').v;
+  String get name => const Localized('Code').v;
   //
   @override
   String get nullValue => '—';
@@ -41,7 +42,7 @@ class ContainerNameColumn implements TableColumn<FreightContainer, String?> {
   double? get grow => null;
   //
   @override
-  double? get width => 350.0;
+  double? get width => 75.0;
   //
   @override
   bool get useDefaultEditing => false;
@@ -54,7 +55,7 @@ class ContainerNameColumn implements TableColumn<FreightContainer, String?> {
   //
   @override
   String? extractValue(FreightContainer container) =>
-      '${container.ownerCode} U ${container.serialCode.toString().padLeft(6, '0')} ${container.checkDigit}';
+      '${container.type.sizeCode} ${container.typeCode}';
   //
   @override
   String? parseToValue(String text) => text;

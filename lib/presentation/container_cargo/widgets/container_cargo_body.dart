@@ -155,7 +155,7 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
         label: const Localized('Check digit').v,
         toValue: (text) => int.tryParse(text) ?? 0,
         toText: (value) => '$value',
-        initialValue: 0, // TODO
+        initialValue: 0,
         validator: const Validator(cases: [
           IntValidationCase(),
           RequiredValidationCase(),
@@ -317,7 +317,7 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
                               children: [
                                 const SizedBox(height: 44.0),
                                 ReadOnlyTextField(
-                                  label: const Localized('Iso code').v,
+                                  label: const Localized('ISO code').v,
                                   toListen: [
                                     _fieldDataList['lengthCode']!.controller,
                                     _fieldDataList['heightCode']!.controller,
@@ -614,7 +614,7 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: 150.0,
+                            width: 200,
                             child: FormFieldGroup(
                               fieldDataList: [
                                 _fieldDataList['containersNumber']!,

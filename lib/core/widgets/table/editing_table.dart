@@ -14,7 +14,7 @@ class EditingTable<T> extends StatefulWidget {
   final List<T> _rows;
   final void Function(T rowData)? _onRowTap;
   final void Function(T rowData)? _onRowDoubleTap;
-  final void Function(T rowData)? _onRowUpdate;
+  final void Function(T newData, T oldData)? _onRowUpdate;
   final T? _selectedRow;
   final Color _selectedRowColor;
   final double _rowHeight;
@@ -24,6 +24,8 @@ class EditingTable<T> extends StatefulWidget {
   /// [columns] – list of [TableColumn] to construct table.
   /// [rows] – list of rows to display.
   /// [onRowTap] – called to handle tap on row.
+  /// [onRowTap] – called to handle double tap on row.
+  /// [onRowUpdate] – called to handle row update.
   /// [selectedRow] – selected element, visually separated from the rest by a special color.
   /// [selectedColor] – color of selected item.
   /// [rowHeight] – table row height.
@@ -33,7 +35,7 @@ class EditingTable<T> extends StatefulWidget {
     required List<T> rows,
     void Function(T rowData)? onRowTap,
     void Function(T rowData)? onRowDoubleTap,
-    void Function(T rowData)? onRowUpdate,
+    void Function(T newData, T oldData)? onRowUpdate,
     T? selectedRow,
     Color selectedColor = Colors.amber,
     double rowHeight = 32.0,
@@ -131,6 +133,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
           row.data,
           (value) => widget._onRowUpdate?.call(
             column.copyRowWith(row.data, value),
+            row.data,
           ),
         ) ??
         Text(
@@ -179,6 +182,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
           Future.value(Ok(value)),
       onSubmitted: (value) => widget._onRowUpdate?.call(
         column.copyRowWith(row.data, value),
+        row.data,
       ),
       validator: column.validator,
       child: _buildPreviewCell(
