@@ -159,7 +159,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
             child: EditingTable(
               selectedRow: _selectedCargo,
               onRowTap: _toggleCargo,
-              onRowUpdate: (oldCargo) => _refetchCargo(oldCargo),
+              onRowUpdate: (_, oldCargo) => _refetchCargo(oldCargo),
               columns: [
                 const CargoTypeColumn(),
                 CargoNameColumn(

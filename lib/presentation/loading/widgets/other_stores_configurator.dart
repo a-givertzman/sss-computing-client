@@ -164,7 +164,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
             child: EditingTable(
               selectedRow: _selectedCargo,
               onRowTap: _toggleCargo,
-              onRowUpdate: (oldCargo) => _refetchCargo(oldCargo),
+              onRowUpdate: (_, oldCargo) => _refetchCargo(oldCargo),
               columns: [
                 const CargoTypeColumn(),
                 CargoNameColumn(
