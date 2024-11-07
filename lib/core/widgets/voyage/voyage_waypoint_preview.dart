@@ -21,10 +21,13 @@ class VoyageWaypointPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final padding = const Setting('padding').toDouble;
+    final width = const Setting('colorLabelWidth').toDouble;
+    final height = const Setting('colorLabelHeight').toDouble;
+    final borderRadius = const Setting('colorLabelBorderRadius').toDouble;
     final textStyle = theme.textTheme.bodyMedium?.copyWith(
       color: _color ?? theme.colorScheme.onPrimary,
     );
-    final padding = const Setting('padding').toDouble;
     final waypoint = _waypoint;
     return waypoint == null
         ? Text(
@@ -37,12 +40,16 @@ class VoyageWaypointPreview extends StatelessWidget {
               Tooltip(
                 message: waypoint.portName,
                 child: Container(
-                  width: 12.0,
-                  height: 24.0,
-                  margin: const EdgeInsets.symmetric(vertical: 2.0),
+                  width: width,
+                  height: height,
+                  margin: EdgeInsets.symmetric(
+                    vertical: borderRadius,
+                  ),
                   decoration: BoxDecoration(
                     color: waypoint.color,
-                    borderRadius: const BorderRadius.all(Radius.circular(2.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(
+                      borderRadius,
+                    )),
                   ),
                 ),
               ),

@@ -111,7 +111,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
           flex: 1,
           child: TableView<T>(
             model: _model..replaceRows(widget._rows),
-            cellHeight: 32.0,
+            cellHeight: widget._rowHeight,
             scrollController: _scrollController,
             cellPadding: EdgeInsets.zero,
             onRowTap: (rowData) => widget._onRowTap?.call(rowData),

@@ -85,17 +85,17 @@ class _ContainerTypeWidget extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
-    final padding = const Setting('padding').toDouble;
+    final borderRadius = const Setting('colorLabelBorderRadius').toDouble;
     return Tooltip(
       message: Localized(_type.isoCode).v,
       child: Container(
         margin: EdgeInsets.symmetric(
-          vertical: padding,
+          vertical: borderRadius,
         ),
         decoration: BoxDecoration(
           color: _type.color,
           borderRadius: BorderRadius.all(
-            Radius.circular(padding),
+            Radius.circular(borderRadius),
           ),
         ),
       ),
