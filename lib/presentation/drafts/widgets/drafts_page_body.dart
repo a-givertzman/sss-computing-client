@@ -64,15 +64,15 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
     return FutureBuilderWidget(
       refreshStream: widget._appRefreshStream,
       onFuture: FieldRecord<PathProjections>(
-        tableName: 'ship_parameters',
-        fieldName: 'value',
-        dbName: widget._dbName,
         apiAddress: widget._apiAddress,
+        dbName: widget._dbName,
         authToken: widget._authToken,
+        tableName: 'ship_geometry',
+        fieldName: 'hull_beauty_svg',
         toValue: (value) => JsonSvgPathProjections(
           json: json.decode(value),
         ),
-        filter: {'key': 'hull_beauty_svg'},
+        filter: {'id': 1},
       ).fetch,
       caseData: (context, hullProjections, _) => FutureBuilderWidget(
         onFuture: PgDrafts(

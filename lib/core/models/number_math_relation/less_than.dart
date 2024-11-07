@@ -21,8 +21,8 @@ final class LessThan implements NumberMathRelation {
   }
   //
   @override
-  GreaterThan swaped() => const GreaterThan();
+  GreaterThan swapped() => const GreaterThan();
   //
   @override
-  GreaterThanOrEqualTo inversed() => const GreaterThanOrEqualTo();
+  GreaterThanOrEqualTo inverted() => const GreaterThanOrEqualTo();
 }

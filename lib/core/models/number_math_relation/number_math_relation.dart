@@ -32,14 +32,14 @@ abstract interface class NumberMathRelation {
       '!=' || '≠' || '<>' => const NotEqualTo(),
       '<=' || '≤' => const LessThanOrEqualTo(),
       '>=' || '≥' => const GreaterThanOrEqualTo(),
-      _ => UnimplementedMathRelation(stringRepresentaion: str),
+      _ => UnimplementedMathRelation(stringRepresentation: str),
     };
   }
   ///
   /// Returns [NumberMathRelation] for which values
   /// order of operands has been reversed
-  NumberMathRelation swaped();
+  NumberMathRelation swapped();
   ///
-  /// Returns [NumberMathRelation] with inversed operator
-  NumberMathRelation inversed();
+  /// Returns [NumberMathRelation] with inverted operator
+  NumberMathRelation inverted();
 }

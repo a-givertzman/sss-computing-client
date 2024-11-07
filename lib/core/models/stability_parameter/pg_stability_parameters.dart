@@ -1,20 +1,21 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:sss_computing_client/core/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/stability_parameter/json_stability_parameter.dart';
 import 'package:sss_computing_client/core/models/stability_parameter/stability_parameter.dart';
 import 'package:sss_computing_client/core/models/stability_parameter/stability_parameters.dart';
 ///
-/// Stability [Criterions] collection that stored in postgres DB.
+/// [StabilityParameter] collection that stored in postgres DB.
 class PgStabilityParameters implements StabilityParameters {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
   ///
-  /// Creates stability [Criterions] collection that stored in postgres DB.
+  /// Creates [StabilityParameter] collection that stored in postgres DB.
   ///
-  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
-  ///   - [dbName] – name of the database;
-  ///   - [authToken] – string  authentication token for accessing server;
+  /// * [apiAddress] – [ApiAddress] of server that interact with database;
+  /// * [dbName] – name of the database;
+  /// * [authToken] – string  authentication token for accessing server;
   const PgStabilityParameters({
     required String dbName,
     required ApiAddress apiAddress,
@@ -34,48 +35,24 @@ class PgStabilityParameters implements StabilityParameters {
             SELECT
               DISTINCT
               ph.title_rus AS "title",
-              ph.unit_rus::TEXT AS "unit",
+              u.symbol_rus::TEXT AS "unit",
               pd.ship_id AS "shipId",
               pd.project_id AS "projectId",
               pd.result AS "value"
             FROM
               parameter_head AS ph
               LEFT JOIN criterions_parameters AS cp ON ph.id = cp.parameter_id
-              LEFT JOIN criterion_stability AS cs ON cp.criterion_id = cs.id
+              LEFT JOIN criterion AS c ON cp.criterion_id = c.id
+              LEFT JOIN unit AS u ON ph.unit_id = u.id
               JOIN parameter_data AS pd ON ph.id = pd.parameter_id
             WHERE
-              (cp.criterion_id IS NOT NULL
-              OR cp.always_visible = TRUE) AND pd.ship_id = 1
+              (cp.criterion_id IS NOT NULL OR cp.always_visible = TRUE) AND
+              pd.ship_id = 1
             ORDER BY "title";
             """,
       ),
-      entryBuilder: (row) => JsonStabilityParameter(
-        json: {
-          'name': row['title'] as String,
-          'value': row['value'] as double,
-          'unit': row['unit'] as String?,
-          'description': null,
-        },
-      ),
+      entryBuilder: (row) => JsonStabilityParameter.fromRow(row),
     );
-    return sqlAccess
-        .fetch()
-        .then<Result<List<StabilityParameter>, Failure<String>>>(
-          (result) => switch (result) {
-            Ok(value: final parameters) => Ok(parameters),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-          },
-        )
-        .onError(
-          (error, stackTrace) => Err(Failure(
-            message: '$error',
-            stackTrace: stackTrace,
-          )),
-        );
+    return sqlAccess.fetch().convertFailure();
   }
 }

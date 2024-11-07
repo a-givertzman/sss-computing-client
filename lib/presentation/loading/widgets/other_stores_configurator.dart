@@ -99,12 +99,12 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                     apiAddress: widget._apiAddress,
                     dbName: widget._dbName,
                     authToken: widget._authToken,
-                    tableName: 'ship_parameters',
-                    fieldName: 'value',
+                    tableName: 'ship_geometry',
+                    fieldName: 'hull_svg',
                     toValue: (value) => JsonSvgPathProjections(
                       json: json.decode(value),
                     ),
-                    filter: {'key': 'hull_svg'},
+                    filter: {'id': 1},
                   ).fetch,
                   caseData: (context, hull, _) => FutureBuilderWidget(
                     refreshStream: widget._appRefreshStream,
@@ -112,12 +112,12 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                       apiAddress: widget._apiAddress,
                       dbName: widget._dbName,
                       authToken: widget._authToken,
-                      tableName: 'ship_parameters',
-                      fieldName: 'value',
+                      tableName: 'ship_geometry',
+                      fieldName: 'hull_beauty_svg',
                       toValue: (value) => JsonSvgPathProjections(
                         json: json.decode(value),
                       ),
-                      filter: {'key': 'hull_beauty_svg'},
+                      filter: {'id': 1},
                     ).fetch,
                     caseData: (context, hullBeauty, _) => CargoSchemes(
                       cargos: _cargos,
@@ -164,7 +164,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
             child: EditingTable(
               selectedRow: _selectedCargo,
               onRowTap: _toggleCargo,
-              onRowUpdate: _refetchCargo,
+              onRowUpdate: (oldCargo) => _refetchCargo(oldCargo),
               columns: [
                 const CargoTypeColumn(),
                 CargoNameColumn(

@@ -406,7 +406,7 @@ void main() {
       test(
         'return correct type',
         () {
-          const relation = UnimplementedMathRelation(stringRepresentaion: '');
+          const relation = UnimplementedMathRelation(stringRepresentation: '');
           final result = relation.process(firstValue, secondValue);
           expect(
             result,

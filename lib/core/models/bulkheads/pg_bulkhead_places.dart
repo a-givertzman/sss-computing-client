@@ -1,9 +1,9 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:sss_computing_client/core/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead_place.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead_places.dart';
 import 'package:sss_computing_client/core/models/bulkheads/json_bulkhead_place.dart';
-import 'package:sss_computing_client/core/future_result_extension.dart';
 ///
 /// [BulkheadPlaces] collection that stored in postgres DB.
 class PgBulkheadPlaces implements BulkheadPlaces {
@@ -13,9 +13,9 @@ class PgBulkheadPlaces implements BulkheadPlaces {
   ///
   /// [BulkheadPlaces] collection that stored in postgres DB.
   ///
-  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
-  ///   - [dbName] – name of the database;
-  ///   - [authToken] – string  authentication token for accessing server;
+  /// * [apiAddress] – [ApiAddress] of server that interact with database;
+  /// * [dbName] – name of the database;
+  /// * [authToken] – string  authentication token for accessing server;
   const PgBulkheadPlaces({
     required String dbName,
     required ApiAddress apiAddress,
@@ -94,15 +94,17 @@ class PgBulkheadPlaces implements BulkheadPlaces {
         },
       ),
     );
-    return sqlAccess.fetch().convertFailure().then((result) => switch (result) {
-          Ok(value: final entries) => entries.length == 1
-              ? Ok(entries.first)
-              : Err(Failure(
-                  message: 'Not found',
-                  stackTrace: StackTrace.current,
-                )),
-          Err(:final error) => Err(error),
-        });
+    return sqlAccess.fetch().convertFailure().then(
+          (result) => switch (result) {
+            Ok(value: final entries) => entries.length == 1
+                ? Ok(entries.first)
+                : Err(Failure(
+                    message: 'Not found',
+                    stackTrace: StackTrace.current,
+                  )),
+            Err(:final error) => Err(error),
+          },
+        );
   }
   //
   @override

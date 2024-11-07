@@ -3,15 +3,15 @@ import 'package:sss_computing_client/core/models/number_math_relation/number_mat
 ///
 /// [NumberMathRelation] that returns [Err] if process() called
 final class UnimplementedMathRelation implements NumberMathRelation {
-  final String _stringRepresentaion;
+  final String _stringRepresentation;
   ///
   /// Creates instance of [NumberMathRelation] for unimplemented relation
   const UnimplementedMathRelation({
-    required String stringRepresentaion,
-  }) : _stringRepresentaion = stringRepresentaion;
+    required String stringRepresentation,
+  }) : _stringRepresentation = stringRepresentation;
   //
   @override
-  String get operator => _stringRepresentaion;
+  String get operator => _stringRepresentation;
   //
   @override
   Err<bool, Failure<String>> process<T extends num>(
@@ -20,18 +20,18 @@ final class UnimplementedMathRelation implements NumberMathRelation {
   ) {
     return Err(Failure<String>(
       message:
-          'No implementation of [NumberMathRelation] for provided [stringRepresentaion]: $_stringRepresentaion',
+          'No implementation of [NumberMathRelation] for provided [stringRepresentaion]: $_stringRepresentation',
       stackTrace: StackTrace.current,
     ));
   }
   //
   @override
-  UnimplementedMathRelation swaped() => UnimplementedMathRelation(
-        stringRepresentaion: _stringRepresentaion,
+  UnimplementedMathRelation swapped() => UnimplementedMathRelation(
+        stringRepresentation: _stringRepresentation,
       );
   //
   @override
-  UnimplementedMathRelation inversed() => UnimplementedMathRelation(
-        stringRepresentaion: _stringRepresentaion,
+  UnimplementedMathRelation inverted() => UnimplementedMathRelation(
+        stringRepresentation: _stringRepresentation,
       );
 }

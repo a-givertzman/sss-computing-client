@@ -6,6 +6,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo_use_max_mfs_record.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_all_cargos.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
 import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
@@ -20,6 +21,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_name_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_tcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_type_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_use_max_mfs_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_vcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_volume_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
@@ -27,7 +29,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_schemes.
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
 ///
 /// Configurator for ship tanks cargo.
-class TanksConfigurator extends StatefulWidget {
+class StoreTanksConfigurator extends StatefulWidget {
   final List<Cargo> _cargos;
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final ApiAddress _apiAddress;
@@ -41,7 +43,7 @@ class TanksConfigurator extends StatefulWidget {
   ///   [apiAddress] – [ApiAddress] of server that interact with database;
   ///   [dbName] – name of the database;
   ///   [authToken] – string authentication token for accessing server;
-  const TanksConfigurator({
+  const StoreTanksConfigurator({
     super.key,
     required List<Cargo> cargos,
     required Stream<DsDataPoint<bool>> appRefreshStream,
@@ -55,9 +57,9 @@ class TanksConfigurator extends StatefulWidget {
         _authToken = authToken;
   //
   @override
-  State<TanksConfigurator> createState() => _TanksConfiguratorState();
+  State<StoreTanksConfigurator> createState() => _StoreTanksConfiguratorState();
 }
-class _TanksConfiguratorState extends State<TanksConfigurator> {
+class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
   late List<Cargo> _cargos;
   Cargo? _selectedCargo;
   @override
@@ -228,6 +230,18 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                 ),
                 const CargoMFSXColumn(
                   useDefaultEditing: false,
+                ),
+                CargoUseMaxMfsColumn(
+                  buildRecord: (cargo, toValue) => CargoUseMaxMfsRecord(
+                    dbName: widget._dbName,
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    authToken: widget._authToken,
+                    id: cargo.id,
+                    toValue: toValue,
+                  ),
                 ),
               ],
               rows: _cargos,

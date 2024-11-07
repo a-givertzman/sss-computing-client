@@ -44,15 +44,15 @@ class ShipDraughtsScheme extends StatelessWidget {
     return FutureBuilderWidget(
       refreshStream: _appRefreshStream,
       onFuture: FieldRecord<PathProjections>(
-        tableName: 'ship_parameters',
-        fieldName: 'value',
-        dbName: _dbName,
         apiAddress: _apiAddress,
+        dbName: _dbName,
         authToken: _authToken,
+        tableName: 'ship_geometry',
+        fieldName: 'hull_beauty_svg',
         toValue: (value) => JsonSvgPathProjections(
           json: json.decode(value),
         ),
-        filter: {'key': 'hull_beauty_svg'},
+        filter: {'id': 1},
       ).fetch,
       caseData: (context, hullProjections, _) {
         return FutureBuilderWidget(
@@ -160,7 +160,7 @@ class ShipDraughtsScheme extends StatelessWidget {
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
-                        _DraugthLabel(
+                        _DraughtLabel(
                           draught: draught,
                           draughtShift: 0.0,
                           massShift: 0.0,
@@ -232,7 +232,7 @@ class ShipDraughtsScheme extends StatelessWidget {
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
-                        _DraugthLabel(
+                        _DraughtLabel(
                           draught: draught,
                           draughtShift: heelTrim.draftAP.offset,
                           massShift: massShiftX,
@@ -243,7 +243,7 @@ class ShipDraughtsScheme extends StatelessWidget {
                               '${const Localized('AP').v} ${heelTrim.draftAP.value.toStringAsFixed(2)} ${const Localized('m').v}',
                           labelStyle: labelStyle,
                         ),
-                        _DraugthLabel(
+                        _DraughtLabel(
                           draught: draught,
                           draughtShift: heelTrim.draftAvg.offset,
                           massShift: massShiftX,
@@ -254,7 +254,7 @@ class ShipDraughtsScheme extends StatelessWidget {
                               '${const Localized('Avg').v} ${heelTrim.draftAvg.value.toStringAsFixed(2)} ${const Localized('m').v}',
                           labelStyle: labelStyle,
                         ),
-                        _DraugthLabel(
+                        _DraughtLabel(
                           draught: draught,
                           draughtShift: heelTrim.draftFP.offset,
                           massShift: massShiftX,
@@ -278,7 +278,7 @@ class ShipDraughtsScheme extends StatelessWidget {
   }
 }
 ///
-class _DraugthLabel extends StatelessWidget {
+class _DraughtLabel extends StatelessWidget {
   final double draught;
   final double draughtShift;
   final double massShift;
@@ -288,7 +288,7 @@ class _DraugthLabel extends StatelessWidget {
   final String label;
   final TextStyle? labelStyle;
   ///
-  const _DraugthLabel({
+  const _DraughtLabel({
     required this.draught,
     required this.draughtShift,
     required this.massShift,

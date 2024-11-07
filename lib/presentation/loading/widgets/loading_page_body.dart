@@ -10,6 +10,7 @@ import 'package:sss_computing_client/core/widgets/tabs/tab_setting.dart';
 import 'package:sss_computing_client/core/widgets/tabs/tabs_view_widget.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/hold_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/other_stores_configurator.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/store_tanks_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/tanks_configurator.dart';
 ///
 /// Body for loading page.
@@ -79,7 +80,7 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
               dbName: widget._dbName,
               authToken: widget._authToken,
             ).fetchAll,
-            caseData: (context, cargos, _) => TanksConfigurator(
+            caseData: (context, cargos, _) => StoreTanksConfigurator(
               cargos: cargos,
               appRefreshStream: widget._appRefreshStream,
               apiAddress: widget._apiAddress,

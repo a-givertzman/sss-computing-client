@@ -194,7 +194,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                 ownId: 'lcg',
                 otherId: 'x1',
                 validateValues: (lcg, x1) =>
-                    switch (const LessThanOrEqualTo().swaped().process(
+                    switch (const LessThanOrEqualTo().swapped().process(
                           double.tryParse(lcg) ?? 0.0,
                           double.tryParse(x1) ?? 0.0,
                         )) {
@@ -224,7 +224,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                 ownId: 'x2',
                 otherId: 'lcg',
                 validateValues: (x2, lcg) =>
-                    switch (const LessThanOrEqualTo().swaped().process(
+                    switch (const LessThanOrEqualTo().swapped().process(
                           double.tryParse(x2) ?? 0.0,
                           double.tryParse(lcg) ?? 0.0,
                         )) {
@@ -253,7 +253,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                 ownId: 'x2',
                 otherId: 'x1',
                 validateValues: (x2, x1) =>
-                    switch (const LessThan().swaped().process(
+                    switch (const LessThan().swapped().process(
                           double.tryParse(x2) ?? 0.0,
                           double.tryParse(x1) ?? 0.0,
                         )) {

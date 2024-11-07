@@ -20,8 +20,8 @@ final class NotEqualTo implements NumberMathRelation {
   }
   //
   @override
-  NotEqualTo swaped() => const NotEqualTo();
+  NotEqualTo swapped() => const NotEqualTo();
   //
   @override
-  EqualTo inversed() => const EqualTo();
+  EqualTo inverted() => const EqualTo();
 }
