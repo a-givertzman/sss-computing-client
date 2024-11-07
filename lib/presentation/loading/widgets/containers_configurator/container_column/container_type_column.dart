@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
@@ -23,7 +24,7 @@ class ContainerTypeColumn implements TableColumn<FreightContainer, String> {
   String get nullValue => '—';
   //
   @override
-  String get defaultValue => '';
+  String get defaultValue => nullValue;
   //
   @override
   Alignment get headerAlignment => Alignment.centerLeft;
@@ -84,15 +85,18 @@ class _ContainerTypeWidget extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
+    final padding = const Setting('padding').toDouble;
     return Tooltip(
       message: Localized(_type.isoCode).v,
       child: Container(
-        margin: const EdgeInsets.symmetric(
-          vertical: 2.0,
+        margin: EdgeInsets.symmetric(
+          vertical: padding,
         ),
         decoration: BoxDecoration(
           color: _type.color,
-          borderRadius: const BorderRadius.all(Radius.circular(2.0)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(padding),
+          ),
         ),
       ),
     );

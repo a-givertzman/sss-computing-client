@@ -30,7 +30,7 @@ class ContainerTypeCodeColumn
   String get nullValue => '—';
   //
   @override
-  String? get defaultValue => '';
+  String? get defaultValue => null;
   //
   @override
   Alignment get headerAlignment => Alignment.centerLeft;

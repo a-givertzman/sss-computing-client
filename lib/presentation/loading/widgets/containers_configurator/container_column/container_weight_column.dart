@@ -63,7 +63,7 @@ class ContainerWeightColumn implements TableColumn<FreightContainer, double> {
   //
   @override
   String parseToString(double? value) {
-    return (value ?? 0.0).toStringAsFixed(1);
+    return (value ?? defaultValue).toStringAsFixed(1);
   }
   //
   @override

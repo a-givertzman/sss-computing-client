@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
@@ -22,7 +21,7 @@ class ContainerSerialColumn implements TableColumn<FreightContainer, int> {
   FieldType get type => FieldType.int;
   //
   @override
-  String get name => const Localized('').v;
+  String get name => '';
   //
   @override
   String get nullValue => '—';
