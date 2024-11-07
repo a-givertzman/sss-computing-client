@@ -1,5 +1,5 @@
 name: sss_computing_client
-description: "Clent application for the SSS-Computing project."
+description: "Client application for the SSS-Computing project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 0.0.1
 
@@ -12,15 +12,15 @@ dependencies:
   hmi_core:
     git:
       url: https://github.com/a-givertzman/hmi_core.git
-      ref: 2.0.0
+      ref: 2.1.0
   hmi_widgets:
     git:
       url: https://github.com/a-givertzman/hmi_widgets.git
-      ref: 1.0.1
+      ref: 1.0.2
   ext_rw:
     git:
       url: https://github.com/a-givertzman/dart_ext_rw.git
-      ref: 1.0.3
+      ref: 1.0.3+1
   fl_chart:
     git:
       url: https://github.com/a-givertzman/fl_chart.git

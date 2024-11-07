@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
 import 'error_message_widget.dart';
 ///
 /// Function called to request data again. Returns Future with value [Ok]

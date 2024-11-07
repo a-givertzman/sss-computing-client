@@ -1,6 +1,5 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:hmi_core/hmi_core.dart' hide Result;
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/criterion/criterion.dart';
 import 'package:sss_computing_client/core/models/criterion/criterions.dart';
 import 'package:sss_computing_client/core/models/criterion/json_criterion.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/validation/int_validation_case.dart';

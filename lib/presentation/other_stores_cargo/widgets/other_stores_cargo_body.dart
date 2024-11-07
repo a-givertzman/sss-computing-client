@@ -2,7 +2,6 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/less_than.dart';

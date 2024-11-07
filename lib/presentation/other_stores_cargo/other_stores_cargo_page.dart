@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/presentation/other_stores_cargo/widgets/other_stores_cargo_body.dart';

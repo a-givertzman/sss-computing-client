@@ -1,5 +1,4 @@
-import 'package:hmi_core/hmi_core_failure.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/equal_to.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/greater_than.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/greater_than_or_equal_to.dart';

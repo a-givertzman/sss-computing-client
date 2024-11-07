@@ -1,9 +1,8 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core.dart' hide Result;
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
