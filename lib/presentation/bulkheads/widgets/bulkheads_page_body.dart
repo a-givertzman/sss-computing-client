@@ -107,7 +107,9 @@ class _BulkheadsPageBodyState extends State<BulkheadsPageBody> {
             ),
             if (_isLoading)
               Container(
-                color: theme.colorScheme.surface.withOpacity(0.75),
+                color: theme.colorScheme.surface.withOpacity(
+                  const Setting('opacityLow').toDouble,
+                ),
                 child: const Center(child: CupertinoActivityIndicator()),
               ),
           ],

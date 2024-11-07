@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/figure/figure_plane.dart';
 import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
 import 'package:sss_computing_client/core/models/figure/path_projections.dart';
@@ -99,7 +100,9 @@ class ShipDraughtsScheme extends StatelessWidget {
               ..translate(0.0, -draught);
             final theme = Theme.of(context);
             final labelStyle = theme.textTheme.labelLarge?.copyWith(
-              backgroundColor: theme.colorScheme.primary.withOpacity(0.75),
+              backgroundColor: theme.colorScheme.primary.withOpacity(
+                const Setting('opacityLow').toDouble,
+              ),
             );
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,

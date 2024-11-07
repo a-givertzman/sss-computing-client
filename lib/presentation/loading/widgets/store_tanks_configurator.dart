@@ -141,6 +141,7 @@ class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
           Expanded(
             child: EditingTable(
               selectedRow: _selectedCargo,
+              rowHeight: const Setting('tableRowHeight').toDouble,
               onRowTap: _toggleCargo,
               onRowUpdate: (_, oldCargo) => _refetchCargo(oldCargo),
               columns: [

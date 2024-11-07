@@ -163,6 +163,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
           Expanded(
             child: EditingTable(
               selectedRow: _selectedCargo,
+              rowHeight: const Setting('tableRowHeight').toDouble,
               onRowTap: _toggleCargo,
               onRowUpdate: (_, oldCargo) => _refetchCargo(oldCargo),
               columns: [

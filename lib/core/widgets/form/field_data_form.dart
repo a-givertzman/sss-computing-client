@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/widgets/form/async_action_button.dart';
@@ -57,6 +58,7 @@ class _FieldDataFormState extends State<FieldDataForm> {
         .isNotEmpty;
     final isFormValid = _isFormValid();
     const buttonHeight = 40.0;
+    final inProgressOpacity = const Setting('opacityLow').toDouble;
     return Form(
       key: _formKey,
       child: Column(
@@ -83,7 +85,9 @@ class _FieldDataFormState extends State<FieldDataForm> {
                 ),
                 if (_isSaving)
                   Container(
-                    color: theme.colorScheme.surface.withOpacity(0.75),
+                    color: theme.colorScheme.surface.withOpacity(
+                      inProgressOpacity,
+                    ),
                   ),
               ],
             ),

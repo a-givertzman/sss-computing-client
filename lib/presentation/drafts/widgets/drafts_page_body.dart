@@ -59,7 +59,9 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
     final padding = const Setting('padding').toDouble;
     final blockPadding = const Setting('blockPadding').toDouble;
     final labelStyle = theme.textTheme.labelLarge?.copyWith(
-      backgroundColor: theme.colorScheme.primary.withOpacity(0.75),
+      backgroundColor: theme.colorScheme.primary.withOpacity(
+        const Setting('opacityLow').toDouble,
+      ),
     );
     return FutureBuilderWidget(
       refreshStream: widget._appRefreshStream,
