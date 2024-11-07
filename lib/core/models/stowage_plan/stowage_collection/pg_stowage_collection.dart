@@ -183,6 +183,9 @@ class PgStowageCollection {
     ).fetch().convertFailure();
   }
   ///
+  /// Returns fetched [StowageCollection].
+  StowageCollection get stowageCollection => _stowageCollection;
+  ///
   /// Restores current [StowageCollection] state from [other] state.
   void _restoreFrom(StowageCollection other) {
     _stowageCollection.removeAllSlots();
