@@ -176,7 +176,7 @@ class StandardSlot implements Slot {
         stackTrace: StackTrace.current,
       ));
     }
-    if (rightZUpper > maxHeight) return Ok(null);
+    if (rightZUpper > maxHeight) return const Ok(null);
     return Ok(StandardSlot(
       isActive: isActive,
       bay: bay,
