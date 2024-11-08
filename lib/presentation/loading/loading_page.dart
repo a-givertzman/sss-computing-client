@@ -49,7 +49,10 @@ class _LoadingPageState extends State<LoadingPage> {
   //
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
+      // ignore: deprecated_member_use
+      backgroundColor: theme.colorScheme.background,
       body: Row(
         children: [
           NavigationPanel(

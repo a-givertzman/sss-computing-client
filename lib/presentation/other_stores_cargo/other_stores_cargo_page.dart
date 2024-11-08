@@ -36,7 +36,10 @@ class OtherStoresCargoPage extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
+      // ignore: deprecated_member_use
+      backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
         leading: Tooltip(
           message: const Localized('Back').v,
