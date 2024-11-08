@@ -134,6 +134,9 @@ class PgStowageCollection {
     );
   }
   ///
+  /// Returns fetched [StowageCollection].
+  StowageCollection get stowageCollection => _stowageCollection;
+  ///
   /// Saves current [StowageCollection] state to Postgres DB.
   Future<ResultF<void>> _save() {
     final sql = """
@@ -162,15 +165,15 @@ class PgStowageCollection {
               '${slot.bay}',
               '${slot.row}',
               '${slot.tier}',
-              slot.leftX.toStringAsFixed(5),
-              slot.rightX.toStringAsFixed(5),
-              slot.leftY.toStringAsFixed(5),
-              slot.rightY.toStringAsFixed(5),
-              slot.leftZ.toStringAsFixed(5),
-              slot.rightZ.toStringAsFixed(5),
-              slot.minVerticalSeparation.toStringAsFixed(5),
-              slot.minHeight.toStringAsFixed(5),
-              slot.maxHeight.toStringAsFixed(5),
+              _numberToText(slot.leftX),
+              _numberToText(slot.rightX),
+              _numberToText(slot.leftY),
+              _numberToText(slot.rightY),
+              _numberToText(slot.leftZ),
+              _numberToText(slot.rightZ),
+              _numberToText(slot.minVerticalSeparation),
+              _numberToText(slot.minHeight),
+              _numberToText(slot.maxHeight),
               slot.isActive ? 'TRUE' : 'FALSE',
             ].join(', ')})').join(',')};
       END \$\$;
@@ -182,9 +185,12 @@ class PgStowageCollection {
       sqlBuilder: (_, __) => Sql(sql: sql),
     ).fetch().convertFailure();
   }
-  ///
-  /// Returns fetched [StowageCollection].
-  StowageCollection get stowageCollection => _stowageCollection;
+  //
+  String _numberToText(
+    num number, {
+    int fractionDigits = 5,
+  }) =>
+      number.toStringAsFixed(fractionDigits);
   ///
   /// Restores current [StowageCollection] state from [other] state.
   void _restoreFrom(StowageCollection other) {
