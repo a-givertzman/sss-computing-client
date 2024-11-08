@@ -58,7 +58,9 @@ class BayPairIndication extends StatelessWidget {
           itemBuilder: (_, index) => GestureDetector(
             onTap: () => _bayPairsScrollController.scrollTo(
               index: index,
-              duration: const Duration(milliseconds: 500),
+              duration: Duration(
+                milliseconds: const Setting('animationDuration').toInt,
+              ),
               curve: Curves.easeInOutCubic,
               alignment: 0.5,
             ),

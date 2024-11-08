@@ -231,7 +231,9 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
               _scrollController.position.maxScrollExtent,
             ),
             curve: Curves.easeOut,
-            duration: const Duration(milliseconds: 500),
+            duration: Duration(
+              milliseconds: const Setting('animationDuration').toInt,
+            ),
           );
         }
       });

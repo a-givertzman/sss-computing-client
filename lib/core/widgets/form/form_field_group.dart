@@ -75,7 +75,7 @@ class _FormFieldGroupState extends State<FormFieldGroup> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (widget._name != null)
+        if (widget._name != null) ...[
           Text(
             widget._name!,
             textAlign: widget._nameAlignment,
@@ -83,7 +83,8 @@ class _FormFieldGroupState extends State<FormFieldGroup> {
               color: theme.colorScheme.onSurface,
             ),
           ),
-        SizedBox(height: blockPadding),
+          SizedBox(height: blockPadding),
+        ],
         Expanded(
           child: FutureBuilder(
             future: Future.wait(widget._fieldDataList.map(
