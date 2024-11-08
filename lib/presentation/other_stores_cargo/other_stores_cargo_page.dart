@@ -38,8 +38,14 @@ class OtherStoresCargoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(
-          onPressed: _onClose,
+        leading: Tooltip(
+          message: const Localized('Back').v,
+          child: TooltipVisibility(
+            visible: false,
+            child: BackButton(
+              onPressed: _onClose,
+            ),
+          ),
         ),
         title: Text(_label),
       ),

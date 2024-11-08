@@ -19,11 +19,17 @@ class BulkheadsPage extends StatelessWidget {
     final navigator = Navigator.of(context);
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(
-          onPressed: () {
-            navigator.pop();
-            _onClose?.call();
-          },
+        leading: Tooltip(
+          message: const Localized('Back').v,
+          child: TooltipVisibility(
+            visible: false,
+            child: BackButton(
+              onPressed: () {
+                navigator.pop();
+                _onClose?.call();
+              },
+            ),
+          ),
         ),
         title: Text(const Localized('Grain bulkheads installation').v),
       ),
