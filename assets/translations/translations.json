@@ -663,6 +663,10 @@
         "Max net mass",
         "Максимальная масса нетто"
     ],
+    "Net mass": [
+        "Net mass",
+        "Масса нетто"
+    ],
     "Container code": [
         "Container code",
         "Код контейнера"
@@ -673,7 +677,7 @@
     ],
     "POL timing": [
         "POL timing",
-        "Время прибывания в POl"
+        "Время прибывания в POL"
     ],
     "POD timing": [
         "POD timing",
