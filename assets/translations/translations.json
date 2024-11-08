@@ -9,7 +9,7 @@
     ],
     "Too few characters": [
         "Too few characters",
-        "Cлишком мало символов"
+        "Слишком мало символов"
     ],
     "Too many characters": [
         "Too many characters",
@@ -263,8 +263,8 @@
         "Run calculations",
         "Запустить вычисления"
     ],
-    "Сalculations in progress": [
-        "Сalculations in progress",
+    "Calculations in progress": [
+        "Calculations in progress",
         "Производятся вычисления"
     ],
     "Main": [
@@ -334,6 +334,26 @@
     "Other": [
         "Other",
         "Другое"
+    ],
+    "Urea tank": [
+        "Urea tank",
+        "Цистерны мочевины"
+    ],
+    "Sundry tank": [
+        "Sundry tank",
+        "Цистерны грязных жидкостей"
+    ],
+    "Fresh & drinking water tank": [
+        "Fresh & drinking water tank",
+        "Цистерны питьевой и пресной воды"
+    ],
+    "Lubricating oil tank": [
+        "Lubricating oil tank",
+        "Цистерны масла"
+    ],
+    "Fuel tank": [
+        "Fuel tank",
+        "Цистерны топлива"
     ],
     "Bulk cargo": [
         "Bulk cargo",
@@ -441,7 +461,7 @@
     ],
     "to starboard": [
         "to starboard",
-        "на првый борт"
+        "на правый борт"
     ],
     "Stability criterions": [
         "Stability criterions",
@@ -506,5 +526,161 @@
     "mfsModCurrent": [
         "Consider current modifications",
         "Учитываются поправки по текущему заполнению"
+    ],
+    "Containers": [
+        "Containers",
+        "Контейнеры"
+    ],
+    "BAY No.": [
+        "BAY No.",
+        "Бэй №"
+    ],
+    "Code": [
+        "Code",
+        "Код"
+    ],
+    "Container gross weight must be less than or equal to max gross weight": [
+        "Container gross weight must be less than or equal to max gross weight",
+        "Масса брутто контейнера должна быть не больше, чем максимальная масса брутто"
+    ],
+    "Container gross weight must be greater than or equal to tare weight": [
+        "Container gross weight must be greater than or equal to tare weight",
+        "Масса брутто контейнера должна быть не меньше, чем масса тары"
+    ],
+    "Container weights must be greater than or equal to 0": [
+        "Container weights must be greater than or equal to 0",
+        "Массы контейнера должны быть больше 0"
+    ],
+    "POL must be before POD in voyage": [
+        "POL must be before POD in voyage",
+        "POL должен быть раньше POD в маршруте"
+    ],
+    "POL must be before POD": [
+        "POL must be before POD",
+        "POL должен быть раньше POD"
+    ],
+    "POD must be after POL": [
+        "POD must be after POL",
+        "POD должен быть позже POL"
+    ],
+    "Slot": [
+        "Slot",
+        "Слот"
+    ],
+    "Max gross mass": [
+        "Max gross mass",
+        "Максимальная масса брутто"
+    ],
+    "Max gross mass cannot be negative": [
+        "Max gross mass cannot be negative",
+        "Максимальная масса брутто не может быть отрицательной"
+    ],
+    "Gross mass": [
+        "Gross mass",
+        "Масса брутто"
+    ],
+    "Gross mass cannot be negative": [
+        "Gross mass cannot be negative",
+        "Масса брутто не может быть отрицательной"
+    ],
+    "Tare mass": [
+        "Tare mass",
+        "Масса тары"
+    ],
+    "Type code": [
+        "Type code",
+        "Код типа"
+    ],
+    "Owner code": [
+        "Owner code",
+        "Код владельца"
+    ],
+    "Serial number": [
+        "Serial number",
+        "Серийный номер"
+    ],
+    "Check digit": [
+        "Check digit",
+        "Контрольное число"
+    ],
+    "Length": [
+        "Length",
+        "Длина"
+    ],
+    "Height": [
+        "Height",
+        "Высота"
+    ],
+    "Unknown length code": [
+        "Unknown length code",
+        "Неизвестный код длины"
+    ],
+    "Unknown height code": [
+        "Unknown height code",
+        "Неизвестный код высоты"
+    ],
+    "POL": [
+        "POL",
+        "POL"
+    ],
+    "POD": [
+        "POD",
+        "POD"
+    ],
+    "Number of containers": [
+        "Number of containers",
+        "Количество контейнеров"
+    ],
+    "Number of containers cannot be negative": [
+        "Number of containers cannot be negative",
+        "Количество контейнеров не может быть отрицательным"
+    ],
+    "Size and type": [
+        "Size and type",
+        "Размер и тип"
+    ],
+    "ISO code": [
+        "ISO code",
+        "Код ISO"
+    ],
+    "Unknown size": [
+        "Unknown size",
+        "Неизвестный тип"
+    ],
+    "Size code": [
+        "Size code",
+        "Код размера"
+    ],
+    "Max gross mass must be greater than or equal to gross mass": [
+        "Max gross mass must be greater than or equal to gross mass",
+        "Максимальная масса брутто должна быть не меньше массы брутто"
+    ],
+    "Gross mass must be greater than or equal to tare mass": [
+        "Gross mass must be greater than or equal to tare mass",
+        "Масса брутто должна быть не меньше массы тары"
+    ],
+    "Max net mass": [
+        "Max net mass",
+        "Максимальная масса нетто"
+    ],
+    "Container code": [
+        "Container code",
+        "Код контейнера"
+    ],
+    "Way": [
+        "Way",
+        "Маршрут"
+    ],
+    "POL timing": [
+        "POL timing",
+        "Время прибывания в POl"
+    ],
+    "POD timing": [
+        "POD timing",
+        "Время прибывания в POD"
+    ],
+    "Value is required": [
+        "Value is required",
+        "Значение необходимо"
     ]
 }

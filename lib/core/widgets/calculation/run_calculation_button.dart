@@ -169,7 +169,7 @@ class _CalculationButton extends StatelessWidget {
       foregroundColor: theme.colorScheme.onPrimary,
       tooltip: switch (status) {
         CalculationStatusLoading() =>
-          const Localized('Сalculations in progress').v,
+          const Localized('Calculations in progress').v,
         _ => const Localized('Run calculations').v
       },
       onPressed: switch (status) {
