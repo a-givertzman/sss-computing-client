@@ -11,6 +11,7 @@ import 'package:sss_computing_client/core/models/stowage_plan/stowage_collection
 import 'package:sss_computing_client/core/models/stowage_plan/stowage_collection/stowage_collection.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/stowage_collection/stowage_collection_iterate_extension.dart';
 import 'package:sss_computing_client/core/models/voyage/waypoint.dart';
+import 'package:sss_computing_client/presentation/container_cargo/container_cargo_page.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/bay_pair_indication.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/bay_pair_scheme.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/containers_table.dart';
@@ -21,6 +22,7 @@ class ContainersConfigurator extends StatefulWidget {
   final FreightContainers _freightContainersCollection;
   final List<FreightContainer> _containers;
   final List<Waypoint> _waypoints;
+  final void Function() _refetchContainers;
   ///
   /// Creates page to configure freight containers.
   ///
@@ -28,16 +30,19 @@ class ContainersConfigurator extends StatefulWidget {
   /// * [freightContainersCollection] - collection of freight containers stored in db.
   /// * [containers] - list of containers to be configured.
   /// * [waypoints] - list of voyage waypoints that can be used as pol and pod for containers.
+  /// * [refetchContainers] - callback to refresh containers list.
   const ContainersConfigurator({
     super.key,
     required PgStowageCollection pgStowageCollection,
     required FreightContainers freightContainersCollection,
     required List<FreightContainer> containers,
     required List<Waypoint> waypoints,
+    required void Function() refetchContainers,
   })  : _pgStowageCollection = pgStowageCollection,
         _freightContainersCollection = freightContainersCollection,
         _containers = containers,
-        _waypoints = waypoints;
+        _waypoints = waypoints,
+        _refetchContainers = refetchContainers;
   //
   @override
   State<ContainersConfigurator> createState() => _ContainersConfiguratorState();
@@ -192,7 +197,32 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
   }
   //
   void _handleContainerAdd() {
-    // TODO
+    final navigator = Navigator.of(context);
+    navigator.push(
+      MaterialPageRoute(
+        builder: (context) => ContainerCargoPage(
+          label: const Localized('Containers').v,
+          onClose: navigator.pop,
+          onSave: (container, number) async {
+            switch (await widget._freightContainersCollection.addAll(
+              List.generate(
+                number,
+                (_) => container,
+              ),
+            )) {
+              case Ok():
+                navigator.pop();
+                widget._refetchContainers();
+                return const Ok(null);
+              case Err(:final error):
+                _showErrorMessage(error.message);
+                return Err(error);
+            }
+          },
+        ),
+        maintainState: false,
+      ),
+    );
   }
   //
   void _handleContainerDelete(int containerId) async {
@@ -247,6 +277,9 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
   void _toggleSelectedContainer(FreightContainer container) {
     if (container.id == _selectedContainerId) {
       _selectedContainerId = null;
+      setState(() {
+        return;
+      });
       return;
     }
     _onContainerSelected(container);
@@ -266,7 +299,9 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     );
     _bayPairsScrollController.scrollTo(
       index: bayPairIndex,
-      duration: const Duration(milliseconds: 500),
+      duration: Duration(
+        milliseconds: const Setting('animationDuration').toInt,
+      ),
       alignment: 0.5,
     );
   }
@@ -381,7 +416,9 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     if (!mounted) return;
     BottomMessage.error(
       message: message,
-      displayDuration: const Duration(milliseconds: 500),
+      displayDuration: Duration(
+        milliseconds: const Setting('errorMessageDisplayDuration').toInt,
+      ),
     ).show(context);
   }
 }
