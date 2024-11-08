@@ -51,7 +51,19 @@ class PgFreightContainers implements FreightContainers {
   @override
   Future<Result<void, Failure<String>>> addAll(
     List<FreightContainer> containers,
-  ) {
+  ) async {
+    final weightsError = _validateWeights(containers);
+    if (weightsError != null) {
+      return Err(
+        Failure(message: weightsError, stackTrace: StackTrace.current),
+      );
+    }
+    final voyageWaypointsError = await _validateVoyageWaypoints(containers);
+    if (voyageWaypointsError != null) {
+      return Err(
+        Failure(message: voyageWaypointsError, stackTrace: StackTrace.current),
+      );
+    }
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       database: _dbName,
@@ -119,13 +131,13 @@ class PgFreightContainers implements FreightContainers {
     FreightContainer newData,
     FreightContainer oldData,
   ) async {
-    final weightsError = _validateWeights(newData);
+    final weightsError = _validateWeights([newData]);
     if (weightsError != null) {
       return Err(
         Failure(message: weightsError, stackTrace: StackTrace.current),
       );
     }
-    final voyageWaypointsError = await _validateVoyageWaypoints(newData);
+    final voyageWaypointsError = await _validateVoyageWaypoints([newData]);
     if (voyageWaypointsError != null) {
       return Err(
         Failure(message: voyageWaypointsError, stackTrace: StackTrace.current),
@@ -159,32 +171,33 @@ class PgFreightContainers implements FreightContainers {
         .convertFailure();
   }
   //
-  String? _validateWeights(FreightContainer container) {
-    if (container.grossWeight > container.maxGrossWeight) {
-      return '${const Localized(
-        'Container gross weight must be less than or equal to max gross weight',
-      ).v} – ${container.maxGrossWeight}${const Localized('t').v}';
-    }
-    if (container.grossWeight < container.tareWeight) {
-      return '${const Localized(
-        'Container gross weight must be greater than or equal to tare weight',
-      ).v} – ${container.tareWeight}${const Localized('t').v}';
-    }
-    if (container.cargoWeight < 0 ||
-        container.tareWeight < 0 ||
-        container.grossWeight < 0 ||
-        container.maxGrossWeight < 0) {
-      return const Localized(
-        'Container weights must be greater than or equal to 0',
-      ).v;
+  String? _validateWeights(List<FreightContainer> containers) {
+    for (final container in containers) {
+      if (container.grossWeight > container.maxGrossWeight) {
+        return '${const Localized(
+          'Container gross weight must be less than or equal to max gross weight',
+        ).v} – ${container.maxGrossWeight}${const Localized('t').v}';
+      }
+      if (container.grossWeight < container.tareWeight) {
+        return '${const Localized(
+          'Container gross weight must be greater than or equal to tare weight',
+        ).v} – ${container.tareWeight}${const Localized('t').v}';
+      }
+      if (container.cargoWeight < 0 ||
+          container.tareWeight < 0 ||
+          container.grossWeight < 0 ||
+          container.maxGrossWeight < 0) {
+        return const Localized(
+          'Container weights must be greater than or equal to 0',
+        ).v;
+      }
     }
     return null;
   }
   //
-  Future<String?> _validateVoyageWaypoints(FreightContainer container) async {
-    final polWaypointId = container.polWaypointId;
-    final podWaypointId = container.podWaypointId;
-    if (polWaypointId == null || podWaypointId == null) return null;
+  Future<String?> _validateVoyageWaypoints(
+    List<FreightContainer> containers,
+  ) async {
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       database: _dbName,
@@ -197,19 +210,23 @@ class PgFreightContainers implements FreightContainers {
           FROM waypoint AS w
         )
         SELECT
-          (SELECT wo.order FROM waypoint_order AS wo WHERE id IS NOT DISTINCT FROM $polWaypointId) AS "polOrder",
-          (SELECT wo.order FROM waypoint_order AS wo WHERE id IS NOT DISTINCT FROM $podWaypointId) AS "podOrder";
+          wo_pol.order AS "polOrder",
+          wo_pod.order AS "podOrder"
+        FROM (
+          VALUES
+            ${containers.map((container) => '(${container.polWaypointId}, ${container.podWaypointId})').join(',\n')}
+        ) AS container_ports(pol_id, pod_id)
+        LEFT JOIN waypoint_order AS wo_pol ON wo_pol.id IS NOT DISTINCT FROM container_ports.pol_id
+        LEFT JOIN waypoint_order AS wo_pod ON wo_pod.id IS NOT DISTINCT FROM container_ports.pod_id;
       '''),
       entryBuilder: (row) => row,
     );
     return sqlAccess.fetch().convertFailure().then(
           (result) => switch (result) {
-            Ok(value: final rows) => () {
-                return rows.firstOrNull?['polOrder'] <
-                        rows.firstOrNull?['podOrder']
-                    ? null
-                    : const Localized('POL must be before POD').v;
-              }(),
+            Ok(value: final rows) =>
+              rows.any((row) => row['polOrder'] >= row['podOrder'])
+                  ? const Localized('POL must be before POD').v
+                  : null,
             Err() => const Localized('Check of POL and POD order fails.').v,
           },
         );
