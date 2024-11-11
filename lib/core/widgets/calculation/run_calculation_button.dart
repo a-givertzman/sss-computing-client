@@ -29,24 +29,14 @@ class RunCalculationButton extends StatefulWidget {
         _calculationStatusNotifier = calculationStatusNotifier;
   //
   @override
-  State<RunCalculationButton> createState() => _RunCalculationButtonState(
-        fireRefreshEvent: _fireRefreshEvent,
-        calculationStatusNotifier: _calculationStatusNotifier,
-      );
+  State<RunCalculationButton> createState() => _RunCalculationButtonState();
 }
 ///
 class _RunCalculationButtonState extends State<RunCalculationButton> {
-  final void Function() _fireRefreshEvent;
-  final CalculationStatus _calculationStatusNotifier;
   late final ApiAddress _apiAddress;
   late final String _authToken;
   late final String _scriptName;
-  ///
-  _RunCalculationButtonState({
-    required void Function() fireRefreshEvent,
-    required CalculationStatus calculationStatusNotifier,
-  })  : _fireRefreshEvent = fireRefreshEvent,
-        _calculationStatusNotifier = calculationStatusNotifier;
+  late final Map<String, dynamic> _scriptParams;
   //
   @override
   void initState() {
@@ -55,17 +45,27 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
       port: const Setting('api-port').toInt,
     );
     _authToken = const Setting('api-auth-token').toString();
-    _scriptName = 'sss-computing-strength';
+    _scriptName = const Setting('calculationScriptName').toString();
+    _scriptParams = {
+      "api-address": {
+        "host": _apiAddress.host,
+        "port": _apiAddress.port,
+      },
+      "params": {
+        "ship-id": const Setting('shipId').toInt,
+        "project-id": int.tryParse('${const Setting('projectId')}'),
+      },
+    };
     super.initState();
   }
   //
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: _calculationStatusNotifier,
+      listenable: widget._calculationStatusNotifier,
       builder: (context, _) {
         final calculationStatus = CalculationStatusState.fromStatus(
-          _calculationStatusNotifier,
+          widget._calculationStatusNotifier,
         );
         return _StatusBadge(
           status: calculationStatus,
@@ -79,29 +79,30 @@ class _RunCalculationButtonState extends State<RunCalculationButton> {
   }
   //
   void _runCalculation() {
-    _calculationStatusNotifier.start();
+    widget._calculationStatusNotifier.start();
     Calculation(
       apiAddress: _apiAddress,
       authToken: _authToken,
       scriptName: _scriptName,
+      scriptParams: _scriptParams,
     )
         .fetch()
         .then(
           (reply) => switch (reply) {
-            Ok() => _calculationStatusNotifier.complete(
+            Ok() => widget._calculationStatusNotifier.complete(
                 message: const Localized('Calculation completed').v,
               ),
-            Err(:final error) => _calculationStatusNotifier.complete(
+            Err(:final error) => widget._calculationStatusNotifier.complete(
                 errorMessage: error.message,
               ),
           },
         )
         .onError(
-          (error, stackTrace) => _calculationStatusNotifier.complete(
+          (error, stackTrace) => widget._calculationStatusNotifier.complete(
             errorMessage: '$error',
           ),
         )
-        .whenComplete(_fireRefreshEvent);
+        .whenComplete(widget._fireRefreshEvent);
   }
 }
 ///
