@@ -4,7 +4,6 @@ import 'package:ext_rw/ext_rw.dart' hide FieldType;
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
@@ -100,12 +99,12 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                     apiAddress: widget._apiAddress,
                     dbName: widget._dbName,
                     authToken: widget._authToken,
-                    tableName: 'ship_parameters',
-                    fieldName: 'value',
+                    tableName: 'ship_geometry',
+                    fieldName: 'hull_svg',
                     toValue: (value) => JsonSvgPathProjections(
                       json: json.decode(value),
                     ),
-                    filter: {'key': 'hull_svg'},
+                    filter: {'id': 1},
                   ).fetch,
                   caseData: (context, hull, _) => FutureBuilderWidget(
                     refreshStream: widget._appRefreshStream,
@@ -113,12 +112,12 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                       apiAddress: widget._apiAddress,
                       dbName: widget._dbName,
                       authToken: widget._authToken,
-                      tableName: 'ship_parameters',
-                      fieldName: 'value',
+                      tableName: 'ship_geometry',
+                      fieldName: 'hull_beauty_svg',
                       toValue: (value) => JsonSvgPathProjections(
                         json: json.decode(value),
                       ),
-                      filter: {'key': 'hull_beauty_svg'},
+                      filter: {'id': 1},
                     ).fetch,
                     caseData: (context, hullBeauty, _) => CargoSchemes(
                       cargos: _cargos,
@@ -164,8 +163,9 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
           Expanded(
             child: EditingTable(
               selectedRow: _selectedCargo,
+              rowHeight: const Setting('tableRowHeight').toDouble,
               onRowTap: _toggleCargo,
-              onRowUpdate: _refetchCargo,
+              onRowUpdate: (_, oldCargo) => _refetchCargo(oldCargo),
               columns: [
                 const CargoTypeColumn(),
                 CargoNameColumn(

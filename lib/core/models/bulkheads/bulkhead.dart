@@ -14,6 +14,18 @@ abstract interface class Bulkhead {
   /// Name of the [Bulkhead]
   String get name;
   ///
+  /// Mass of the [Bulkhead]
+  double? get mass;
+  ///
+  /// Longitudinal center of gravity of the [Bulkhead]
+  double? get lcg;
+  ///
+  /// Transverse center of gravity of the [Bulkhead]
+  double? get tcg;
+  ///
+  /// Vertical center of gravity of the [Bulkhead]
+  double? get vcg;
+  ///
   /// Returns [Bulkhead] as map
   Map<String, dynamic> asMap();
 }

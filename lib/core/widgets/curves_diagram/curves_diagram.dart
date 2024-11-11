@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/widgets/bar_chart_widget/chart_legend.dart';
 import 'package:sss_computing_client/core/widgets/curves_diagram/axis_name.dart';
@@ -154,8 +155,9 @@ class _CurvesDiagramState extends State<CurvesDiagram> {
   LineTouchTooltipData _tooltipData() {
     final theme = Theme.of(context);
     final textStyle = theme.textTheme.labelSmall ?? const TextStyle();
+    final bgOpacity = const Setting('opacityLow').toDouble;
     return LineTouchTooltipData(
-      tooltipBgColor: theme.colorScheme.surface.withOpacity(0.75),
+      tooltipBgColor: theme.colorScheme.surface.withOpacity(bgOpacity),
       fitInsideVertically: true,
       fitInsideHorizontally: true,
       getTooltipItems: (touchedSpots) => touchedSpots

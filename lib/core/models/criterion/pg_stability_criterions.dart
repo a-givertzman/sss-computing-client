@@ -1,6 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:hmi_core/hmi_core.dart' hide Result;
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
+import 'package:sss_computing_client/core/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/criterion/criterion.dart';
 import 'package:sss_computing_client/core/models/criterion/criterions.dart';
 import 'package:sss_computing_client/core/models/criterion/json_criterion.dart';
@@ -13,9 +13,9 @@ class PgStabilityCriterions implements Criterions {
   ///
   /// Creates stability [Criterions] collection that stored in postgres DB.
   ///
-  ///   - [apiAddress] – [ApiAddress] of server that interact with database;
-  ///   - [dbName] – name of the database;
-  ///   - [authToken] – string  authentication token for accessing server;
+  /// * [apiAddress] – [ApiAddress] of server that interact with database;
+  /// * [dbName] – name of the database;
+  /// * [authToken] – string  authentication token for accessing server;
   const PgStabilityCriterions({
     required String dbName,
     required ApiAddress apiAddress,
@@ -33,47 +33,23 @@ class PgStabilityCriterions implements Criterions {
       sqlBuilder: (_, __) => Sql(
         sql: """
             SELECT
-              cs.title_rus AS "name",
-              cs.unit_rus::TEXT AS "unit",
-              cs.relation::TEXT AS "relation",
-              rs.result AS "value",
-              rs.target AS "limit"
+              c.title_rus AS "name",
+              u.symbol_rus AS "unit",
+              c.math_relation::TEXT AS "relation",
+              cv.actual_value AS "value",
+              cv.limit_value AS "limit"
             FROM
-              criterion_stability AS cs JOIN result_stability AS rs
-              ON rs.criterion_id = cs.id
-            WHERE rs.ship_id = 1
-            ORDER BY cs.id;
+              criterion AS c
+              JOIN criterion_values AS cv ON
+                cv.criterion_id = c.id
+              LEFT JOIN unit AS u ON
+                c.unit_id = u.id
+            WHERE cv.ship_id = 1 AND c.category_id = 1
+            ORDER BY c.id;
             """,
       ),
-      entryBuilder: (row) => JsonCriterion(
-        json: {
-          'name': row['name'] as String,
-          'value': row['value'] as double,
-          'limit': row['limit'] as double,
-          'relation': row['relation'] as String,
-          'unit': row['unit'] as String?,
-          'description': null,
-        },
-      ),
+      entryBuilder: (row) => JsonCriterion.fromRow(row),
     );
-    return sqlAccess
-        .fetch()
-        .then<Result<List<Criterion>, Failure<String>>>(
-          (result) => switch (result) {
-            Ok(value: final criterions) => Ok(criterions),
-            Err(:final error) => Err(
-                Failure(
-                  message: '$error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-          },
-        )
-        .onError(
-          (error, stackTrace) => Err(Failure(
-            message: '$error',
-            stackTrace: stackTrace,
-          )),
-        );
+    return sqlAccess.fetch().convertFailure();
   }
 }

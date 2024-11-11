@@ -1,6 +1,5 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:hmi_core/hmi_core.dart' hide Result;
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 ///
 /// Model for running calculations on backend and processing results.
 class Calculation {

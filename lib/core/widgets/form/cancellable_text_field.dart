@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/validation/int_validation_case.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 ///
-class CancelableField extends StatefulWidget {
+/// Cancellable text form field.
+class CancellableTextField extends StatefulWidget {
   final FieldType _fieldType;
   final String _initialValue;
   final TextEditingController _controller;
@@ -20,7 +20,18 @@ class CancelableField extends StatefulWidget {
   final Future<ResultF<String>> Function(String?)? _onSaved;
   final Validator? _validator;
   ///
-  const CancelableField({
+  /// Creates cancellable text form field.
+  ///
+  /// * [controller] - controller that holds field data.
+  /// * [label] - label for field.
+  /// * [fieldType] - type of field data.
+  /// * [initialValue] - initial value for field.
+  /// * [validator] - validator for field.
+  /// * [sendError] - error message for field.
+  /// * [onChanged] - called when field value changes.
+  /// * [onCancelled] - called when field is cancelled.
+  /// * [onSaved] - called when field is saved.
+  const CancellableTextField({
     super.key,
     required TextEditingController controller,
     String? label,
@@ -29,7 +40,7 @@ class CancelableField extends StatefulWidget {
     String initialValue = '',
     FieldType fieldType = FieldType.string,
     void Function(String)? onChanged,
-    void Function(String)? onCanceled,
+    void Function(String)? onCancelled,
     void Function(String)? onSubmitted,
     Future<ResultF<String>> Function(String?)? onSaved,
     Validator? validator,
@@ -39,14 +50,14 @@ class CancelableField extends StatefulWidget {
         _sendError = sendError,
         _initialValue = initialValue,
         _onChanged = onChanged,
-        _onCanceled = onCanceled,
+        _onCanceled = onCancelled,
         _onSubmitted = onSubmitted,
         _onSaved = onSaved,
         _validator = validator,
         _fieldType = fieldType;
   //
   @override
-  State<CancelableField> createState() => _CancelableFieldState(
+  State<CancellableTextField> createState() => _CancellableTextFieldState(
         label: _label,
         suffixText: _suffixText,
         sendError: _sendError,
@@ -59,7 +70,7 @@ class CancelableField extends StatefulWidget {
       );
 }
 ///
-class _CancelableFieldState extends State<CancelableField> {
+class _CancellableTextFieldState extends State<CancellableTextField> {
   late final TextEditingController _controller;
   final FieldType _fieldType;
   final String? _label;
@@ -72,7 +83,7 @@ class _CancelableFieldState extends State<CancelableField> {
   String? _sendError;
   bool _isInProcess = false;
   ///
-  _CancelableFieldState({
+  _CancellableTextFieldState({
     required String initialValue,
     required Validator? validator,
     required FieldType fieldType,
@@ -155,30 +166,7 @@ class _CancelableFieldState extends State<CancelableField> {
           _onChanged?.call(value);
         });
       },
-      onSaved: (value) {
-        if (_initialValue != _controller.text) {
-          setState(() {
-            _isInProcess = true;
-            _sendError = null;
-          });
-          _onSaved
-              ?.call(value)
-              .then((result) => switch (result) {
-                    Ok() => setState(() {
-                        _initialValue = _controller.text;
-                        _isInProcess = false;
-                      }),
-                    Err(:final error) => setState(() {
-                        _sendError = error.message;
-                        _isInProcess = false;
-                      }),
-                  })
-              .onError((error, _) => setState(() {
-                    _sendError = '$error';
-                    _isInProcess = false;
-                  }));
-        }
-      },
+      onSaved: _handleValueSave,
       decoration: InputDecoration(
         labelText: _label,
         suffix: Row(
@@ -235,5 +223,36 @@ class _CancelableFieldState extends State<CancelableField> {
         ),
       ),
     );
+  }
+  //
+  void _handleValueSave(String? value) {
+    final onSaved = _onSaved;
+    if (_initialValue == _controller.text || onSaved == null) return;
+    setState(() {
+      _isInProcess = true;
+      _sendError = null;
+    });
+    onSaved
+        .call(value)
+        .then(
+          (result) => switch (result) {
+            Ok() => setState(() {
+                _initialValue = _controller.text;
+              }),
+            Err(:final error) => setState(() {
+                _sendError = '${error.message}';
+              }),
+          },
+        )
+        .catchError(
+          (error) => setState(() {
+            _sendError = '$error';
+          }),
+        )
+        .whenComplete(
+          () => setState(() {
+            _isInProcess = false;
+          }),
+        );
   }
 }

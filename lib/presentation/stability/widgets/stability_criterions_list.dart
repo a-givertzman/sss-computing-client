@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/criterion/criterion.dart';
 import 'package:sss_computing_client/core/widgets/scrollable_builder_widget.dart';
@@ -10,6 +9,7 @@ import 'package:sss_computing_client/presentation/stability/widgets/criterions_s
 /// with summary about its pass status.
 class StabilityCriterionsList extends StatefulWidget {
   final List<Criterion> _criterions;
+  final String _title;
   ///
   /// Creates widget that displays list of criterions
   /// with summary about its pass status.
@@ -18,7 +18,9 @@ class StabilityCriterionsList extends StatefulWidget {
   const StabilityCriterionsList({
     super.key,
     required List<Criterion> criterions,
-  }) : _criterions = criterions;
+    required String title,
+  })  : _criterions = criterions,
+        _title = title;
   ///
   @override
   State<StabilityCriterionsList> createState() =>
@@ -52,7 +54,7 @@ class _StabilityCriterionsListState extends State<StabilityCriterionsList> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '${const Localized('Stability criterions').v}:',
+              widget._title,
               textAlign: TextAlign.start,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.onSurface,

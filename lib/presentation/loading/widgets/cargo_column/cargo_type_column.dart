@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo_type.dart';
@@ -84,15 +85,18 @@ class _CargoTypeWidget extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
+    final borderRadius = const Setting('colorLabelBorderRadius').toDouble;
     return Tooltip(
       message: Localized(_type.label).v,
       child: Container(
-        margin: const EdgeInsets.symmetric(
-          vertical: 2.0,
+        margin: EdgeInsets.symmetric(
+          vertical: borderRadius,
         ),
         decoration: BoxDecoration(
           color: _type.color,
-          borderRadius: const BorderRadius.all(Radius.circular(2.0)),
+          borderRadius: BorderRadius.all(Radius.circular(
+            borderRadius,
+          )),
         ),
       ),
     );

@@ -4,22 +4,53 @@ import 'package:flutter/material.dart';
 enum CargoType {
   ///
   /// "water ballast" in OCX:liquidCargoType
-  ballast('Ballast tank', Colors.green, 'ballast_tank'),
-  ///
-  /// oils (e.g. vegetable oil, fuel oil) in OCX:liquidCargoType
-  oilsAndFuels('Oils and fuels', Colors.brown, 'fuel_tank'),
-  ///
-  /// "fresh water" in OCX:liquidCargoType
-  freshWater('Fresh water', Colors.blue, 'fresh_drinking_water_tank'),
-  ///
-  /// "ammonia" in OCX:liquidCargoType
-  acidsAndAlkalis('Acids and alkalis', Colors.purple, 'urea_tank'),
+  ballast(
+    'Ballast tank',
+    Colors.green,
+    'ballast_tank',
+  ),
   ///
   /// TODO: determine type based on the OCX standard
-  pollutedLiquids('Polluted liquids', Colors.black, 'sundry_tank'),
+  fuelTank(
+    'Fuel tank',
+    Colors.brown,
+    'fuel_tank',
+  ),
+  ///
+  /// oils (e.g. vegetable oil, fuel oil) in OCX:liquidCargoType
+  oilTank(
+    'Lubricating oil tank',
+    Colors.brown,
+    'lubricating_oil_tank',
+  ),
+  ///
+  /// "fresh water" in OCX:liquidCargoType
+  freshWater(
+    'Fresh & drinking water tank',
+    Colors.blue,
+    'fresh_drinking_water_tank',
+  ),
+  ///
+  /// "ammonia" in OCX:liquidCargoType
+  acidsAndAlkalis(
+    'Urea tank',
+    Colors.purple,
+    'urea_tank',
+  ),
+  ///
+  /// TODO: determine type based on the OCX standard
+  pollutedLiquids(
+    'Sundry tank',
+    Colors.black,
+    'sundry_tank',
+  ),
   ///
   /// "general" in OCX:bulkCargoType
-  bulkCargo('Bulk cargo', Colors.grey, 'bulk_cargo'),
+  bulkCargo(
+    'Bulk cargo',
+    Colors.grey,
+    'bulk_cargo',
+  ),
   ///
   /// "grain" in OCX:bulkCargoType
   bulkCargoShiftable(

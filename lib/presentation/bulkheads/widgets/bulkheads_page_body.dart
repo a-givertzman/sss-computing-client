@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead_place.dart';
 import 'package:sss_computing_client/core/models/bulkheads/json_bulkhead_place.dart';
@@ -108,7 +107,9 @@ class _BulkheadsPageBodyState extends State<BulkheadsPageBody> {
             ),
             if (_isLoading)
               Container(
-                color: theme.colorScheme.surface.withOpacity(0.75),
+                color: theme.colorScheme.surface.withOpacity(
+                  const Setting('opacityLow').toDouble,
+                ),
                 child: const Center(child: CupertinoActivityIndicator()),
               ),
           ],

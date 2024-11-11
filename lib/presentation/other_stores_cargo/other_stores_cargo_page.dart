@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/presentation/other_stores_cargo/widgets/other_stores_cargo_body.dart';
@@ -36,10 +36,19 @@ class OtherStoresCargoPage extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
+      // ignore: deprecated_member_use
+      backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
-        leading: BackButton(
-          onPressed: _onClose,
+        leading: Tooltip(
+          message: const Localized('Back').v,
+          child: TooltipVisibility(
+            visible: false,
+            child: BackButton(
+              onPressed: _onClose,
+            ),
+          ),
         ),
         title: Text(_label),
       ),

@@ -1,5 +1,4 @@
-import 'package:hmi_core/hmi_core_failure.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/equal_to.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/greater_than.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/greater_than_or_equal_to.dart';
@@ -33,14 +32,14 @@ abstract interface class NumberMathRelation {
       '!=' || '≠' || '<>' => const NotEqualTo(),
       '<=' || '≤' => const LessThanOrEqualTo(),
       '>=' || '≥' => const GreaterThanOrEqualTo(),
-      _ => UnimplementedMathRelation(stringRepresentaion: str),
+      _ => UnimplementedMathRelation(stringRepresentation: str),
     };
   }
   ///
   /// Returns [NumberMathRelation] for which values
   /// order of operands has been reversed
-  NumberMathRelation swaped();
+  NumberMathRelation swapped();
   ///
-  /// Returns [NumberMathRelation] with inversed operator
-  NumberMathRelation inversed();
+  /// Returns [NumberMathRelation] with inverted operator
+  NumberMathRelation inverted();
 }

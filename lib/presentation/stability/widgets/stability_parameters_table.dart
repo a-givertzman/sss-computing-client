@@ -35,6 +35,8 @@ class _StabilityParametersTableState extends State<StabilityParametersTable> {
               '${data.name}${data.unit != null ? ' [${data.unit}]' : ''}',
         ),
         DaviColumn<StabilityParameter>(
+          headerAlignment: Alignment.centerRight,
+          cellAlignment: Alignment.centerRight,
           name: const Localized('Value').v,
           stringValue: (data) => data.value.toStringAsFixed(2),
         ),

@@ -1,4 +1,4 @@
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 ///
 /// Record with value stored in some source.
 abstract interface class ValueRecord<T> {

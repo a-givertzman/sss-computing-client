@@ -2,13 +2,12 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/less_than.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/less_than_or_equal_to.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
-import 'package:sss_computing_client/core/widgets/form/compund_field_data_validation.dart';
+import 'package:sss_computing_client/core/widgets/form/compound_field_data_validation.dart';
 import 'package:sss_computing_client/core/widgets/form/field_data_form.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_lcg_column.dart';
@@ -71,7 +70,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
           child: FieldDataForm(
             label: const Localized('Cargo parameters').v,
             onSave: widget._onSave,
-            fieldDatas: _mapColumnsToFields(
+            fieldDataList: _mapColumnsToFields(
               cargo: widget._cargo,
               fetch: widget._fetchData,
               columns: [
@@ -175,7 +174,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                 ),
               ],
             ),
-            compundValidations: [
+            compoundValidations: [
               CompoundFieldDataValidation(
                 ownId: 'x1',
                 otherId: 'lcg',
@@ -195,7 +194,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                 ownId: 'lcg',
                 otherId: 'x1',
                 validateValues: (lcg, x1) =>
-                    switch (const LessThanOrEqualTo().swaped().process(
+                    switch (const LessThanOrEqualTo().swapped().process(
                           double.tryParse(lcg) ?? 0.0,
                           double.tryParse(x1) ?? 0.0,
                         )) {
@@ -225,7 +224,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                 ownId: 'x2',
                 otherId: 'lcg',
                 validateValues: (x2, lcg) =>
-                    switch (const LessThanOrEqualTo().swaped().process(
+                    switch (const LessThanOrEqualTo().swapped().process(
                           double.tryParse(x2) ?? 0.0,
                           double.tryParse(lcg) ?? 0.0,
                         )) {
@@ -254,7 +253,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                 ownId: 'x2',
                 otherId: 'x1',
                 validateValues: (x2, x1) =>
-                    switch (const LessThan().swaped().process(
+                    switch (const LessThan().swapped().process(
                           double.tryParse(x2) ?? 0.0,
                           double.tryParse(x1) ?? 0.0,
                         )) {

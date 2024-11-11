@@ -1,4 +1,5 @@
 import 'package:flutter/painting.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/figure/combined_figure.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
@@ -20,6 +21,7 @@ class CargoFigure {
   /// Returns [Figure] for cargo.
   Figure figure() {
     final color = _cargo.type.color;
+    final fillOpacity = const Setting('opacityHigh').toDouble;
     return switch (_cargo.paths) {
       final PathProjections projections => PathProjectionsFigure(
           paints: [
@@ -27,7 +29,7 @@ class CargoFigure {
               ..color = color
               ..style = PaintingStyle.stroke,
             Paint()
-              ..color = color.withOpacity(0.25)
+              ..color = color.withOpacity(fillOpacity)
               ..style = PaintingStyle.fill,
           ],
           pathProjections: projections,
@@ -36,10 +38,10 @@ class CargoFigure {
           paints: [
             Paint()
               ..color = color
-              ..strokeWidth = 2.0
+              ..strokeWidth = const Setting('strokeWidth').toDouble
               ..style = PaintingStyle.stroke,
             Paint()
-              ..color = color.withOpacity(0.25)
+              ..color = color.withOpacity(fillOpacity)
               ..style = PaintingStyle.fill,
           ],
           figureOne: LineSegment3DFigure(

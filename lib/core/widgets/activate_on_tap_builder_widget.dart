@@ -9,18 +9,38 @@ class ActivateOnTapBuilderWidget extends StatefulWidget {
     BuildContext context,
     bool isActivated,
     void Function() deactivate,
-  ) builder;
-  final bool? Function()? onActivate;
-  final bool? Function()? onDeactivate;
-  final MouseCursor cursor;
+  ) _builder;
+  final bool? Function()? _onActivate;
+  final bool? Function()? _onDeactivate;
+  final bool _useDoubleTap;
+  final MouseCursor _cursor;
   ///
+  /// Creates widget that becomes active when clicked
+  /// and deactivates when clicked outside its area or press ESC key.
+  ///
+  /// Current state can be obtained via parameters of [builder]
+  /// that used to build this widget.
+  ///
+  /// [onActivate] and [onDeactivate] callbacks can be used
+  /// to handle activation and deactivation events. If they return
+  /// `true`, then activating/deactivating will be cancelled.
+  ///
+  /// If [useDoubleTap] is `true`, then widget becomes active
+  /// on double tap instead of single tap.
+  ///
+  /// [cursor] specifies mouse cursor when mouse dragged over this widget.
   const ActivateOnTapBuilderWidget({
     super.key,
-    required this.builder,
-    this.onActivate,
-    this.onDeactivate,
-    this.cursor = SystemMouseCursors.click,
-  });
+    required Widget Function(BuildContext, bool, void Function()) builder,
+    bool? Function()? onActivate,
+    bool? Function()? onDeactivate,
+    bool useDoubleTap = false,
+    MouseCursor cursor = SystemMouseCursors.click,
+  })  : _builder = builder,
+        _onActivate = onActivate,
+        _onDeactivate = onDeactivate,
+        _useDoubleTap = useDoubleTap,
+        _cursor = cursor;
   ///
   @override
   State<ActivateOnTapBuilderWidget> createState() =>
@@ -33,14 +53,14 @@ class _ActivateOnTapBuilderWidgetState
   bool _isActivated = false;
   //
   void _handleActivate() {
-    if (widget.onActivate?.call() ?? false) return;
+    if (widget._onActivate?.call() ?? false) return;
     setState(() {
       _isActivated = true;
     });
   }
   //
   void _handleDeactivate() {
-    if (widget.onDeactivate?.call() ?? false) return;
+    if (widget._onDeactivate?.call() ?? false) return;
     setState(() {
       _isActivated = false;
     });
@@ -73,16 +93,17 @@ class _ActivateOnTapBuilderWidgetState
               },
               child: Builder(
                 builder: (context) =>
-                    widget.builder(context, _isActivated, _handleDeactivate),
+                    widget._builder(context, _isActivated, _handleDeactivate),
               ),
             ),
           )
         : MouseRegion(
-            cursor: widget.cursor,
+            cursor: widget._cursor,
             child: GestureDetector(
-              onTap: () => _handleActivate(),
+              onTap: widget._useDoubleTap ? null : _handleActivate,
+              onDoubleTap: widget._useDoubleTap ? _handleActivate : null,
               child: Builder(
-                builder: (context) => widget.builder(
+                builder: (context) => widget._builder(
                   context,
                   _isActivated,
                   _handleDeactivate,

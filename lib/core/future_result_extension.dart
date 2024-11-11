@@ -1,5 +1,4 @@
-import 'package:hmi_core/hmi_core.dart' hide Result;
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 ///
 /// Extension for [Future] returning [Result].
 extension FutureResultExtension<T> on Future<Result<T, Failure<dynamic>>> {

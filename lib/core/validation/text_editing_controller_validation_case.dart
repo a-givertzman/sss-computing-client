@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:hmi_core/hmi_core.dart' hide Result;
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 ///
 typedef TECValidationCase = TextEditingControllerValidationCase;
