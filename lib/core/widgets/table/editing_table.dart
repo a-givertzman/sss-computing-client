@@ -101,25 +101,14 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
   @override
   Widget build(BuildContext context) {
     _highlightRow(widget._selectedRow);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(
-          height: const Setting('padding', factor: 1.0).toDouble,
-        ),
-        Expanded(
-          flex: 1,
-          child: TableView<T>(
-            model: _model..replaceRows(widget._rows),
-            cellHeight: widget._rowHeight,
-            scrollController: _scrollController,
-            cellPadding: EdgeInsets.zero,
-            onRowTap: (rowData) => widget._onRowTap?.call(rowData),
-            onRowDoubleTap: (rowData) => widget._onRowDoubleTap?.call(rowData),
-            tableBorderColor: Colors.transparent,
-          ),
-        ),
-      ],
+    return TableView<T>(
+      model: _model..replaceRows(widget._rows),
+      cellHeight: widget._rowHeight,
+      scrollController: _scrollController,
+      cellPadding: EdgeInsets.zero,
+      onRowTap: (rowData) => widget._onRowTap?.call(rowData),
+      onRowDoubleTap: (rowData) => widget._onRowDoubleTap?.call(rowData),
+      tableBorderColor: Colors.transparent,
     );
   }
   ///
