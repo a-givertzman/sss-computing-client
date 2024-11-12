@@ -14,7 +14,7 @@ void main() {
       '[LessThan]',
       () {
         expect(
-          const LessThan().swaped(),
+          const LessThan().swapped(),
           isA<GreaterThan>(),
           reason: 'Type of the returned relation must be [GreaterThan]',
         );
@@ -25,7 +25,7 @@ void main() {
       '[GreaterThan]',
       () {
         expect(
-          const GreaterThan().swaped(),
+          const GreaterThan().swapped(),
           isA<LessThan>(),
           reason: 'Type of the returned relation must be [LessThan]',
         );
@@ -36,7 +36,7 @@ void main() {
       '[EqualTo]',
       () {
         expect(
-          const EqualTo().swaped(),
+          const EqualTo().swapped(),
           isA<EqualTo>(),
           reason: 'Type of the returned relation must be [EqualTo]',
         );
@@ -47,7 +47,7 @@ void main() {
       '[NotEqualTo]',
       () {
         expect(
-          const NotEqualTo().swaped(),
+          const NotEqualTo().swapped(),
           isA<NotEqualTo>(),
           reason: 'Type of the returned relation must be [NotEqualTo]',
         );
@@ -58,7 +58,7 @@ void main() {
       '[LessThanOrEqualTo]',
       () {
         expect(
-          const LessThanOrEqualTo().swaped(),
+          const LessThanOrEqualTo().swapped(),
           isA<GreaterThanOrEqualTo>(),
           reason:
               'Type of the returned relation must be [GreaterThanOrEqualTo]',
@@ -70,7 +70,7 @@ void main() {
       '[GreaterThanOrEqualTo]',
       () {
         expect(
-          const GreaterThanOrEqualTo().swaped(),
+          const GreaterThanOrEqualTo().swapped(),
           isA<LessThanOrEqualTo>(),
           reason: 'Type of the returned relation must be [LessThanOrEqualTo]',
         );

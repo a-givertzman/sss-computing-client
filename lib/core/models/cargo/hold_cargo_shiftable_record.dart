@@ -1,6 +1,5 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:ext_rw/ext_rw.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 ///
 /// Gives access to field of hold cargo shiftable record stored in database.

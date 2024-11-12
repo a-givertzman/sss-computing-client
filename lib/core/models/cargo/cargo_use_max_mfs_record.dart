@@ -1,6 +1,5 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:ext_rw/ext_rw.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 ///
 /// Gives access to field of cargo useMaxMfs record stored in database.

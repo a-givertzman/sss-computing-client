@@ -16,14 +16,23 @@ class BulkheadsPage extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final navigator = Navigator.of(context);
     return Scaffold(
+      // ignore: deprecated_member_use
+      backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
-        leading: BackButton(
-          onPressed: () {
-            navigator.pop();
-            _onClose?.call();
-          },
+        leading: Tooltip(
+          message: const Localized('Back').v,
+          child: TooltipVisibility(
+            visible: false,
+            child: BackButton(
+              onPressed: () {
+                navigator.pop();
+                _onClose?.call();
+              },
+            ),
+          ),
         ),
         title: Text(const Localized('Grain bulkheads installation').v),
       ),

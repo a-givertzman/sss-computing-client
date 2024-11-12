@@ -1,25 +1,28 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:hmi_core/hmi_core.dart' hide Result;
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 ///
 /// Model for running calculations on backend and processing results.
 class Calculation {
   final ApiAddress _apiAddress;
   final String _authToken;
   final String _scriptName;
+  final Map<String, dynamic> _scriptParams;
   ///
   /// Creates model for running calculations on backend and processing results.
   ///
-  /// - [apiAddress] – [ApiAddress] of server that interact with backend script.
-  /// - [authToken] – string authentication token for accessing server.
-  /// - [scriptName] – name of script to run by server.
+  /// * [apiAddress] – [ApiAddress] of server that interact with backend script.
+  /// * [authToken] – string authentication token for accessing server.
+  /// * [scriptName] – name of script to run by server.
+  /// * [scriptParams] – additional parameters that will be passed to script.
   const Calculation({
     required ApiAddress apiAddress,
     required String authToken,
     required String scriptName,
+    required Map<String, dynamic> scriptParams,
   })  : _apiAddress = apiAddress,
         _authToken = authToken,
-        _scriptName = scriptName;
+        _scriptName = scriptName,
+        _scriptParams = scriptParams;
   ///
   /// Starts calculation and returns its result.
   Future<Result<void, Failure<String>>> fetch() {
@@ -29,7 +32,7 @@ class Calculation {
       timeout: const Duration(seconds: 15),
       query: ExecutableQuery(
         script: _scriptName,
-        params: {"message": "start"},
+        params: _scriptParams,
       ),
     )
         .fetch()

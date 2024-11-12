@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/widgets/activate_on_tap_builder_widget.dart';
 ///
@@ -69,6 +68,7 @@ class _EditOnTapCellState extends State<EditOnTapCell> {
     final iconSize = IconTheme.of(context).size ?? 10.0;
     return ActivateOnTapBuilderWidget(
       cursor: SystemMouseCursors.text,
+      useDoubleTap: true,
       onActivate: () {
         _handleEditingStart();
         return;
@@ -78,12 +78,14 @@ class _EditOnTapCellState extends State<EditOnTapCell> {
         _handleEditingEnd();
         return false;
       },
-      builder: ((context, isActivated, deactivate) => !isActivated
-          ? widget._child
-          : Row(
-              children: [
+      builder: ((context, isActivated, deactivate) => Row(
+            children: [
+              if (!isActivated)
+                Expanded(
+                  child: widget._child,
+                ),
+              if (isActivated)
                 Flexible(
-                  flex: 1,
                   child: TextField(
                     readOnly: _isInProcess,
                     controller: _controller,
@@ -99,9 +101,9 @@ class _EditOnTapCellState extends State<EditOnTapCell> {
                     ),
                   ),
                 ),
-                ..._buildActions(iconSize, deactivate),
-              ],
-            )),
+              if (isActivated) ..._buildActions(iconSize, deactivate),
+            ],
+          )),
     );
   }
   //
@@ -227,7 +229,8 @@ class _EditOnTapCellState extends State<EditOnTapCell> {
         width: iconSize,
         height: iconSize,
         child: Tooltip(
-          message: _validationError,
+          message:
+              _validationError != null ? Localized(_validationError!).v : '',
           child: Icon(
             Icons.warning_rounded,
             color: widget._errorColor,

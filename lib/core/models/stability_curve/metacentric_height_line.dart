@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
-import 'package:hmi_core/hmi_core.dart' hide Result;
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/stability_curve/curve.dart';
 import 'package:vector_math/vector_math_64.dart';
 ///

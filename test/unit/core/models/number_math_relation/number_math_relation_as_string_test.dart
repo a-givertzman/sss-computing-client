@@ -87,7 +87,7 @@ void main() {
       final values = ['', '-', '.', '>>', '<<', '><', '=>', '=<', '!!='];
       for (final value in values) {
         final relation = UnimplementedMathRelation(
-          stringRepresentaion: value,
+          stringRepresentation: value,
         );
         expect(
           relation.operator,

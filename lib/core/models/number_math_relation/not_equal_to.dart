@@ -1,5 +1,4 @@
-import 'package:hmi_core/hmi_core.dart' hide Result;
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/equal_to.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/number_math_relation.dart';
 ///
@@ -21,8 +20,8 @@ final class NotEqualTo implements NumberMathRelation {
   }
   //
   @override
-  NotEqualTo swaped() => const NotEqualTo();
+  NotEqualTo swapped() => const NotEqualTo();
   //
   @override
-  EqualTo inversed() => const EqualTo();
+  EqualTo inverted() => const EqualTo();
 }

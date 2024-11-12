@@ -77,8 +77,11 @@ class _StabilityBodyState extends State<StabilityBody> {
                         margin: EdgeInsets.zero,
                         child: Padding(
                           padding: EdgeInsets.all(padding),
-                          child:
-                              StabilityCriterionsList(criterions: criterions),
+                          child: StabilityCriterionsList(
+                            criterions: criterions,
+                            title:
+                                '${const Localized('Stability criterions').v}:',
+                          ),
                         ),
                       );
                     },

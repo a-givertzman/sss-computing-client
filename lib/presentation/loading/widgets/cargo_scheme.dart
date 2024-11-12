@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/figure/figure.dart';
@@ -129,7 +130,7 @@ class CargoScheme extends StatelessWidget {
                   Paint()
                     ..color = _selectedCargoColor
                     ..style = PaintingStyle.stroke
-                    ..strokeWidth = 2.0,
+                    ..strokeWidth = const Setting('strokeWidth').toDouble,
                 ]),
                 layoutTransform: transform,
                 onTap: () => _onCargoTap?.call(_selectedCargoFigure.cargo),

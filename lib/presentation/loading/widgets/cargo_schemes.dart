@@ -68,7 +68,7 @@ class _CargoSchemesState extends State<CargoSchemes> {
         Paint()
           ..color = Colors.white
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 2.0,
+          ..strokeWidth = const Setting('strokeWidth').toDouble,
       ],
       figureOne: PathProjectionsFigure(pathProjections: widget._hull),
       figureTwo: PathProjectionsFigure(pathProjections: widget._hullBeauty),

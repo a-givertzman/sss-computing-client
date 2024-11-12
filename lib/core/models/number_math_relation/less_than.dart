@@ -1,5 +1,4 @@
-import 'package:hmi_core/hmi_core.dart' hide Result;
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/greater_than.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/greater_than_or_equal_to.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/number_math_relation.dart';
@@ -22,8 +21,8 @@ final class LessThan implements NumberMathRelation {
   }
   //
   @override
-  GreaterThan swaped() => const GreaterThan();
+  GreaterThan swapped() => const GreaterThan();
   //
   @override
-  GreaterThanOrEqualTo inversed() => const GreaterThanOrEqualTo();
+  GreaterThanOrEqualTo inverted() => const GreaterThanOrEqualTo();
 }

@@ -1,7 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart' hide Curve;
-import 'package:hmi_core/hmi_core.dart' hide Result;
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/stability_curve/curve.dart';
 ///
 /// Dynamic stabilty [Curve] stored in Postgres DB.
