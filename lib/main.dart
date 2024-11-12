@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart' hide Localizations;
 import 'package:hmi_core/hmi_core.dart';
+import 'package:sss_computing_client/core/models/subscripting/subscripting.dart';
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
 import 'package:sss_computing_client/app_widget.dart';
+
 ///
 void main() async {
   Log.initialize(level: LogLevel.error);
@@ -19,6 +21,13 @@ void main() async {
         jsonMap: JsonMap.fromTextFile(
           const TextFile.asset(
             'assets/settings/app-settings.json',
+          ),
+        ),
+      );
+      await AppSubscripting.initialize(
+        jsonMap: JsonMap.fromTextFile(
+          const TextFile.asset(
+            'assets/unicodes/unicodes.json',
           ),
         ),
       );
