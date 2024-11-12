@@ -5,10 +5,12 @@ import 'package:sss_computing_client/core/models/calculation/calculation_status.
 import 'package:sss_computing_client/core/widgets/calculation/run_calculation_button.dart';
 import 'package:sss_computing_client/core/widgets/error_message_widget.dart';
 import 'package:sss_computing_client/presentation/drafts/drafts_page.dart';
+import 'package:sss_computing_client/presentation/info/info_page.dart';
 import 'package:sss_computing_client/presentation/loading/loading_page.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
 import 'package:sss_computing_client/presentation/stability/stability_page.dart';
 import 'package:sss_computing_client/presentation/strength/strength_page.dart';
+
 ///
 /// App main navigation widget.
 class NavigationPanel extends StatelessWidget {
@@ -16,6 +18,7 @@ class NavigationPanel extends StatelessWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
+
   ///
   /// Creates app main navigation widget.
   const NavigationPanel({
@@ -89,6 +92,11 @@ class NavigationPanel extends StatelessWidget {
             selectedIcon: const Icon(Icons.pallet),
             label: Text(const Localized('Loading').v),
           ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.folder_open_outlined),
+            selectedIcon: const Icon(Icons.folder_open_outlined),
+            label: Text(const Localized('Docs').v),
+          ),
         ],
         selectedIndex: _selectedPageIndex,
         onDestinationSelected: (index) {
@@ -151,6 +159,14 @@ class NavigationPanel extends StatelessWidget {
                     calculationStatusNotifier: _calculationStatusNotifier,
                   ),
                   settings: const RouteSettings(name: '/LoadingPage'),
+                ),
+              );
+              return;
+            case 5:
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const InfoPage(),
+                  settings: const RouteSettings(name: '/InfoPage'),
                 ),
               );
               return;
