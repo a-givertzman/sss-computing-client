@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+// ignore: unnecessary_import
+import 'package:hmi_core/hmi_core_result.dart';
 import 'package:sss_computing_client/core/models/ship/ship.dart';
 import 'package:sss_computing_client/core/widgets/edit_on_tap_widget/edit_on_tap_field.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
