@@ -1,0 +1,122 @@
+name: sss
+description: "A new Flutter project."
+
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  hmi_core:
+    git:
+      url: https://github.com/a-givertzman/hmi_core.git
+      ref: 2.0.0
+  hmi_widgets:
+    git:
+      url: https://github.com/a-givertzman/hmi_widgets.git
+      ref: 1.0.1
+  ext_rw:
+    git:
+      url: https://github.com/a-givertzman/dart_ext_rw.git
+      ref: 1.0.3
+  fl_chart:
+    git:
+      url: https://github.com/a-givertzman/fl_chart.git
+      ref: 0.63.0+2
+  window_manager: ^0.3.0
+  davi: ^3.5.0
+  collection: ^1.18.0
+  vector_math: ^2.1.4
+  path_drawing: ^1.0.1
+  flutter_markdown: ^0.7.4+1
+  markdown_widget: ^2.3.2+6
+  flutter_math_fork:
+    git:
+      url: https://github.com/Telosnex/flutter_math_fork_fork.git
+  markdown: ^7.2.2
+  html: ^0.15.4
+  flutter_svg: ^2.0.10+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.13
+  build: ^2.4.1
+  source_gen: ^1.5.0
+
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/icons/
+    - assets/img/
+    - assets/settings/
+    - assets/translations/
+    - assets/unicodes/
+    - assets/docs/
+    - assets/image/
+    - assets/image/program_sheets/sheet1_mainScreen/
+    - assets/image/program_sheets/sheet2_loading/tab1_ballast/
+    - assets/image/program_sheets/sheet2_loading/tab2_storeTanks/
+    - assets/image/program_sheets/sheet2_loading/tab3_stores/
+    - assets/image/program_sheets/sheet2_loading/tab4_bulkCargo/
+    - assets/image/program_sheets/sheet2_loading/tab5_containers/
+    - assets/image/program_sheets/sheet4_stability/
+    - assets/image/program_sheets/sheet5_strength/
+    - assets/docs/user-guide/ru/
+    - assets/docs/mock/
+    - assets/reference/
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-1_clasification.pdf
+    - assets/docs/user-guide/ru/part01_overview/
+    - assets/docs/user-guide/ru/part02_operatingProcedure/
+    - assets/docs/user-guide/ru/part03_shipInfo/
+    - assets/docs/user-guide/ru/part04_loading/
+    - assets/docs/user-guide/ru/part05_stability/
+    - assets/docs/user-guide/ru/part06_strength/
+    - assets/docs/user-guide/ru/part10_technicalSupport/
+    - assets/docs/user-guide/ru/part01_overview/chapter01_programmInfo/
+    - assets/docs/user-guide/ru/part01_overview/chapter02_programmPurpose/
+    - assets/docs/user-guide/ru/part01_overview/chapter03_programmFunction/
+    - assets/docs/user-guide/ru/part01_overview/chapter04_shipInfo/
+    - assets/docs/user-guide/ru/part01_overview/chapter05_documentation/
+    - assets/docs/user-guide/ru/part01_overview/chapter01_programmInfo/
+    - assets/docs/user-guide/ru/part01_overview/chapter02_programmPurpose/
+    - assets/docs/user-guide/ru/part01_overview/chapter03_programmFunction/
+    - assets/docs/user-guide/ru/part01_overview/chapter04_shipInfo/
+    - assets/docs/user-guide/ru/part01_overview/chapter05_documentation/
+    - assets/docs/user-guide/ru/part02_operatingProcedure/
+    - assets/docs/user-guide/ru/part03_shipInfo/
+    - assets/docs/user-guide/ru/part04_loading/chapter01_ballast/
+    - assets/docs/user-guide/ru/part04_loading/chapter02_storeTanks/
+    - assets/docs/user-guide/ru/part04_loading/chapter03_stores/
+    - assets/docs/user-guide/ru/part04_loading/chapter04_bulkCargo/
+    - assets/docs/user-guide/ru/part04_loading/chapter05_unitCargo/
+    - assets/docs/user-guide/ru/part04_loading/chapter06_containers/
+    - assets/docs/user-guide/ru/part05_stability/
+    - assets/docs/user-guide/ru/part06_strength/
+    - assets/docs/user-guide/ru/part10_technicalSupport/
+    - assets/docs/user-guide/ru/part04_loading/chapter06_containers/section01_type/
+    - assets/docs/user-guide/ru/part04_loading/chapter06_containers/section02_location/
+    - assets/docs/user-guide/ru/part04_loading/chapter06_containers/section03_workingProcedure/
+    - assets/docs/user-guide/ru/part04_loading/chapter01_ballast/section02_table/
+    - assets/docs/user-guide/ru/part05_stability/section01_leverFigure/
+    - assets/docs/user-guide/ru/part05_stability/section02_criteriaStability/
+    - assets/docs/user-guide/ru/part05_stability/section03_parametresStability/
+    - assets/docs/user-guide/ru/part05_stability/section04_damageStability/
+    - assets/docs/user-guide/ru/part04_loading/chapter01_ballast/section01_figure/
+    - assets/reference/IMO/internationalConvention/LL_66_88.pdf
+    - assets/reference/OCX/gost_r_iso_10303-216-2023-1.pdf
+    - assets/reference/RMRS/Guidelines/ships_&_offshore_installations/2-030101-046_LL_66_88.pdf
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-1_clasification.pdf
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-4_stability.pdf
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-5_subdivision.pdf
+    - assets/reference/RMRS/Rules/different_types_of_ships/2-020101-013-E.pdf

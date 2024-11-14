@@ -1,0 +1,106 @@
+[
+  {
+    "title": "part01_overview",
+    "value": "part01_overview.md",
+    "children": [
+      {
+        "title": "chapter01_programmInfo",
+        "value": "chapter01_programmInfo.md"
+      },
+      {
+        "title": "chapter02_programmPurpose",
+        "value": "chapter02_programmPurpose.md"
+      },
+      {
+        "title": "chapter03_programmFunction",
+        "value": "chapter03_programmFunction.md"
+      },
+      {
+        "title": "chapter04_shipInfo",
+        "value": "chapter04_shipInfo.md"
+      },
+      {
+        "title": "chapter05_documentation",
+        "value": "chapter05_documentation.md"
+      }
+    ]
+  },
+  {
+    "title": "part02_operatingProcedure",
+    "value": "part02_operatingProcedure.md"
+  },
+  {
+    "title": "part03_shipInfo",
+    "value": "part03_shipInfo.md"
+  },
+  {
+    "title": "part04_loading",
+    "value": "part03_loading.md",
+    "children": [
+      {
+        "title": "chapter01_ballast",
+        "value": "chapter01_ballast.md",
+        "children": [
+          {
+            "title": "section01_figure",
+            "value": "section01_figure.md"
+          },
+          {
+            "title": "section02_table",
+            "value": "section02_table.md"
+          }
+        ]
+      },
+      {
+        "title": "chapter02_storeTanks",
+        "value": "chapter02_storeTanks.md"
+      },
+      {
+        "title": "chapter03_stores",
+        "value": "chapter03_stores.md"
+      },
+      {
+        "title": "chapter04_bulkCargo",
+        "value": "chapter04_bulkCargo.md"
+      },
+      {
+        "title": "chapter05_unitCargo",
+        "value": "chapter05_unitCargo.md"
+      },
+      {
+        "title": "chapter06_containers",
+        "value": "chapter06_containers.md"
+      }
+    ]
+  },
+  {
+    "title": "part05_stability",
+    "value": "part05_stability.md",
+    "children": [
+      {
+        "title": "section01_leverFigure",
+        "value": "section01_leverFigure.md"
+      },
+      {
+        "title": "section02_criteriaStability",
+        "value": "section02_criteriaStability.md"
+      },
+      {
+        "title": "section03_parametresStability",
+        "value": "section03_parametresStability.md"
+      },
+      {
+        "title": "section04_damageStability",
+        "value": "section04_damageStability.md"
+      }
+    ]
+  },
+  {
+    "title": "part06_strength",
+    "value": "part04_strength.md"
+  },
+  {
+    "title": "part10_technicalSupport",
+    "value": "part10_technicalSupport.md"
+  }
+]

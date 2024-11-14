@@ -1,10 +1,10 @@
 name: sss_computing_client
 description: "Client application for the SSS-Computing project."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 0.0.1
 
 environment:
-  sdk: '>=3.2.5 <4.0.0'
+  sdk: ">=3.2.5 <4.0.0"
 
 dependencies:
   flutter:
@@ -32,6 +32,9 @@ dependencies:
   vector_math: ^2.1.4
   path_drawing: ^1.0.1
   scrollable_positioned_list: ^0.3.8
+  markdown_widget: ^2.3.2+6
+  flutter_svg: ^2.0.9
+  flutter_math_fork: ^0.7.2
 
 dev_dependencies:
   flutter_test:
@@ -39,7 +42,6 @@ dev_dependencies:
   flutter_launcher_icons: ^0.11.0
   dart_code_metrics: ^5.1.0
   flutter_lints: ^3.0.1
-
 
 flutter:
   uses-material-design: true
@@ -49,29 +51,62 @@ flutter:
     - assets/settings/
     - assets/translations/
     - assets/unicodes/
-
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+    - assets/docs/
+    - assets/image/
+    - assets/image/program_sheets/sheet1_mainScreen/
+    - assets/image/program_sheets/sheet2_loading/tab1_ballast/
+    - assets/image/program_sheets/sheet2_loading/tab2_storeTanks/
+    - assets/image/program_sheets/sheet2_loading/tab3_stores/
+    - assets/image/program_sheets/sheet2_loading/tab4_bulkCargo/
+    - assets/image/program_sheets/sheet2_loading/tab5_containers/
+    - assets/image/program_sheets/sheet4_stability/
+    - assets/image/program_sheets/sheet5_strength/
+    - assets/docs/user-guide/ru/
+    - assets/docs/mock/
+    - assets/reference/
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-1_clasification.pdf
+    - assets/docs/user-guide/ru/part01_overview/
+    - assets/docs/user-guide/ru/part02_operatingProcedure/
+    - assets/docs/user-guide/ru/part03_shipInfo/
+    - assets/docs/user-guide/ru/part04_loading/
+    - assets/docs/user-guide/ru/part05_stability/
+    - assets/docs/user-guide/ru/part06_strength/
+    - assets/docs/user-guide/ru/part10_technicalSupport/
+    - assets/docs/user-guide/ru/part01_overview/chapter01_programmInfo/
+    - assets/docs/user-guide/ru/part01_overview/chapter02_programmPurpose/
+    - assets/docs/user-guide/ru/part01_overview/chapter03_programmFunction/
+    - assets/docs/user-guide/ru/part01_overview/chapter04_shipInfo/
+    - assets/docs/user-guide/ru/part01_overview/chapter05_documentation/
+    - assets/docs/user-guide/ru/part01_overview/chapter01_programmInfo/
+    - assets/docs/user-guide/ru/part01_overview/chapter02_programmPurpose/
+    - assets/docs/user-guide/ru/part01_overview/chapter03_programmFunction/
+    - assets/docs/user-guide/ru/part01_overview/chapter04_shipInfo/
+    - assets/docs/user-guide/ru/part01_overview/chapter05_documentation/
+    - assets/docs/user-guide/ru/part02_operatingProcedure/
+    - assets/docs/user-guide/ru/part03_shipInfo/
+    - assets/docs/user-guide/ru/part04_loading/chapter01_ballast/
+    - assets/docs/user-guide/ru/part04_loading/chapter02_storeTanks/
+    - assets/docs/user-guide/ru/part04_loading/chapter03_stores/
+    - assets/docs/user-guide/ru/part04_loading/chapter04_bulkCargo/
+    - assets/docs/user-guide/ru/part04_loading/chapter05_unitCargo/
+    - assets/docs/user-guide/ru/part04_loading/chapter06_containers/
+    - assets/docs/user-guide/ru/part05_stability/
+    - assets/docs/user-guide/ru/part06_strength/
+    - assets/docs/user-guide/ru/part10_technicalSupport/
+    - assets/docs/user-guide/ru/part04_loading/chapter06_containers/section01_type/
+    - assets/docs/user-guide/ru/part04_loading/chapter06_containers/section02_location/
+    - assets/docs/user-guide/ru/part04_loading/chapter06_containers/section03_workingProcedure/
+    - assets/docs/user-guide/ru/part04_loading/chapter01_ballast/section02_table/
+    - assets/docs/user-guide/ru/part05_stability/section01_leverFigure/
+    - assets/docs/user-guide/ru/part05_stability/section02_criteriaStability/
+    - assets/docs/user-guide/ru/part05_stability/section03_parametresStability/
+    - assets/docs/user-guide/ru/part05_stability/section04_damageStability/
+    - assets/docs/user-guide/ru/part04_loading/chapter01_ballast/section01_figure/
+    - assets/reference/IMO/internationalConvention/LL_66_88.pdf
+    - assets/reference/OCX/gost_r_iso_10303-216-2023-1.pdf
+    - assets/reference/RMRS/Guidelines/ships_&_offshore_installations/2-030101-046_LL_66_88.pdf
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-1_clasification.pdf
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-4_stability.pdf
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-5_subdivision.pdf
+    - assets/reference/RMRS/Rules/different_types_of_ships/2-020101-013-E.pdf

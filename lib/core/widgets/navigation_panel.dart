@@ -4,6 +4,7 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/calculation/run_calculation_button.dart';
 import 'package:sss_computing_client/core/widgets/error_message_widget.dart';
+import 'package:sss_computing_client/presentation/docs_viewer/docs_page.dart';
 import 'package:sss_computing_client/presentation/drafts/drafts_page.dart';
 import 'package:sss_computing_client/presentation/info/info_page.dart';
 import 'package:sss_computing_client/presentation/loading/loading_page.dart';
@@ -97,6 +98,11 @@ class NavigationPanel extends StatelessWidget {
             selectedIcon: const Icon(Icons.folder_open_outlined),
             label: Text(const Localized('Docs').v),
           ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.library_books_outlined),
+            selectedIcon: const Icon(Icons.library_books),
+            label: Text(const Localized('user_guide').v),
+          ),
         ],
         selectedIndex: _selectedPageIndex,
         onDestinationSelected: (index) {
@@ -167,6 +173,14 @@ class NavigationPanel extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => const InfoPage(),
                   settings: const RouteSettings(name: '/InfoPage'),
+                ),
+              );
+              return;
+            case 6:
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const MarkdownViewerPage(),
+                  settings: const RouteSettings(name: '/docs'),
                 ),
               );
               return;

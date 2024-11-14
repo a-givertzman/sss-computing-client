@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/core/models/accordion/accordion_item.dart';
+import 'package:sss_computing_client/core/widgets/accordion/accordion_item.dart';
 
 /// The Accordion widget. It displays a list of [AccordionItem]s.
 /// Each item has a title and a list of children.
