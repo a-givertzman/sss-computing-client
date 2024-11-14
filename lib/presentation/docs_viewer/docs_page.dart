@@ -59,7 +59,7 @@ class _BodyWidgetState extends State<_BodyWidget> {
 
     final items = AssetsAccordions(
       AssetsDirectoryInfoMerger(grouped).merge(),
-      deep: 0,
+      deep: 1,
     ).build();
 
     _markdownAccordion = MarkdownAccordionModel(items)

@@ -26,7 +26,8 @@ class LatexNode extends SpanNode {
     final latex = Math.tex(
       content,
       mathStyle: MathStyle.text,
-      settings: TexParserSettings(maxExpand: 2000),
+      settings: const TexParserSettings(maxExpand: 2000),
+      // textStyle: TextStyle(),
       // textStyle: style.copyWith(color: isDark ? Colors.white : Colors.black),
       textScaleFactor: 1,
 

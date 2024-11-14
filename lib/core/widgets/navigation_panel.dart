@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
@@ -171,7 +173,20 @@ class NavigationPanel extends StatelessWidget {
             case 5:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const InfoPage(),
+                  builder: (context) => Row(
+                    children: [
+                       NavigationPanel(
+                        selectedPageIndex: 5,
+                        appRefreshStream: _appRefreshStream,
+                        fireRefreshEvent: _fireRefreshEvent,
+                        calculationStatusNotifier: _calculationStatusNotifier,
+                      ),
+                      const Expanded(
+
+                        child: InfoPage(),
+                      ),
+                    ],
+                  ),
                   settings: const RouteSettings(name: '/InfoPage'),
                 ),
               );
@@ -179,8 +194,18 @@ class NavigationPanel extends StatelessWidget {
             case 6:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const MarkdownViewerPage(),
-                  settings: const RouteSettings(name: '/docs'),
+                  builder: (context) => Row(
+                    children: [
+                      NavigationPanel(
+                        selectedPageIndex: 6,
+                        appRefreshStream: _appRefreshStream,
+                        fireRefreshEvent: _fireRefreshEvent,
+                        calculationStatusNotifier: _calculationStatusNotifier,
+                      ),
+                      const Expanded(child: MarkdownViewerPage()),
+                    ],
+                  ),
+                  settings: const RouteSettings(name: '/'),
                 ),
               );
               return;

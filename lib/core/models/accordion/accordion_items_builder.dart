@@ -39,13 +39,14 @@ class AssetsAccordions
     int parents = 0,
   }) {
     final includeChildren = parents < deep;
+
     var children = switch (includeChildren) {
       false => <AccordionItem<List<String>>>[],
       true =>
         item.subs.map((e) => createFrom(e, parents: parents + 1)).toList(),
     };
 
-    if (children.isEmpty && parents == 0) {
+    if (children.isEmpty && parents == 0 || item.assets.isNotEmpty) {
       children = [
         AccordionItem<List<String>>(
           title: item.name,
