@@ -98,7 +98,7 @@ class NavigationPanel extends StatelessWidget {
           NavigationRailDestination(
             icon: const Icon(Icons.folder_open_outlined),
             selectedIcon: const Icon(Icons.folder_open_outlined),
-            label: Text(const Localized('Docs').v),
+            label: Text(const Localized('Info').v),
           ),
           NavigationRailDestination(
             icon: const Icon(Icons.library_books_outlined),
@@ -175,14 +175,13 @@ class NavigationPanel extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => Row(
                     children: [
-                       NavigationPanel(
+                      NavigationPanel(
                         selectedPageIndex: 5,
                         appRefreshStream: _appRefreshStream,
                         fireRefreshEvent: _fireRefreshEvent,
                         calculationStatusNotifier: _calculationStatusNotifier,
                       ),
                       const Expanded(
-
                         child: InfoPage(),
                       ),
                     ],
