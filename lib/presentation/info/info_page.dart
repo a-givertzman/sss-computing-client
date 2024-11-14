@@ -67,6 +67,7 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TabBar(
+                    // dividerColor: theme.colorScheme.surface,
                     controller: _tabController,
                     indicatorColor: theme.colorScheme.primary,
                     tabs: _tabs,
@@ -83,7 +84,7 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                         VoyageBody(),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
