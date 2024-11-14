@@ -93,9 +93,9 @@ class NavigationPanel extends StatelessWidget {
             label: Text(const Localized('Loading').v),
           ),
           NavigationRailDestination(
-            icon: const Icon(Icons.folder_open_outlined),
-            selectedIcon: const Icon(Icons.folder_open_outlined),
-            label: Text(const Localized('Docs').v),
+            icon: const Icon(Icons.info_outline),
+            selectedIcon: const Icon(Icons.info),
+            label: Text(const Localized('Info').v),
           ),
         ],
         selectedIndex: _selectedPageIndex,
@@ -153,6 +153,7 @@ class NavigationPanel extends StatelessWidget {
             case 4:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
+                  
                   builder: (context) => LoadingPage(
                     appRefreshStream: _appRefreshStream,
                     fireRefreshEvent: _fireRefreshEvent,
@@ -165,7 +166,19 @@ class NavigationPanel extends StatelessWidget {
             case 5:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const InfoPage(),
+                  builder: (context) => Row(
+                    children: [
+                      NavigationPanel(
+                        selectedPageIndex: 5,
+                        appRefreshStream: _appRefreshStream,
+                        fireRefreshEvent: _fireRefreshEvent,
+                        calculationStatusNotifier: _calculationStatusNotifier,
+                      ),
+                      const Expanded(
+                        child: InfoPage(),
+                      ),
+                    ],
+                  ),
                   settings: const RouteSettings(name: '/InfoPage'),
                 ),
               );
