@@ -15,18 +15,26 @@ class AssetsDirectoryInfoMerger implements DirectoryInfoMerger {
   AssetsDirectoryInfoMerger(this.dirs);
   @override
   List<AssetsDirectoryInfo> merge() {
-    return dirs.fold(<AssetsDirectoryInfo>[], (e, dir) {
-      final merged = e.firstWhereOrNull((e) => e.path == dir.path)?.merge(dir);
-      if (merged == null) e.add(dir);
-      return e;
-    });
+    List<AssetsDirectoryInfo> mergedDirs = [];
+    for (var dir in dirs) {
+      final existingDir =
+          mergedDirs.firstWhereOrNull((existing) => existing.name == dir.name);
+
+      if (existingDir == null) {
+        mergedDirs.add(dir);
+      } else {
+        existingDir.merge(dir);
+      }
+    }
+
+    return _clean(mergedDirs);
   }
 
+  /// Clean subdirectories
   List<AssetsDirectoryInfo> _clean(List<AssetsDirectoryInfo> assets) {
-    return assets
-      ..removeWhere((e) {
-        e.subs.removeWhere((e) => e.isEmpty);
-        return e.isEmpty;
-      });
+    return assets.where((dir) {
+      dir.subs.removeWhere((subDir) => subDir.isEmpty);
+      return !dir.isEmpty;
+    }).toList();
   }
 }
