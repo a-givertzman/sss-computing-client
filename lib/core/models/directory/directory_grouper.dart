@@ -54,12 +54,11 @@ class AssestDirectoryInfoGrouper implements DirectoryGrouper {
       directories.add(directory);
     }
 
-    // If there are still more subdirectories, recursively go deeper
+    /// If there are still more subdirectories, recursively go deeper
     if (pathComponents.length > 1) {
-      // Remove the first component and go deeper into the subdirectories
       _addDirectoryRecursively(directory.subs, pathComponents.sublist(1), path);
     } else {
-      // If it's the last component, we add the asset here
+      /// If it's the last component, we add the asset here.
       directory.assets.add(path);
     }
   }
