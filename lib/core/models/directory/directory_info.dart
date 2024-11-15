@@ -43,26 +43,54 @@ class AssetsDirectoryInfo implements DirectoryInfo {
   /// check if the directory is empty
   bool get isEmpty => subs.isEmpty && assets.isEmpty;
 
+  /// Merge this directory with another directory
   bool merge(AssetsDirectoryInfo dir) {
     if (name == dir.name) {
-      ///
+      /// Merge assets if they are the same directory
       assets.addAllIfAbsent(dir.assets);
 
-      ///
+      /// Recursively merge subdirectories
       final mergedSubs = [
         ...subs,
         ...dir.subs,
-      ].fold(<AssetsDirectoryInfo>[], (e, dir) {
-        if (!e.any((e) => e.name == dir.name)) e.add(dir);
+      ].fold(<AssetsDirectoryInfo>[], (e, subDir) {
+        final existingSub = e.firstWhereOrNull((e) => e.path == subDir.path);
+        if (existingSub != null) {
+          existingSub.merge(subDir);
+        } else {
+          e.add(subDir);
+        }
         return e;
       });
+
+      /// Update the subdirectories after merge
       subs.clear();
       subs.addAll(mergedSubs);
-
       return true;
     }
     return false;
   }
+
+  // bool merge(AssetsDirectoryInfo dir) {
+  //   if (name == dir.name) {
+  //     ///
+  //     assets.addAllIfAbsent(dir.assets);
+
+  //     ///
+  //     final mergedSubs = [
+  //       ...subs,
+  //       ...dir.subs,
+  //     ].fold(<AssetsDirectoryInfo>[], (e, dir) {
+  //       if (!e.any((e) => e.name == dir.name)) e.add(dir);
+  //       return e;
+  //     });
+  //     subs.clear();
+  //     subs.addAll(mergedSubs);
+
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   @override
   String toString() {
