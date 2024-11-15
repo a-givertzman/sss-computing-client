@@ -358,5 +358,51 @@
   "winter": ["Winter", "Зимняя"],
   "light": ["Light", "Легкая"],
   "port": ["Port", "Порт"],
-  "sea": ["Sea", "Море"]
+  "sea": ["Sea", "Море"],
+  "section01_figure": ["Section 01. Figure", "Глава 01. Изображение судна"],
+  "section02_table": ["Section 02. Table", "Глава 02. Таблица"],
+  "chapter01_ballast": ["Chapter 01. Ballast", "Глава 01. Балласт"],
+  "chapter02_storeTanks": [
+    "Chapter 02. Store tanks",
+    "Глава 02. Цистерны запаса"
+  ],
+  "chapter03_stores": ["Chapter 03. Stores", "Глава 03. Прочие запасы"],
+  "chapter04_bulkCargo": [
+    "Chapter 04. Bulk cargo",
+    "Глава 04. Навалочный груз"
+  ],
+  "chapter05_unitCargo": [
+    "Chapter 05. Unit cargo",
+    "Глава 05. Генеральный груз"
+  ],
+  "chapter06_containers": ["Chapter 06. Containers", "Глава 06. Контейнеры"],
+  "section01_type": [
+    "Section 01. Container Type",
+    "Глава 01. Типы контейнеров"
+  ],
+  "section02_location": [
+    "Section 02. Container Location",
+    "Глава 02. Размещение контейнеров"
+  ],
+  "section03_workingProcedure": [
+    "Section 03. Working Procedure",
+    "Глава 03. Работа с контейнерами"
+  ],
+  "part03_loading": ["Part 04. Loading", "Часть 04. Загрузка судна"],
+  "section01_leverFigure": [
+    "Section 01. Lever figure",
+    "Глава 01. График плеч остойчивости"
+  ],
+  "section02_criteriaStability": [
+    "Section 02. Criteria of stability",
+    "Глава 02. Таблица критериев остойчивости"
+  ],
+  "section03_parametresStability": [
+    "Section 03. Parameters of stability",
+    "Глава 03. Таблица параметров остойчивости"
+  ],
+  "section04_damageStability": [
+    "Section 04. Damage of stability",
+    "Глава 04. Аварийная остойчивость"
+  ]
 }
