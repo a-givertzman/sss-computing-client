@@ -37,27 +37,31 @@ class AssetsAccordions
   AccordionItem<List<String>> createFrom(
     AssetsDirectoryInfo item, {
     int parents = 0,
+    List<String>? data,
   }) {
     final includeChildren = parents < deep;
+    data ??= item.allAssets;
 
     var children = switch (includeChildren) {
       false => <AccordionItem<List<String>>>[],
-      true =>
-        item.subs.map((e) => createFrom(e, parents: parents + 1)).toList(),
+      true => item.subs
+          .map((e) => createFrom(e, parents: parents + 1, data: data))
+          .toList(),
     };
 
-    if (children.isEmpty && parents == 0 || item.assets.isNotEmpty) {
+    if (children.isEmpty && parents == 0) {
       children = [
+        // ...children,
         AccordionItem<List<String>>(
           title: item.name,
-          data: item.allAssets,
+          data: data,
         ),
       ];
     }
 
     return AccordionItem<List<String>>(
       title: item.name,
-      data: item.allAssets,
+      data: data,
       children: children,
     );
   }

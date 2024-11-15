@@ -83,7 +83,7 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                         VoyageBody(),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

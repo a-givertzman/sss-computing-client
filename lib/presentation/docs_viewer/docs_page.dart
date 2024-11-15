@@ -56,10 +56,9 @@ class _BodyWidgetState extends State<_BodyWidget> {
   @override
   void initState() {
     final grouped = AssestDirectoryInfoGrouper(widget.assets).grouped();
-
     final items = AssetsAccordions(
       AssetsDirectoryInfoMerger(grouped).merge(),
-      deep: 1,
+      deep: 2,
     ).build();
 
     _markdownAccordion = MarkdownAccordionModel(items)
