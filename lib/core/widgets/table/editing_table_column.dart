@@ -8,28 +8,40 @@ import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 class EditingTableColumn<D, V> implements TableColumn<D, V> {
   /// Default string representation for `null` values.
   static const String _defaultNullValue = '–';
+  //
   @override
   final String key;
+  //
   @override
   final FieldType type;
+  //
   @override
   final String name;
+  //
   @override
   final String nullValue;
+  //
   @override
   final V defaultValue;
+  //
   @override
   final Alignment headerAlignment;
+  //
   @override
   final Alignment cellAlignment;
+  //
   @override
   final double? grow;
+  //
   @override
   final double? width;
+  //
   @override
   final bool useDefaultEditing;
+  //
   @override
   final bool isResizable;
+  //
   @override
   final Validator? validator;
   final V Function(D rowData) _extractValue;
@@ -47,7 +59,7 @@ class EditingTableColumn<D, V> implements TableColumn<D, V> {
   )? _buildCell;
   ///
   /// Creates [TableColumn] for [EditingTable] based on passed arguments.
-  ///TODO
+  /// TODO
   const EditingTableColumn({
     required this.key,
     this.type = FieldType.string,
