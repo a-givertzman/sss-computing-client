@@ -32,7 +32,7 @@ class _AssetsStream implements TextFileStream {
           _controller.add(Ok(_lastPath!));
           break;
         case Err():
-          Log('Docs').error(res.error);
+          const Log('Docs').error(res.error);
           break;
       }
     }

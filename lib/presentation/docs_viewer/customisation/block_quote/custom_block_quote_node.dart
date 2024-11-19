@@ -72,7 +72,7 @@ class CustomBlockquoteNode extends ElementNode {
               color: alert.color,
               size: 18,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               Localized(alert.name).v,
               style: TextStyle(
