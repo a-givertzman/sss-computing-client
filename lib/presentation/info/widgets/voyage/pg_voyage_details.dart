@@ -4,7 +4,7 @@ import 'package:sss_computing_client/core/models/voyage/itinerary.dart';
 import 'package:sss_computing_client/core/models/voyage/voyage.dart';
 
 /// Voyage details and itineraries collections that are stored in postgres DB.
-/// TODO: Postgres database access implementation
+/// todo: Postgres database access implementation
 class PgVoyageDetails {
   /// Fetches the details of the voyage from the database
   /// and return it as a list of [ConfigurableItem]s
@@ -33,7 +33,7 @@ class PgVoyageDetails {
           "port_code": "RUARH",
           "arrival": "2024-10-19 11:24:54.00 +02:00",
           "departure": "2024-10-19 11:24:54.00 +02:00",
-          "draft_limit": "100"
+          "draft_limit": "100",
         },
         {
           "port": "Азов",
@@ -41,7 +41,7 @@ class PgVoyageDetails {
           "port_code": "RUAZO",
           "arrival": "2024-10-19 09:24:54 +02:00",
           "departure": "2024-10-19 09:24:54 +02:00",
-          "draft_limit": "100"
+          "draft_limit": "100",
         },
         {
           "port": "Астрахань",
@@ -58,7 +58,7 @@ class PgVoyageDetails {
           "departure": "2024-10-19 09:24:54 +02:00",
           "index": "4",
           "draft_limit": "200",
-        }
+        },
       ].map((e) => JsonItinerary(json: e)).toList(),
     );
   }

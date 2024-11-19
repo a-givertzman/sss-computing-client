@@ -53,14 +53,16 @@ flutter:
     - assets/unicodes/
     - assets/docs/
     - assets/image/
-    - assets/image/program_sheets/sheet1_mainScreen/
-    - assets/image/program_sheets/sheet2_loading/tab1_ballast/
-    - assets/image/program_sheets/sheet2_loading/tab2_storeTanks/
-    - assets/image/program_sheets/sheet2_loading/tab3_stores/
-    - assets/image/program_sheets/sheet2_loading/tab4_bulkCargo/
-    - assets/image/program_sheets/sheet2_loading/tab5_containers/
-    - assets/image/program_sheets/sheet4_stability/
-    - assets/image/program_sheets/sheet5_strength/
+    - assets/image/program_sheets/ru/sheet03_mainScreen/
+    - assets/image/program_sheets/ru/sheet04_shipinfo/
+    - assets/image/program_sheets/ru/sheet05_loading/
+    - assets/image/program_sheets/ru/sheet07_strength/
+    - assets/image/program_sheets/ru/sheet08_stability/
+    - assets/image/program_sheets/ru/sheet05_loading/tab01_ballast/
+    - assets/image/program_sheets/ru/sheet05_loading/tab02_storeTanks/
+    - assets/image/program_sheets/ru/sheet05_loading/tab03_stores/
+    - assets/image/program_sheets/ru/sheet05_loading/tab04_bulkCargo/
+    - assets/image/program_sheets/ru/sheet05_loading/tab06_containers/
     - assets/docs/user-guide/ru/
     - assets/docs/mock/
     - assets/reference/
@@ -68,41 +70,20 @@ flutter:
     - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-1_clasification.pdf
     - assets/docs/user-guide/ru/part01_overview/
     - assets/docs/user-guide/ru/part02_operatingProcedure/
-    - assets/docs/user-guide/ru/part03_shipInfo/
-    - assets/docs/user-guide/ru/part04_loading/
-    - assets/docs/user-guide/ru/part05_stability/
-    - assets/docs/user-guide/ru/part06_strength/
-    - assets/docs/user-guide/ru/part10_technicalSupport/
-    - assets/docs/user-guide/ru/part01_overview/chapter01_programmInfo/
-    - assets/docs/user-guide/ru/part01_overview/chapter02_programmPurpose/
-    - assets/docs/user-guide/ru/part01_overview/chapter03_programmFunction/
-    - assets/docs/user-guide/ru/part01_overview/chapter04_shipInfo/
-    - assets/docs/user-guide/ru/part01_overview/chapter05_documentation/
-    - assets/docs/user-guide/ru/part01_overview/chapter01_programmInfo/
-    - assets/docs/user-guide/ru/part01_overview/chapter02_programmPurpose/
-    - assets/docs/user-guide/ru/part01_overview/chapter03_programmFunction/
-    - assets/docs/user-guide/ru/part01_overview/chapter04_shipInfo/
-    - assets/docs/user-guide/ru/part01_overview/chapter05_documentation/
-    - assets/docs/user-guide/ru/part02_operatingProcedure/
-    - assets/docs/user-guide/ru/part03_shipInfo/
-    - assets/docs/user-guide/ru/part04_loading/chapter01_ballast/
-    - assets/docs/user-guide/ru/part04_loading/chapter02_storeTanks/
-    - assets/docs/user-guide/ru/part04_loading/chapter03_stores/
-    - assets/docs/user-guide/ru/part04_loading/chapter04_bulkCargo/
-    - assets/docs/user-guide/ru/part04_loading/chapter05_unitCargo/
-    - assets/docs/user-guide/ru/part04_loading/chapter06_containers/
-    - assets/docs/user-guide/ru/part05_stability/
-    - assets/docs/user-guide/ru/part06_strength/
-    - assets/docs/user-guide/ru/part10_technicalSupport/
-    - assets/docs/user-guide/ru/part04_loading/chapter06_containers/section01_type/
-    - assets/docs/user-guide/ru/part04_loading/chapter06_containers/section02_location/
-    - assets/docs/user-guide/ru/part04_loading/chapter06_containers/section03_workingProcedure/
-    - assets/docs/user-guide/ru/part04_loading/chapter01_ballast/section02_table/
-    - assets/docs/user-guide/ru/part05_stability/section01_leverFigure/
-    - assets/docs/user-guide/ru/part05_stability/section02_criteriaStability/
-    - assets/docs/user-guide/ru/part05_stability/section03_parametresStability/
-    - assets/docs/user-guide/ru/part05_stability/section04_damageStability/
-    - assets/docs/user-guide/ru/part04_loading/chapter01_ballast/section01_figure/
+    - assets/docs/user-guide/ru/part03_mainScreen/
+    - assets/docs/user-guide/ru/part04_shipInfo/
+    - assets/docs/user-guide/ru/part05_loading/
+    - assets/docs/user-guide/ru/part08_stability/
+    - assets/docs/user-guide/ru/part06_draft/
+    - assets/docs/user-guide/ru/part07_strength/
+    - assets/docs/user-guide/ru/part01_overview/chapter01_programm/
+    - assets/docs/user-guide/ru/part01_overview/chapter02_ship/
+    - assets/docs/user-guide/ru/part05_loading/chapter01_ballast/
+    - assets/docs/user-guide/ru/part05_loading/chapter02_storeTanks/
+    - assets/docs/user-guide/ru/part05_loading/chapter03_stores/
+    - assets/docs/user-guide/ru/part05_loading/chapter04_bulkCargo/
+    - assets/docs/user-guide/ru/part05_loading/chapter05_unitCargo/
+    - assets/docs/user-guide/ru/part05_loading/chapter06_containers/
     - assets/reference/IMO/internationalConvention/LL_66_88.pdf
     - assets/reference/OCX/gost_r_iso_10303-216-2023-1.pdf
     - assets/reference/RMRS/Guidelines/ships_&_offshore_installations/2-030101-046_LL_66_88.pdf

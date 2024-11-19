@@ -71,27 +71,6 @@ class AssetsDirectoryInfo implements DirectoryInfo {
     return false;
   }
 
-  // bool merge(AssetsDirectoryInfo dir) {
-  //   if (name == dir.name) {
-  //     ///
-  //     assets.addAllIfAbsent(dir.assets);
-
-  //     ///
-  //     final mergedSubs = [
-  //       ...subs,
-  //       ...dir.subs,
-  //     ].fold(<AssetsDirectoryInfo>[], (e, dir) {
-  //       if (!e.any((e) => e.name == dir.name)) e.add(dir);
-  //       return e;
-  //     });
-  //     subs.clear();
-  //     subs.addAll(mergedSubs);
-
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
   @override
   String toString() {
     return 'DirectoryInfo(name: $name, path: $path, assets: $assets, subs: $subs)';
@@ -99,8 +78,11 @@ class AssetsDirectoryInfo implements DirectoryInfo {
 
   @override
   List<String> get subsAssets => subs.fold(<String>[], (e, dir) {
-        e.addAll(dir.allAssets);
-        return e;
+        final assets = dir.allAssets;
+        return switch (dir.name == name) {
+          true => [...assets, ...e],
+          false => e..addAll(assets),
+        };
       });
 
   @override

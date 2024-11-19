@@ -47,7 +47,7 @@ class VoyageBody extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -1,12 +1,9 @@
 import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_failure.dart';
-
 import 'package:sss_computing_client/core/models/ship/ship.dart';
 
 
 ///
 /// Ship general details collection that stored in postgres DB.
-/// TODO: Postgres database access implementation
 ///
 class PgShipDetails {
   Future<Result<JsonShip, Failure<String>>> fetchShip() async {

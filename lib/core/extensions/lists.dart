@@ -1,3 +1,5 @@
+import 'package:sss_computing_client/core/models/directory/directory_info.dart';
+
 import '../widgets/accordion/accordion_item.dart';
 
 /// List extensions
@@ -18,6 +20,22 @@ extension ListExt<T> on List<T> {
       }
     }
   }
+}
+
+extension AssetsDirectoryInfoListExt on List<AssetsDirectoryInfo> {
+  /// Find a similar directory by name.
+  /// Recursively searches through the directory tree.
+  AssetsDirectoryInfo? findByName(String name) {
+    final directory = firstWhereOrNull((e) => e.name == name);
+    if (directory != null) return directory;
+    for (var dir in this) {
+      final sub = dir.subs.findByName(name);
+      if (sub != null) return sub;
+    }
+    return null;
+  }
+
+
 }
 
 extension AccordionListExt<T> on List<AccordionItem<T>> {

@@ -31,7 +31,6 @@
 | Registered number       |                       |
 | Port of Registration    |                       |
 | Flag State              |                       |
-| Proprietor              |                       |
 | Shipowner               |                       |
 | Owner’s code            |                       |
 | Yard of build           |                       |
@@ -77,6 +76,7 @@
 | Код порта прибытия             |            |
 | Наименование порта прибытия    |            |
 | Estimated Time of Departure    |            |
-| Actual Time of Departure       |            |
 | Estimated Time of Arrival      |            |
-| Actual Time of Arrival         |            |
+
+
+

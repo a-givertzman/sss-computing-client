@@ -110,7 +110,7 @@ class _BuildItem<T> extends StatelessWidget {
             ),
             child: ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: item.children.length,
               itemBuilder: (_, index) {
                 final child = item.children[index];
@@ -123,7 +123,7 @@ class _BuildItem<T> extends StatelessWidget {
                 );
               },
             ),
-          )
+          ),
       ],
     );
   }
@@ -140,8 +140,10 @@ class _BuildItem<T> extends StatelessWidget {
     };
   }
 
-  TextStyle? _buildTextStyle(
-      {required bool isParent, required ThemeData theme}) {
+  TextStyle? _buildTextStyle({
+    required bool isParent,
+    required ThemeData theme,
+  }) {
     return switch (isParent) {
       true => theme.textTheme.titleMedium,
       false => theme.textTheme.bodySmall?.copyWith(

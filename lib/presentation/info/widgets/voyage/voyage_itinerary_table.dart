@@ -73,7 +73,7 @@ class _VoyageItineraryTableState extends State<VoyageItineraryTable> {
             value: row.data.departure.formatRU(),
           ),
         ),
-        _hiddenColumns.first
+        _hiddenColumns.first,
       ],
     );
     super.initState();
@@ -151,13 +151,17 @@ class _VoyageItineraryTableState extends State<VoyageItineraryTable> {
           child: NullableCellWidget(
             value: value,
           ),
-        )
+        ),
       ],
     );
   }
 
-  ElevatedButton _buildAction(ThemeData theme,
-      {required IconData icon, required String label, bool actionable = true}) {
+  ElevatedButton _buildAction(
+    ThemeData theme, {
+    required IconData icon,
+    required String label,
+    bool actionable = true,
+  }) {
     return ElevatedButton.icon(
       onPressed: !actionable
           ? null

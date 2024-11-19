@@ -22,10 +22,11 @@ class ShipBody extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(blockPadding),
         child: FutureBuilderWidget(
-            onFuture: PgShipDetails().fetchShip,
-            caseData: (context, ship, _) {
-              return _BuildItems(ship: ship);
-            }),
+          onFuture: PgShipDetails().fetchShip,
+          caseData: (context, ship, _) {
+            return _BuildItems(ship: ship);
+          },
+        ),
       ),
     );
   }
@@ -65,7 +66,7 @@ class _BuildItemsState extends State<_BuildItems> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          Localized('Ship').v,
+          const Localized('Ship').v,
           textAlign: TextAlign.start,
           style: theme.textTheme.titleLarge,
         ),

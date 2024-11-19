@@ -18,7 +18,7 @@ class AssetsDirectoryInfoMerger implements DirectoryInfoMerger {
     List<AssetsDirectoryInfo> mergedDirs = [];
     for (var dir in dirs) {
       final existingDir =
-          mergedDirs.firstWhereOrNull((existing) => existing.name == dir.name);
+          mergedDirs.firstWhereOrNull((existing) => existing.path == dir.path);
 
       if (existingDir == null) {
         mergedDirs.add(dir);

@@ -5,6 +5,7 @@ import 'package:sss_computing_client/core/extensions/lists.dart';
 import 'package:sss_computing_client/core/models/directory/directory_info.dart';
 
 typedef DirectoryItem = MapEntry<String, List<String>>;
+
 typedef DirectoryItems = List<DirectoryItem>;
 
 extension DirectoryItemExt on List<DirectoryItem> {

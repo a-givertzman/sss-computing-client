@@ -30,6 +30,7 @@ class AssetsAccordions
 
   @override
   List<AccordionItem<List<String>>> build() {
+
     return items.map(createFrom).toList();
   }
 
@@ -41,7 +42,6 @@ class AssetsAccordions
   }) {
     final includeChildren = parents < deep;
     data ??= item.allAssets;
-
     var children = switch (includeChildren) {
       false => <AccordionItem<List<String>>>[],
       true => item.subs

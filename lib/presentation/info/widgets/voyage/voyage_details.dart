@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 
-import 'package:hmi_core/hmi_core_translate.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/subscripting/subscripting.dart';
 import 'package:sss_computing_client/core/models/voyage/voyage.dart';
@@ -46,7 +45,7 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          Localized('general').v,
+          const Localized('general').v,
           textAlign: TextAlign.start,
           style: theme.textTheme.titleLarge,
         ),
@@ -80,8 +79,10 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
     );
   }
 
-  Widget _buildValueWidget(MapEntry<String, String?> item,
-      {double padding = 0}) {
+  Widget _buildValueWidget(
+    MapEntry<String, String?> item, {
+    double padding = 0,
+  }) {
     switch (item.key) {
       case 'intake_water_density':
         return EditOnTapField(
@@ -137,8 +138,11 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
 }
 
 class _BuildDropdownButton extends StatefulWidget {
-  const _BuildDropdownButton(
-      {required this.items, this.initialValue, required this.onChanged});
+  const _BuildDropdownButton({
+    required this.items,
+    this.initialValue,
+    required this.onChanged,
+  });
   final String? initialValue;
   final List<String> items;
   final Future<ResultF<String>> Function(String) onChanged;
@@ -174,9 +178,14 @@ class _BuildDropdownButtonState extends State<_BuildDropdownButton> {
             .toList(),
         onChanged: (value) {
           if (value == null) return;
-          _initialValue = value;
-          widget.onChanged(_initialValue).then((value) {
-            setState(() {});
+
+          widget.onChanged(_initialValue).then((res) {
+            setState(() {
+              _initialValue = switch (res) {
+                Ok(:final value) => value,
+                Err() => value,
+              };
+            });
           });
         },
       ),

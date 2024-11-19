@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:sss_computing_client/core/extensions/lists.dart';
+import 'package:sss_computing_client/core/models/directory/dir_merger.dart';
 
 import 'package:sss_computing_client/core/models/directory/directory_info.dart';
 
@@ -19,47 +19,57 @@ class AssestDirectoryInfoGrouper implements DirectoryGrouper {
 
   @override
   List<AssetsDirectoryInfo> grouped() {
-    return paths.map(group).reduce((e, a) => [...e, ...a]);
+    return AssetsDirectoryInfoMerger(
+      paths.map(_group).reduce((e, a) => [...e, ...a]),
+    ).merge();
   }
 
-  @protected
-  List<AssetsDirectoryInfo> group(String path) {
+  List<AssetsDirectoryInfo> _group(String path) {
     final List<AssetsDirectoryInfo> directories = [];
     for (var path in paths) {
-      List<String> pathComponents =
-          path.replaceFirst('$parentPath/', '').split('/');
-      _addDirectoryRecursively(directories, pathComponents,path);
+      final directory = _createDirectory(path, parentPath);
+      _addDirectoryRecursively(directory, directories);
     }
 
     return directories;
   }
 
-  /// Recursively add directories and assets to maintain the correct structure
-  void _addDirectoryRecursively(
-    List<AssetsDirectoryInfo> directories,
-    List<String> pathComponents,String path,
-  ) {
-    if (pathComponents.isEmpty) return;
+  AssetsDirectoryInfo _createDirectory(String path, String parentPath) {
+    List<String> pathComponents =
+        path.replaceFirst('$parentPath/', '').split('/');
+    final subDirectories = pathComponents.sublist(1);
+    final directoryName = (pathComponents.isEmpty ? path : pathComponents.first)
+        .replaceAll(RegExp(r'\.[^.]+$'), '');
+    final directoryPath = '$parentPath/$directoryName';
 
-    String currentDirName = pathComponents.first.replaceAll(RegExp(r'\.[^.]+$'), '');
-    String currentPath =
-        '$parentPath/${pathComponents.sublist(0, pathComponents.length - 1).join('/')}';
-
-    /// The directory at the current level
-    var directory =
-        directories.firstWhereOrNull((dir) => dir.path == currentPath);
-
-    if (directory == null) {
-      directory = AssetsDirectoryInfo(currentDirName, currentPath);
-      directories.add(directory);
+    final assets = <String>[];
+    final subs = <AssetsDirectoryInfo>[];
+    if (subDirectories.isNotEmpty) {
+      final subdirectory = _createDirectory(path, directoryPath);
+      subs.add(subdirectory);
+    } else {
+      assets.add(path);
     }
 
-    /// If there are still more subdirectories, recursively go deeper
-    if (pathComponents.length > 1) {
-      _addDirectoryRecursively(directory.subs, pathComponents.sublist(1), path);
+    return AssetsDirectoryInfo(
+      directoryName,
+      directoryPath,
+      assets: assets,
+      subs: subs,
+    );
+  }
+
+  /// Add directory down the tree recursively
+  ///Recursively add directories and assets to maintain the correct structure
+  _addDirectoryRecursively(
+    AssetsDirectoryInfo directory,
+    List<AssetsDirectoryInfo> directories,
+  ) {
+    final existing = directories.findByName(directory.name);
+    if (existing != null) {
+      existing.merge(directory);
     } else {
-      /// If it's the last component, we add the asset here.
-      directory.assets.add(path);
+      directories.add(directory);
     }
   }
 }
