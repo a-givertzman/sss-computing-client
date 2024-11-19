@@ -39,7 +39,9 @@ class HtmlSupport {
   }) {
     try {
       final text = node.textContent.replaceAll(
-          visitor?.splitRegExp ?? WidgetVisitor.defaultSplitRegExp, '');
+        visitor?.splitRegExp ?? WidgetVisitor.defaultSplitRegExp,
+        '',
+      );
       if (!text.contains(htmlRep)) return [TextNode(text: node.text)];
       h.DocumentFragment document = parseFragment(text);
       return HtmlToSpanVisitor(visitor: visitor, parentStyle: parentStyle)
@@ -66,7 +68,7 @@ class HtmlToSpanVisitor extends TreeVisitor {
 
   HtmlToSpanVisitor({WidgetVisitor? visitor, TextStyle? parentStyle})
       : visitor = visitor ?? WidgetVisitor(),
-        parentStyle = parentStyle ?? TextStyle();
+        parentStyle = parentStyle ?? const TextStyle();
 
   List<SpanNode> toVisit(List<h.Node> nodes) {
     _spans.clear();

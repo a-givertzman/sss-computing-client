@@ -44,7 +44,7 @@ class LatexNode extends SpanNode {
       child: !isInline
           ? Container(
               width: double.infinity,
-              margin: EdgeInsets.symmetric(vertical: 16.0),
+              margin: const EdgeInsets.symmetric(vertical: 16.0),
               child: Center(child: latex),
             )
           : latex,

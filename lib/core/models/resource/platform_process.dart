@@ -4,7 +4,7 @@ import 'dart:io';
 
 /// Platform  process
 class PlatformProcess {
-  final Log _logger = Log('Document launcher');
+  final Log _logger = const Log('Document launcher');
 
   ///
   Future<void> start(String url) async {

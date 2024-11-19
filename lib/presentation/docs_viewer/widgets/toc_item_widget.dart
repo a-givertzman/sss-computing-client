@@ -4,12 +4,13 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 
 /// Table of contents item widget
 class TocItemWidget extends StatefulWidget {
-  const TocItemWidget(
-      {super.key,
-      required this.data,
-      required this.tocController,
-      required this.currentToc,
-      required this.onSelected});
+  const TocItemWidget({
+    super.key,
+    required this.data,
+    required this.tocController,
+    required this.currentToc,
+    required this.onSelected,
+  });
 
   /// Table of contents item data
   final TocItemBuilderData data;
@@ -47,7 +48,8 @@ class _TocItemWidgetState extends State<TocItemWidget> {
         contentPadding: EdgeInsets.zero,
         title: Container(
           margin: EdgeInsets.only(
-              left: 20.0 * (headingTag2Level[node.headingConfig.tag] ?? 0)),
+            left: 20.0 * (headingTag2Level[node.headingConfig.tag] ?? 0),
+          ),
           child: ProxyRichText(node.build()),
         ),
         onTap: () {

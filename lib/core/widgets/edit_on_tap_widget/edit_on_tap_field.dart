@@ -151,7 +151,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
   @override
   Widget build(BuildContext context) {
     // final iconSize = IconTheme.of(context).size ?? 10.0;
-    final iconSize = 12.0;
+    const iconSize = 12.0;
     return ActivateOnTapBuilderWidget(
       cursor: SystemMouseCursors.text,
       onActivate: () {
