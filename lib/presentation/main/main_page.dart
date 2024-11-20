@@ -1,23 +1,12 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core.dart';
+import 'package:provider/provider.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/main/widgets/main_page_body.dart';
 ///
 class MainPage extends StatelessWidget {
-  final Stream<DsDataPoint<bool>> _appRefreshStream;
-  final void Function() _fireRefreshEvent;
-  final CalculationStatus _calculationStatusNotifier;
   ///
-  const MainPage({
-    super.key,
-    required Stream<DsDataPoint<bool>> appRefreshStream,
-    required void Function() fireRefreshEvent,
-    required CalculationStatus calculationStatusNotifier,
-  })  : _appRefreshStream = appRefreshStream,
-        _fireRefreshEvent = fireRefreshEvent,
-        _calculationStatusNotifier = calculationStatusNotifier;
+  const MainPage({super.key});
   //
   @override
   Widget build(BuildContext context) {
@@ -25,20 +14,20 @@ class MainPage extends StatelessWidget {
     return Scaffold(
       // ignore: deprecated_member_use
       backgroundColor: theme.colorScheme.background,
-      body: Row(
-        children: [
-          NavigationPanel(
-            selectedPageIndex: 0,
-            appRefreshStream: _appRefreshStream,
-            fireRefreshEvent: _fireRefreshEvent,
-            calculationStatusNotifier: _calculationStatusNotifier,
-          ),
-          Expanded(
-            child: MainPageBody(
-              appRefreshStream: _appRefreshStream,
+      body: Consumer<CalculationStatus>(
+        builder: (_, status, __) => Row(
+          children: [
+            NavigationPanel(
+              selectedPageIndex: 0,
+              calculationStatusNotifier: status,
             ),
-          ),
-        ],
+            Expanded(
+              child: MainPageBody(
+                appRefreshStream: status.refreshStream,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
