@@ -83,8 +83,8 @@ class CargoMFSYColumn implements TableColumn<Cargo, double?> {
   }
   //
   @override
-  Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['mfsy'] = parseToValue(text),
+  Cargo copyRowWith(Cargo cargo, double? value) => JsonCargo(
+        json: cargo.asMap()..['mfsy'] = value,
       );
   //
   @override

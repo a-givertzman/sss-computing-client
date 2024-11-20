@@ -82,8 +82,8 @@ class CargoVCGColumn implements TableColumn<Cargo, double?> {
   }
   //
   @override
-  Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['vcg'] = parseToValue(text),
+  Cargo copyRowWith(Cargo cargo, double? value) => JsonCargo(
+        json: cargo.asMap()..['vcg'] = value,
       );
   //
   @override

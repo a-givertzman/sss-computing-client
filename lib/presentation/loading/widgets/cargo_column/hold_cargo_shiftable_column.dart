@@ -72,8 +72,8 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
   String parseToString(bool value) => '$value';
   //
   @override
-  Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['shiftable'] = parseToValue(text),
+  Cargo copyRowWith(Cargo cargo, bool value) => JsonCargo(
+        json: cargo.asMap()..['shiftable'] = value,
       );
   //
   @override
@@ -95,7 +95,7 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
           .then(
             (result) => switch (result) {
               Ok(:final value) => () {
-                  updateValue(value.toString());
+                  updateValue(value);
                   return const Ok<void, Failure>(null);
                 }(),
               Err(:final error) => Err<void, Failure>(error),

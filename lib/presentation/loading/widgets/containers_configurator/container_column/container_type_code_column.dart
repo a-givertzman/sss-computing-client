@@ -66,7 +66,7 @@ class ContainerTypeCodeColumn
   @override
   FreightContainer copyRowWith(
     FreightContainer container,
-    String text,
+    String? text,
   ) =>
       container;
   //
