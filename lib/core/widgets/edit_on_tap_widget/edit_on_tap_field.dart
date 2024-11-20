@@ -142,6 +142,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
     const iconSize = 12.0;
     return ActivateOnTapBuilderWidget(
       cursor: SystemMouseCursors.text,
+      useDoubleTap: true,
       onActivate: () {
         _handleEditingStart();
         return;
