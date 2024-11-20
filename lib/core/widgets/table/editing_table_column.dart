@@ -8,46 +8,52 @@ import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 class EditingTableColumn<D, V> implements TableColumn<D, V> {
   /// Default string representation for `null` values.
   static const String _defaultNullValue = '–';
+  //
   @override
   final String key;
+  //
   @override
   final FieldType type;
+  //
   @override
   final String name;
+  //
   @override
   final String nullValue;
+  //
   @override
   final V defaultValue;
+  //
   @override
   final Alignment headerAlignment;
+  //
   @override
   final Alignment cellAlignment;
+  //
   @override
   final double? grow;
+  //
   @override
   final double? width;
+  //
   @override
   final bool useDefaultEditing;
+  //
   @override
   final bool isResizable;
+  //
   @override
   final Validator? validator;
-  final V Function(D rowData) _extractValue;
-  final V Function(String text) _parseToValue;
-  final String Function(V value)? _parseToString;
-  final D Function(D rowData, V value)? _copyRowWith;
-  final ValueRecord<V> Function(
-    D rowData,
-    V Function(String text)? toValue,
-  )? _buildRecord;
-  final Widget Function(
-    BuildContext context,
-    D rowData,
-    void Function(V value) updateValue,
-  )? _buildCell;
   ///
   /// Creates [TableColumn] for [EditingTable] based on passed arguments.
-  ///TODO
+  ///
+  /// * [extractValue] is used to extract value from [D].
+  /// * [parseToValue] is used to parse [String] text into [V] value.
+  /// * [parseToString] is used to parse [V] value into [String] text.
+  /// * [copyRowWith] is used to copy [D] row with new [V] value.
+  /// * [buildCell] is used to build custom cell widget with ability to update [V] value if needed.
+  /// * [buildRecord] can be used to construct [ValueRecord] for row value, that handle value update remote source,
+  /// prefer to use [EditingTable] onRowUpdate callback to handle value update manually.
   const EditingTableColumn({
     required this.key,
     this.type = FieldType.string,
@@ -73,24 +79,43 @@ class EditingTableColumn<D, V> implements TableColumn<D, V> {
         _copyRowWith = copyRowWith,
         _buildRecord = buildRecord,
         _buildCell = buildCell;
+  ///
+  final V Function(D rowData) _extractValue;
   //
   @override
   V extractValue(D rowData) => _extractValue(rowData);
+  ///
+  final V Function(String text) _parseToValue;
   //
   @override
   V parseToValue(String text) => _parseToValue(text);
+  ///
+  final String Function(V value)? _parseToString;
   //
   @override
   String parseToString(V value) =>
       _parseToString?.call(value) ?? value.toString();
+  ///
+  final D Function(D rowData, V value)? _copyRowWith;
   //
   @override
   D copyRowWith(D rowData, V value) =>
       _copyRowWith?.call(rowData, value) ?? rowData;
+  ///
+  final ValueRecord<V> Function(
+    D rowData,
+    V Function(String text)? toValue,
+  )? _buildRecord;
   //
   @override
   ValueRecord<V>? buildRecord(D rowData, V Function(String text) toValue) =>
       _buildRecord?.call(rowData, toValue);
+  ///
+  final Widget Function(
+    BuildContext context,
+    D rowData,
+    void Function(V value) updateValue,
+  )? _buildCell;
   //
   @override
   Widget? buildCell(
