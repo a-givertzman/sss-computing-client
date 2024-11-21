@@ -365,6 +365,10 @@
   "Delete waypoint": ["Delete waypoint", "Удалить точку маршрута"],
   "Container with this waypoint as POL or POD exists": [
     "Container with this waypoint as POL or POD exists",
-    "существует контейнер с этой точкой маршрута как POL или POD"
+    "Существует контейнер для которого эта точка маршрута задана как POL или POD"
+  ],
+  "Deleting of this waypoint will clear all container's POL and POD record with this waypoint": [
+    "Deleting of this waypoint will clear all container's POL and POD record with this waypoint",
+    "Удаление этой точки маршрута приведет к сбросу всех записей о POL и POD для контейнеров, связанных с этой точкой"
   ]
 }

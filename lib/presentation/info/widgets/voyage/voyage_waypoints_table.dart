@@ -280,15 +280,19 @@ class _VoyageWaypointsTableState extends State<VoyageWaypointsTable> {
         if (references > 0) {
           final deleteConfirmation = await showDialog<bool>(
             context: context,
-            builder: (context) => ConfirmationDialog(
-              title: Text(const Localized(
-                'Delete waypoint',
-              ).v),
-              content: Text(const Localized(
-                'Container with this waypoint as POL or POD exists',
-              ).v),
-              confirmationButtonLabel: const Localized('Delete anyway').v,
-            ),
+            builder: (context) {
+              return ConfirmationDialog(
+                title: Text(const Localized(
+                  'Delete waypoint',
+                ).v),
+                content: Text('${const Localized(
+                  'Container with this waypoint as POL or POD exists',
+                ).v}\n\n${const Localized(
+                  "Deleting of this waypoint will clear all container's POL and POD record with this waypoint",
+                ).v}'),
+                confirmationButtonLabel: const Localized('Delete anyway').v,
+              );
+            },
           );
           if (!(deleteConfirmation ?? false)) return;
         }
