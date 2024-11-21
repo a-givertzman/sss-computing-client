@@ -246,7 +246,7 @@ class ResizeSlotOperation implements StowageOperation {
     );
     if (existingSlot == null) {
       return Err(Failure(
-        message: 'Slot to resize not found',
+        message: 'Slot not found',
         stackTrace: StackTrace.current,
       ));
     }

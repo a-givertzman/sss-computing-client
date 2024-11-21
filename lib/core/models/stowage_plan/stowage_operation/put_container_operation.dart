@@ -101,7 +101,7 @@ class PutContainerOperation implements StowageOperation {
     );
     if (existingSlot == null) {
       return Err(Failure(
-        message: 'Slot to put container not found: ($bay, $row, $tier)',
+        message: 'Slot to put container not found',
         stackTrace: StackTrace.current,
       ));
     }

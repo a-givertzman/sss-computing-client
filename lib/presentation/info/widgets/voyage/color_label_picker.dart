@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 ///
 /// Widget that displays a color label and allows to change it.
@@ -90,14 +91,14 @@ class _ColorLabelPickerState extends State<ColorLabelPicker> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: Text(const Localized('Cancel').v),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 widget._updateColor(_pickerColor);
               },
-              child: const Text('Ok'),
+              child: Text(const Localized('Ok').v),
             ),
           ],
         ),

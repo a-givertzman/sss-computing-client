@@ -167,7 +167,7 @@ class _VoyageWaypointsTableState extends State<VoyageWaypointsTable> {
       ),
       EditingTableColumn<Waypoint, bool>(
         key: 'useDraftLimit',
-        name: const Localized('Учитывать в критериях').v,
+        name: const Localized('take into account in the criteria').v,
         grow: 1.0,
         headerAlignment: Alignment.centerRight,
         defaultValue: false,

@@ -310,5 +310,61 @@
   "important": ["Important", "Важно"],
   "warning": ["Warning", "Внимание"],
   "caution": ["Caution", "Осторожно"],
-  "navigationArea": ["Navigation area", "Район плавания"]
+  "navigationArea": ["Navigation area", "Район плавания"],
+  "not found": ["Not found", "Не найдено"],
+  "fetch error": ["Fetch error", "Ошибка загрузки"],
+  "checking of containers port references failed": [
+    "Checking of containers port references failed",
+    "Не удалось проверить ссылки портов на контейнеры"
+  ],
+  "ETA must be before ETD": [
+    "ETA must be before ETD",
+    "ETA должен быть раньше ETD"
+  ],
+  "ETD must be after ETA": [
+    "ETD must be after ETA",
+    "ETD должен быть позже ETA"
+  ],
+  "Slot to put container not found": [
+    "Slot to put container not found",
+    "Слот для размещения контейнера не найден"
+  ],
+  "Slot not found": [
+    "Slot not found",
+    "Слот не найден"
+  ],
+  "Collection corrupted during operation execution": [
+    "Collection corrupted during operation execution",
+    "Коллекция повреждена во время выполнения операции"
+  ],
+  "unknown field to update": [
+    "Unknown field to update",
+    "Неизвестное поле для обновления"
+  ],
+  "Cancel": ["Cancel", "Отмена"],
+  "Confirm": ["Confirm", "Подтвердить"],
+  "Ok": ["OK", "ОК"],
+  "Draft limit is used": [
+    "Draft limit is used",
+    "Используется лимит по осадке"
+  ],
+  "Draft limit is not used": [
+    "Draft limit is not used",
+    "Лимит по осадке не используется"
+  ],
+  "Port name": ["Port name", "Имя порта"],
+  "ETA - ETD range overlap with another waypoint": [
+    "ETA - ETD range overlap with another waypoint",
+    "Промежуток ETA - ETD пересекается с другой точкой маршрута"
+  ],
+  "take into account in the criteria": [
+    "Take into account in the criteria",
+    "Учитывать в критериях"
+  ],
+  "Delete anyway": ["Delete anyway", "Удалить все равно"],
+  "Delete waypoint": ["Delete waypoint", "Удалить точку маршрута"],
+  "Container with this waypoint as POL or POD exists": [
+    "Container with this waypoint as POL or POD exists",
+    "существует контейнер с этой точкой маршрута как POL или POD"
+  ]
 }
