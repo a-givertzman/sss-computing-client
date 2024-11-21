@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/accordion/accordion_item.dart';
-
 /// The Accordion widget. It displays a list of [AccordionItem]s.
 /// Each item has a title and a list of children.
 class AccordionWidget<T> extends StatefulWidget {
@@ -15,17 +14,14 @@ class AccordionWidget<T> extends StatefulWidget {
   final List<AccordionItem<T>> items;
   final AccordionItem<T>? current;
   final ValueChanged<AccordionItem<T>> onSelected;
-
   @override
   State<AccordionWidget<T>> createState() => _AccordionWidgetState<T>();
 }
-
 class _AccordionWidgetState<T> extends State<AccordionWidget<T>> {
   @override
   void initState() {
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -47,7 +43,6 @@ class _AccordionWidgetState<T> extends State<AccordionWidget<T>> {
     );
   }
 }
-
 /// Builds an Accordion [item] widget and its children.
 /// And handles all edge cases.
 class _BuildItem<T> extends StatelessWidget {
@@ -58,29 +53,22 @@ class _BuildItem<T> extends StatelessWidget {
     required this.selected,
     required this.onOpened,
   });
-
   /// The item to build
   final AccordionItem<T> item;
-
   /// The currently selected item
   final AccordionItem? selected;
-
   /// The number of [parents]. Used to determine if the item is a parent
   /// or a child.
   final int parents;
-
   /// Called when an item is selected
   final ValueChanged<AccordionItem<T>> onSelected;
-
   /// Called when an item is opened
   final ValueChanged<AccordionItem<T>> onOpened;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final padding = const Setting('padding').toDouble;
     final isParent = parents == 0;
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -110,7 +98,7 @@ class _BuildItem<T> extends StatelessWidget {
             ),
             child: ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: item.children.length,
               itemBuilder: (_, index) {
                 final child = item.children[index];
@@ -127,7 +115,6 @@ class _BuildItem<T> extends StatelessWidget {
       ],
     );
   }
-
   Widget? _buildLeading({required bool isParent, double? padding}) {
     return switch (isParent) {
       true => null,
@@ -139,7 +126,6 @@ class _BuildItem<T> extends StatelessWidget {
         },
     };
   }
-
   TextStyle? _buildTextStyle(
       {required bool isParent, required ThemeData theme}) {
     return switch (isParent) {
@@ -149,7 +135,6 @@ class _BuildItem<T> extends StatelessWidget {
         )
     };
   }
-
   Widget? _buildTrailing(bool isParent) {
     return switch (!isParent || !item.hasChildren) {
       true => null,

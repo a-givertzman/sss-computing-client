@@ -10,7 +10,6 @@ import 'package:sss_computing_client/presentation/loading/loading_page.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
 import 'package:sss_computing_client/presentation/stability/stability_page.dart';
 import 'package:sss_computing_client/presentation/strength/strength_page.dart';
-
 ///
 /// App main navigation widget.
 class NavigationPanel extends StatelessWidget {
@@ -18,7 +17,6 @@ class NavigationPanel extends StatelessWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
-
   ///
   /// Creates app main navigation widget.
   const NavigationPanel({
@@ -153,7 +151,6 @@ class NavigationPanel extends StatelessWidget {
             case 4:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  
                   builder: (context) => LoadingPage(
                     appRefreshStream: _appRefreshStream,
                     fireRefreshEvent: _fireRefreshEvent,
@@ -166,18 +163,10 @@ class NavigationPanel extends StatelessWidget {
             case 5:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => Row(
-                    children: [
-                      NavigationPanel(
-                        selectedPageIndex: 5,
-                        appRefreshStream: _appRefreshStream,
-                        fireRefreshEvent: _fireRefreshEvent,
-                        calculationStatusNotifier: _calculationStatusNotifier,
-                      ),
-                      const Expanded(
-                        child: InfoPage(),
-                      ),
-                    ],
+                  builder: (context) => InfoPage(
+                    appRefreshStream: _appRefreshStream,
+                    fireRefreshEvent: _fireRefreshEvent,
+                    calculationStatusNotifier: _calculationStatusNotifier,
                   ),
                   settings: const RouteSettings(name: '/InfoPage'),
                 ),

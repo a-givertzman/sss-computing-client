@@ -82,8 +82,8 @@ class CargoX1Column implements TableColumn<Cargo, double?> {
   }
   //
   @override
-  Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['x1'] = parseToValue(text),
+  Cargo copyRowWith(Cargo cargo, double? value) => JsonCargo(
+        json: cargo.asMap()..['x1'] = value,
       );
   //
   @override

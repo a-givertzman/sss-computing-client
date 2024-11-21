@@ -78,8 +78,8 @@ class CargoNameColumn implements TableColumn<Cargo, String?> {
   String parseToString(String? value) => value ?? nullValue;
   //
   @override
-  Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['name'] = parseToValue(text),
+  Cargo copyRowWith(Cargo cargo, String? value) => JsonCargo(
+        json: cargo.asMap()..['name'] = value,
       );
   //
   @override

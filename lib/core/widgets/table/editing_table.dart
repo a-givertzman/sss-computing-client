@@ -68,9 +68,9 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
             grow: column.grow,
             sortable: true,
             resizable: column.isResizable,
-            stringValue: column.type == FieldType.string
-                ? (rowData) => column.extractValue(rowData)
-                : null,
+            stringValue: (row) => column.parseToString(
+              column.extractValue(row),
+            ),
             doubleValue: column.type == FieldType.real
                 ? (rowData) => column.extractValue(rowData)
                 : null,
@@ -101,25 +101,14 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
   @override
   Widget build(BuildContext context) {
     _highlightRow(widget._selectedRow);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(
-          height: const Setting('padding', factor: 1.0).toDouble,
-        ),
-        Expanded(
-          flex: 1,
-          child: TableView<T>(
-            model: _model..replaceRows(widget._rows),
-            cellHeight: widget._rowHeight,
-            scrollController: _scrollController,
-            cellPadding: EdgeInsets.zero,
-            onRowTap: (rowData) => widget._onRowTap?.call(rowData),
-            onRowDoubleTap: (rowData) => widget._onRowDoubleTap?.call(rowData),
-            tableBorderColor: Colors.transparent,
-          ),
-        ),
-      ],
+    return TableView<T>(
+      model: _model..replaceRows(widget._rows),
+      cellHeight: widget._rowHeight,
+      scrollController: _scrollController,
+      cellPadding: EdgeInsets.zero,
+      onRowTap: (rowData) => widget._onRowTap?.call(rowData),
+      onRowDoubleTap: (rowData) => widget._onRowDoubleTap?.call(rowData),
+      tableBorderColor: Colors.transparent,
     );
   }
   ///
@@ -180,8 +169,8 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
                     Err(:final error) => Err(error),
                   }) ??
           Future.value(Ok(value)),
-      onSubmitted: (value) => widget._onRowUpdate?.call(
-        column.copyRowWith(row.data, value),
+      onSubmitted: (text) => widget._onRowUpdate?.call(
+        column.copyRowWith(row.data, column.parseToValue(text)),
         row.data,
       ),
       validator: column.validator,

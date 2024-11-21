@@ -67,9 +67,8 @@ class ContainerCheckDigitColumn implements TableColumn<FreightContainer, int> {
   String parseToString(int value) => '$value';
   //
   @override
-  FreightContainer copyRowWith(FreightContainer container, String text) {
-    final newContainerData = container.asMap()
-      ..['checkDigit'] = parseToValue(text);
+  FreightContainer copyRowWith(FreightContainer container, int value) {
+    final newContainerData = container.asMap()..['checkDigit'] = value;
     return JsonFreightContainer.fromRow(newContainerData);
   }
   //

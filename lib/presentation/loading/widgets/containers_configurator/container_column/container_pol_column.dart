@@ -67,9 +67,8 @@ class ContainerPOLColumn implements TableColumn<FreightContainer, int?> {
       value != null ? value.toString() : nullValue;
   //
   @override
-  FreightContainer copyRowWith(FreightContainer container, String text) {
-    final newContainerData = container.asMap()
-      ..['polWaypointId'] = parseToValue(text);
+  FreightContainer copyRowWith(FreightContainer container, int? value) {
+    final newContainerData = container.asMap()..['polWaypointId'] = value;
     return JsonFreightContainer.fromRow(newContainerData);
   }
   //
@@ -91,9 +90,7 @@ class ContainerPOLColumn implements TableColumn<FreightContainer, int?> {
         initialValue: _waypoints.firstWhereOrNull(
           (w) => w.id == container.polWaypointId,
         ),
-        onWaypointChanged: (w) => updateValue(
-          parseToString(w.id),
-        ),
+        onWaypointChanged: (w) => updateValue(w.id),
         buildCustomButton: (onTap) => GestureDetector(
           onTap: onTap,
           child: VoyageWaypointPreview(
