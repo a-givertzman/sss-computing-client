@@ -10,7 +10,7 @@ import 'package:sss_computing_client/core/widgets/table/edit_on_tap_cell.dart';
 ///
 /// Widget that displays [T] list in form of table with editing fields.
 class EditingTable<T> extends StatefulWidget {
-  final List<TableColumn> _columns;
+  final List<TableColumn<T, dynamic>> _columns;
   final List<T> _rows;
   final void Function(T rowData)? _onRowTap;
   final void Function(T rowData)? _onRowDoubleTap;
@@ -31,7 +31,7 @@ class EditingTable<T> extends StatefulWidget {
   /// * [rowHeight] – table row height.
   const EditingTable({
     super.key,
-    required List<TableColumn> columns,
+    required List<TableColumn<T, dynamic>> columns,
     required List<T> rows,
     void Function(T rowData)? onRowTap,
     void Function(T rowData)? onRowDoubleTap,
@@ -115,7 +115,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
   Widget _buildPreviewCell(
     BuildContext context,
     DaviRow<T> row,
-    TableColumn column,
+    TableColumn<T, Object?> column,
   ) {
     return column.buildCell(
           context,
@@ -149,7 +149,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
   Widget _buildEditableCell(
     BuildContext context,
     DaviRow<T> row,
-    TableColumn column,
+    TableColumn<T, Object?> column,
   ) {
     final theme = Theme.of(context);
     return EditOnTapCell(
@@ -185,7 +185,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
   Widget _buildCell(
     BuildContext context,
     DaviRow<T> row,
-    TableColumn column,
+    TableColumn<T, Object?> column,
   ) {
     return column.useDefaultEditing
         ? _buildEditableCell(
