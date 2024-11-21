@@ -44,7 +44,7 @@ class PgWaypoints implements Waypoints {
           w.use_max_draught AS "useDraftLimit"
         FROM waypoint AS w
         WHERE
-          w.ship_id = ${shipId} AND
+          w.ship_id = $shipId AND
           w.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
         ORDER BY eta, etd, id;
       '''),
@@ -202,6 +202,7 @@ class PgWaypoints implements Waypoints {
     return const Ok(null);
   }
   //
+  @override
   Future<Result<int, Failure<String>>> validateContainerReference(
     Waypoint waypoint,
   ) async {
