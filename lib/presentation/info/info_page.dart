@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:provider/provider.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/mini_side_bar/mini_sidebar.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
@@ -9,26 +10,8 @@ import 'widgets/ship/ship_body.dart';
 /// The page is intended for displaying and setting general information
 ///  on the [Ship] and [VoyageDetails].
 class InfoPage extends StatefulWidget {
-  final Stream<DsDataPoint<bool>> _appRefreshStream;
-  final void Function() _fireRefreshEvent;
-  final CalculationStatus _calculationStatusNotifier;
-  ///
-  /// Creates page for configuring ship cargos.
-  ///
-  ///   [appRefreshStream] – stream with events causing data to be updated.
-  ///   [fireRefreshEvent] – callback for triggering refresh event, called
-  /// when calculation succeeds or fails;
-  ///   [calculationStatusNotifier] – passed to control calculation status
-  /// between many instances of calculation button.
-  const InfoPage({
-    super.key,
-    required Stream<DsDataPoint<bool>> appRefreshStream,
-    required void Function() fireRefreshEvent,
-    required CalculationStatus calculationStatusNotifier,
-  })  : _appRefreshStream = appRefreshStream,
-        _fireRefreshEvent = fireRefreshEvent,
-        _calculationStatusNotifier = calculationStatusNotifier;
-  //
+  /// The page is intended for displaying and setting general information
+  const InfoPage({super.key});
   @override
   State<InfoPage> createState() => _InfoPageState();
 }
@@ -61,58 +44,61 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
     final blockPadding = const Setting('blockPadding').toDouble;
     final theme = Theme.of(context);
     return Scaffold(
-      body: Row(
-        children: [
-          NavigationPanel(
-            selectedPageIndex: 5,
-            appRefreshStream: widget._appRefreshStream,
-            fireRefreshEvent: widget._fireRefreshEvent,
-            calculationStatusNotifier: widget._calculationStatusNotifier,
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(blockPadding),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MiniSidebar(
-                    child: Text(
-                      'Info Sidebar', //todo: replace with an image
-                      style: theme.textTheme.bodyMedium,
+      // ignore: deprecated_member_use
+      backgroundColor: theme.colorScheme.background,
+      body: Consumer<CalculationStatus>(
+        builder: (_, status, __) => Row(
+          children: [
+            NavigationPanel(
+              selectedPageIndex: 5,
+              calculationStatusNotifier: status,
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(blockPadding),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MiniSidebar(
+                      child: Text(
+                        'Info Sidebar', // TODO: replace with an image
+                        style: theme.textTheme.bodyMedium,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: blockPadding),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TabBar(
-                          // dividerColor: theme.colorScheme.surface,
-                          controller: _tabController,
-                          indicatorColor: theme.colorScheme.primary,
-                          tabs: _tabs,
-                          indicatorSize: TabBarIndicatorSize.tab,
-                          tabAlignment: TabAlignment.start,
-                          isScrollable: true,
-                        ),
-                        SizedBox(height: blockPadding),
-                        Expanded(
-                          child: TabBarView(
+                    SizedBox(width: blockPadding),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TabBar(
+                            dividerColor: theme.colorScheme.surface,
+                            indicatorColor: theme.colorScheme.primary,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            tabAlignment: TabAlignment.start,
+                            isScrollable: true,
                             controller: _tabController,
-                            children: const [
-                              ShipBody(),
-                              VoyageBody(),
-                            ],
+                            tabs: _tabs,
                           ),
-                        ),
-                      ],
+                          SizedBox(height: blockPadding),
+                          Expanded(
+                            child: TabBarView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              controller: _tabController,
+                              children: const [
+                                ShipBody(),
+                                VoyageBody(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

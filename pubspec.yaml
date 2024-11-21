@@ -37,6 +37,7 @@ dependencies:
   scrollable_positioned_list: ^0.3.8
   flutter_colorpicker: ^1.1.0
   flutter_localization: ^0.2.2
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:

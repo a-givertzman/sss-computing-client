@@ -1,16 +1,13 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:provider/provider.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/drafts/widgets/drafts_page_body.dart';
 ///
 /// Page displaying drafts data.
 class DraftsPage extends StatefulWidget {
-  final Stream<DsDataPoint<bool>> _appRefreshStream;
-  final void Function() _fireRefreshEvent;
-  final CalculationStatus _calculationStatusNotifier;
   ///
   /// Creates page displaying drafts data.
   ///
@@ -19,14 +16,7 @@ class DraftsPage extends StatefulWidget {
   /// when calculation succeeds or fails;
   ///   [calculationStatusNotifier] – passed to control calculation status
   /// between many instances of calculation button.
-  const DraftsPage({
-    super.key,
-    required Stream<DsDataPoint<bool>> appRefreshStream,
-    required void Function() fireRefreshEvent,
-    required CalculationStatus calculationStatusNotifier,
-  })  : _appRefreshStream = appRefreshStream,
-        _fireRefreshEvent = fireRefreshEvent,
-        _calculationStatusNotifier = calculationStatusNotifier;
+  const DraftsPage({super.key});
   //
   @override
   State<DraftsPage> createState() => _DraftsPageState();
@@ -53,23 +43,23 @@ class _DraftsPageState extends State<DraftsPage> {
     return Scaffold(
       // ignore: deprecated_member_use
       backgroundColor: theme.colorScheme.background,
-      body: Row(
-        children: [
-          NavigationPanel(
-            selectedPageIndex: 3,
-            appRefreshStream: widget._appRefreshStream,
-            fireRefreshEvent: widget._fireRefreshEvent,
-            calculationStatusNotifier: widget._calculationStatusNotifier,
-          ),
-          Expanded(
-            child: DraftsPageBody(
-              appRefreshStream: widget._appRefreshStream,
-              apiAddress: _apiAddress,
-              dbName: _dbName,
-              authToken: _authToken,
+      body: Consumer<CalculationStatus>(
+        builder: (_, status, __) => Row(
+          children: [
+            NavigationPanel(
+              selectedPageIndex: 3,
+              calculationStatusNotifier: status,
             ),
-          ),
-        ],
+            Expanded(
+              child: DraftsPageBody(
+                appRefreshStream: status.refreshStream,
+                apiAddress: _apiAddress,
+                dbName: _dbName,
+                authToken: _authToken,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
