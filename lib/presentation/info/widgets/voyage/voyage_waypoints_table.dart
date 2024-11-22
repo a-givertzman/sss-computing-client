@@ -54,13 +54,13 @@ class _VoyageWaypointsTableState extends State<VoyageWaypointsTable> {
         name: '',
         width: 32.0,
         defaultValue: Colors.transparent,
-        extractValue: (row) => row.color,
+        extractValue: (waypoint) => waypoint.color,
         parseToValue: (String text) => HexColor(text).color(),
         copyRowWith: (w, color) => JsonWaypoint.fromRow(
           w.asMap()..['color'] = color.value.toRadixString(16),
         ),
-        buildCell: (_, row, updateValue) => ColorLabelPicker(
-          color: row.color,
+        buildCell: (_, waypoint, updateValue) => ColorLabelPicker(
+          color: waypoint.color,
           updateColor: updateValue,
           themeData: Theme.of(context),
         ),
@@ -71,7 +71,7 @@ class _VoyageWaypointsTableState extends State<VoyageWaypointsTable> {
         useDefaultEditing: true,
         width: 160.0,
         defaultValue: '',
-        extractValue: (row) => row.portName,
+        extractValue: (waypoint) => waypoint.portName,
         parseToValue: (String text) => text,
         copyRowWith: (w, portName) =>
             JsonWaypoint.fromRow(w.asMap()..['portName'] = portName),
@@ -82,7 +82,7 @@ class _VoyageWaypointsTableState extends State<VoyageWaypointsTable> {
         useDefaultEditing: true,
         width: 160.0,
         defaultValue: '',
-        extractValue: (row) => row.portCode,
+        extractValue: (waypoint) => waypoint.portCode,
         parseToValue: (String text) => text,
         copyRowWith: (w, portCode) =>
             JsonWaypoint.fromRow(w.asMap()..['portCode'] = portCode),
@@ -92,7 +92,7 @@ class _VoyageWaypointsTableState extends State<VoyageWaypointsTable> {
         name: const Localized('ETA').v,
         grow: 1.0,
         defaultValue: DateTime.now(),
-        extractValue: (row) => row.eta,
+        extractValue: (waypoint) => waypoint.eta,
         parseToValue: (String text) =>
             DateTime.tryParse(text) ?? DateTime.now(),
         parseToString: (DateTime value) => value.formatRU(),
@@ -109,41 +109,36 @@ class _VoyageWaypointsTableState extends State<VoyageWaypointsTable> {
         name: const Localized('ETD').v,
         grow: 1.0,
         defaultValue: DateTime.now(),
-        extractValue: (row) => row.etd,
+        extractValue: (waypoint) => waypoint.etd,
         parseToValue: (String text) =>
             DateTime.tryParse(text) ?? DateTime.now(),
         parseToString: (DateTime value) => value.formatRU(),
         copyRowWith: (w, etd) =>
             JsonWaypoint.fromRow(w.asMap()..['etd'] = etd.toString()),
-        buildCell: (_, row, updateValue) => DateTimeLabelPicker(
-          dateTime: row.etd,
+        buildCell: (_, waypoint, updateValue) => DateTimeLabelPicker(
+          dateTime: waypoint.etd,
           updateDateTime: updateValue,
           themeData: Theme.of(context),
         ),
       ),
       EditingTableColumn<Waypoint, None>(
-        key: 'checkEtaEtdRange',
+        key: 'timingStatus',
         name: const Localized('Status').v,
         width: 96.0,
         headerAlignment: Alignment.centerRight,
         defaultValue: const None(),
         extractValue: (_) => const None(),
         parseToValue: (_) => const None(),
-        buildCell: (_, row, __) => Align(
+        buildCell: (_, waypoint, __) => Align(
           alignment: Alignment.centerRight,
           child: StatusLabel(
             theme: Theme.of(context),
             errorColor: Theme.of(context).stateColors.error,
             okColor: Colors.green,
-            errorMessage: _waypoints.any(
-              (w) => w.id != row.id
-                  ? row.eta.isBefore(w.etd) && row.etd.isAfter(w.eta)
-                  : false,
-            )
-                ? const Localized(
-                    'ETA - ETD range overlap with another waypoint',
-                  ).v
-                : null,
+            errorMessage: switch (_validateWaypoint(waypoint)) {
+              Ok() => null,
+              Err(:final error) => error,
+            },
           ),
         ),
       ),
@@ -159,7 +154,7 @@ class _VoyageWaypointsTableState extends State<VoyageWaypointsTable> {
         headerAlignment: Alignment.centerRight,
         cellAlignment: Alignment.centerRight,
         defaultValue: 0.0,
-        extractValue: (row) => row.draftLimit,
+        extractValue: (waypoint) => waypoint.draftLimit,
         parseToValue: (String text) => double.parse(text),
         parseToString: (double value) => value.toStringAsFixed(2),
         copyRowWith: (w, draftLimit) =>
@@ -171,16 +166,16 @@ class _VoyageWaypointsTableState extends State<VoyageWaypointsTable> {
         grow: 1.0,
         headerAlignment: Alignment.centerRight,
         defaultValue: false,
-        extractValue: (row) => row.useDraftLimit,
+        extractValue: (waypoint) => waypoint.useDraftLimit,
         parseToValue: (String text) => bool.parse(text),
         parseToString: (bool value) => value.toString(),
         copyRowWith: (w, useDraftLimit) =>
             JsonWaypoint.fromRow(w.asMap()..['useDraftLimit'] = useDraftLimit),
         cellAlignment: Alignment.center,
-        buildCell: (_, row, updateValue) => Align(
+        buildCell: (_, waypoint, updateValue) => Align(
           alignment: Alignment.centerRight,
           child: UseDraftLimitLabel(
-            useDraftLimit: row.useDraftLimit,
+            useDraftLimit: waypoint.useDraftLimit,
             updateUseDraftLimit: updateValue,
             theme: Theme.of(context),
           ),
@@ -344,6 +339,33 @@ class _VoyageWaypointsTableState extends State<VoyageWaypointsTable> {
       });
     });
   }
+  //
+  Result<void, String> _validateWaypoint(Waypoint waypoint) =>
+      const Ok<void, String>(null)
+          .andThen((_) => _validateWaypointTimesOrder(waypoint))
+          .andThen((_) => _validateWaypointTimesOverlap(waypoint));
+  //
+  Result<void, String> _validateWaypointTimesOverlap(
+    Waypoint waypoint,
+  ) =>
+      _waypoints.any(
+        (w) => w.id != waypoint.id
+            ? waypoint.eta.isBefore(w.etd) && waypoint.etd.isAfter(w.eta)
+            : false,
+      )
+          ? Err(const Localized(
+              'ETA - ETD range overlap with another waypoint',
+            ).v)
+          : const Ok(null);
+  //
+  Result<void, String> _validateWaypointTimesOrder(
+    Waypoint waypoint,
+  ) =>
+      waypoint.etd.isBefore(waypoint.eta)
+          ? Err(const Localized(
+              'ETA must be before ETD',
+            ).v)
+          : const Ok(null);
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;

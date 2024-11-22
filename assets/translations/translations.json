@@ -341,6 +341,10 @@
     "Unknown field to update",
     "Неизвестное поле для обновления"
   ],
+  "no rows updated": [
+    "Record for updating not found",
+    "Запись для обновления не обнаружена"
+  ],
   "Cancel": ["Cancel", "Отмена"],
   "Confirm": ["Confirm", "Подтвердить"],
   "Ok": ["OK", "ОК"],

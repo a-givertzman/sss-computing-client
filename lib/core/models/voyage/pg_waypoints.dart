@@ -55,9 +55,6 @@ class PgWaypoints implements Waypoints {
   //
   @override
   Future<Result<Waypoint, Failure<String>>> add(Waypoint waypoint) async {
-    final validateTiming = await _validateTiming(waypoint);
-    final validateResult = validateTiming;
-    if (validateResult case Err(:final error)) return Err(error);
     final shipId = const Setting('shipId').toInt;
     final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
@@ -141,10 +138,6 @@ class PgWaypoints implements Waypoints {
     Waypoint newData,
     Waypoint oldData,
   ) async {
-    final validateId = _validateId(newData, oldData);
-    final validateTiming = await _validateTiming(newData);
-    final validateResult = validateId.and(validateTiming);
-    if (validateResult case Err(:final error)) return Err(error);
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       database: _dbName,
@@ -251,65 +244,16 @@ class PgWaypoints implements Waypoints {
           SET
             pol_waypoint_id = NULL
           WHERE
-            pol_waypoint_id = 20;
+            pol_waypoint_id = ${waypoint.id};
           UPDATE
             container
           SET
             pod_waypoint_id = NULL
           WHERE
-            pod_waypoint_id = 40;
+            pod_waypoint_id = ${waypoint.id};
         END \$\$;
       '''),
     );
     return sqlAccess.fetch().convertFailure();
-  }
-  //
-  Future<Result<void, Failure<String>>> _validateTiming(
-    Waypoint waypoint,
-  ) async {
-    // [waypoint].eta must be before or equal to [waypoint].etd
-    if (waypoint.eta.isAfter(waypoint.etd)) {
-      return Err(Failure(
-        message: 'ETA must be before ETD',
-        stackTrace: StackTrace.current,
-      ));
-    }
-    return const Ok(null);
-    // [waypoint].eta - [waypoint].etd range must not overlap with another waypoint
-    // final sqlAccess = SqlAccess(
-    //   address: _apiAddress,
-    //   database: _dbName,
-    //   authToken: _authToken ?? '',
-    //   sqlBuilder: (_, __) => Sql(sql: '''
-    //     SELECT
-    //       w.id AS "id"
-    //     FROM waypoint AS w
-    //     WHERE
-    //       w.id != ${waypoint.id} AND
-    //       w.ship_id = ${waypoint.shipId} AND
-    //       w.project_id IS NOT DISTINCT FROM ${waypoint.projectId ?? 'NULL'} AND
-    //       (
-    //         TIMESTAMP '${waypoint.eta.toString()}' < w.etd AND
-    //         TIMESTAMP '${waypoint.etd.toString()}' > w.eta
-    //       )
-    //     ;
-    //   '''),
-    // );
-    // const errorMessage =
-    //     'checking of ETA-ETD range overlap with another waypoint failed';
-    // return sqlAccess.fetch().convertFailure().then(
-    //       (result) => switch (result) {
-    //         Ok(value: final rows) => rows.isEmpty
-    //             ? const Ok(null)
-    //             : Err(Failure(
-    //                 message: errorMessage,
-    //                 stackTrace: StackTrace.current,
-    //               )),
-    //         Err() => Err(Failure(
-    //             message: errorMessage,
-    //             stackTrace: StackTrace.current,
-    //           )),
-    //       },
-    //     );
   }
 }
