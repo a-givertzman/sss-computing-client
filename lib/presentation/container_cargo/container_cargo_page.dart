@@ -123,8 +123,8 @@ class _ContainerCargoPageState extends State<ContainerCargoPage> {
         'grossWeight': fieldsValues['grossWeight'],
         'maxGrossWeight': fieldsValues['maxGrossWeight'],
         'tareWeight': fieldsValues['tareWeight'],
-        'polWaypointId': (fieldsValues['pol'] as Waypoint).id,
-        'podWaypointId': (fieldsValues['pod'] as Waypoint).id,
+        'polWaypointId': (fieldsValues['pol'] as Waypoint?)?.id,
+        'podWaypointId': (fieldsValues['pod'] as Waypoint?)?.id,
       },
     );
   }

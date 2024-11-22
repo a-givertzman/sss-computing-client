@@ -138,6 +138,8 @@ class PgWaypoints implements Waypoints {
     Waypoint newData,
     Waypoint oldData,
   ) async {
+    final validateResult = _validateId(newData, oldData);
+    if (validateResult case Err(:final error)) return Err(error);
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       database: _dbName,

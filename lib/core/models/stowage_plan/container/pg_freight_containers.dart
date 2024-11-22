@@ -210,11 +210,14 @@ class PgFreightContainers implements FreightContainers {
           FROM waypoint AS w
         )
         SELECT
-          wo_pol.order AS "polOrder",
-          wo_pod.order AS "podOrder"
+          wo_pol.order::INT AS "polOrder",
+          wo_pod.order::INT AS "podOrder"
         FROM (
           VALUES
-            ${containers.map((container) => '(${container.polWaypointId}, ${container.podWaypointId})').join(',\n')}
+            ${containers.map(
+                (container) =>
+                    '(${container.polWaypointId}::INT, ${container.podWaypointId}::INT)',
+              ).join(',\n')}
         ) AS container_ports(pol_id, pod_id)
         LEFT JOIN waypoint_order AS wo_pol ON wo_pol.id IS NOT DISTINCT FROM container_ports.pol_id
         LEFT JOIN waypoint_order AS wo_pod ON wo_pod.id IS NOT DISTINCT FROM container_ports.pod_id;
@@ -223,8 +226,12 @@ class PgFreightContainers implements FreightContainers {
     );
     return sqlAccess.fetch().convertFailure().then(
           (result) => switch (result) {
-            Ok(value: final rows) =>
-              rows.any((row) => row['polOrder'] >= row['podOrder'])
+            Ok(value: final rows) => rows.any((row) {
+                if (row['polOrder'] == null || row['podOrder'] == null) {
+                  return false;
+                }
+                return row['podOrder'] < row['polOrder'];
+              })
                   ? const Localized('POL must be before POD').v
                   : null,
             Err() => const Localized('Check of POL and POD order fails.').v,
