@@ -63,6 +63,11 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
         const Setting('opacityLow').toDouble,
       ),
     );
+    final shipId = const Setting('shipId').toInt;
+    final minX = const Setting('shipMinX').toDouble;
+    final maxX = const Setting('shipMaxX').toDouble;
+    final minY = const Setting('shipMinY').toDouble;
+    final maxY = const Setting('shipMaxY').toDouble;
     return FutureBuilderWidget(
       refreshStream: widget._appRefreshStream,
       onFuture: FieldRecord<PathProjections>(
@@ -74,7 +79,7 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
         toValue: (value) => JsonSvgPathProjections(
           json: json.decode(value),
         ),
-        filter: {'id': 1},
+        filter: {'id': shipId},
       ).fetch,
       caseData: (context, hullProjections, _) => FutureBuilderWidget(
         onFuture: PgDrafts(
@@ -121,10 +126,10 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
                         SizedBox(height: padding),
                         SchemeLayout(
                           fit: BoxFit.contain,
-                          minX: -65.0,
-                          maxX: 65.0,
-                          minY: -15.0,
-                          maxY: 15.0,
+                          minX: minX,
+                          maxX: maxX,
+                          minY: minY,
+                          maxY: maxY,
                           yAxisReversed: false,
                           buildContent: (context, transform) => Stack(
                             children: [
@@ -137,8 +142,8 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
                                         ..color = Colors.blue.withOpacity(0.25)
                                         ..style = PaintingStyle.fill,
                                     ],
-                                    start: Vector3(-65.0, -15.0, 0.0),
-                                    end: Vector3(65.0, 15.0, 0.0),
+                                    start: Vector3(minX, minY, 0.0),
+                                    end: Vector3(maxX, maxY, 0.0),
                                   ),
                                   PathProjectionsFigure(
                                     paints: [
@@ -159,22 +164,22 @@ class _DraftsPageBodyState extends State<DraftsPageBody> {
                                         ..strokeWidth = 2.0
                                         ..style = PaintingStyle.stroke,
                                     ],
-                                    start: Vector3(-65.0, 0.0, 0.0),
-                                    end: Vector3(65.0, 0.0, 0.0),
+                                    start: Vector3(minX, 0.0, 0.0),
+                                    end: Vector3(maxX, 0.0, 0.0),
                                   ),
                                 ],
                                 layoutTransform: transform,
                               ),
                               SchemeText(
                                 text: const Localized('PS').v,
-                                offset: const Offset(0.0, -15.0),
+                                offset: Offset(0.0, minY),
                                 alignment: const Alignment(0.0, 2.0),
                                 style: labelStyle,
                                 layoutTransform: transform,
                               ),
                               SchemeText(
                                 text: const Localized('SB').v,
-                                offset: const Offset(0.0, 15.0),
+                                offset: Offset(0.0, maxY),
                                 alignment: const Alignment(0.0, -2.0),
                                 style: labelStyle,
                                 layoutTransform: transform,

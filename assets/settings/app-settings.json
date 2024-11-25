@@ -23,10 +23,16 @@
     "api-database": "sss-computing",
     "comment": "db / stdout",
     "report": "db",
-    "shipMinX": -70.0,
-    "shipMaxX": 70.0,
+    "shipMinX": -5.0,
+    "shipMaxX": 136.0,
     "shipMinY": -10.0,
     "shipMaxY": 10.0,
-    "shipMinZ": -3.0,
-    "shipMaxZ": 21.0
+    "shipMinZ": -4.0,
+    "shipMaxZ": 28.0,
+    "shipMinWithGapX": -5.0,
+    "shipMaxWithGapX": 136.0,
+    "shipMinWithGapY": -16.0,
+    "shipMaxWithGapY": 16.0,
+    "shipMinWithGapZ": -2.0,
+    "shipMaxWithGapZ": 30.0
 }

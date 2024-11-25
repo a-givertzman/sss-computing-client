@@ -99,6 +99,13 @@ class _CargoSchemesState extends State<CargoSchemes> {
   Widget build(BuildContext context) {
     final padding = const Setting('padding').toDouble;
     final blockPadding = const Setting('blockPadding').toDouble;
+    final minX = const Setting('shipMinX').toDouble;
+    final maxX = const Setting('shipMaxX').toDouble;
+    final minY = const Setting('shipMinY').toDouble;
+    final maxY = const Setting('shipMaxY').toDouble;
+    final minZ = const Setting('shipMinZ').toDouble;
+    final maxZ = const Setting('shipMaxZ').toDouble;
+    final yTopViewGap = (maxZ - minZ) - (maxY - minY);
     final axis = ChartAxis(
       valueInterval: 10.0,
       isLabelsVisible: _viewOptions.contains(CargoSchemeViewOption.showAxes),
@@ -144,13 +151,13 @@ class _CargoSchemesState extends State<CargoSchemes> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Flexible(
-                      flex: 5,
+                      flex: 1,
                       child: CargoScheme(
                         caption: const Localized('Side').v,
-                        minX: -65.0,
-                        maxX: 65.0,
-                        minY: -5.0,
-                        maxY: 20.0,
+                        minX: minX,
+                        maxX: maxX,
+                        minY: minZ,
+                        maxY: maxZ,
                         xAxis: axis,
                         yAxis: axis,
                         framesTheoretical: _viewOptions.contains(
@@ -177,13 +184,13 @@ class _CargoSchemesState extends State<CargoSchemes> {
                     ),
                     SizedBox(height: padding),
                     Flexible(
-                      flex: 6,
+                      flex: 1,
                       child: CargoScheme(
                         caption: const Localized('Top').v,
-                        minX: -65.0,
-                        maxX: 65.0,
-                        minY: -15.0,
-                        maxY: 15.0,
+                        minX: minX,
+                        maxX: maxX,
+                        minY: minY - yTopViewGap / 2,
+                        maxY: maxY + yTopViewGap / 2,
                         xAxis: axis,
                         yAxis: axis,
                         framesTheoretical: _viewOptions.contains(
@@ -217,10 +224,10 @@ class _CargoSchemesState extends State<CargoSchemes> {
                 child: CargoScheme(
                   caption:
                       '${const Localized('AFT').v}→${const Localized('FWD').v}',
-                  minX: -10.0,
-                  maxX: 10.0,
-                  minY: -5.0,
-                  maxY: 20.0,
+                  minX: minY,
+                  maxX: maxY,
+                  minY: minZ,
+                  maxY: maxZ,
                   xAxis: axis,
                   yAxis: axis,
                   xAxisReversed: false,

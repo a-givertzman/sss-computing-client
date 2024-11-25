@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/criterion/criterion.dart';
 import 'package:sss_computing_client/core/models/criterion/criterions.dart';
@@ -26,6 +27,8 @@ class PgDraughtCriterions implements Criterions {
   //
   @override
   Future<Result<List<Criterion>, Failure<String>>> fetchAll() async {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -44,7 +47,10 @@ class PgDraughtCriterions implements Criterions {
                 cv.criterion_id = c.id
               LEFT JOIN unit AS u ON
                 c.unit_id = u.id
-            WHERE cv.ship_id = 1 AND c.category_id = 2
+            WHERE
+              cv.ship_id = $shipId AND
+              cv.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'} AND
+              c.category_id = 2
             ORDER BY c.id;
             """,
       ),

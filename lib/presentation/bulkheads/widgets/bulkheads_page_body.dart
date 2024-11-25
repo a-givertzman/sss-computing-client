@@ -68,6 +68,7 @@ class _BulkheadsPageBodyState extends State<BulkheadsPageBody> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Flexible(
+                      flex: 5,
                       child: BulkheadPlacesSection(
                         bulkheadHeight: widget._bulkheadHeight,
                         label: const Localized('Hold').v,
@@ -88,6 +89,7 @@ class _BulkheadsPageBodyState extends State<BulkheadsPageBody> {
                     ),
                     SizedBox(width: blockPadding),
                     Flexible(
+                      flex: 1,
                       child: BulkheadRemovedSection(
                         bulkheadHeight: widget._bulkheadHeight,
                         label: const Localized('Overboard').v,
@@ -175,6 +177,10 @@ class _BulkheadsPageBodyState extends State<BulkheadsPageBody> {
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
-    BottomMessage.error(message: message).show(context);
+    final durationMs = const Setting('errorMessageDisplayDuration').toInt;
+    BottomMessage.error(
+      message: message,
+      displayDuration: Duration(milliseconds: durationMs),
+    ).show(context);
   }
 }

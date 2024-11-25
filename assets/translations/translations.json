@@ -403,5 +403,6 @@
   "Deleting of this waypoint will clear all container's POL and POD record with this waypoint": [
     "Deleting of this waypoint will clear all container's POL and POD record with this waypoint",
     "Удаление этой точки маршрута приведет к сбросу всех записей о POL и POD для контейнеров, связанных с этой точкой"
-  ]
+  ],
+  "30ft_indicator": ["*", "*"]
 }

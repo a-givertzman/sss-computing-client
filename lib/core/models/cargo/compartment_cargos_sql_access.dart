@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 ///
@@ -29,6 +30,8 @@ class CompartmentCargosSqlAccess {
   ///
   /// Retrieves and returns list of compartment [Cargo].
   Future<ResultF<List<Cargo>>> fetch() {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final filterQuery = _filter?.entries
         .map(
           (entry) => switch (entry.value) {
@@ -47,7 +50,7 @@ class CompartmentCargosSqlAccess {
               c.project_id AS "projectId",
               c.ship_id AS "shipId",
               c.id AS "id",
-              c.name AS "name",
+              c.name_rus AS "name",
               c.mass AS "mass",
               c.volume AS "volume",
               c.density AS "density",
@@ -81,7 +84,8 @@ class CompartmentCargosSqlAccess {
               JOIN cargo_category AS cc ON c.category_id = cc.id
               JOIN cargo_general_category AS cgc ON cc.general_category_id = cgc.id
             WHERE
-              ship_id = 1
+              ship_id = $shipId
+              AND project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
               ${filterQuery == null ? '' : 'AND ($filterQuery)'}
             ORDER BY
               name;

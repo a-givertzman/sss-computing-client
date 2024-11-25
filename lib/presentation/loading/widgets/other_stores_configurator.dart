@@ -73,6 +73,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
   @override
   Widget build(BuildContext context) {
     final blockPadding = const Setting('blockPadding').toDouble;
+    final shipId = const Setting('shipId').toInt;
     return Padding(
       padding: EdgeInsets.all(blockPadding),
       child: Column(
@@ -104,7 +105,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                     toValue: (value) => JsonSvgPathProjections(
                       json: json.decode(value),
                     ),
-                    filter: {'id': 1},
+                    filter: {'id': shipId},
                   ).fetch,
                   caseData: (context, hull, _) => FutureBuilderWidget(
                     refreshStream: widget._appRefreshStream,
@@ -117,7 +118,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
                       toValue: (value) => JsonSvgPathProjections(
                         json: json.decode(value),
                       ),
-                      filter: {'id': 1},
+                      filter: {'id': shipId},
                     ).fetch,
                     caseData: (context, hullBeauty, _) => CargoSchemes(
                       cargos: _cargos,

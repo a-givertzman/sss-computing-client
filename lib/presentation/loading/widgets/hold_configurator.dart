@@ -77,6 +77,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
   @override
   Widget build(BuildContext context) {
     final blockPadding = const Setting('blockPadding').toDouble;
+    final shipId = const Setting('shipId').toInt;
     final navigator = Navigator.of(context);
     return Padding(
       padding: EdgeInsets.all(blockPadding),
@@ -109,7 +110,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                     toValue: (value) => JsonSvgPathProjections(
                       json: json.decode(value),
                     ),
-                    filter: {'id': 1},
+                    filter: {'id': shipId},
                   ).fetch,
                   caseData: (context, hull, _) => FutureBuilderWidget(
                     refreshStream: widget._appRefreshStream,
@@ -122,7 +123,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                       toValue: (value) => JsonSvgPathProjections(
                         json: json.decode(value),
                       ),
-                      filter: {'id': 1},
+                      filter: {'id': shipId},
                     ).fetch,
                     caseData: (context, hullBeauty, _) => CargoSchemes(
                       cargos: _cargos,
