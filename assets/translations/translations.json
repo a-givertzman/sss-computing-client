@@ -287,7 +287,7 @@
   "voyageCode": ["Voyage code", "Код рейса"],
   "icingTypes": ["Icing", "Обледенение"],
   "waterAreaTypes": ["Water area", "Акватория"],
-  "draftMarkTypes": ["Load line", "Грузовая марка"],
+  "loadLineTypes": ["Load line", "Грузовая марка"],
   "wettingDeck": [
     "Wetting of deck timber cargo",
     "Намокание палубного лесного груза"
@@ -302,6 +302,35 @@
   "summer": ["Summer", "Летняя"],
   "winter": ["Winter", "Зимняя"],
   "light": ["Light", "Легкая"],
+  "Winter North Atlantic": [
+    "Winter North Atlantic",
+    "Зимняя в Северной Атлантике"
+  ],
+  "Tropical": ["Tropical", "Тропическая"],
+  "Fresh water in summer": [
+    "Fresh water in summer",
+    "Летняя в пресной воде"
+  ],
+  "Tropical fresh water": [
+    "Tropical fresh water",
+    "Тропическая в пресной воде"
+  ],
+  "Summer timber": ["Summer timber", "Лесная летняя"],
+  "Winter timber": ["Winter timber", "Лесная зимняя"],
+  "Winter North Atlantic timber": [
+    "Winter North Atlantic timber",
+    "Лесная зимняя в Северной Атлантике"
+  ],
+  "Tropical timber": ["Tropical timber", "Лесная тропическая"],
+  "Fresh water in summer timber": [
+    "Fresh water in summer timber",
+    "Лесная летняя в пресной воде"
+  ],
+  "Tropical fresh water timber": [
+    "Tropical fresh water timber",
+    "Лесная тропическая в пресной воде"
+  ],
+  "Subdivision LL": ["Subdivision LL", "ГВЛ деления на отсеки"],
   "harbor": ["Harbor", "Порт"],
   "sea": ["Sea", "Море"],
   "general": ["General", "Общие"],

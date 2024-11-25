@@ -176,7 +176,7 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
               .updateWaterAreaType(value)
               .then(_handleDetailsUpdate),
         );
-      case 'draftMarkTypes':
+      case 'loadLineTypes':
         return _BuildDropdownButton(
           items: widget._details.loadLine.options,
           initialValue: widget._details.loadLine.active,
