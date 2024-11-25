@@ -54,7 +54,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
   late final List<Waypoint> _waypoints;
   late final ItemScrollController _bayPairsScrollController;
   late final ItemPositionsListener _bayPairsPositionsListener;
-  late List<({int? odd, int? even})> _bayPairs;
+  late List<({int? odd, int? even, bool isThirtyFt})> _bayPairs;
   late List<Slot> _selectedSlots;
   late int? _selectedContainerId;
   //
@@ -65,7 +65,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     _waypoints = widget._waypoints;
     _bayPairsScrollController = ItemScrollController();
     _bayPairsPositionsListener = ItemPositionsListener.create();
-    _bayPairs = _stowagePlan.iterateBayPairs().toList();
+    _bayPairs = _getBayPairs();
     _selectedSlots = [];
     _selectedContainerId = null;
     super.initState();
@@ -87,10 +87,12 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
               itemBuilder: (_, index) => BayPairScheme(
                 oddBayNumber: _bayPairs[index].odd,
                 evenBayNumber: _bayPairs[index].even,
+                isThirtyFt: _bayPairs[index].isThirtyFt,
                 slots: _stowagePlan.toFilteredSlotList(
                   shouldIncludeSlot: (slot) =>
                       (slot.bay == _bayPairs[index].odd ||
-                          slot.bay == _bayPairs[index].even),
+                          slot.bay == _bayPairs[index].even) &&
+                      slot.isThirtyFt == _bayPairs[index].isThirtyFt,
                 ),
                 isFlyoverSlot: _isFlyoverSlot,
                 shouldRenderEmptySlot: _filterSlotsByContainerSelected,
@@ -106,8 +108,9 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
                 selectedSlots: _selectedSlots
                     .where(
                       (s) =>
-                          s.bay == _bayPairs[index].odd ||
-                          s.bay == _bayPairs[index].even,
+                          (s.bay == _bayPairs[index].odd ||
+                              s.bay == _bayPairs[index].even) &&
+                          s.isThirtyFt == _bayPairs[index].isThirtyFt,
                     )
                     .toList(),
               ),
@@ -179,6 +182,28 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
         ],
       ),
     );
+  }
+  //
+  List<({int? odd, int? even, bool isThirtyFt})> _getBayPairs() {
+    final allBays = _stowagePlan.iterateBayPairs().toList();
+    final resultBays = <({int? odd, int? even, bool isThirtyFt})>[];
+    for (final bay in allBays) {
+      final notThirtyFt = _stowagePlan.toFilteredSlotList(
+        shouldIncludeSlot: (slot) =>
+            (slot.bay == bay.odd || slot.bay == bay.even) && !slot.isThirtyFt,
+      );
+      final thirtyFt = _stowagePlan.toFilteredSlotList(
+        shouldIncludeSlot: (slot) =>
+            (slot.bay == bay.odd || slot.bay == bay.even) && slot.isThirtyFt,
+      );
+      if (notThirtyFt.isNotEmpty) {
+        resultBays.add((odd: bay.odd, even: bay.even, isThirtyFt: false));
+      }
+      if (thirtyFt.isNotEmpty) {
+        resultBays.add((odd: bay.odd, even: bay.even, isThirtyFt: true));
+      }
+    }
+    return resultBays;
   }
   //
   Slot? _findSlotWithContainerId(int? containerId) {

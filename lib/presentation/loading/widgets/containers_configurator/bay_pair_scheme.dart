@@ -15,6 +15,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/containers_con
 class BayPairScheme extends StatefulWidget {
   final int? _oddBayNumber;
   final int? _evenBayNumber;
+  final bool _isThirtyFt;
   final List<Slot> _slots;
   final List<Slot> _selectedSlots;
   final void Function(int bay, int row, int tier)? _onSlotTap;
@@ -39,6 +40,7 @@ class BayPairScheme extends StatefulWidget {
     required int? oddBayNumber,
     required int? evenBayNumber,
     required List<Slot> selectedSlots,
+    required bool isThirtyFt,
     void Function(int, int, int)? onSlotTap,
     void Function(int, int, int)? onSlotDoubleTap,
     void Function(int, int, int)? onSlotSecondaryTap,
@@ -49,6 +51,7 @@ class BayPairScheme extends StatefulWidget {
         _evenBayNumber = evenBayNumber,
         _slots = slots,
         _selectedSlots = selectedSlots,
+        _isThirtyFt = isThirtyFt,
         _onSlotTap = onSlotTap,
         _onSlotDoubleTap = onSlotDoubleTap,
         _onSlotSecondaryTap = onSlotSecondaryTap,
@@ -117,8 +120,8 @@ class _BayPairSchemeState extends State<BayPairScheme> {
       const Setting('shipMaxY').toDouble
     );
     final (minY, maxY) = (
-      const Setting('shipMinZ').toDouble,
-      const Setting('shipMaxZ').toDouble
+      const Setting('shipMinWithGapZ').toDouble,
+      const Setting('shipMaxWithGapZ').toDouble
     );
     const schemeHorizontalPad = 1.0;
     const schemeVerticalPad = 1.0;
@@ -233,6 +236,7 @@ class _BayPairSchemeState extends State<BayPairScheme> {
             text: const Localized('Bay No.').v +
                 BayPairTitle(
                   withFortyFoots: _withFourtyFtContainers,
+                  isThirtyFt: widget._isThirtyFt,
                   oddBayNumber: widget._oddBayNumber,
                   evenBayNumber: widget._evenBayNumber,
                 ).title(),

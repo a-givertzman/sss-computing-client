@@ -6,7 +6,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/containers_con
 ///
 /// Widget to display bay pairs with certain bay pairs highlighted.
 class BayPairIndication extends StatelessWidget {
-  final List<({int? odd, int? even})> _bayPairs;
+  final List<({int? odd, int? even, bool isThirtyFt})> _bayPairs;
   final ItemPositionsListener _bayPairsPositionsListener;
   final ItemScrollController _bayPairsScrollController;
   final StowageCollection _stowagePlan;
@@ -19,7 +19,7 @@ class BayPairIndication extends StatelessWidget {
   /// [stowagePlan] used to determine slots associated with each item of bay pairs.
   const BayPairIndication({
     super.key,
-    required List<({int? even, int? odd})> bayPairs,
+    required List<({int? even, int? odd, bool isThirtyFt})> bayPairs,
     required ItemPositionsListener bayPairsPositionsListener,
     required ItemScrollController bayPairsScrollController,
     required StowageCollection stowagePlan,
@@ -67,6 +67,7 @@ class BayPairIndication extends StatelessWidget {
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
               child: BayPairNumber(
+                isThirtyFt: _bayPairs[index].isThirtyFt,
                 isVisible:
                     min != null && max != null && index >= min && index <= max,
                 oddBayNumber: _bayPairs[index].odd,

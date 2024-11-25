@@ -14,13 +14,21 @@ class FakeStowageCollection implements StowageCollection {
   FakeStowageCollection._(List<Slot> slots) : _slots = slots;
   ///
   factory FakeStowageCollection.fromSlots(List<Slot> slots) {
-    return FakeStowageCollection._(slots.map((s) => s.copy()).toList());
+    return FakeStowageCollection._(slots
+        .map(
+          (s) => s.copy(),
+        )
+        .toList());
   }
   //
   @override
-  Slot? findSlot(int bay, int row, int tier) {
+  Slot? findSlot(int bay, int row, int tier, {bool isThirtyFt = false}) {
     return _slots.firstWhereOrNull(
-      (slot) => slot.bay == bay && slot.row == row && slot.tier == tier,
+      (slot) =>
+          slot.bay == bay &&
+          slot.row == row &&
+          slot.tier == tier &&
+          slot.isThirtyFt == isThirtyFt,
     );
   }
   //
@@ -38,9 +46,13 @@ class FakeStowageCollection implements StowageCollection {
   }
   //
   @override
-  void removeSlot(int bay, int row, int tier) {
+  void removeSlot(int bay, int row, int tier, {bool isThirtyFt = false}) {
     _slots.removeWhere(
-      (slot) => slot.bay == bay && slot.row == row && slot.tier == tier,
+      (slot) =>
+          slot.bay == bay &&
+          slot.row == row &&
+          slot.tier == tier &&
+          slot.isThirtyFt == isThirtyFt,
     );
   }
   //
@@ -54,6 +66,7 @@ class FakeStowageCollection implements StowageCollection {
     int? bay,
     int? row,
     int? tier,
+    bool? isThirtyFt,
     bool Function(Slot slot)? shouldIncludeSlot,
   }) {
     List<Slot> filteredSlots = _slots;
@@ -65,6 +78,10 @@ class FakeStowageCollection implements StowageCollection {
     }
     if (tier != null) {
       filteredSlots = filteredSlots.where((slot) => slot.tier == tier).toList();
+    }
+    if (isThirtyFt != null) {
+      filteredSlots =
+          filteredSlots.where((slot) => slot.isThirtyFt == isThirtyFt).toList();
     }
     if (shouldIncludeSlot != null) {
       filteredSlots =
