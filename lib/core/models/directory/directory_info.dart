@@ -19,7 +19,7 @@ abstract interface class DirectoryInfo {
 }
 
 /// Directory info with subdirectories and assets
-class AssetsDirectoryInfo implements DirectoryInfo {
+final class AssetsDirectoryInfo implements DirectoryInfo {
   @override
   final String name;
   @override

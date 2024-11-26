@@ -9,7 +9,7 @@ abstract interface class DirectoryInfoMerger {
   List<DirectoryInfo> merge();
 }
 
-class AssetsDirectoryInfoMerger implements DirectoryInfoMerger {
+final class AssetsDirectoryInfoMerger implements DirectoryInfoMerger {
   @override
   final List<AssetsDirectoryInfo> dirs;
   AssetsDirectoryInfoMerger(this.dirs);

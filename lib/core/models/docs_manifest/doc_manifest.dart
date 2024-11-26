@@ -23,7 +23,7 @@ abstract interface class DocumentManifest<T> {
 }
 
 /// Handle asset loading for markdown docs
-class MarkdownManifest implements DocumentManifest<AssetsDirectoryInfo> {
+final class MarkdownManifest implements DocumentManifest<AssetsDirectoryInfo> {
   @override
   final String path;
 

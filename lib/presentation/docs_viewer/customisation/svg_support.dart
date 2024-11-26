@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
 /// A [SpanNode] for [local] and [remote] SVGs.
-class SvgNode extends SpanNode {
+final class SvgNode extends SpanNode {
   final Map<String, String> attributes;
   final MarkdownConfig config;
   final double? width;

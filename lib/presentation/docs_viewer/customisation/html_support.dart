@@ -6,7 +6,7 @@ import 'package:html/dom_parsing.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
 /// a helper class with HTML supports methods
-class HtmlSupport {
+final class HtmlSupport {
   static final RegExp svgReg =
       RegExp(r'<svg[^>]*>', multiLine: true, caseSensitive: true);
 

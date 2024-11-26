@@ -4,7 +4,7 @@ import 'package:sss_computing_client/presentation/docs_viewer/customisation/html
 import 'package:sss_computing_client/presentation/docs_viewer/customisation/svg_support.dart';
 
 /// A customised [ElementNode] that supports HTML, SVG manipulations
-class CustomTextNode extends ElementNode {
+final class CustomTextNode extends ElementNode {
   final String text;
   final MarkdownConfig config;
   final WidgetVisitor visitor;

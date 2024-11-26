@@ -18,3 +18,15 @@ mkdir -p $config_dir && \
     echo -e '/reference/' >> "$config_dir/sparse-checkout" && \
     echo -e '/assets/image/' >> "$config_dir/sparse-checkout"
 git submodule update --init --force --checkout -- assets/info
+
+rm -rf assets/docs
+rm -rf assets/reference
+rm -rf  assets/image
+
+mv -f assets/info/docs/ assets/docs
+mv -f assets/info/assets/image/ assets/image
+mv -f assets/info/reference/ assets/reference
+
+rm -rf assets/info/docs/
+rm -rf assets/info/reference/
+rm -rf assets/info/assets/

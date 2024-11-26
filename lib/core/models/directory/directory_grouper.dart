@@ -9,7 +9,7 @@ abstract interface class DirectoryGrouper {
 }
 
 /// Groups assets directories
-class AssestDirectoryInfoGrouper implements DirectoryGrouper {
+final class AssestDirectoryInfoGrouper implements DirectoryGrouper {
   final List<String> paths;
   final String parentPath;
   AssestDirectoryInfoGrouper(

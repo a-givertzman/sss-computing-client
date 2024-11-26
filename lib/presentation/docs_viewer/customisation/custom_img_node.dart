@@ -4,7 +4,7 @@ import 'package:sss_computing_client/presentation/docs_viewer/customisation/svg_
 /// Custom node to support [SVG]s and images
 ///
 /// Supports both local and remote [SVG]s
-class CustomImgNode {
+final class CustomImgNode {
   /// Attributes of the node like [src], [alt]
   final Map<String, String> attributes;
 
