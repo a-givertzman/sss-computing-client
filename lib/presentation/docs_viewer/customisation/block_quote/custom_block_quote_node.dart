@@ -7,7 +7,7 @@ import 'package:sss_computing_client/presentation/docs_viewer/customisation/bloc
 ///
 /// A block quote marker, optionally preceded by up to three spaces of indentation
 /// The custome blockquote node supports Alerts
-class CustomBlockquoteNode extends ElementNode {
+final class CustomBlockquoteNode extends ElementNode {
   final BlockquoteConfig config;
   final WidgetVisitor visitor;
   final BlockQuoteAlert alert;

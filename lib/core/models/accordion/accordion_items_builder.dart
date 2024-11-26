@@ -18,7 +18,7 @@ abstract interface class AccordionItems<T, A> {
 }
 
 /// Creates [AccordionItem]s from [AssetsDirectoryInfo]s
-class AssetsAccordions
+final class AssetsAccordions
     implements AccordionItems<AssetsDirectoryInfo, List<String>> {
   @override
   final List<AssetsDirectoryInfo> items;

@@ -14,7 +14,7 @@ abstract interface class AccordionModel<T> {
   AccordionItem<T>? get currentItem;
 }
 
-class MarkdownAccordionModel implements AccordionModel<List<String>> {
+final class MarkdownAccordionModel implements AccordionModel<List<String>> {
   @override
   final List<AccordionItem<List<String>>> items;
 

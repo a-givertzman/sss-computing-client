@@ -68,7 +68,6 @@ flutter:
     - assets/image/program_sheets/ru/sheet05_loading/tab04_bulkCargo/
     - assets/image/program_sheets/ru/sheet05_loading/tab06_containers/
     - assets/docs/user-guide/ru/
-    - assets/docs/mock/
     - assets/reference/
     - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/
     - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-1_clasification.pdf
@@ -80,7 +79,7 @@ flutter:
     - assets/docs/user-guide/ru/part08_stability/
     - assets/docs/user-guide/ru/part06_draft/
     - assets/docs/user-guide/ru/part07_strength/
-    - assets/docs/user-guide/ru/part01_overview/chapter01_programm/
+    - assets/docs/user-guide/ru/part01_overview/chapter01_prorgamm/
     - assets/docs/user-guide/ru/part01_overview/chapter02_ship/
     - assets/docs/user-guide/ru/part05_loading/chapter01_ballast/
     - assets/docs/user-guide/ru/part05_loading/chapter02_storeTanks/

@@ -51,7 +51,6 @@ class __BuildBodyState extends State<_BuildBody> {
   @override
   void initState() {
     _tocController = TocController();
-
     super.initState();
   }
 

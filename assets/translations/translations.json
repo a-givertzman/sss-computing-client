@@ -273,6 +273,7 @@
   ],
   "part03_mainScreen": ["Part 03. Main Screen", "Часть 03. Главный экран"],
   "part04_shipInfo": ["Part 04. Ship info", "Часть 04. Информация по судну"],
+  "part03_shipInfo": ["Part 04. Ship info", "Часть 04. Информация по судну"],
   "part05_loading": ["Part 05. Loading", "Часть 05. Загрузка судна"],
   "part06_draft": ["Part 06. Draft", "Часть 06. Посадка"],
   "part08_stability": ["Part 08. Stability", "Часть 08. Остойчивость"],
@@ -405,6 +406,10 @@
     "Section 04. Damage of stability",
     "Глава 04. Аварийная остойчивость"
   ],
+  "chapter01_prorgamm": [
+    "Chapter 01. Programme information",
+    "Глава 01. Сведения о программе"
+  ],
   "chapter01_programm": [
     "Chapter 01. Programme information",
     "Глава 01. Сведения о программе"
@@ -448,5 +453,13 @@
   "chapter04_check": [
     "Chapter 04. Periodic inspections",
     "Глава 04. Периодические проверки"
+  ],
+  "chapter01_shipInfo": [
+    "Chapter 01. Ship info",
+    "Глава 01. Основные данные по судну"
+  ],
+  "chapter02_wayinfo": [
+    "Chapter 02. Flight details",
+    "Глава 02. Данные по рейсу"
   ]
 }
