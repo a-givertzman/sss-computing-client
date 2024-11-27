@@ -88,6 +88,7 @@ class PgStowageCollection {
     required int bay,
     required int row,
     required int tier,
+    required bool isThirtyFt,
   }) async {
     final backup = _stowageCollection.copy();
     final putResult = PutContainerOperation(
@@ -95,6 +96,7 @@ class PgStowageCollection {
       bay: bay,
       row: row,
       tier: tier,
+      isThirtyFt: isThirtyFt,
     ).execute(_stowageCollection);
     final alreadyOccupiedSlot = backup
         .toFilteredSlotList(
@@ -103,10 +105,17 @@ class PgStowageCollection {
         .firstOrNull;
     final delResult = switch (alreadyOccupiedSlot) {
       null => const Ok<void, Failure>(null),
-      Slot(:final bay, :final row, :final tier) => RemoveContainerOperation(
+      Slot(
+        :final bay,
+        :final row,
+        :final tier,
+        :final isThirtyFt,
+      ) =>
+        RemoveContainerOperation(
           bay: bay,
           row: row,
           tier: tier,
+          isThirtyFt: isThirtyFt,
         ).execute(_stowageCollection),
     };
     final saveResult = switch (putResult.and(delResult)) {
@@ -125,12 +134,14 @@ class PgStowageCollection {
     required int bay,
     required int row,
     required int tier,
+    required bool isThirtyFt,
   }) async {
     final backup = _stowageCollection.copy();
     final removeResult = RemoveContainerOperation(
       bay: bay,
       row: row,
       tier: tier,
+      isThirtyFt: isThirtyFt,
     ).execute(_stowageCollection);
     final saveResult = switch (removeResult) {
       Ok() => await _save(),

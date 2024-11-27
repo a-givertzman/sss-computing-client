@@ -18,9 +18,24 @@ class BayPairScheme extends StatefulWidget {
   final bool _isThirtyFt;
   final List<Slot> _slots;
   final List<Slot> _selectedSlots;
-  final void Function(int bay, int row, int tier)? _onSlotTap;
-  final void Function(int bat, int row, int tier)? _onSlotDoubleTap;
-  final void Function(int bat, int row, int tier)? _onSlotSecondaryTap;
+  final void Function(
+    int bay,
+    int row,
+    int tier,
+    bool isThirtyFt,
+  )? _onSlotTap;
+  final void Function(
+    int bat,
+    int row,
+    int tier,
+    bool isThirtyFt,
+  )? _onSlotDoubleTap;
+  final void Function(
+    int bat,
+    int row,
+    int tier,
+    bool isThirtyFt,
+  )? _onSlotSecondaryTap;
   final bool Function(Slot slot)? _isFlyoverSlot;
   final bool Function(Slot slot)? _shouldRenderEmptySlot;
   ///
@@ -41,9 +56,9 @@ class BayPairScheme extends StatefulWidget {
     required int? evenBayNumber,
     required List<Slot> selectedSlots,
     required bool isThirtyFt,
-    void Function(int, int, int)? onSlotTap,
-    void Function(int, int, int)? onSlotDoubleTap,
-    void Function(int, int, int)? onSlotSecondaryTap,
+    void Function(int, int, int, bool)? onSlotTap,
+    void Function(int, int, int, bool)? onSlotDoubleTap,
+    void Function(int, int, int, bool)? onSlotSecondaryTap,
     bool Function(Slot)? isFlyoverSlot,
     bool Function(Slot)? shouldRenderEmptySlot,
     List<Slot> slots = const [],
@@ -167,16 +182,19 @@ class _BayPairSchemeState extends State<BayPairScheme> {
                       slot.bay,
                       slot.row,
                       slot.tier,
+                      slot.isThirtyFt,
                     ),
                     onDoubleTap: () => widget._onSlotDoubleTap?.call(
                       slot.bay,
                       slot.row,
                       slot.tier,
+                      slot.isThirtyFt,
                     ),
                     onSecondaryTap: () => widget._onSlotSecondaryTap?.call(
                       slot.bay,
                       slot.row,
                       slot.tier,
+                      slot.isThirtyFt,
                     ),
                   ),
                 ),
@@ -196,16 +214,19 @@ class _BayPairSchemeState extends State<BayPairScheme> {
                       slot.bay,
                       slot.row,
                       slot.tier,
+                      slot.isThirtyFt,
                     ),
                     onDoubleTap: () => widget._onSlotDoubleTap?.call(
                       slot.bay,
                       slot.row,
                       slot.tier,
+                      slot.isThirtyFt,
                     ),
                     onSecondaryTap: () => widget._onSlotSecondaryTap?.call(
                       slot.bay,
                       slot.row,
                       slot.tier,
+                      slot.isThirtyFt,
                     ),
                   ),
                 ),
@@ -220,16 +241,18 @@ class _BayPairSchemeState extends State<BayPairScheme> {
                   isSelected: true,
                 ).slotFigure(slot),
                 layoutTransform: transform,
-                onTap: () => widget._onSlotTap?.call(-1, -1, -1),
+                onTap: () => widget._onSlotTap?.call(-1, -1, -1, false),
                 onDoubleTap: () => widget._onSlotDoubleTap?.call(
                   slot.bay,
                   slot.row,
                   slot.tier,
+                  slot.isThirtyFt,
                 ),
                 onSecondaryTap: () => widget._onSlotSecondaryTap?.call(
                   slot.bay,
                   slot.row,
                   slot.tier,
+                  slot.isThirtyFt,
                 ),
               ),
             ),
