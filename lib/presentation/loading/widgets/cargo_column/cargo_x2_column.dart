@@ -6,6 +6,7 @@ import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
+import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
 /// Creates [TableColumn] for [Cargo] x2.
@@ -65,13 +66,13 @@ class CargoX2Column implements TableColumn<Cargo, double?> {
   @override
   Validator? get validator => const Validator(
         cases: [
-          MinLengthValidationCase(1),
+          RequiredValidationCase(),
           RealValidationCase(),
         ],
       );
   //
   @override
-  double? extractValue(Cargo cargo) => cargo.lcg;
+  double? extractValue(Cargo cargo) => cargo.x2;
   //
   @override
   double? parseToValue(String text) => double.tryParse(text);

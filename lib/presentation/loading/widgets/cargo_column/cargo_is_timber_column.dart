@@ -9,34 +9,34 @@ import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/check_box_cell_widget.dart';
 ///
-/// [TableColumn] for hold [Cargo] shiftable.
-class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
+/// [TableColumn] for [Cargo] isTimber field.
+class CargoIsTimberColumn implements TableColumn<Cargo, bool> {
   final ThemeData _theme;
   final ValueRecord<bool> Function(
     Cargo data,
     bool Function(String text) toValue,
   ) _buildRecord;
   ///
-  /// Creates [TableColumn] for hold [Cargo] shiftable.
+  /// Creates [TableColumn] for [Cargo] isTimber.
   ///
-  ///   [buildRecord] build [ValueRecord] for hold [Cargo] shiftable field.
-  const HoldCargoShiftableColumn({
+  ///  * [buildRecord] build [ValueRecord] for [Cargo] isTimber field.
+  const CargoIsTimberColumn({
     required ValueRecord<bool> Function(
       Cargo,
       bool Function(String),
     ) buildRecord,
     required ThemeData theme,
-  })  : _theme = theme,
-        _buildRecord = buildRecord;
+  })  : _buildRecord = buildRecord,
+        _theme = theme;
   //
   @override
-  String get key => 'shiftable';
+  String get key => 'isTimber';
   //
   @override
   FieldType get type => FieldType.bool;
   //
   @override
-  String get name => const Localized('Shiftable').v;
+  String get name => const Localized('isTimber').v;
   //
   @override
   String get nullValue => '—';
@@ -66,7 +66,7 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
   Validator? get validator => null;
   //
   @override
-  bool extractValue(Cargo cargo) => cargo.shiftable;
+  bool extractValue(Cargo cargo) => cargo.isTimber;
   //
   @override
   bool parseToValue(String text) =>
@@ -77,7 +77,7 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
   //
   @override
   Cargo copyRowWith(Cargo cargo, bool value) => JsonCargo(
-        json: cargo.asMap()..['shiftable'] = value,
+        json: cargo.asMap()..['isTimber'] = value,
       );
   //
   @override
@@ -92,7 +92,7 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
     return Theme(
       data: _theme,
       child: CheckboxCellWidget(
-        value: cargo.shiftable,
+        value: cargo.isTimber,
         onUpdate: (value) => _buildRecord(cargo, parseToValue)
             .persist(value.toString())
             .convertFailure()

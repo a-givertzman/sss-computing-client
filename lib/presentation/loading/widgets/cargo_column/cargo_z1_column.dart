@@ -9,19 +9,19 @@ import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
-/// [TableColumn] for [Cargo] TCG.
-class CargoTCGColumn implements TableColumn<Cargo, double?> {
+/// Creates [TableColumn] for [Cargo] z1.
+class CargoZ1Column implements TableColumn<Cargo, double?> {
   final bool _useDefaultEditing;
   final ValueRecord<double?> Function(
     Cargo data,
     double? Function(String text) toValue,
   )? _buildRecord;
   ///
-  /// Creates [TableColumn] for [Cargo] TCG.
+  /// Creates [TableColumn] for [Cargo] z1.
   ///
   ///   [useDefaultEditing] either standard [EditingTable] editor is used or not.
-  ///   [buildRecord] build [ValueRecord] for [Cargo] TCG field.
-  const CargoTCGColumn({
+  ///   [buildRecord] build [ValueRecord] for [Cargo] z1 field.
+  const CargoZ1Column({
     bool useDefaultEditing = false,
     ValueRecord<double?> Function(
       Cargo,
@@ -31,13 +31,13 @@ class CargoTCGColumn implements TableColumn<Cargo, double?> {
         _buildRecord = buildRecord;
   //
   @override
-  String get key => 'tcg';
+  String get key => 'z1';
   //
   @override
   FieldType get type => FieldType.real;
   //
   @override
-  String get name => '${const Localized('TCG').v} [${const Localized('m').v}]';
+  String get name => '${const Localized('z1').v} [${const Localized('m').v}]';
   //
   @override
   String get nullValue => '—';
@@ -72,7 +72,7 @@ class CargoTCGColumn implements TableColumn<Cargo, double?> {
       );
   //
   @override
-  double? extractValue(Cargo cargo) => cargo.tcg;
+  double? extractValue(Cargo cargo) => cargo.z1;
   //
   @override
   double? parseToValue(String text) => double.tryParse(text);
@@ -84,7 +84,7 @@ class CargoTCGColumn implements TableColumn<Cargo, double?> {
   //
   @override
   Cargo copyRowWith(Cargo cargo, double? value) => JsonCargo(
-        json: cargo.asMap()..['tcg'] = value,
+        json: cargo.asMap()..['z1'] = value,
       );
   //
   @override

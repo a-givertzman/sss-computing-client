@@ -16,7 +16,7 @@ class ContainerCodeColumn implements TableColumn<FreightContainer, String> {
   String get key => 'code';
   //
   @override
-  FieldType get type => FieldType.int;
+  FieldType get type => FieldType.string;
   //
   @override
   String get name => '';
@@ -49,7 +49,7 @@ class ContainerCodeColumn implements TableColumn<FreightContainer, String> {
   Validator? get validator => const Validator(
         cases: [
           RequiredValidationCase(),
-          MinLengthValidationCase(1),
+          RequiredValidationCase(),
           MaxLengthValidationCase(1),
         ],
       );

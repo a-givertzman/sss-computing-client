@@ -6,6 +6,7 @@ import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
+import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
 /// Creates [TableColumn] for [Cargo] weight.
@@ -65,7 +66,7 @@ class CargoWeightColumn implements TableColumn<Cargo, double?> {
   @override
   Validator? get validator => const Validator(
         cases: [
-          MinLengthValidationCase(1),
+          RequiredValidationCase(),
           RealValidationCase(),
         ],
       );
@@ -78,7 +79,7 @@ class CargoWeightColumn implements TableColumn<Cargo, double?> {
   //
   @override
   String parseToString(double? value) {
-    return (value ?? 0.0).toStringAsFixed(1);
+    return (value ?? 0).toStringAsFixed(2);
   }
   //
   @override
