@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/extensions/strings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo_use_max_mfs_record.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_all_cargos.dart';
@@ -303,7 +304,7 @@ class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
   void _showErrorMessage(String message) {
     if (!mounted) return;
     BottomMessage.error(
-      message: message,
+      message: message.truncate(),
       displayDuration: Duration(
         milliseconds: const Setting('errorMessageDisplayDuration').toInt,
       ),

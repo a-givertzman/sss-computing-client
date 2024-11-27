@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/extensions/strings.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead_place.dart';
 import 'package:sss_computing_client/core/models/bulkheads/pg_bulkhead_places.dart';
 import 'package:sss_computing_client/core/models/bulkheads/pg_bulkheads.dart';
@@ -182,7 +183,7 @@ class _BulkheadsPageBodyState extends State<BulkheadsPageBody> {
   void _showErrorMessage(String message) {
     if (!mounted) return;
     BottomMessage.error(
-      message: message,
+      message: message.truncate(),
       displayDuration: Duration(
         milliseconds: const Setting('errorMessageDisplayDuration').toInt,
       ),

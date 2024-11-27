@@ -5,6 +5,7 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/extensions/date_time.dart';
 import 'package:sss_computing_client/core/extensions/lists.dart';
+import 'package:sss_computing_client/core/extensions/strings.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/hex_color.dart';
 import 'package:sss_computing_client/core/models/voyage/json_waypoint.dart';
@@ -374,7 +375,7 @@ class _VoyageWaypointsTableState extends State<VoyageWaypointsTable> {
     if (!mounted) return;
     final durationMs = const Setting('errorMessageDisplayDuration').toInt;
     BottomMessage.error(
-      message: message,
+      message: message.truncate(),
       displayDuration: Duration(milliseconds: durationMs),
     ).show(context);
   }

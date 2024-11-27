@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/extensions/strings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_others.dart';
@@ -396,7 +397,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
   void _showErrorMessage(String message) {
     if (!mounted) return;
     BottomMessage.error(
-      message: message,
+      message: message.truncate(),
       displayDuration: Duration(
         milliseconds: const Setting('errorMessageDisplayDuration').toInt,
       ),

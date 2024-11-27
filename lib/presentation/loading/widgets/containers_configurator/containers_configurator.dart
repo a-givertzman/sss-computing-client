@@ -4,6 +4,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:sss_computing_client/core/extensions/strings.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/container/freight_container.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/container/freight_containers.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/slot/slot.dart';
@@ -448,7 +449,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
   void _showErrorMessage(String message) {
     if (!mounted) return;
     BottomMessage.error(
-      message: message,
+      message: message.truncate(),
       displayDuration: Duration(
         milliseconds: const Setting('errorMessageDisplayDuration').toInt,
       ),
