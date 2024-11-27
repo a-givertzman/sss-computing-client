@@ -17,20 +17,24 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_x1_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_x2_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_y1_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_y2_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_z1_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_z2_column.dart';
 ///
-/// Form for configuration of other stores cargo.
-class OtherStoresCargoBody extends StatefulWidget {
+/// Form for configuration of general cargo.
+class GeneralCargoBody extends StatefulWidget {
   final Future<ResultF<List<FieldData>>> Function(List<FieldData>) _onSave;
   final Cargo _cargo;
   final bool _fetchData;
   ///
-  /// Creates form for configuration of other stores cargo.
+  /// Creates form for configuration of general cargo.
   ///
   /// [onSave] callbacks run after saving edited data
   ///
   /// [cargo] is instance of [Cargo] to be configured.
   /// Data for the the [cargo] will be fetched if [fetchData] is true.
-  const OtherStoresCargoBody({
+  const GeneralCargoBody({
     super.key,
     required Future<ResultF<List<FieldData>>> Function(List<FieldData>) onSave,
     required Cargo cargo,
@@ -40,10 +44,10 @@ class OtherStoresCargoBody extends StatefulWidget {
         _fetchData = fetchData;
   //
   @override
-  State<OtherStoresCargoBody> createState() => _OtherStoresCargoBodyState();
+  State<GeneralCargoBody> createState() => _GeneralCargoBodyState();
 }
 ///
-class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
+class _GeneralCargoBodyState extends State<GeneralCargoBody> {
   late final ApiAddress _apiAddress;
   late final String _dbName;
   late final String? _authToken;
@@ -172,6 +176,62 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                     toValue: toValue,
                   ),
                 ),
+                CargoY1Column(
+                  buildRecord: (cargo, toValue) => FieldRecord<double?>(
+                    dbName: _dbName,
+                    apiAddress: ApiAddress(
+                      host: _apiAddress.host,
+                      port: _apiAddress.port,
+                    ),
+                    authToken: _authToken,
+                    tableName: 'compartment',
+                    fieldName: 'bound_y1',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
+                ),
+                CargoY2Column(
+                  buildRecord: (cargo, toValue) => FieldRecord<double?>(
+                    dbName: _dbName,
+                    apiAddress: ApiAddress(
+                      host: _apiAddress.host,
+                      port: _apiAddress.port,
+                    ),
+                    authToken: _authToken,
+                    tableName: 'compartment',
+                    fieldName: 'bound_y2',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
+                ),
+                CargoZ1Column(
+                  buildRecord: (cargo, toValue) => FieldRecord<double?>(
+                    dbName: _dbName,
+                    apiAddress: ApiAddress(
+                      host: _apiAddress.host,
+                      port: _apiAddress.port,
+                    ),
+                    authToken: _authToken,
+                    tableName: 'compartment',
+                    fieldName: 'bound_z1',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
+                ),
+                CargoZ2Column(
+                  buildRecord: (cargo, toValue) => FieldRecord<double?>(
+                    dbName: _dbName,
+                    apiAddress: ApiAddress(
+                      host: _apiAddress.host,
+                      port: _apiAddress.port,
+                    ),
+                    authToken: _authToken,
+                    tableName: 'compartment',
+                    fieldName: 'bound_z2',
+                    filter: {'id': cargo.id},
+                    toValue: toValue,
+                  ),
+                ),
               ],
             ),
             compoundValidations: [
@@ -215,6 +275,94 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                   Ok(value: true) => const Ok(null),
                   Ok(value: false) => Err(Failure(
                       message: const Localized('X1 !< X2').v,
+                      stackTrace: StackTrace.current,
+                    )),
+                },
+              ),
+              CompoundFieldDataValidation(
+                ownId: 'y1',
+                otherId: 'tcg',
+                validateValues: (y1, tcg) =>
+                    switch (const LessThanOrEqualTo().process(
+                  double.tryParse(y1) ?? 0.0,
+                  double.tryParse(tcg) ?? 0.0,
+                )) {
+                  Ok(value: true) => const Ok(null),
+                  Ok(value: false) => Err(Failure(
+                      message: const Localized('Y1 !≤ Yg').v,
+                      stackTrace: StackTrace.current,
+                    )),
+                },
+              ),
+              CompoundFieldDataValidation(
+                ownId: 'tcg',
+                otherId: 'y2',
+                validateValues: (tcg, y2) =>
+                    switch (const LessThanOrEqualTo().process(
+                  double.tryParse(tcg) ?? 0.0,
+                  double.tryParse(y2) ?? 0.0,
+                )) {
+                  Ok(value: true) => const Ok(null),
+                  Ok(value: false) => Err(Failure(
+                      message: const Localized('Yg !≤ Y2').v,
+                      stackTrace: StackTrace.current,
+                    )),
+                },
+              ),
+              CompoundFieldDataValidation(
+                ownId: 'y1',
+                otherId: 'y2',
+                validateValues: (y1, y2) => switch (const LessThan().process(
+                  double.tryParse(y1) ?? 0.0,
+                  double.tryParse(y2) ?? 0.0,
+                )) {
+                  Ok(value: true) => const Ok(null),
+                  Ok(value: false) => Err(Failure(
+                      message: const Localized('Y1 !< Y2').v,
+                      stackTrace: StackTrace.current,
+                    )),
+                },
+              ),
+              CompoundFieldDataValidation(
+                ownId: 'z1',
+                otherId: 'vcg',
+                validateValues: (z1, vcg) =>
+                    switch (const LessThanOrEqualTo().process(
+                  double.tryParse(z1) ?? 0.0,
+                  double.tryParse(vcg) ?? 0.0,
+                )) {
+                  Ok(value: true) => const Ok(null),
+                  Ok(value: false) => Err(Failure(
+                      message: const Localized('Z1 !≤ Zg').v,
+                      stackTrace: StackTrace.current,
+                    )),
+                },
+              ),
+              CompoundFieldDataValidation(
+                ownId: 'vcg',
+                otherId: 'z2',
+                validateValues: (vcg, z2) =>
+                    switch (const LessThanOrEqualTo().process(
+                  double.tryParse(vcg) ?? 0.0,
+                  double.tryParse(z2) ?? 0.0,
+                )) {
+                  Ok(value: true) => const Ok(null),
+                  Ok(value: false) => Err(Failure(
+                      message: const Localized('Zg !≤ Z2').v,
+                      stackTrace: StackTrace.current,
+                    )),
+                },
+              ),
+              CompoundFieldDataValidation(
+                ownId: 'z1',
+                otherId: 'z2',
+                validateValues: (z1, z2) => switch (const LessThan().process(
+                  double.tryParse(z1) ?? 0.0,
+                  double.tryParse(z2) ?? 0.0,
+                )) {
+                  Ok(value: true) => const Ok(null),
+                  Ok(value: false) => Err(Failure(
+                      message: const Localized('Z1 !< Z2').v,
                       stackTrace: StackTrace.current,
                     )),
                 },
