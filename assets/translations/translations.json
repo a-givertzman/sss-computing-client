@@ -415,5 +415,7 @@
   "Load container": ["Load container", "Загрузить контейнер"],
   "Unload container": ["Unload container", "Выгрузить контейнер"],
   "Correction": ["correction", "поправка"],
-  "inf": ["∞", "∞"]
+  "inf": ["∞", "∞"],
+  "deg": ["°", "°"],
+  "draught": ["Draught", "Осадка"]
 }

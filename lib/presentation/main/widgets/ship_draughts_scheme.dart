@@ -151,7 +151,7 @@ class ShipDraughtsScheme extends StatelessWidget {
                         ),
                         SchemeText(
                           text:
-                              '${const Localized('Heel').v} ${heelAngle.toStringAsFixed(2)}${const Localized('°').v}',
+                              '${const Localized('Heel').v} ${heelAngle.toStringAsFixed(2)}${const Localized('deg').v}',
                           alignment: const Alignment(0.0, 2.0),
                           offset: Offset(0.0, maxZ),
                           style: labelStyle,
@@ -223,7 +223,7 @@ class ShipDraughtsScheme extends StatelessWidget {
                         ),
                         SchemeText(
                           text:
-                              '${const Localized('Trim').v} ${trimAngle.toStringAsFixed(2)}${const Localized('°').v}',
+                              '${const Localized('Trim').v} ${trimAngle.toStringAsFixed(2)}${const Localized('deg').v}',
                           alignment: const Alignment(0.0, 2.0),
                           offset: Offset(0.0, maxZ),
                           style: labelStyle,

@@ -16,14 +16,17 @@ import 'package:sss_computing_client/presentation/strength/strength_page.dart';
 class NavigationPanel extends StatelessWidget {
   final int? _selectedPageIndex;
   final CalculationStatus _calculationStatusNotifier;
+  final Widget? _trailing;
   ///
   /// Creates app main navigation widget.
   const NavigationPanel({
     super.key,
     required int? selectedPageIndex,
     required CalculationStatus calculationStatusNotifier,
+    Widget? trailing,
   })  : _selectedPageIndex = selectedPageIndex,
-        _calculationStatusNotifier = calculationStatusNotifier;
+        _calculationStatusNotifier = calculationStatusNotifier,
+        _trailing = trailing;
   //
   @override
   Widget build(BuildContext context) {
@@ -53,6 +56,14 @@ class NavigationPanel extends StatelessWidget {
             calculationStatusNotifier: _calculationStatusNotifier,
           ),
         ),
+        trailing: _trailing != null
+            ? Expanded(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: _trailing,
+                ),
+              )
+            : null,
         destinations: [
           NavigationRailDestination(
             icon: const Icon(Icons.home_outlined),

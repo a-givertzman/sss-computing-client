@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sss_computing_client/core/models/strength/strength_forces_limited.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
+import 'package:sss_computing_client/core/widgets/general_info_widget.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_page_body.dart';
 ///
@@ -48,6 +49,9 @@ class _StrengthPageState extends State<StrengthPage> {
             NavigationPanel(
               selectedPageIndex: widget._pageIndex,
               calculationStatusNotifier: status,
+              trailing: GeneralInfoWidget(
+                appRefreshStream: status.refreshStream,
+              ),
             ),
             Expanded(
               child: FutureBuilderWidget(
