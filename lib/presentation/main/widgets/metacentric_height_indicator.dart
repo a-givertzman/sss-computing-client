@@ -124,9 +124,11 @@ class MetacentricHeightIndicator extends StatelessWidget {
   }
   //
   Widget _buildCaseData({required double? low, required double? high}) {
+    final infSymbol = const Localized('inf').v;
+    final andSymbol = const Localized('and').v;
     return Tooltip(
       message:
-          '> ${low?.toStringAsFixed(2) ?? '-inf'} ${const Localized('and').v} < ${high?.toStringAsFixed(2) ?? 'inf'}',
+          '> ${low?.toStringAsFixed(2) ?? '-$infSymbol'} $andSymbol < ${high?.toStringAsFixed(2) ?? infSymbol}',
       child: FCircularValueIndicator(
         future: FieldRecord<double>(
           tableName: 'parameter_data',

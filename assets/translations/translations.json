@@ -413,5 +413,7 @@
   "Add container": ["Add container", "Добавить контейнер"],
   "Delete container": ["Delete container", "Удалить контейнер"],
   "Load container": ["Load container", "Загрузить контейнер"],
-  "Unload container": ["Unload container", "Выгрузить контейнер"]
+  "Unload container": ["Unload container", "Выгрузить контейнер"],
+  "Correction": ["correction", "поправка"],
+  "inf": ["∞", "∞"]
 }

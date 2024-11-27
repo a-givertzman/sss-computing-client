@@ -15,7 +15,7 @@
     "opacityLow": 0.75,
     "opacityHigh": 0.25,
     "calculationScriptName": "sss-computing-strength",
-    "shipId": 2,
+    "shipId": 1,
     "projectId": "null",
     "api-host": "0.0.0.0",
     "api-port": 8080,
