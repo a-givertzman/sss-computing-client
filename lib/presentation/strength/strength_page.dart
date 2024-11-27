@@ -9,8 +9,12 @@ import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_page_body.dart';
 ///
 class StrengthPage extends StatefulWidget {
+  final int _pageIndex;
   ///
-  const StrengthPage({super.key});
+  const StrengthPage({
+    super.key,
+    required int pageIndex,
+  }) : _pageIndex = pageIndex;
   //
   @override
   State<StrengthPage> createState() => _StrengthPageState();
@@ -42,7 +46,7 @@ class _StrengthPageState extends State<StrengthPage> {
         builder: (_, status, __) => Row(
           children: [
             NavigationPanel(
-              selectedPageIndex: 1,
+              selectedPageIndex: widget._pageIndex,
               calculationStatusNotifier: status,
             ),
             Expanded(

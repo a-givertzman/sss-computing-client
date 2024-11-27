@@ -116,13 +116,15 @@ class _BayPairSchemeState extends State<BayPairScheme> {
     final labelStyle = theme.textTheme.labelLarge;
     const figurePlane = FigurePlane.yz;
     final (minX, maxX) = (
-      const Setting('shipMinY').toDouble,
-      const Setting('shipMaxY').toDouble
+      const Setting('shipMinY_m').toDouble,
+      const Setting('shipMaxY_m').toDouble
     );
     final (minY, maxY) = (
-      const Setting('shipMinWithGapZ').toDouble,
-      const Setting('shipMaxWithGapZ').toDouble
+      const Setting('shipMinWithGapZ_m').toDouble,
+      const Setting('shipMaxWithGapZ_m').toDouble
     );
+    final holdDeckSeparationZ =
+        const Setting('shipHoldDeckSeparationZ_m').toDouble;
     const schemeHorizontalPad = 1.0;
     const schemeVerticalPad = 1.0;
     return SchemeLayout(
@@ -249,7 +251,7 @@ class _BayPairSchemeState extends State<BayPairScheme> {
             text: '$_containersNumberOnDeck',
             offset: Offset(
               maxX - schemeHorizontalPad,
-              minY + (maxY - minY) / 2 + schemeVerticalPad,
+              holdDeckSeparationZ + schemeVerticalPad,
             ),
             style: labelStyle,
             alignment: Alignment.centerLeft,
@@ -259,7 +261,7 @@ class _BayPairSchemeState extends State<BayPairScheme> {
             text: '$_containersNumberInHold',
             offset: Offset(
               maxX - schemeHorizontalPad,
-              minY + (maxY - minY) / 2 - schemeVerticalPad,
+              holdDeckSeparationZ - schemeVerticalPad,
             ),
             style: labelStyle,
             alignment: Alignment.centerLeft,

@@ -60,14 +60,9 @@ class NavigationPanel extends StatelessWidget {
             label: Text(const Localized('Main').v),
           ),
           NavigationRailDestination(
-            icon: const Icon(Icons.analytics_outlined),
-            selectedIcon: const Icon(Icons.analytics),
-            label: Text(const Localized('Strength').v),
-          ),
-          NavigationRailDestination(
-            icon: const Icon(Icons.video_stable_outlined),
-            selectedIcon: const Icon(Icons.video_stable),
-            label: Text(const Localized('Stability').v),
+            icon: const Icon(Icons.pallet),
+            selectedIcon: const Icon(Icons.pallet),
+            label: Text(const Localized('Loading').v),
           ),
           NavigationRailDestination(
             icon: const RotatedBox(
@@ -81,9 +76,14 @@ class NavigationPanel extends StatelessWidget {
             label: Text(const Localized('Drafts').v),
           ),
           NavigationRailDestination(
-            icon: const Icon(Icons.pallet),
-            selectedIcon: const Icon(Icons.pallet),
-            label: Text(const Localized('Loading').v),
+            icon: const Icon(Icons.analytics_outlined),
+            selectedIcon: const Icon(Icons.analytics),
+            label: Text(const Localized('Strength').v),
+          ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.video_stable_outlined),
+            selectedIcon: const Icon(Icons.video_stable),
+            label: Text(const Localized('Stability').v),
           ),
           NavigationRailDestination(
             icon: const Icon(Icons.info_outline),
@@ -98,7 +98,7 @@ class NavigationPanel extends StatelessWidget {
             case 0:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const MainPage(),
+                  builder: (context) => const MainPage(pageIndex: 0),
                   settings: const RouteSettings(name: '/MainPage'),
                 ),
               );
@@ -106,39 +106,39 @@ class NavigationPanel extends StatelessWidget {
             case 1:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const StrengthPage(),
-                  settings: const RouteSettings(name: '/StrengthPage'),
+                  builder: (context) => const LoadingPage(pageIndex: 1),
+                  settings: const RouteSettings(name: '/LoadingPage'),
                 ),
               );
               return;
             case 2:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const StabilityPage(),
-                  settings: const RouteSettings(name: '/StabilityPage'),
+                  builder: (context) => const DraftsPage(pageIndex: 2),
+                  settings: const RouteSettings(name: '/DraftsPage'),
                 ),
               );
               return;
             case 3:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const DraftsPage(),
-                  settings: const RouteSettings(name: '/DraftsPage'),
+                  builder: (context) => const StrengthPage(pageIndex: 3),
+                  settings: const RouteSettings(name: '/StrengthPage'),
                 ),
               );
               return;
             case 4:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const LoadingPage(),
-                  settings: const RouteSettings(name: '/LoadingPage'),
+                  builder: (context) => const StabilityPage(pageIndex: 4),
+                  settings: const RouteSettings(name: '/StabilityPage'),
                 ),
               );
               return;
             case 5:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const InfoPage(),
+                  builder: (context) => const InfoPage(pageIndex: 5),
                   settings: const RouteSettings(name: '/InfoPage'),
                 ),
               );

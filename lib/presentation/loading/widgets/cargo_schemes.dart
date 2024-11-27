@@ -99,12 +99,12 @@ class _CargoSchemesState extends State<CargoSchemes> {
   Widget build(BuildContext context) {
     final padding = const Setting('padding').toDouble;
     final blockPadding = const Setting('blockPadding').toDouble;
-    final minX = const Setting('shipMinX').toDouble;
-    final maxX = const Setting('shipMaxX').toDouble;
-    final minY = const Setting('shipMinY').toDouble;
-    final maxY = const Setting('shipMaxY').toDouble;
-    final minZ = const Setting('shipMinZ').toDouble;
-    final maxZ = const Setting('shipMaxZ').toDouble;
+    final minX = const Setting('shipMinX_m').toDouble;
+    final maxX = const Setting('shipMaxX_m').toDouble;
+    final minY = const Setting('shipMinY_m').toDouble;
+    final maxY = const Setting('shipMaxY_m').toDouble;
+    final minZ = const Setting('shipMinZ_m').toDouble;
+    final maxZ = const Setting('shipMaxZ_m').toDouble;
     final yTopViewGap = (maxZ - minZ) - (maxY - minY);
     final axis = ChartAxis(
       valueInterval: 10.0,
@@ -284,10 +284,10 @@ class _SortedFigures {
             ? (one.x2 - other.x2).sign.toInt()
             : (other.x1 - one.x1).sign.toInt(),
         _FigureAxis.y => _ascendingOrder
-            ? (one.y2 - other.y2).sign.toInt()
-            : (other.y1 - one.y1).sign.toInt(),
+            ? ((one.y2 ?? 0.0) - (other.y2 ?? 0.0)).sign.toInt()
+            : ((other.y1 ?? 0.0) - (one.y1 ?? 0.0)).sign.toInt(),
         _FigureAxis.z => _ascendingOrder
-            ? (one.z2 - other.z2).sign.toInt()
-            : (other.z1 - one.z1).sign.toInt(),
+            ? ((one.z2 ?? 0.0) - (other.z2 ?? 0.0)).sign.toInt()
+            : ((other.z1 ?? 0.0) - (one.z1 ?? 0.0)).sign.toInt(),
       };
 }

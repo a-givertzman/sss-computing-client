@@ -155,7 +155,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                     ),
                     authToken: widget._authToken,
                     tableName: 'compartment',
-                    fieldName: 'name',
+                    fieldName: 'name_rus',
                     filter: {'id': cargo.id},
                     toValue: toValue,
                   ),
@@ -287,6 +287,11 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
-    BottomMessage.error(message: message).show(context);
+    BottomMessage.error(
+      message: message,
+      displayDuration: Duration(
+        milliseconds: const Setting('errorMessageDisplayDuration').toInt,
+      ),
+    ).show(context);
   }
 }

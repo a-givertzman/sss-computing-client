@@ -174,7 +174,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                     ),
                     authToken: widget._authToken,
                     tableName: 'hold_compartment',
-                    fieldName: 'name',
+                    fieldName: 'name_rus',
                     filter: {'id': cargo.id},
                     toValue: toValue,
                   ),
@@ -247,6 +247,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                   useDefaultEditing: false,
                 ),
                 HoldCargoShiftableColumn(
+                  theme: Theme.of(context),
                   buildRecord: (cargo, toValue) => HoldCargoShiftableRecord(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -314,6 +315,11 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
-    BottomMessage.error(message: message).show(context);
+    BottomMessage.error(
+      message: message,
+      displayDuration: Duration(
+        milliseconds: const Setting('errorMessageDisplayDuration').toInt,
+      ),
+    ).show(context);
   }
 }

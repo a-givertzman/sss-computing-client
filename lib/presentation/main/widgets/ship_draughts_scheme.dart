@@ -43,11 +43,13 @@ class ShipDraughtsScheme extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final shipId = const Setting('shipId').toInt;
-    final minX = const Setting('shipMinX').toDouble;
-    final maxX = const Setting('shipMaxX').toDouble;
-    final minY = const Setting('shipMinY').toDouble;
-    final maxY = const Setting('shipMaxY').toDouble;
-    final minZ = const Setting('shipMinZ').toDouble;
+    final minX = const Setting('shipMinX_m').toDouble;
+    final maxX = const Setting('shipMaxX_m').toDouble;
+    final minY = const Setting('shipMinY_m').toDouble;
+    final maxY = const Setting('shipMaxY_m').toDouble;
+    final minZ = const Setting('shipMinZ_m').toDouble;
+    final maxZ = const Setting('shipMaxZ_m').toDouble;
+    final draftGapZ = const Setting('shipDraftGapZ_m').toDouble;
     return FutureBuilderWidget(
       refreshStream: _appRefreshStream,
       onFuture: FieldRecord<PathProjections>(
@@ -83,7 +85,7 @@ class ShipDraughtsScheme extends StatelessWidget {
               pathProjections: hullProjections,
             );
             final waterlineFigure = RectangularCuboidFigure(
-              start: Vector3(minX * 2, minY * 2, minZ * 2),
+              start: Vector3(minX * 2, minY * 2, (minZ - draftGapZ) * 2),
               end: Vector3(maxX * 2, maxY * 2, 0.0),
               paints: [
                 Paint()
@@ -119,8 +121,8 @@ class ShipDraughtsScheme extends StatelessWidget {
                     fit: BoxFit.contain,
                     minX: minY,
                     maxX: maxY,
-                    minY: -15.0,
-                    maxY: 15.0,
+                    minY: minZ - draftGapZ,
+                    maxY: maxZ,
                     yAxisReversed: true,
                     buildContent: (ctx, transform) => Stack(
                       children: [
@@ -150,8 +152,8 @@ class ShipDraughtsScheme extends StatelessWidget {
                         SchemeText(
                           text:
                               '${const Localized('Heel').v} ${heelAngle.toStringAsFixed(2)}${const Localized('°').v}',
-                          offset: const Offset(0.0, 10.0),
                           alignment: const Alignment(0.0, 2.0),
+                          offset: Offset(0.0, maxZ),
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
@@ -191,8 +193,8 @@ class ShipDraughtsScheme extends StatelessWidget {
                     fit: BoxFit.contain,
                     minX: minX,
                     maxX: maxX,
-                    minY: minY,
-                    maxY: maxY,
+                    minY: minZ - draftGapZ,
+                    maxY: maxZ,
                     yAxisReversed: true,
                     buildContent: (ctx, transform) => Stack(
                       children: [
@@ -223,7 +225,7 @@ class ShipDraughtsScheme extends StatelessWidget {
                           text:
                               '${const Localized('Trim').v} ${trimAngle.toStringAsFixed(2)}${const Localized('°').v}',
                           alignment: const Alignment(0.0, 2.0),
-                          offset: const Offset(0.0, 10.0),
+                          offset: Offset(0.0, maxZ),
                           style: labelStyle,
                           layoutTransform: transform,
                         ),

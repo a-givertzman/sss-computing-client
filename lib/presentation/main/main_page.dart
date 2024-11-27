@@ -5,8 +5,12 @@ import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/main/widgets/main_page_body.dart';
 ///
 class MainPage extends StatelessWidget {
+  final int _pageIndex;
   ///
-  const MainPage({super.key});
+  const MainPage({
+    super.key,
+    required int pageIndex,
+  }) : _pageIndex = pageIndex;
   //
   @override
   Widget build(BuildContext context) {
@@ -18,7 +22,7 @@ class MainPage extends StatelessWidget {
         builder: (_, status, __) => Row(
           children: [
             NavigationPanel(
-              selectedPageIndex: 0,
+              selectedPageIndex: _pageIndex,
               calculationStatusNotifier: status,
             ),
             Expanded(

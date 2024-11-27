@@ -133,6 +133,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton.filled(
+                tooltip: const Localized('Add container').v,
                 icon: const Icon(Icons.add_rounded),
                 onPressed: _handleContainerAdd,
               ),
@@ -193,14 +194,13 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
             (slot.bay == bay.odd || slot.bay == bay.even) && !slot.isThirtyFt,
       );
       final thirtyFt = _stowagePlan.toFilteredSlotList(
-        shouldIncludeSlot: (slot) =>
-            (slot.bay == bay.odd || slot.bay == bay.even) && slot.isThirtyFt,
+        shouldIncludeSlot: (slot) => slot.bay == bay.even && slot.isThirtyFt,
       );
       if (notThirtyFt.isNotEmpty) {
         resultBays.add((odd: bay.odd, even: bay.even, isThirtyFt: false));
       }
       if (thirtyFt.isNotEmpty) {
-        resultBays.add((odd: bay.odd, even: bay.even, isThirtyFt: true));
+        resultBays.add((odd: null, even: bay.even, isThirtyFt: true));
       }
     }
     return resultBays;

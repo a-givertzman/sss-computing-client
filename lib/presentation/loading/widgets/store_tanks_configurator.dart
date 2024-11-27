@@ -157,7 +157,7 @@ class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
                     ),
                     authToken: widget._authToken,
                     tableName: 'compartment',
-                    fieldName: 'name',
+                    fieldName: 'name_rus',
                     filter: {'id': cargo.id},
                     toValue: toValue,
                   ),
@@ -234,6 +234,7 @@ class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
                   useDefaultEditing: false,
                 ),
                 CargoUseMaxMfsColumn(
+                  theme: Theme.of(context),
                   buildRecord: (cargo, toValue) => CargoUseMaxMfsRecord(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -301,6 +302,11 @@ class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
-    BottomMessage.error(message: message).show(context);
+    BottomMessage.error(
+      message: message,
+      displayDuration: Duration(
+        milliseconds: const Setting('errorMessageDisplayDuration').toInt,
+      ),
+    ).show(context);
   }
 }

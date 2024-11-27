@@ -2,9 +2,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-import 'package:sss_computing_client/core/widgets/disabled_widget.dart';
 import 'package:sss_computing_client/presentation/main/widgets/allowed_strength_force_chart.dart';
-import 'package:sss_computing_client/presentation/main/widgets/future_circular_value_indicator.dart';
 import 'package:sss_computing_client/presentation/main/widgets/metacentric_height_indicator.dart';
 import 'package:sss_computing_client/presentation/main/widgets/ship_draughts_scheme.dart';
 import 'package:sss_computing_client/presentation/main/widgets/weight_indicators.dart';
@@ -22,6 +20,7 @@ class MainPageBody extends StatefulWidget {
         appRefreshStream: _appRefreshStream,
       );
 }
+///
 class _MainPageBodyState extends State<MainPageBody> {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   late final ApiAddress _apiAddress;
@@ -87,44 +86,17 @@ class _MainPageBodyState extends State<MainPageBody> {
                 ),
                 SizedBox(width: blockPadding),
                 Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Card(
-                          margin: EdgeInsets.zero,
-                          child: Padding(
-                            padding: EdgeInsets.all(padding),
-                            child: MetacentricHeightIndicator(
-                              appRefreshStream: _appRefreshStream,
-                              apiAddress: _apiAddress,
-                              dbName: _dbName,
-                              authToken: _authToken,
-                            ),
-                          ),
-                        ),
+                  child: Card(
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: MetacentricHeightIndicator(
+                        appRefreshStream: _appRefreshStream,
+                        apiAddress: _apiAddress,
+                        dbName: _dbName,
+                        authToken: _authToken,
                       ),
-                      SizedBox(width: blockPadding),
-                      Expanded(
-                        child: Card(
-                          margin: EdgeInsets.zero,
-                          child: Padding(
-                            padding: EdgeInsets.all(padding),
-                            child: DisabledWidget(
-                              disabled: true,
-                              child: FCircularValueIndicator(
-                                title: const Localized('Bulk').v,
-                                valueUnit: '°',
-                                minValue: 0,
-                                maxValue: 360,
-                                low: 60.0,
-                                high: 300.0,
-                                future: null,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ],
