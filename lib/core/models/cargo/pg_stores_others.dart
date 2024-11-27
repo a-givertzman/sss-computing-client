@@ -1,5 +1,7 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/core/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/compartment_cargos_sql_access.dart';
@@ -29,23 +31,7 @@ class PgStoresOthers implements Cargos {
         'cgc.key': 'stores',
         'cc.matter_type': 'solid',
       },
-    )
-        .fetch()
-        .then<Result<List<Cargo>, Failure<String>>>(
-          (result) => switch (result) {
-            Ok(value: final cargos) => Ok(cargos),
-            Err(:final error) => Err(Failure(
-                message: '$error',
-                stackTrace: StackTrace.current,
-              )),
-          },
-        )
-        .onError(
-          (error, stackTrace) => Err(Failure(
-            message: '$error',
-            stackTrace: stackTrace,
-          )),
-        );
+    ).fetch().convertFailure();
   }
   //
   @override
@@ -74,8 +60,10 @@ class PgStoresOthers implements Cargos {
         );
   }
   ///
-  /// Push new cargo to other sotres [Cargo] collection.
+  /// Push new cargo to other stores [Cargo] collection.
   Future<Result<void, Failure<String>>> add(Cargo cargo) async {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     return SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -83,28 +71,12 @@ class PgStoresOthers implements Cargos {
       sqlBuilder: (_, __) => Sql(
         sql: """
               INSERT INTO compartment
-                (ship_id, space_id, active, category_id, name, mass, mass_shift_x, mass_shift_y, mass_shift_z, bound_x1, bound_x2)
+                (ship_id, project_id, space_id, active, category_id, name_rus, mass, mass_shift_x, mass_shift_y, mass_shift_z, bound_x1, bound_x2)
               VALUES
-                (1, (SELECT MAX(space_id) + 1 FROM compartment), TRUE, 9, '${cargo.name}', ${cargo.weight}, ${cargo.lcg}, ${cargo.tcg}, ${cargo.vcg}, ${cargo.x1}, ${cargo.x2});
+                ($shipId, ${projectId ?? 'NULL'}, (SELECT MAX(space_id) + 1 FROM compartment), TRUE, 9, '${cargo.name}', ${cargo.weight}, ${cargo.lcg}, ${cargo.tcg}, ${cargo.vcg}, ${cargo.x1}, ${cargo.x2});
             """,
       ),
-    )
-        .fetch()
-        .then<Result<void, Failure<String>>>(
-          (result) => switch (result) {
-            Ok() => const Ok(null),
-            Err(:final error) => Err(Failure(
-                message: '$error',
-                stackTrace: StackTrace.current,
-              )),
-          },
-        )
-        .onError(
-          (error, stackTrace) => Err(Failure(
-            message: '$error',
-            stackTrace: stackTrace,
-          )),
-        );
+    ).fetch().convertFailure();
   }
   ///
   /// Remove cargo from other stores [Cargo] collection.
@@ -118,22 +90,6 @@ class PgStoresOthers implements Cargos {
               DELETE FROM compartment WHERE id = ${cargo.id};
             """,
       ),
-    )
-        .fetch()
-        .then<Result<void, Failure<String>>>(
-          (result) => switch (result) {
-            Ok() => const Ok(null),
-            Err(:final error) => Err(Failure(
-                message: '$error',
-                stackTrace: StackTrace.current,
-              )),
-          },
-        )
-        .onError(
-          (error, stackTrace) => Err(Failure(
-            message: '$error',
-            stackTrace: stackTrace,
-          )),
-        );
+    ).fetch().convertFailure();
   }
 }

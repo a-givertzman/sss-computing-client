@@ -22,7 +22,6 @@ class PgHeelTrim {
   /// Fetch and return [HeelTrim] from postgres DB.
   Future<Result<HeelTrim, Failure<String>>> fetch() {
     final shipId = const Setting('shipId').toInt;
-    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -42,8 +41,7 @@ class PgHeelTrim {
           FROM
             heel_trim_general
           WHERE
-            ship_id = $shipId AND
-            project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
+            ship_id = $shipId
           LIMIT 1;
         """,
       ),

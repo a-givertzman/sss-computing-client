@@ -78,20 +78,22 @@ class CompartmentCargosSqlAccess {
               CASE
                   WHEN cc.matter_type = 'bulk' THEN TRUE
                   ELSE FALSE
-              END AS "shiftable"
+              END AS "shiftable",
+              c.is_on_deck AS "isOnDeck",
+              c.is_timber AS "isTimber"
             FROM
               compartment AS c
               JOIN cargo_category AS cc ON c.category_id = cc.id
               JOIN cargo_general_category AS cgc ON cc.general_category_id = cgc.id
             WHERE
-              ship_id = $shipId
-              AND project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
+              c.ship_id = $shipId AND
+              c.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
               ${filterQuery == null ? '' : 'AND ($filterQuery)'}
             ORDER BY
               name;
             """,
       ),
-      entryBuilder: _buildCargoEntry,
+      entryBuilder: (row) => JsonCargo.fromRow(row),
     )
         .fetch()
         .then<Result<List<Cargo>, Failure<String>>>(
@@ -110,30 +112,4 @@ class CompartmentCargosSqlAccess {
           )),
         );
   }
-  //
-  JsonCargo _buildCargoEntry(Map<String, dynamic> row) => JsonCargo(json: {
-        'shipId': row['shipId'] as int,
-        'projectId': row['projectId'] as int?,
-        'id': row['id'] as int?,
-        'name': row['name'] as String?,
-        'weight': row['mass'] as double?,
-        'volume': row['volume'] as double?,
-        'density': row['density'] as double?,
-        'level': row['level'] as double?,
-        'x1': row['x1'] as double?,
-        'x2': row['x2'] as double?,
-        'y1': row['y1'] as double?,
-        'y2': row['y2'] as double?,
-        'z1': row['z1'] as double?,
-        'z2': row['z2'] as double?,
-        'vcg': row['vcg'] as double?,
-        'lcg': row['lcg'] as double?,
-        'tcg': row['tcg'] as double?,
-        'mfsx': row['mfsx'] as double?,
-        'mfsy': row['mfsy'] as double?,
-        'type': row['type'] as String,
-        'shiftable': row['shiftable'] as bool,
-        'useMaxMfs': row['useMaxMfs'] as bool,
-        'path': row['path'] as String?,
-      });
 }
