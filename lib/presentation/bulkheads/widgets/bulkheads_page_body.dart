@@ -5,12 +5,13 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead_place.dart';
-import 'package:sss_computing_client/core/models/bulkheads/json_bulkhead_place.dart';
 import 'package:sss_computing_client/core/models/bulkheads/pg_bulkhead_places.dart';
 import 'package:sss_computing_client/core/models/bulkheads/pg_bulkheads.dart';
+import 'package:sss_computing_client/core/widgets/disabled_widget.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_places_section.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_removed_section.dart';
+import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkheads_table.dart';
 ///
 /// Display configurator of ship's grain bulkheads.
 class BulkheadsPageBody extends StatefulWidget {
@@ -45,7 +46,6 @@ class _BulkheadsPageBodyState extends State<BulkheadsPageBody> {
   ///
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final blockPadding = const Setting('blockPadding').toDouble;
     return FutureBuilderWidget(
       onFuture: PgBulkheadPlaces(
@@ -59,62 +59,66 @@ class _BulkheadsPageBodyState extends State<BulkheadsPageBody> {
           dbName: _dbName,
           authToken: _authToken,
         ).fetchAllRemoved,
-        caseData: (context, bulkheadsRemoved, _) => Stack(
-          children: [
-            Center(
+        caseData: (context, bulkheadsRemoved, _) => FutureBuilderWidget(
+          onFuture: PgBulkheads(
+            apiAddress: _apiAddress,
+            dbName: _dbName,
+            authToken: _authToken,
+          ).fetchAll,
+          caseData: (context, bulkheads, _) => DisabledWidget(
+            disabled: _isLoading,
+            child: Center(
               child: Padding(
                 padding: EdgeInsets.all(blockPadding),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
+                child: Column(
                   children: [
-                    Flexible(
-                      flex: 5,
-                      child: BulkheadPlacesSection(
-                        bulkheadHeight: widget._bulkheadHeight,
-                        label: const Localized('Hold').v,
-                        onBulkheadDropped: (bulkheadPlace, bulkheadId) =>
-                            _onBulkheadWillInstalled(
-                          bulkheadPlace,
-                          bulkheadId,
-                          refresh,
-                        ),
-                        bulkheadPlaces: bulkheadPlaces
-                            .map((place) => JsonBulkheadPlace(json: {
-                                  'id': place.id,
-                                  'bulkheadId': place.bulkheadId,
-                                  'name': place.name,
-                                }))
-                            .toList(),
+                    Expanded(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Flexible(
+                            flex: 4,
+                            child: BulkheadPlacesSection(
+                              bulkheadHeight: widget._bulkheadHeight,
+                              label: const Localized('Hold').v,
+                              onBulkheadDropped: (bulkheadPlace, bulkheadId) =>
+                                  _onBulkheadWillInstalled(
+                                bulkheadPlace,
+                                bulkheadId,
+                                refresh,
+                              ),
+                              bulkheadPlaces: bulkheadPlaces,
+                              bulkheads: bulkheads,
+                            ),
+                          ),
+                          SizedBox(width: blockPadding),
+                          Flexible(
+                            flex: 1,
+                            child: BulkheadRemovedSection(
+                              bulkheadHeight: widget._bulkheadHeight,
+                              label: const Localized('Overboard').v,
+                              bulkheadIds: bulkheadsRemoved
+                                  .map((bulkhead) => bulkhead.id)
+                                  .toList(),
+                              bulkheads: bulkheads,
+                              onBulkheadDropped: (bulkheadId) =>
+                                  _onBulkheadWillRemoved(
+                                bulkheadId,
+                                refresh,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(width: blockPadding),
-                    Flexible(
-                      flex: 1,
-                      child: BulkheadRemovedSection(
-                        bulkheadHeight: widget._bulkheadHeight,
-                        label: const Localized('Overboard').v,
-                        bulkheadIds: bulkheadsRemoved
-                            .map((bulkhead) => bulkhead.id)
-                            .toList(),
-                        onBulkheadDropped: (bulkheadId) =>
-                            _onBulkheadWillRemoved(
-                          bulkheadId,
-                          refresh,
-                        ),
-                      ),
+                    Expanded(
+                      child: BulkheadsTable(bulkheads: bulkheads),
                     ),
                   ],
                 ),
               ),
             ),
-            if (_isLoading)
-              Container(
-                color: theme.colorScheme.surface.withOpacity(
-                  const Setting('opacityLow').toDouble,
-                ),
-                child: const Center(child: CupertinoActivityIndicator()),
-              ),
-          ],
+          ),
         ),
       ),
     );
@@ -177,10 +181,11 @@ class _BulkheadsPageBodyState extends State<BulkheadsPageBody> {
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
-    final durationMs = const Setting('errorMessageDisplayDuration').toInt;
     BottomMessage.error(
       message: message,
-      displayDuration: Duration(milliseconds: durationMs),
+      displayDuration: Duration(
+        milliseconds: const Setting('errorMessageDisplayDuration').toInt,
+      ),
     ).show(context);
   }
 }
