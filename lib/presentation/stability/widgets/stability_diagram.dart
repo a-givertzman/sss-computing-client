@@ -172,7 +172,8 @@ class StabilityDiagram extends StatelessWidget {
   }) =>
       curves.fold(initialValue, (curr, curve) {
         final curveMaxY = curve
-            .reduce(
+            .fold(
+              Offset(initialValue, initialValue),
               (curr, next) => curr.dy > next.dy ? curr : next,
             )
             .dy;

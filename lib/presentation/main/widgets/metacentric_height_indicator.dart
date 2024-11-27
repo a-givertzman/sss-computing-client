@@ -2,6 +2,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/lerp_metacentric_height_limit.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/pg_metacentric_height_high_limits.dart';
@@ -35,6 +36,8 @@ class MetacentricHeightIndicator extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     return FutureBuilderWidget(
       refreshStream: _appRefreshStream,
       onFuture: PgMetacentricHeightLowLimits(
@@ -79,12 +82,14 @@ class MetacentricHeightIndicator extends StatelessWidget {
                 caseLoading: (context) => _buildCaseLoading(),
                 caseData: (context, displacement, _) {
                   final lowLimit = LerpMetacentricHeightLimit(
-                    shipId: lowLimits.first.shipId,
+                    shipId: shipId,
+                    projectId: projectId,
                     displacement: draft,
                     limits: lowLimits,
                   );
                   final highLimit = LerpMetacentricHeightLimit(
-                    shipId: highLimits.first.shipId,
+                    shipId: shipId,
+                    projectId: projectId,
                     displacement: displacement,
                     limits: highLimits,
                   );
