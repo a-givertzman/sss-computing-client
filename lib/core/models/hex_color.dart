@@ -21,10 +21,16 @@ class HexColor {
       '${includeSharp ? '#' : ''}${color().value.toRadixString(16)}';
   //
   Color? _tryParseHex(String text) {
-    final normalizedHexString = text.replaceFirst('#', '').padLeft(8, 'F');
-    if (normalizedHexString.length != 8) return null;
-    final hexValue = int.tryParse(normalizedHexString, radix: 16);
+    final normalizedHexString = text.replaceFirst('#', '');
+    if (normalizedHexString.length != 8 && normalizedHexString.length != 6) {
+      return null;
+    }
+    final hexValue = int.tryParse(
+      normalizedHexString.padLeft(8, 'F'),
+      radix: 16,
+    );
     if (hexValue == null) return null;
+    if (hexValue > int.parse('FFFFFFFF', radix: 16)) return null;
     return Color(hexValue);
   }
 }

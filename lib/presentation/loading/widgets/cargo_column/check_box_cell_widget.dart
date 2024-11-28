@@ -3,7 +3,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/extensions/strings.dart';
-import 'package:sss_computing_client/core/future_result_extension.dart';
+import 'package:sss_computing_client/core/extensions/future_result_extension.dart';
 import 'package:sss_computing_client/core/widgets/async_action_checkbox.dart';
 ///
 /// Cell for [TableColumn] with checkbox.

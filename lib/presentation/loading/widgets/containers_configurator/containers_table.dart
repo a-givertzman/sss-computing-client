@@ -11,6 +11,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/containers_con
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_pol_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_serial_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_slot_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_status_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_type_code_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_type_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/container_column/container_weight_column.dart';
@@ -54,6 +55,7 @@ class ContainersTable extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return EditingTable<FreightContainer>(
       columns: [
         const ContainerTypeColumn(),
@@ -65,6 +67,7 @@ class ContainersTable extends StatelessWidget {
         const ContainerWeightColumn(),
         ContainerPOLColumn(waypoints: _waypoints),
         ContainerPODColumn(waypoints: _waypoints),
+        ContainerStatusColumn(waypoints: _waypoints, theme: theme),
         ContainerSlotColumn(collection: _collection),
       ],
       selectedRow: _containers.firstWhereOrNull((c) => c.id == _selectedId),

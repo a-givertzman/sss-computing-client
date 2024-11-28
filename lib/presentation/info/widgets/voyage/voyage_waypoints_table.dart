@@ -20,7 +20,7 @@ import 'package:sss_computing_client/core/widgets/table/editing_table_column.dar
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 import 'package:sss_computing_client/presentation/info/widgets/voyage/color_label_picker.dart';
 import 'package:sss_computing_client/presentation/info/widgets/voyage/datetime_label_picker.dart';
-import 'package:sss_computing_client/presentation/info/widgets/voyage/status_label.dart';
+import 'package:sss_computing_client/core/widgets/status_label.dart';
 import 'package:sss_computing_client/presentation/info/widgets/voyage/use_draft_limit_label.dart';
 ///
 /// Displays the waypoints of the voyage
@@ -138,7 +138,7 @@ class _VoyageWaypointsTableState extends State<VoyageWaypointsTable> {
           child: StatusLabel(
             theme: Theme.of(context),
             errorColor: Theme.of(context).stateColors.error,
-            okColor: Colors.green,
+            okColor: Theme.of(context).stateColors.on,
             errorMessage: switch (_validateWaypoint(waypoint)) {
               Ok() => null,
               Err(:final error) => error,

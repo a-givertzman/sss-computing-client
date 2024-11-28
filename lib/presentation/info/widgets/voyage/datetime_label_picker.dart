@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:sss_computing_client/presentation/container_cargo/widgets/date_format_extension.dart';
+import 'package:sss_computing_client/core/extensions/date_time.dart';
 ///
 /// Widget that displays a dateTime label and allows to change it.
 class DateTimeLabelPicker extends StatelessWidget {

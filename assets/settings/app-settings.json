@@ -40,5 +40,6 @@
     "shearForcesLimitLow_MN": -50.0,
     "shearForcesLimitHigh_MN": 50.0,
     "bendingMomentsLimitLow_MN*m": -150.0,
-    "bendingMomentsLimitHigh_MN*m": 100.0
+    "bendingMomentsLimitHigh_MN*m": 100.0,
+    "diagramBarColor": "#B2FF5B"
 }

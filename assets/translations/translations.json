@@ -417,5 +417,20 @@
   "Correction": ["correction", "поправка"],
   "inf": ["∞", "∞"],
   "deg": ["°", "°"],
-  "draught": ["Draught", "Осадка"]
+  "draught": ["Draught", "Осадка"],
+  "X1 !≤ Xg": ["X1 must be less than or equal to Xg", "X1 должен быть меньше или равен Xg"],
+  "Xg !≤ X2": ["Xg must be less than or equal to X2", "Xg должен быть меньше или равен X2"],
+  "X1 !< X2": ["X1 must be less than X2", "X1 должен быть меньше X2"],
+  "Y1 !≤ Yg": ["Y1 must be less than or equal to Yg", "Y1 должен быть меньше или равен Yg"],
+  "Yg !≤ Y2": ["Yg must be less than or equal to Y2", "Yg должен быть меньше или равен Y2"],
+  "Y1 !< Y2": ["Y1 must be less than Y2", "Y1 должен быть меньше Y2"],
+  "Z1 !≤ Zg": ["Z1 must be less than or equal to Yg", "Y1 должен быть меньше или равен Zg"],
+  "Zg !≤ Z2": ["Zg must be less than or equal to Z2", "Zg должен быть меньше или равен Z2"],
+  "Z1 !< Z2": ["Z1 must be less than Z2", "Z1 должен быть меньше Z2"],
+  "y1": ["Y1", "Y1"],
+  "y2": ["Y2", "Y2"],
+  "z1": ["Z1", "Z1"],
+  "z2": ["Z2", "Z2"],
+  "weight cannot be negative": ["Weight cannot be negative", "Масса не может быть отрицательной"],
+  "cannot be negative": ["Value cannot be negative", "Значение не может быть отрицательным"]
 }

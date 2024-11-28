@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/core/extensions/setting.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_limited.dart';
 import 'package:sss_computing_client/presentation/strength/widgets/strength_forces_chart.dart';
@@ -38,7 +39,7 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
   Widget build(BuildContext context) {
     final padding = const Setting('padding').toDouble;
     final blockPadding = const Setting('blockPadding').toDouble;
-    const barValueColor = Colors.lightGreenAccent;
+    final barValueColor = const Setting('diagramBarColor').toColor();
     return Padding(
       padding: EdgeInsets.all(blockPadding),
       child: Row(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/extensions/setting.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_allow.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_limited.dart';
@@ -39,7 +40,7 @@ class AllowedStrengthForceChart extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
-    const barColor = Colors.lightGreenAccent;
+    final barColor = const Setting('diagramBarColor').toColor();
     const xAxis = ChartAxis(
       labelsSpaceReserved: 25.0,
       captionSpaceReserved: 0.0,

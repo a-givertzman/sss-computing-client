@@ -163,8 +163,7 @@ Widget _defaultCaseError(BuildContext _, Object error, void Function() retry) =>
         message: Localized('$error').v,
         stackTrace: StackTrace.current,
       ),
-      message: const Localized('Data loading error').v,
-      // onConfirm: retry,
+      message: '',
     );
 ///
 /// Default indicator builder for [FutureBuilderWidget] empty-data state

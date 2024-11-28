@@ -87,11 +87,11 @@ class ContainerSlotColumn implements TableColumn<FreightContainer, String> {
       .map((s) => s.copy())
       .firstOrNull;
   //
-  // Returns slot key in format BBRRTT or BB<30ft_indicator>RRTT
+  // Returns slot key in format BBRRTT
   String _slotKey(Slot slot) {
     final bay = slot.bay.toString().padLeft(2, '0');
     final row = slot.row.toString().padLeft(2, '0');
     final tier = slot.tier.toString().padLeft(2, '0');
-    return '$bay${slot.isThirtyFt ? const Localized('30ft_indicator').v : ''}$row$tier';
+    return '$bay$row$tier';
   }
 }

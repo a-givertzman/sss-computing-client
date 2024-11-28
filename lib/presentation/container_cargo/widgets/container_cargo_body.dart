@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/extensions/date_time.dart';
 import 'package:sss_computing_client/core/models/field/field_data.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/greater_than_or_equal_to.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/container/freight_container.dart';
@@ -17,7 +18,6 @@ import 'package:sss_computing_client/core/widgets/form/form_field_group.dart';
 import 'package:sss_computing_client/core/widgets/voyage/voyage_waypoint_dropdown.dart';
 import 'package:sss_computing_client/presentation/container_cargo/widgets/container_form_section.dart';
 import 'package:sss_computing_client/presentation/container_cargo/widgets/container_size_code_dropdown.dart';
-import 'package:sss_computing_client/presentation/container_cargo/widgets/date_format_extension.dart';
 import 'package:sss_computing_client/presentation/container_cargo/widgets/read_only_text_field.dart';
 ///
 /// Widget to configure [FreightContainer] entry.
