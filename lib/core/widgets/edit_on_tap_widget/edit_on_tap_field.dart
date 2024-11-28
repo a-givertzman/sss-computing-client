@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/widgets/activate_on_tap_builder_widget.dart';
+import 'package:sss_computing_client/core/widgets/prefixed_widget/prefixed_widget.dart';
 
 ///
 /// Field that can be edited after activation by tap
@@ -162,11 +163,13 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
         return false;
       },
       builder: ((context, isActivated, deactivate) => !isActivated
-          ? Text(
-              _initialValue,
-              overflow: TextOverflow.ellipsis,
-              maxLines: widget.maxLines,
-            )
+          ? IconPrefixedWidget(builder: (_) {
+              return Text(
+                _initialValue,
+                overflow: TextOverflow.ellipsis,
+                maxLines: widget.maxLines,
+              );
+            })
           : Row(
               children: [
                 Flexible(

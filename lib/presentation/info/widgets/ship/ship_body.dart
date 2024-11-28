@@ -185,7 +185,6 @@ class _BuildItemsState extends State<_BuildItems> {
   Widget _buildValueWidget(MapEntry<String, dynamic> item) {
     final theme = Theme.of(context);
     if (widget._shipDetails.isFieldEditable(item.key)) {
-      /// TODO validation
       return EditOnTapField(
         initialValue: item.value,
         maxLines: 5,
