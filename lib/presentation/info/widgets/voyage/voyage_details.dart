@@ -2,24 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/models/number_math_relation/greater_than_or_equal_to.dart';
 import 'package:sss_computing_client/core/models/options_field/options_field.dart';
-
 import 'package:sss_computing_client/core/models/voyage/pg_voyage_details.dart';
 import 'package:sss_computing_client/core/models/voyage/voyage_details.dart';
+import 'package:sss_computing_client/core/validation/number_math_relation_validation_case.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
 import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/disabled_widget.dart';
 import 'package:sss_computing_client/core/widgets/edit_on_tap_widget/edit_on_tap_field.dart';
 import 'package:sss_computing_client/core/widgets/table/table_nullable_cell.dart';
 import 'package:sss_computing_client/core/widgets/zebra_stripped_list/zebra_stripped_list.dart';
-
 ///
 /// The widget that displays the details of the voyage
 class VoyageDetailsWidget extends StatefulWidget {
   final PgVoyageDetails _detailsCollection;
   final VoyageDetails _details;
   final void Function()? _onDetailsUpdate;
-
   ///
   /// Creates a widget that displays the [details] of the voyage
   /// and allows to edit them using provided [detailsCollection].
@@ -37,7 +36,6 @@ class VoyageDetailsWidget extends StatefulWidget {
   @override
   State<VoyageDetailsWidget> createState() => _VoyageDetailsWidgetState();
 }
-
 ///
 class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
   late ScrollController _scrollController;
@@ -49,14 +47,12 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
     _isLoading = false;
     super.initState();
   }
-
   //
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
-
   //
   @override
   Widget build(BuildContext context) {
@@ -101,7 +97,6 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
       ],
     );
   }
-
   // ignore: long-method
   Widget _buildValueWidget(
     MapEntry<String, dynamic> item, {
@@ -109,7 +104,7 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
   }) {
     final theme = Theme.of(context);
     final iconColor = theme.colorScheme.primary;
-    final errorColor = theme.alarmColors.class3;
+    final errorColor = theme.stateColors.error;
     switch (item.key) {
       case 'voyageCode':
         return EditOnTapField(
@@ -142,9 +137,15 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
           iconColor: iconColor,
           errorColor: errorColor,
           initialValue: item.value ?? '',
-          validator: const Validator(cases: [
-            RequiredValidationCase(),
-            RealValidationCase(),
+          validator: Validator(cases: [
+            const RequiredValidationCase(),
+            const RealValidationCase(),
+            NumberMathRelationValidationCase(
+              relation: const GreaterThanOrEqualTo(),
+              secondValue: 0.0,
+              toValue: (text) => double.tryParse(text) ?? 0.0,
+              customMessage: const Localized('cannot be negative').v,
+            ),
           ]),
           onSubmit: (value) => Future.value(Ok(value)),
           onSubmitted: (value) => widget._detailsCollection
@@ -156,9 +157,15 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
           iconColor: iconColor,
           errorColor: errorColor,
           initialValue: item.value ?? '',
-          validator: const Validator(cases: [
-            RequiredValidationCase(),
-            RealValidationCase(),
+          validator: Validator(cases: [
+            const RequiredValidationCase(),
+            const RealValidationCase(),
+            NumberMathRelationValidationCase(
+              relation: const GreaterThanOrEqualTo(),
+              secondValue: 0.0,
+              toValue: (text) => double.tryParse(text) ?? 0.0,
+              customMessage: const Localized('cannot be negative').v,
+            ),
           ]),
           onSubmit: (String value) => Future.value(Ok(value)),
           onSubmitted: (value) => widget._detailsCollection
@@ -193,7 +200,6 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
         return NullableCellWidget(value: item.value);
     }
   }
-
   //
   Result<void, Failure<String>> _handleDetailsUpdate(
     Result<void, Failure<String>> updateResult,
@@ -209,7 +215,6 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
       },
     );
   }
-
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
@@ -220,13 +225,11 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
     ).show(context);
   }
 }
-
 ///
 class _BuildDropdownButton extends StatelessWidget {
   final FieldOption<String> initialValue;
   final List<FieldOption<String>> items;
   final void Function(FieldOption<String>) onChanged;
-
   ///
   const _BuildDropdownButton({
     required this.initialValue,
