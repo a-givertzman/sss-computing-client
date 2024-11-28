@@ -3,7 +3,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/options_field/options_field.dart';
-import 'package:sss_computing_client/core/models/subscripting/subscripting.dart';
+
 import 'package:sss_computing_client/core/models/voyage/pg_voyage_details.dart';
 import 'package:sss_computing_client/core/models/voyage/voyage_details.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
@@ -12,12 +12,14 @@ import 'package:sss_computing_client/core/widgets/disabled_widget.dart';
 import 'package:sss_computing_client/core/widgets/edit_on_tap_widget/edit_on_tap_field.dart';
 import 'package:sss_computing_client/core/widgets/table/table_nullable_cell.dart';
 import 'package:sss_computing_client/core/widgets/zebra_stripped_list/zebra_stripped_list.dart';
+
 ///
 /// The widget that displays the details of the voyage
 class VoyageDetailsWidget extends StatefulWidget {
   final PgVoyageDetails _detailsCollection;
   final VoyageDetails _details;
   final void Function()? _onDetailsUpdate;
+
   ///
   /// Creates a widget that displays the [details] of the voyage
   /// and allows to edit them using provided [detailsCollection].
@@ -35,6 +37,7 @@ class VoyageDetailsWidget extends StatefulWidget {
   @override
   State<VoyageDetailsWidget> createState() => _VoyageDetailsWidgetState();
 }
+
 ///
 class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
   late ScrollController _scrollController;
@@ -46,12 +49,14 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
     _isLoading = false;
     super.initState();
   }
+
   //
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -80,7 +85,7 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
                     if (!widget._details.isFieldDescription(item.key))
                       Expanded(
                         child: Text(
-                          '${Localized(item.key).v} ${AppSubscripting.getMathsExpression(
+                          '${Localized(item.key)} ${Localized(
                             widget._details.unitsBy(item.key),
                           )}',
                         ),
@@ -97,6 +102,7 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
       ],
     );
   }
+
   // ignore: long-method
   Widget _buildValueWidget(
     MapEntry<String, dynamic> item, {
@@ -188,6 +194,7 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
         return NullableCellWidget(value: item.value);
     }
   }
+
   //
   Result<void, Failure<String>> _handleDetailsUpdate(
     Result<void, Failure<String>> updateResult,
@@ -203,6 +210,7 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
       },
     );
   }
+
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
@@ -213,11 +221,13 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
     ).show(context);
   }
 }
+
 ///
 class _BuildDropdownButton extends StatelessWidget {
   final FieldOption<String> initialValue;
   final List<FieldOption<String>> items;
   final void Function(FieldOption<String>) onChanged;
+
   ///
   const _BuildDropdownButton({
     required this.initialValue,
