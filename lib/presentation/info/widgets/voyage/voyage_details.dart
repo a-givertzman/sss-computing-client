@@ -76,7 +76,6 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
             disabled: _isLoading,
             child: ZebraStripedListView<MapEntry<String, dynamic>>(
               scrollController: _scrollController,
-              scrollbarThickness: 0.0,
               items: widget._details.toMap().entries.toList(),
               buildItem: (context, item, stripped) => Padding(
                 padding: EdgeInsets.all(padding / 2),
@@ -90,7 +89,7 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
                           )}',
                         ),
                       ),
-                    Flexible(
+                    Expanded(
                       child: _buildValueWidget(item, padding: padding),
                     ),
                   ],
