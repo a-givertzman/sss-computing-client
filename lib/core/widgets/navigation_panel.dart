@@ -148,16 +148,8 @@ class NavigationPanel extends StatelessWidget {
             case 5:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => Row(
-                    children: [
-                      NavigationPanel(
-                        selectedPageIndex: 5,
-                        calculationStatusNotifier: _calculationStatusNotifier,
-                      ),
-                      const Expanded(
-                        child: InfoPage(),
-                      ),
-                    ],
+                  builder: (context) => const InfoPage(
+                    pageIndex: 5,
                   ),
                   settings: const RouteSettings(name: '/InfoPage'),
                 ),

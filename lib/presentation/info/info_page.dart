@@ -7,16 +7,25 @@ import 'package:sss_computing_client/core/widgets/mini_side_bar/mini_sidebar.dar
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/info/widgets/voyage/voyage_body.dart';
 import 'widgets/ship/ship_body.dart';
+
 /// The page is intended for displaying and setting general information
 ///  on the [Ship] and [VoyageDetails].
 class InfoPage extends StatefulWidget {
+  final int _pageIndex;
+
   /// The page is intended for displaying and setting general information
-  const InfoPage({super.key});
+  const InfoPage({
+    super.key,
+    required int pageIndex,
+  }) : _pageIndex = pageIndex;
+  //
   @override
   State<InfoPage> createState() => _InfoPageState();
 }
+
 class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
   late TabController _tabController;
+
   ///
   late List<Tab> _tabs;
   @override
@@ -34,11 +43,13 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
     );
     super.initState();
   }
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final blockPadding = const Setting('blockPadding').toDouble;
@@ -50,7 +61,7 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
         builder: (_, status, __) => Row(
           children: [
             NavigationPanel(
-              selectedPageIndex: 5,
+              selectedPageIndex: widget._pageIndex,
               calculationStatusNotifier: status,
             ),
             Expanded(
