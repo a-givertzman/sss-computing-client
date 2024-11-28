@@ -5,12 +5,14 @@ import 'package:sss_computing_client/core/extensions/future_result_extension.dar
 import 'package:sss_computing_client/core/models/stability_parameter/json_stability_parameter.dart';
 import 'package:sss_computing_client/core/models/stability_parameter/stability_parameter.dart';
 import 'package:sss_computing_client/core/models/stability_parameter/stability_parameters.dart';
+
 ///
 /// [StabilityParameter] collection that stored in postgres DB.
 class PgStabilityParameters implements StabilityParameters {
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
+
   ///
   /// Creates [StabilityParameter] collection that stored in postgres DB.
   ///
