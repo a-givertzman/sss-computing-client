@@ -22,10 +22,13 @@ import 'package:sss_computing_client/presentation/drafts/widgets/draft_type.dart
 import 'package:sss_computing_client/presentation/drafts/widgets/draft_type_dropdown.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 ///
-/// TODO: add doc
+/// Widget that displays drafts on scheme with ship.
 class DraftScheme extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   ///
+  /// Creates widget that displays drafts on scheme with ship.
+  ///
+  /// * [appRefreshStream] – stream with events causing data to be updated.
   const DraftScheme({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,

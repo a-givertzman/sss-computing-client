@@ -6,10 +6,13 @@ import 'package:sss_computing_client/core/models/criterion/pg_draught_criterions
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/stability/widgets/stability_criterions_list.dart';
 ///
-/// TODO: add doc
+/// Widget that displays [Criterion] list and its status.
 class DraftCriteria extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   ///
+  /// Creates widget that displays [Criterion] list and its status.
+  ///
+  /// * [appRefreshStream] – stream with events causing data to be updated.
   const DraftCriteria({
     super.key,
     required Stream<DsDataPoint<bool>> appRefreshStream,
