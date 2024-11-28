@@ -77,6 +77,14 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
             intValue: column.type == FieldType.int
                 ? (rowData) => column.extractValue(rowData)
                 : null,
+            dataComparator: switch (column.type) {
+              FieldType.date => (row1, row2, _) => column
+                  .extractValue(row1)
+                  .compareTo(column.extractValue(row2)),
+              FieldType.bool => (row1, _, __) =>
+                  column.extractValue(row1) as bool ? 1 : -1,
+              _ => null,
+            },
             width: column.width ?? 100.0,
             name: column.name,
             cellBuilder: (_, row) => Padding(

@@ -3,26 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:provider/provider.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
+import 'package:sss_computing_client/core/widgets/general_info_widget.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/loading_page_body.dart';
 ///
 /// Page for configuring ship cargos.
 class LoadingPage extends StatefulWidget {
+  final int _pageIndex;
   ///
-  /// Creates page for configuring ship cargos.
-  ///
-  ///   [appRefreshStream] – stream with events causing data to be updated.
-  ///   [fireRefreshEvent] – callback for triggering refresh event, called
-  /// when calculation succeeds or fails;
-  ///   [calculationStatusNotifier] – passed to control calculation status
-  /// between many instances of calculation button.
   const LoadingPage({
     super.key,
-  });
+    required int pageIndex,
+  }) : _pageIndex = pageIndex;
   //
   @override
   State<LoadingPage> createState() => _LoadingPageState();
 }
+///
 class _LoadingPageState extends State<LoadingPage> {
   late final ApiAddress _apiAddress;
   late final String _dbName;
@@ -49,8 +46,11 @@ class _LoadingPageState extends State<LoadingPage> {
         builder: (_, status, __) => Row(
           children: [
             NavigationPanel(
-              selectedPageIndex: 4,
+              selectedPageIndex: widget._pageIndex,
               calculationStatusNotifier: status,
+              trailing: GeneralInfoWidget(
+                appRefreshStream: status.refreshStream,
+              ),
             ),
             Expanded(
               child: LoadingPageBody(

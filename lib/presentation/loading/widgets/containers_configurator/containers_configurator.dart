@@ -4,6 +4,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:sss_computing_client/core/extensions/strings.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/container/freight_container.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/container/freight_containers.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/slot/slot.dart';
@@ -54,7 +55,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
   late final List<Waypoint> _waypoints;
   late final ItemScrollController _bayPairsScrollController;
   late final ItemPositionsListener _bayPairsPositionsListener;
-  late List<({int? odd, int? even})> _bayPairs;
+  late List<({int? odd, int? even, bool isThirtyFt})> _bayPairs;
   late List<Slot> _selectedSlots;
   late int? _selectedContainerId;
   //
@@ -65,7 +66,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     _waypoints = widget._waypoints;
     _bayPairsScrollController = ItemScrollController();
     _bayPairsPositionsListener = ItemPositionsListener.create();
-    _bayPairs = _stowagePlan.iterateBayPairs().toList();
+    _bayPairs = _getBayPairs();
     _selectedSlots = [];
     _selectedContainerId = null;
     super.initState();
@@ -87,27 +88,30 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
               itemBuilder: (_, index) => BayPairScheme(
                 oddBayNumber: _bayPairs[index].odd,
                 evenBayNumber: _bayPairs[index].even,
+                isThirtyFt: _bayPairs[index].isThirtyFt,
                 slots: _stowagePlan.toFilteredSlotList(
                   shouldIncludeSlot: (slot) =>
                       (slot.bay == _bayPairs[index].odd ||
-                          slot.bay == _bayPairs[index].even),
+                          slot.bay == _bayPairs[index].even) &&
+                      slot.isThirtyFt == _bayPairs[index].isThirtyFt,
                 ),
                 isFlyoverSlot: _isFlyoverSlot,
                 shouldRenderEmptySlot: _filterSlotsByContainerSelected,
                 onSlotTap: _onSlotSelected,
-                onSlotDoubleTap: (bay, row, tier) {
-                  _onSlotSelected(bay, row, tier);
+                onSlotDoubleTap: (bay, row, tier, isThirtyFt) {
+                  _onSlotSelected(bay, row, tier, isThirtyFt);
                   _putSelectedContainer();
                 },
-                onSlotSecondaryTap: (bay, row, tier) {
-                  _onSlotSelected(bay, row, tier);
+                onSlotSecondaryTap: (bay, row, tier, isThirtyFt) {
+                  _onSlotSelected(bay, row, tier, isThirtyFt);
                   _removeSelectedContainer();
                 },
                 selectedSlots: _selectedSlots
                     .where(
                       (s) =>
-                          s.bay == _bayPairs[index].odd ||
-                          s.bay == _bayPairs[index].even,
+                          (s.bay == _bayPairs[index].odd ||
+                              s.bay == _bayPairs[index].even) &&
+                          s.isThirtyFt == _bayPairs[index].isThirtyFt,
                     )
                     .toList(),
               ),
@@ -130,6 +134,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton.filled(
+                tooltip: const Localized('Add container').v,
                 icon: const Icon(Icons.add_rounded),
                 onPressed: _handleContainerAdd,
               ),
@@ -179,6 +184,27 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
         ],
       ),
     );
+  }
+  //
+  List<({int? odd, int? even, bool isThirtyFt})> _getBayPairs() {
+    final allBays = _stowagePlan.iterateBayPairs().toList();
+    final resultBays = <({int? odd, int? even, bool isThirtyFt})>[];
+    for (final bay in allBays) {
+      final notThirtyFt = _stowagePlan.toFilteredSlotList(
+        shouldIncludeSlot: (slot) =>
+            (slot.bay == bay.odd || slot.bay == bay.even) && !slot.isThirtyFt,
+      );
+      final thirtyFt = _stowagePlan.toFilteredSlotList(
+        shouldIncludeSlot: (slot) => slot.bay == bay.even && slot.isThirtyFt,
+      );
+      if (notThirtyFt.isNotEmpty) {
+        resultBays.add((odd: bay.odd, even: bay.even, isThirtyFt: false));
+      }
+      if (thirtyFt.isNotEmpty) {
+        resultBays.add((odd: null, even: bay.even, isThirtyFt: true));
+      }
+    }
+    return resultBays;
   }
   //
   Slot? _findSlotWithContainerId(int? containerId) {
@@ -294,8 +320,9 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     _onContainerSelected(container);
     final bayPairIndex = _bayPairs.indexWhere(
       (bayPair) =>
-          bayPair.odd == slotWithContainer.bay ||
-          bayPair.even == slotWithContainer.bay,
+          (bayPair.odd == slotWithContainer.bay ||
+              bayPair.even == slotWithContainer.bay) &&
+          bayPair.isThirtyFt == slotWithContainer.isThirtyFt,
     );
     _bayPairsScrollController.scrollTo(
       index: bayPairIndex,
@@ -314,6 +341,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
         slotWithContainer.bay,
         slotWithContainer.row,
         slotWithContainer.tier,
+        slotWithContainer.isThirtyFt,
       );
     }
     setState(() {
@@ -321,15 +349,17 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     });
   }
   //
-  void _onSlotSelected(int bay, int row, int tier) {
+  void _onSlotSelected(int bay, int row, int tier, bool isThirtyFt) {
     _selectedSlots = _stowagePlan.toFilteredSlotList(
       row: row,
       tier: tier,
       shouldIncludeSlot: (slot) {
         if (bay.isOdd) {
-          return slot.bay == bay || slot.bay == bay - 1;
+          return (slot.bay == bay || slot.bay == bay - 1) &&
+              slot.isThirtyFt == isThirtyFt;
         } else {
-          return slot.bay == bay || slot.bay == bay + 1;
+          return (slot.bay == bay || slot.bay == bay + 1) &&
+              slot.isThirtyFt == isThirtyFt;
         }
       },
     );
@@ -349,8 +379,9 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     if (container == null) return;
     final slotToPut = _selectedSlots
         .firstWhereOrNull((s) => switch (container.type.lengthCode) {
-              4 => s.bay.isEven && s.isActive,
-              2 => s.bay.isOdd && s.isActive,
+              4 => s.bay.isEven && !s.isThirtyFt && s.isActive,
+              3 => s.bay.isEven && s.isThirtyFt && s.isActive,
+              2 => s.bay.isOdd && !s.isThirtyFt && s.isActive,
               _ => false,
             });
     if (slotToPut == null) return;
@@ -359,6 +390,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
       bay: slotToPut.bay,
       row: slotToPut.row,
       tier: slotToPut.tier,
+      isThirtyFt: slotToPut.isThirtyFt,
     );
     putResult.inspect((_) {
       _selectedSlots.clear();
@@ -384,6 +416,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
       bay: slotToRemove.bay,
       row: slotToRemove.row,
       tier: slotToRemove.tier,
+      isThirtyFt: slotToRemove.isThirtyFt,
     );
     removeResult.inspect((_) {
       if (mounted) {
@@ -406,8 +439,9 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
         ?.type;
     if (selectedContainerType == null) return true;
     return switch (selectedContainerType.lengthCode) {
-      4 => slot.bay.isEven || slot.containerId != null,
-      2 => slot.bay.isOdd || slot.containerId != null,
+      2 => (slot.bay.isOdd || slot.containerId != null) && !slot.isThirtyFt,
+      3 => (slot.bay.isEven || slot.containerId != null) && slot.isThirtyFt,
+      4 => (slot.bay.isEven || slot.containerId != null) && !slot.isThirtyFt,
       _ => false,
     };
   }
@@ -415,7 +449,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
   void _showErrorMessage(String message) {
     if (!mounted) return;
     BottomMessage.error(
-      message: message,
+      message: message.truncate(),
       displayDuration: Duration(
         milliseconds: const Setting('errorMessageDisplayDuration').toInt,
       ),

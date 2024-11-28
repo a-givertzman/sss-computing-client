@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sss_computing_client/core/widgets/tabs/tab_setting.dart';
 ///
-/// Tab view that construsted based on list of [TabSetting].
+/// Tab view that constructed based on list of [TabSetting].
 class TabViewWidget extends StatelessWidget {
   final List<TabSetting> _tabSettings;
   final bool _isScrollable;
@@ -9,10 +9,10 @@ class TabViewWidget extends StatelessWidget {
   final Color? _dividerColor;
   final ScrollPhysics? _physics;
   ///
-  /// Creates tab view that construsted based on list of provided [TabSetting].
+  /// Creates tab view that constructed based on list of provided [TabSetting].
   ///
-  ///   [tabsSettings] used to construct [TabBarView] and [TabBar].
-  ///   [isScrollable], [indicatorColor], [dividerColor] and [physics]
+  /// * [tabSettings] used to construct [TabBarView] and [TabBar].
+  /// * [isScrollable], [indicatorColor], [dividerColor] and [physics]
   /// used as parameters of [TabBar].
   const TabViewWidget({
     super.key,
@@ -26,7 +26,7 @@ class TabViewWidget extends StatelessWidget {
         _indicatorColor = indicatorColor,
         _dividerColor = dividerColor,
         _physics = physics;
-  ///
+  //
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

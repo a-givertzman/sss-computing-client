@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/extensions/strings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo_stowage_factor_record.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_hold_cargos.dart';
@@ -77,6 +78,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
   @override
   Widget build(BuildContext context) {
     final blockPadding = const Setting('blockPadding').toDouble;
+    final shipId = const Setting('shipId').toInt;
     final navigator = Navigator.of(context);
     return Padding(
       padding: EdgeInsets.all(blockPadding),
@@ -109,7 +111,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                     toValue: (value) => JsonSvgPathProjections(
                       json: json.decode(value),
                     ),
-                    filter: {'id': 1},
+                    filter: {'id': shipId},
                   ).fetch,
                   caseData: (context, hull, _) => FutureBuilderWidget(
                     refreshStream: widget._appRefreshStream,
@@ -122,7 +124,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                       toValue: (value) => JsonSvgPathProjections(
                         json: json.decode(value),
                       ),
-                      filter: {'id': 1},
+                      filter: {'id': shipId},
                     ).fetch,
                     caseData: (context, hullBeauty, _) => CargoSchemes(
                       cargos: _cargos,
@@ -173,7 +175,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                     ),
                     authToken: widget._authToken,
                     tableName: 'hold_compartment',
-                    fieldName: 'name',
+                    fieldName: 'name_rus',
                     filter: {'id': cargo.id},
                     toValue: toValue,
                   ),
@@ -246,6 +248,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
                   useDefaultEditing: false,
                 ),
                 HoldCargoShiftableColumn(
+                  theme: Theme.of(context),
                   buildRecord: (cargo, toValue) => HoldCargoShiftableRecord(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -313,6 +316,11 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
-    BottomMessage.error(message: message).show(context);
+    BottomMessage.error(
+      message: message.truncate(),
+      displayDuration: Duration(
+        milliseconds: const Setting('errorMessageDisplayDuration').toInt,
+      ),
+    ).show(context);
   }
 }

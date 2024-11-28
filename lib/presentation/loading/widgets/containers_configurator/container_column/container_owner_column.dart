@@ -18,7 +18,7 @@ class ContainerOwnerColumn implements TableColumn<FreightContainer, String> {
   String get key => 'ownerCode';
   //
   @override
-  FieldType get type => FieldType.int;
+  FieldType get type => FieldType.string;
   //
   @override
   String get name => const Localized('Name').v;

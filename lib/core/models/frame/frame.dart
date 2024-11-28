@@ -14,10 +14,20 @@ abstract interface class Frame {
 /// [Frame] that parses itself from json map.
 final class JsonFrame implements Frame {
   final Map<String, dynamic> _json;
+  ///
   /// [Frame] that parses itself from json map.
   const JsonFrame({
     required Map<String, dynamic> json,
   }) : _json = json;
+  ///
+  /// [Frame] that parses itself from database [row]
+  /// TODO: discuss concept of frame indexing
+  factory JsonFrame.fromRow(Map<String, dynamic> row) => JsonFrame(json: {
+        'shipId': row['shipId'] as int,
+        'projectId': row['projectId'] as int?,
+        'index': int.tryParse('${row['index']}') ?? -1,
+        'x': row['x'] as double,
+      });
   //
   @override
   int get index => _json['index'];

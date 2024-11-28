@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/extensions/strings.dart';
 import 'package:sss_computing_client/core/models/ship/ship_details.dart';
 import 'package:sss_computing_client/core/widgets/disabled_widget.dart';
 import 'package:sss_computing_client/core/widgets/edit_on_tap_widget/edit_on_tap_field.dart';
@@ -94,7 +95,7 @@ class _ShipBodyState extends State<ShipBody> {
     if (!mounted) return;
     final durationMs = const Setting('errorMessageDisplayDuration').toInt;
     BottomMessage.error(
-      message: message,
+      message: message.truncate(),
       displayDuration: Duration(milliseconds: durationMs),
     ).show(context);
   }

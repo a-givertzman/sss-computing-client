@@ -226,7 +226,7 @@
   "Way": ["Way", "Маршрут"],
   "POL timing": ["POL timing", "Время прибывания в POL"],
   "POD timing": ["POD timing", "Время прибывания в POD"],
-  "Value is required": ["Value is required", "Значение необходимо"],
+  "Value is required": ["Value is required", "Необходимо указать значение"],
   "Page not found": ["Page not found", "Страница не найдена"],
   "ft": ["t.fr", "т.шп"],
   "fr": ["fr", "шп"],
@@ -240,12 +240,8 @@
   "ddo": ["DSC", "ДДО"],
   "Parameter": ["Parameter", "Параметр"],
   "to port side": ["to port side", "на левый борт"],
-  "to starboard": ["to starboard", "на првый борт"],
+  "to starboard": ["to starboard", "на правый борт"],
   "Stability criterions": ["Stability criterions", "Критерии остойчивости"],
-  "Actual and limit values did not pass relation test": [
-    "Actual and limit values did not pass relation test",
-    "Актуальное значение не соответствует заданному лимиту"
-  ],
   "On this page": ["On this page", "На этой странице"],
   "Ship": ["Ship", "Судно"],
   "Itinerary": ["Itinerary", "Маршрут"],
@@ -287,7 +283,7 @@
   "voyageCode": ["Voyage code", "Код рейса"],
   "icingTypes": ["Icing", "Обледенение"],
   "waterAreaTypes": ["Water area", "Акватория"],
-  "draftMarkTypes": ["Load line", "Грузовая марка"],
+  "loadLineTypes": ["Load line", "Грузовая марка"],
   "wettingDeck": [
     "Wetting of deck timber cargo",
     "Намокание палубного лесного груза"
@@ -302,6 +298,35 @@
   "summer": ["Summer", "Летняя"],
   "winter": ["Winter", "Зимняя"],
   "light": ["Light", "Легкая"],
+  "Winter North Atlantic": [
+    "Winter North Atlantic",
+    "Зимняя в Северной Атлантике"
+  ],
+  "Tropical": ["Tropical", "Тропическая"],
+  "Fresh water in summer": [
+    "Fresh water in summer",
+    "Летняя в пресной воде"
+  ],
+  "Tropical fresh water": [
+    "Tropical fresh water",
+    "Тропическая в пресной воде"
+  ],
+  "Summer timber": ["Summer timber", "Лесная летняя"],
+  "Winter timber": ["Winter timber", "Лесная зимняя"],
+  "Winter North Atlantic timber": [
+    "Winter North Atlantic timber",
+    "Лесная зимняя в Северной Атлантике"
+  ],
+  "Tropical timber": ["Tropical timber", "Лесная тропическая"],
+  "Fresh water in summer timber": [
+    "Fresh water in summer timber",
+    "Лесная летняя в пресной воде"
+  ],
+  "Tropical fresh water timber": [
+    "Tropical fresh water timber",
+    "Лесная тропическая в пресной воде"
+  ],
+  "Subdivision LL": ["Subdivision LL", "ГВЛ деления на отсеки"],
   "harbor": ["Harbor", "Порт"],
   "sea": ["Sea", "Море"],
   "general": ["General", "Общие"],
@@ -312,6 +337,7 @@
   "caution": ["Caution", "Осторожно"],
   "navigationArea": ["Navigation area", "Район плавания"],
   "not found": ["Not found", "Не найдено"],
+  "Bad state: no element": ["Not found", "Не найдено"],
   "fetch error": ["Fetch error", "Ошибка загрузки"],
   "checking of containers port references failed": [
     "Checking of containers port references failed",
@@ -329,10 +355,7 @@
     "Slot to put container not found",
     "Слот для размещения контейнера не найден"
   ],
-  "Slot not found": [
-    "Slot not found",
-    "Слот не найден"
-  ],
+  "Slot not found": ["Slot not found", "Слот не найден"],
   "Collection corrupted during operation execution": [
     "Collection corrupted during operation execution",
     "Коллекция повреждена во время выполнения операции"
@@ -367,6 +390,7 @@
   ],
   "Delete anyway": ["Delete anyway", "Удалить все равно"],
   "Delete waypoint": ["Delete waypoint", "Удалить точку маршрута"],
+  "Add waypoint": ["Add waypoint", "Добавить точку маршрута"],
   "Container with this waypoint as POL or POD exists": [
     "Container with this waypoint as POL or POD exists",
     "Существует контейнер для которого эта точка маршрута задана как POL или POD"
@@ -374,5 +398,24 @@
   "Deleting of this waypoint will clear all container's POL and POD record with this waypoint": [
     "Deleting of this waypoint will clear all container's POL and POD record with this waypoint",
     "Удаление этой точки маршрута приведет к сбросу всех записей о POL и POD для контейнеров, связанных с этой точкой"
-  ]
+  ],
+  "30ft_indicator": ["*", "*"],
+  "criteria successfully passed": ["Criteria successfully passed", "Критериев выполнено"],
+  "criteria failed": ["Criteria failed", "Критериев не выполнено"],
+  "criterion passed": ["Criterion passed", "Критерий выполняется"],
+  "criterion failed": ["Criterion failed", "Критерий не выполняется"],
+  "draft criteria": ["Draft criteria", "Критерии посадки"],
+  "Back": ["Back", "Назад"],
+  "General cargos": ["General", "Генеральный"],
+  "General cargo": ["General cargo", "Генеральный груз"],
+  "isOnDeck": ["Deck", "Палубный"],
+  "isTimber": ["Timber", "Лесной"],
+  "Add container": ["Add container", "Добавить контейнер"],
+  "Delete container": ["Delete container", "Удалить контейнер"],
+  "Load container": ["Load container", "Загрузить контейнер"],
+  "Unload container": ["Unload container", "Выгрузить контейнер"],
+  "Correction": ["correction", "поправка"],
+  "inf": ["∞", "∞"],
+  "deg": ["°", "°"],
+  "draught": ["Draught", "Осадка"]
 }
