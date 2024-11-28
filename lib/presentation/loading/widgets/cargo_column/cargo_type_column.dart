@@ -63,8 +63,8 @@ class CargoTypeColumn implements TableColumn<Cargo, String> {
   }
   //
   @override
-  Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['type'] = CargoType.from(text).key,
+  Cargo copyRowWith(Cargo cargo, String value) => JsonCargo(
+        json: cargo.asMap()..['type'] = CargoType.from(value).key,
       );
   //
   @override

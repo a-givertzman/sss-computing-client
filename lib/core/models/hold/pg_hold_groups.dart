@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/hold/hold_group.dart';
 import 'package:sss_computing_client/core/models/hold/hold_groups.dart';
 import 'package:sss_computing_client/core/models/hold/json_hold_group.dart';
@@ -25,6 +26,8 @@ class PgHoldGroups implements HoldGroups {
   //
   @override
   Future<Result<List<HoldGroup>, Failure<String>>> fetchAll() async {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -39,7 +42,8 @@ class PgHoldGroups implements HoldGroups {
             FROM
                 hold_group AS hg
             WHERE
-                hg.ship_id = 1
+                hg.ship_id = $shipId AND
+                hg.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
             ORDER BY "id";
             """,
       ),
@@ -87,8 +91,7 @@ class PgHoldGroups implements HoldGroups {
             FROM
                 hold_group AS hg
             WHERE
-                hg.ship_id = 1
-                AND hg.id = $id
+                hg.id = $id
             ORDER BY "id";
             """,
       ),

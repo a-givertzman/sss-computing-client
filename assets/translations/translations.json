@@ -1,690 +1,1278 @@
 {
-    "Save": [
-        "Save",
-        "Сохранить"
-    ],
-    "Please, fix all errors before saving!": [
-        "Please, fix all errors before saving!",
-        "Пожалуйста, исправьте все ошибки перед сохранением!"
-    ],
-    "Too few characters": [
-        "Too few characters",
-        "Слишком мало символов"
-    ],
-    "Too many characters": [
-        "Too many characters",
-        "Слишком много символов"
-    ],
-    "Data saving": [
-        "Data saving",
-        "Сохранение данных"
-    ],
-    "Data saved": [
-        "Data saved",
-        "Данные сохранены"
-    ],
-    "Data will be persisted on the server. Do you want to proceed?": [
-        "Data will be persisted on the server. Do you want to proceed?",
-        "Данные будут сохранены на сервере. Хотите продолжить?"
-    ],
-    "Something went wrong": [
-        "Something went wrong",
-        "Что-то пошло не так"
-    ],
-    "Ship parameters": [
-        "Ship parameters",
-        "Параметры корабля"
-    ],
-    "Ship length": [
-        "Ship length",
-        "Длина корабля"
-    ],
-    "Water density": [
-        "Water density",
-        "Плотность воды"
-    ],
-    "g/ml": [
-        "g/ml",
-        "г/мл"
-    ],
-    "Number of parts": [
-        "Number of parts",
-        "Число частей"
-    ],
-    "Shear force": [
-        "Shear force",
-        "Перерезывающая сила"
-    ],
-    "Bending moment": [
-        "Bending moment",
-        "Изгибающий момент"
-    ],
-    "Frames": [
-        "Frames",
-        "Шпангоуты"
-    ],
-    "MN": [
-        "MN",
-        "МН"
-    ],
-    "MN*m": [
-        "MN·m",
-        "МН·м"
-    ],
-    "Limit": [
-        "Limit",
-        "Предел"
-    ],
-    "Frame": [
-        "Frame",
-        "Шпангоут"
-    ],
-    "Value": [
-        "Value",
-        "Значение"
-    ],
-    "Low limit": [
-        "Low limit",
-        "Ниж. предел"
-    ],
-    "High limit": [
-        "High limit",
-        "Верх. предел"
-    ],
-    "Limits gap": [
-        "Allow",
-        "Допустимый"
-    ],
-    "Status": [
-        "Status",
-        "Статус"
-    ],
-    "Retry": [
-        "Retry",
-        "Повторить"
-    ],
-    "Error": [
-        "Error",
-        "Ошибка"
-    ],
-    "Data loading error": [
-        "Data loading error",
-        "Ошибка при загрузке данных"
-    ],
-    "No data": [
-        "No data",
-        "Отсутствуют данные для загрузки"
-    ],
-    "Unknown error, no response from backend": [
-        "Unknown error, no response from backend",
-        "Неизвестная ошибка, нет ответа от бэкенда"
-    ],
-    "Backend error": [
-        "Backend error",
-        "Ошибка бэкенда"
-    ],
-    "Calculation completed": [
-        "Calculation completed",
-        "Вычисления закончены"
-    ],
-    "Heel": [
-        "Heel",
-        "Крен"
-    ],
-    "Trim": [
-        "Trim",
-        "Дифферент"
-    ],
-    "Metacentric height": [
-        "Metacentric height",
-        "Метацентрическая высота"
-    ],
-    "Bulk": [
-        "Bulk",
-        "Навалочный"
-    ],
-    "Stores": [
-        "Stores",
-        "Запасы"
-    ],
-    "Cargo": [
-        "Cargo",
-        "Груз"
-    ],
-    "Deadweight": [
-        "Deadweight",
-        "Дедвейт"
-    ],
-    "Lightship": [
-        "Lightship",
-        "Порожнем"
-    ],
-    "Icing": [
-        "Icing",
-        "Наледь"
-    ],
-    "Wetting": [
-        "Wetting",
-        "Намокание"
-    ],
-    "Displacement": [
-        "Displacement",
-        "Водоизмещение"
-    ],
-    "Strength force, Allow": [
-        "Strength force, Allow",
-        "Прочность, Допустимый"
-    ],
-    "PS": [
-        "PS",
-        "ЛБ"
-    ],
-    "SB": [
-        "SB",
-        "Пр.Б"
-    ],
-    "AFT": [
-        "AFT",
-        "Корма"
-    ],
-    "FWD": [
-        "FWD",
-        "Нос"
-    ],
-    "stern": [
-        "AFT",
-        "Корма"
-    ],
-    "bow": [
-        "FWD",
-        "Нос"
-    ],
-    "AP": [
-        "AP",
-        "КП"
-    ],
-    "Avg": [
-        "AFT",
-        "Ср."
-    ],
-    "FP": [
-        "FP",
-        "НП"
-    ],
-    "Mf.sx": [
-        "Mf.sx",
-        "Mf.sx"
-    ],
-    "Mf.sy": [
-        "Mf.sy",
-        "Mf.sy"
-    ],
-    "VCG": [
-        "VCG",
-        "z₉"
-    ],
-    "LCG": [
-        "VCG",
-        "x₉"
-    ],
-    "TCG": [
-        "VCG",
-        "y₉"
-    ],
-    "t•m": [
-        "t•m",
-        "т•м"
-    ],
-    "Name": [
-        "Name",
-        "Имя"
-    ],
-    "Mass": [
-        "Weight",
-        "Масса"
-    ],
-    "Volume": [
-        "V",
-        "V"
-    ],
-    "Density": [
-        "ρ",
-        "ρ"
-    ],
-    "Stowage factor": [
-        "SF",
-        "УПО"
-    ],
-    "Shiftable": [
-        "Shiftable",
-        "Смещаемый"
-    ],
-    "Run calculations": [
-        "Run calculations",
-        "Запустить вычисления"
-    ],
-    "Calculations in progress": [
-        "Calculations in progress",
-        "Производятся вычисления"
-    ],
-    "Main": [
-        "Main",
-        "Главная"
-    ],
-    "Strength": [
-        "Strength",
-        "Прочность"
-    ],
-    "Stability": [
-        "Stability",
-        "Остойчивость"
-    ],
-    "Loading": [
-        "Loading",
-        "Загрузка"
-    ],
-    "Drafts": [
-        "Drafts",
-        "Осадки"
-    ],
-    "Draft marks": [
-        "Draft marks",
-        "На марках углубления"
-    ],
-    "Perpendicular drafts": [
-        "Perpendicular drafts",
-        "На перпендикуляре"
-    ],
-    "Ballast": [
-        "Ballast",
-        "Балласт"
-    ],
-    "Ballast tank": [
-        "Ballast tanks",
-        "Балластные цистерны"
-    ],
-    "Stores tank": [
-        "Storage tanks",
-        "Цистерны запаса"
-    ],
-    "Other stores": [
-        "Other stores",
-        "Прочие запасы"
-    ],
-    "Hold": [
-        "Hold",
-        "Трюм"
-    ],
-    "Fresh water": [
-        "Fresh water",
-        "Пресная вода"
-    ],
-    "Acids and alkalis": [
-        "Acids and alkalis",
-        "Кислоты и щелочи"
-    ],
-    "Polluted liquids": [
-        "Polluted liquids",
-        "Загрязнения и другие жидкости"
-    ],
-    "Oils and fuels": [
-        "Oils and fuels",
-        "Масла и горючие жидкости"
-    ],
-    "Other": [
-        "Other",
-        "Другое"
-    ],
-    "Urea tank": [
-        "Urea tank",
-        "Цистерны мочевины"
-    ],
-    "Sundry tank": [
-        "Sundry tank",
-        "Цистерны грязных жидкостей"
-    ],
-    "Fresh & drinking water tank": [
-        "Fresh & drinking water tank",
-        "Цистерны питьевой и пресной воды"
-    ],
-    "Lubricating oil tank": [
-        "Lubricating oil tank",
-        "Цистерны масла"
-    ],
-    "Fuel tank": [
-        "Fuel tank",
-        "Цистерны топлива"
-    ],
-    "Bulk cargo": [
-        "Bulk cargo",
-        "Груз навалочный"
-    ],
-    "Bulk cargo, shiftable": [
-        "Bulk cargo, shiftable",
-        "Груз навалочный, смещаемый"
-    ],
-    "Axes": [
-        "Axes",
-        "Оси"
-    ],
-    "Grid": [
-        "Grid",
-        "Сетка"
-    ],
-    "Fr. R.": [
-        "Fr. R.",
-        "Шп. физ."
-    ],
-    "Fr. Th.": [
-        "Fr. Th.",
-        "Шп. теор."
-    ],
-    "Show axes": [
-        "Show axes",
-        "Показать оси"
-    ],
-    "Show grid": [
-        "Show grid",
-        "Показать сетку"
-    ],
-    "Show real frames": [
-        "Show real frames",
-        "Показать физические шпангоуты"
-    ],
-    "Show theoretic frames": [
-        "Show theoretic frames",
-        "Показать теоретические шпангоуты"
-    ],
-    "Only integer numbers allowed": [
-        "Only integer numbers allowed",
-        "Разрешены только целые числа"
-    ],
-    "Only real numbers allowed": [
-        "Only real numbers allowed",
-        "Разрешены только действительные числа"
-    ],
-    "Select cargo type to display": [
-        "Select cargo type to display",
-        "Выбрать тип груза для отображения"
-    ],
-    "Page not found": [
-        "Page not found",
-        "Страница не найдена"
-    ],
-    "ft": [
-        "t.fr",
-        "т.шп"
-    ],
-    "fr": [
-        "fr",
-        "шп"
-    ],
-    "Side": [
-        "Side",
-        "Сбоку"
-    ],
-    "Top": [
-        "Top",
-        "Сверху"
-    ],
-    "Righting lever": [
-        "Righting lever",
-        "Плечо остойчивости"
-    ],
-    "Angle of heel": [
-        "Angle of heel",
-        "Угол крена"
-    ],
-    "h": [
-        "GM",
-        "h"
-    ],
-    "radian": [
-        "rad",
-        "рад"
-    ],
-    "dso": [
-        "SSC",
-        "ДСО"
-    ],
-    "ddo": [
-        "DSC",
-        "ДДО"
-    ],
-    "Parameter": [
-        "Parameter",
-        "Параметр"
-    ],
-    "to port side": [
-        "to port side",
-        "на левый борт"
-    ],
-    "to starboard": [
-        "to starboard",
-        "на правый борт"
-    ],
-    "Stability criterions": [
-        "Stability criterions",
-        "Критерии остойчивости"
-    ],
-    "Actual and limit values did not pass relation test": [
-        "Actual and limit values did not pass relation test",
-        "Актуальное значение не соответствует заданному лимиту"
-    ],
-    "m^3": [
-        "m³",
-        "м³"
-    ],
-    "t/m^3": [
-        "t/m³",
-        "т/м³"
-    ],
-    "m^3/t": [
-        "m³/t",
-        "м³/т"
-    ],
-    "Edit": [
-        "Edit",
-        "Редактировать"
-    ],
-    "Cargo parameters": [
-        "Cargo parameters",
-        "Параметры груза"
-    ],
-    "Grain bulkheads installation": [
-        "Grain bulkheads installation",
-        "Установка зерновых переборок"
-    ],
-    "Overboard": [
-        "Overboard",
-        "За бортом"
-    ],
-    "Grain bulkhead": [
-        "Grain bulkhead",
-        "Зерновая переборка"
-    ],
-    "Grain bulkheads": [
-        "Grain bulkheads",
-        "Зерновые переборки"
-    ],
-    "Install bulkhead": [
-        "Install bulkhead",
-        "Установить переборку"
-    ],
-    "Remove bulkhead": [
-        "Remove bulkhead",
-        "Убрать переборку"
-    ],
-    "useMaxMfs": [
-        "Mf.sx max.",
-        "Mf.sx макс."
-    ],
-    "mfsModMax": [
-        "Consider maximum modifications",
-        "Учитываются максимальные поправки"
-    ],
-    "mfsModCurrent": [
-        "Consider current modifications",
-        "Учитываются поправки по текущему заполнению"
-    ],
-    "Containers": [
-        "Containers",
-        "Контейнеры"
-    ],
-    "BAY No.": [
-        "BAY No.",
-        "Бэй №"
-    ],
-    "Code": [
-        "Code",
-        "Код"
-    ],
-    "Container gross weight must be less than or equal to max gross weight": [
-        "Container gross weight must be less than or equal to max gross weight",
-        "Масса брутто контейнера должна быть не больше, чем максимальная масса брутто"
-    ],
-    "Container gross weight must be greater than or equal to tare weight": [
-        "Container gross weight must be greater than or equal to tare weight",
-        "Масса брутто контейнера должна быть не меньше, чем масса тары"
-    ],
-    "Container weights must be greater than or equal to 0": [
-        "Container weights must be greater than or equal to 0",
-        "Массы контейнера должны быть больше 0"
-    ],
-    "POL must be before POD in voyage": [
-        "POL must be before POD in voyage",
-        "POL должен быть раньше POD в маршруте"
-    ],
-    "POL must be before POD": [
-        "POL must be before POD",
-        "POL должен быть раньше POD"
-    ],
-    "POD must be after POL": [
-        "POD must be after POL",
-        "POD должен быть позже POL"
-    ],
-    "Slot": [
-        "Slot",
-        "Слот"
-    ],
-    "Max gross mass": [
-        "Max gross mass",
-        "Максимальная масса брутто"
-    ],
-    "Max gross mass cannot be negative": [
-        "Max gross mass cannot be negative",
-        "Максимальная масса брутто не может быть отрицательной"
-    ],
-    "Gross mass": [
-        "Gross mass",
-        "Масса брутто"
-    ],
-    "Gross mass cannot be negative": [
-        "Gross mass cannot be negative",
-        "Масса брутто не может быть отрицательной"
-    ],
-    "Tare mass": [
-        "Tare mass",
-        "Масса тары"
-    ],
-    "Type code": [
-        "Type code",
-        "Код типа"
-    ],
-    "Owner code": [
-        "Owner code",
-        "Код владельца"
-    ],
-    "Serial number": [
-        "Serial number",
-        "Серийный номер"
-    ],
-    "Check digit": [
-        "Check digit",
-        "Контрольное число"
-    ],
-    "Length": [
-        "Length",
-        "Длина"
-    ],
-    "Height": [
-        "Height",
-        "Высота"
-    ],
-    "Unknown length code": [
-        "Unknown length code",
-        "Неизвестный код длины"
-    ],
-    "Unknown height code": [
-        "Unknown height code",
-        "Неизвестный код высоты"
-    ],
-    "POL": [
-        "POL",
-        "POL"
-    ],
-    "POD": [
-        "POD",
-        "POD"
-    ],
-    "Number of containers": [
-        "Number of containers",
-        "Количество контейнеров"
-    ],
-    "Number of containers cannot be negative": [
-        "Number of containers cannot be negative",
-        "Количество контейнеров не может быть отрицательным"
-    ],
-    "Size and type": [
-        "Size and type",
-        "Размер и тип"
-    ],
-    "ISO code": [
-        "ISO code",
-        "Код ISO"
-    ],
-    "Unknown size": [
-        "Unknown size",
-        "Неизвестный тип"
-    ],
-    "Size code": [
-        "Size code",
-        "Код размера"
-    ],
-    "Max gross mass must be greater than or equal to gross mass": [
-        "Max gross mass must be greater than or equal to gross mass",
-        "Максимальная масса брутто должна быть не меньше массы брутто"
-    ],
-    "Gross mass must be greater than or equal to tare mass": [
-        "Gross mass must be greater than or equal to tare mass",
-        "Масса брутто должна быть не меньше массы тары"
-    ],
-    "Max net mass": [
-        "Max net mass",
-        "Максимальная масса нетто"
-    ],
-    "Net mass": [
-        "Net mass",
-        "Масса нетто"
-    ],
-    "Container code": [
-        "Container code",
-        "Код контейнера"
-    ],
-    "Way": [
-        "Way",
-        "Маршрут"
-    ],
-    "POL timing": [
-        "POL timing",
-        "Время прибывания в POL"
-    ],
-    "POD timing": [
-        "POD timing",
-        "Время прибывания в POD"
-    ],
-    "Value is required": [
-        "Value is required",
-        "Значение необходимо"
-    ]
+  "Save": [
+    "Save",
+    "Сохранить"
+  ],
+  "Please, fix all errors before saving!": [
+    "Please, fix all errors before saving!",
+    "Пожалуйста, исправьте все ошибки перед сохранением!"
+  ],
+  "Too few characters": [
+    "Too few characters",
+    "Слишком мало символов"
+  ],
+  "Too many characters": [
+    "Too many characters",
+    "Слишком много символов"
+  ],
+  "Data saving": [
+    "Data saving",
+    "Сохранение данных"
+  ],
+  "Data saved": [
+    "Data saved",
+    "Данные сохранены"
+  ],
+  "Data will be persisted on the server. Do you want to proceed?": [
+    "Data will be persisted on the server. Do you want to proceed?",
+    "Данные будут сохранены на сервере. Хотите продолжить?"
+  ],
+  "Something went wrong": [
+    "Something went wrong",
+    "Что-то пошло не так"
+  ],
+  "Ship parameters": [
+    "Ship parameters",
+    "Параметры корабля"
+  ],
+  "Ship length": [
+    "Ship length",
+    "Длина корабля"
+  ],
+  "Water density": [
+    "Water density",
+    "Плотность воды"
+  ],
+  "g/ml": [
+    "g/ml",
+    "г/мл"
+  ],
+  "Number of parts": [
+    "Number of parts",
+    "Число частей"
+  ],
+  "Shear force": [
+    "Shear force",
+    "Перерезывающая сила"
+  ],
+  "Bending moment": [
+    "Bending moment",
+    "Изгибающий момент"
+  ],
+  "Frames": [
+    "Frames",
+    "Шпангоуты"
+  ],
+  "MN": [
+    "MN",
+    "МН"
+  ],
+  "MN*m": [
+    "MN·m",
+    "МН·м"
+  ],
+  "Limit": [
+    "Limit",
+    "Предел"
+  ],
+  "Frame": [
+    "Frame",
+    "Шпангоут"
+  ],
+  "Value": [
+    "Value",
+    "Значение"
+  ],
+  "Low limit": [
+    "Low limit",
+    "Ниж. предел"
+  ],
+  "High limit": [
+    "High limit",
+    "Верх. предел"
+  ],
+  "Limits gap": [
+    "Allow",
+    "Допустимый"
+  ],
+  "Status": [
+    "Status",
+    "Статус"
+  ],
+  "Retry": [
+    "Retry",
+    "Повторить"
+  ],
+  "Error": [
+    "Error",
+    "Ошибка"
+  ],
+  "Data loading error": [
+    "Data loading error",
+    "Ошибка при загрузке данных"
+  ],
+  "No data": [
+    "No data",
+    "Отсутствуют данные для загрузки"
+  ],
+  "Unknown error, no response from backend": [
+    "Unknown error, no response from backend",
+    "Неизвестная ошибка, нет ответа от бэкенда"
+  ],
+  "Backend error": [
+    "Backend error",
+    "Ошибка бэкенда"
+  ],
+  "Calculation completed": [
+    "Calculation completed",
+    "Вычисления закончены"
+  ],
+  "Heel": [
+    "Heel",
+    "Крен"
+  ],
+  "Trim": [
+    "Trim",
+    "Дифферент"
+  ],
+  "Metacentric height": [
+    "Metacentric height",
+    "Метацентрическая высота"
+  ],
+  "Bulk": [
+    "Bulk",
+    "Навалочный"
+  ],
+  "Stores": [
+    "Stores",
+    "Запасы"
+  ],
+  "Cargo": [
+    "Cargo",
+    "Груз"
+  ],
+  "Deadweight": [
+    "Deadweight",
+    "Дедвейт"
+  ],
+  "Lightship": [
+    "Lightship",
+    "Порожнем"
+  ],
+  "Icing": [
+    "Icing",
+    "Наледь"
+  ],
+  "Wetting": [
+    "Wetting",
+    "Намокание"
+  ],
+  "Displacement": [
+    "Displacement",
+    "Водоизмещение"
+  ],
+  "Strength force, Allow": [
+    "Strength force, Allow",
+    "Прочность, Допустимый"
+  ],
+  "PS": [
+    "PS",
+    "ЛБ"
+  ],
+  "SB": [
+    "SB",
+    "Пр.Б"
+  ],
+  "AFT": [
+    "AFT",
+    "Корма"
+  ],
+  "FWD": [
+    "FWD",
+    "Нос"
+  ],
+  "stern": [
+    "AFT",
+    "Корма"
+  ],
+  "bow": [
+    "FWD",
+    "Нос"
+  ],
+  "AP": [
+    "AP",
+    "КП"
+  ],
+  "Avg": [
+    "AFT",
+    "Ср."
+  ],
+  "FP": [
+    "FP",
+    "НП"
+  ],
+  "Mf.sx": [
+    "Mf.sx",
+    "Mf.sx"
+  ],
+  "Mf.sy": [
+    "Mf.sy",
+    "Mf.sy"
+  ],
+  "VCG": [
+    "VCG",
+    "z₉"
+  ],
+  "LCG": [
+    "VCG",
+    "x₉"
+  ],
+  "TCG": [
+    "VCG",
+    "y₉"
+  ],
+  "t•m": [
+    "t•m",
+    "т•м"
+  ],
+  "Name": [
+    "Name",
+    "Имя"
+  ],
+  "Mass": [
+    "Weight",
+    "Масса"
+  ],
+  "Volume": [
+    "V",
+    "V"
+  ],
+  "Density": [
+    "ρ",
+    "ρ"
+  ],
+  "Stowage factor": [
+    "SF",
+    "УПО"
+  ],
+  "Shiftable": [
+    "Shiftable",
+    "Смещаемый"
+  ],
+  "Run calculations": [
+    "Run calculations",
+    "Запустить вычисления"
+  ],
+  "Calculations in progress": [
+    "Calculations in progress",
+    "Производятся вычисления"
+  ],
+  "Main": [
+    "Main",
+    "Главная"
+  ],
+  "Strength": [
+    "Strength",
+    "Прочность"
+  ],
+  "Stability": [
+    "Stability",
+    "Остойчивость"
+  ],
+  "Loading": [
+    "Loading",
+    "Загрузка"
+  ],
+  "Drafts": [
+    "Drafts",
+    "Осадки"
+  ],
+  "Draft marks": [
+    "Draft marks",
+    "На марках углубления"
+  ],
+  "Perpendicular drafts": [
+    "Perpendicular drafts",
+    "На перпендикуляре"
+  ],
+  "Ballast": [
+    "Ballast",
+    "Балласт"
+  ],
+  "Ballast tank": [
+    "Ballast tanks",
+    "Балластные цистерны"
+  ],
+  "Stores tank": [
+    "Storage tanks",
+    "Цистерны запаса"
+  ],
+  "Other stores": [
+    "Other stores",
+    "Прочие запасы"
+  ],
+  "Hold": [
+    "Hold",
+    "Трюм"
+  ],
+  "Fresh water": [
+    "Fresh water",
+    "Пресная вода"
+  ],
+  "Acids and alkalis": [
+    "Acids and alkalis",
+    "Кислоты и щелочи"
+  ],
+  "Polluted liquids": [
+    "Polluted liquids",
+    "Загрязнения и другие жидкости"
+  ],
+  "Oils and fuels": [
+    "Oils and fuels",
+    "Масла и горючие жидкости"
+  ],
+  "Other": [
+    "Other",
+    "Другое"
+  ],
+  "Urea tank": [
+    "Urea tank",
+    "Цистерны мочевины"
+  ],
+  "Sundry tank": [
+    "Sundry tank",
+    "Цистерны грязных жидкостей"
+  ],
+  "Fresh & drinking water tank": [
+    "Fresh & drinking water tank",
+    "Цистерны питьевой и пресной воды"
+  ],
+  "Lubricating oil tank": [
+    "Lubricating oil tank",
+    "Цистерны масла"
+  ],
+  "Fuel tank": [
+    "Fuel tank",
+    "Цистерны топлива"
+  ],
+  "Bulk cargo": [
+    "Bulk cargo",
+    "Груз навалочный"
+  ],
+  "Bulk cargo, shiftable": [
+    "Bulk cargo, shiftable",
+    "Груз навалочный, смещаемый"
+  ],
+  "Axes": [
+    "Axes",
+    "Оси"
+  ],
+  "Grid": [
+    "Grid",
+    "Сетка"
+  ],
+  "Fr. R.": [
+    "Fr. R.",
+    "Шп. физ."
+  ],
+  "Fr. Th.": [
+    "Fr. Th.",
+    "Шп. теор."
+  ],
+  "Show axes": [
+    "Show axes",
+    "Показать оси"
+  ],
+  "Show grid": [
+    "Show grid",
+    "Показать сетку"
+  ],
+  "Show real frames": [
+    "Show real frames",
+    "Показать физические шпангоуты"
+  ],
+  "Show theoretic frames": [
+    "Show theoretic frames",
+    "Показать теоретические шпангоуты"
+  ],
+  "Only integer numbers allowed": [
+    "Only integer numbers allowed",
+    "Разрешены только целые числа"
+  ],
+  "Only real numbers allowed": [
+    "Only real numbers allowed",
+    "Разрешены только действительные числа"
+  ],
+  "Select cargo type to display": [
+    "Select cargo type to display",
+    "Выбрать тип груза для отображения"
+  ],
+  "m^3": [
+    "m³",
+    "м³"
+  ],
+  "t/m^3": [
+    "t/m³",
+    "т/м³"
+  ],
+  "m^3/t": [
+    "m³/t",
+    "м³/т"
+  ],
+  "Edit": [
+    "Edit",
+    "Редактировать"
+  ],
+  "Cargo parameters": [
+    "Cargo parameters",
+    "Параметры груза"
+  ],
+  "Grain bulkheads installation": [
+    "Grain bulkheads installation",
+    "Установка зерновых переборок"
+  ],
+  "Overboard": [
+    "Overboard",
+    "За бортом"
+  ],
+  "Grain bulkhead": [
+    "Grain bulkhead",
+    "Зерновая переборка"
+  ],
+  "Grain bulkheads": [
+    "Grain bulkheads",
+    "Зерновые переборки"
+  ],
+  "Install bulkhead": [
+    "Install bulkhead",
+    "Установить переборку"
+  ],
+  "Remove bulkhead": [
+    "Remove bulkhead",
+    "Убрать переборку"
+  ],
+  "useMaxMfs": [
+    "Mf.sx max.",
+    "Mf.sx макс."
+  ],
+  "mfsModMax": [
+    "Consider maximum modifications",
+    "Учитываются максимальные поправки"
+  ],
+  "mfsModCurrent": [
+    "Consider current modifications",
+    "Учитываются поправки по текущему заполнению"
+  ],
+  "Containers": [
+    "Containers",
+    "Контейнеры"
+  ],
+  "BAY No.": [
+    "BAY No.",
+    "Бэй №"
+  ],
+  "Code": [
+    "Code",
+    "Код"
+  ],
+  "Container gross weight must be less than or equal to max gross weight": [
+    "Container gross weight must be less than or equal to max gross weight",
+    "Масса брутто контейнера должна быть не больше, чем максимальная масса брутто"
+  ],
+  "Container gross weight must be greater than or equal to tare weight": [
+    "Container gross weight must be greater than or equal to tare weight",
+    "Масса брутто контейнера должна быть не меньше, чем масса тары"
+  ],
+  "Container weights must be greater than or equal to 0": [
+    "Container weights must be greater than or equal to 0",
+    "Массы контейнера должны быть больше 0"
+  ],
+  "POL must be before POD in voyage": [
+    "POL must be before POD in voyage",
+    "POL должен быть раньше POD в маршруте"
+  ],
+  "POL must be before POD": [
+    "POL must be before POD",
+    "POL должен быть раньше POD"
+  ],
+  "POD must be after POL": [
+    "POD must be after POL",
+    "POD должен быть позже POL"
+  ],
+  "Slot": [
+    "Slot",
+    "Слот"
+  ],
+  "Max gross mass": [
+    "Max gross mass",
+    "Максимальная масса брутто"
+  ],
+  "Max gross mass cannot be negative": [
+    "Max gross mass cannot be negative",
+    "Максимальная масса брутто не может быть отрицательной"
+  ],
+  "Gross mass": [
+    "Gross mass",
+    "Масса брутто"
+  ],
+  "Gross mass cannot be negative": [
+    "Gross mass cannot be negative",
+    "Масса брутто не может быть отрицательной"
+  ],
+  "Tare mass": [
+    "Tare mass",
+    "Масса тары"
+  ],
+  "Type code": [
+    "Type code",
+    "Код типа"
+  ],
+  "Owner code": [
+    "Owner code",
+    "Код владельца"
+  ],
+  "Serial number": [
+    "Serial number",
+    "Серийный номер"
+  ],
+  "Check digit": [
+    "Check digit",
+    "Контрольное число"
+  ],
+  "Length": [
+    "Length",
+    "Длина"
+  ],
+  "Height": [
+    "Height",
+    "Высота"
+  ],
+  "Unknown length code": [
+    "Unknown length code",
+    "Неизвестный код длины"
+  ],
+  "Unknown height code": [
+    "Unknown height code",
+    "Неизвестный код высоты"
+  ],
+  "POL": [
+    "POL",
+    "POL"
+  ],
+  "POD": [
+    "POD",
+    "POD"
+  ],
+  "Number of containers": [
+    "Number of containers",
+    "Количество контейнеров"
+  ],
+  "Number of containers cannot be negative": [
+    "Number of containers cannot be negative",
+    "Количество контейнеров не может быть отрицательным"
+  ],
+  "Size and type": [
+    "Size and type",
+    "Размер и тип"
+  ],
+  "ISO code": [
+    "ISO code",
+    "Код ISO"
+  ],
+  "Unknown size": [
+    "Unknown size",
+    "Неизвестный тип"
+  ],
+  "Size code": [
+    "Size code",
+    "Код размера"
+  ],
+  "Max gross mass must be greater than or equal to gross mass": [
+    "Max gross mass must be greater than or equal to gross mass",
+    "Максимальная масса брутто должна быть не меньше массы брутто"
+  ],
+  "Gross mass must be greater than or equal to tare mass": [
+    "Gross mass must be greater than or equal to tare mass",
+    "Масса брутто должна быть не меньше массы тары"
+  ],
+  "Max net mass": [
+    "Max net mass",
+    "Максимальная масса нетто"
+  ],
+  "Net mass": [
+    "Net mass",
+    "Масса нетто"
+  ],
+  "Container code": [
+    "Container code",
+    "Код контейнера"
+  ],
+  "Way": [
+    "Way",
+    "Маршрут"
+  ],
+  "POL timing": [
+    "POL timing",
+    "Время прибывания в POL"
+  ],
+  "POD timing": [
+    "POD timing",
+    "Время прибывания в POD"
+  ],
+  "Value is required": [
+    "Value is required",
+    "Необходимо указать значение"
+  ],
+  "Page not found": [
+    "Page not found",
+    "Страница не найдена"
+  ],
+  "ft": [
+    "t.fr",
+    "т.шп"
+  ],
+  "fr": [
+    "fr",
+    "шп"
+  ],
+  "Side": [
+    "Side",
+    "Сбоку"
+  ],
+  "Top": [
+    "Top",
+    "Сверху"
+  ],
+  "Righting lever": [
+    "Righting lever",
+    "Плечо остойчивости"
+  ],
+  "Angle of heel": [
+    "Angle of heel",
+    "Угол крена"
+  ],
+  "h": [
+    "GM",
+    "h"
+  ],
+  "radian": [
+    "rad",
+    "рад"
+  ],
+  "dso": [
+    "SSC",
+    "ДСО"
+  ],
+  "ddo": [
+    "DSC",
+    "ДДО"
+  ],
+  "Parameter": [
+    "Parameter",
+    "Параметр"
+  ],
+  "to port side": [
+    "to port side",
+    "на левый борт"
+  ],
+  "to starboard": [
+    "to starboard",
+    "на правый борт"
+  ],
+  "Stability criterions": [
+    "Stability criterions",
+    "Критерии остойчивости"
+  ],
+  "On this page": [
+    "On this page",
+    "На этой странице"
+  ],
+  "Ship": [
+    "Ship",
+    "Судно"
+  ],
+  "Itinerary": [
+    "Itinerary",
+    "Маршрут"
+  ],
+  "Voyage": [
+    "Voyage",
+    "Рейс"
+  ],
+  "Port": [
+    "Port",
+    "Порт"
+  ],
+  "Port code": [
+    "Port code",
+    "Код порта"
+  ],
+  "Arrival": [
+    "Arrival",
+    "Прибытие"
+  ],
+  "Departure": [
+    "Departure",
+    "Отправление"
+  ],
+  "Voyage code": [
+    "Voyage code",
+    "Код рейса"
+  ],
+  "Yes": [
+    "Yes",
+    "Да"
+  ],
+  "No": [
+    "No",
+    "Нет"
+  ],
+  "Voyage data": [
+    "Voyage data",
+    "Данные по рейсу"
+  ],
+  "Ship data": [
+    "Ship data",
+    "Данные по судну"
+  ],
+  "Add": [
+    "Add",
+    "Добавить"
+  ],
+  "Delete": [
+    "Delete",
+    "Удалить"
+  ],
+  "Draft limit": [
+    "Draft limit",
+    "Макс. осадка"
+  ],
+  "callSign": [
+    "Call sign",
+    "Позывной"
+  ],
+  "shipName": [
+    "Ship name",
+    "Наименование судна"
+  ],
+  "imo": [
+    "IMO Number",
+    "Номер ИМО"
+  ],
+  "mmsi": [
+    "MMSI",
+    "MMSI"
+  ],
+  "shipType": [
+    "Ship Type",
+    "Тип судна"
+  ],
+  "shipClassification": [
+    "Classification Society",
+    "Классификационное общество"
+  ],
+  "registration": [
+    "Registration number",
+    "Регистровый номер"
+  ],
+  "registration_port": [
+    "Registration port",
+    "Порт приписки"
+  ],
+  "flagState": [
+    "Flag state",
+    "Флаг приписки"
+  ],
+  "shipOwner": [
+    "Owner",
+    "Cудовладелец"
+  ],
+  "shipOwnerCode": [
+    "Owner code",
+    "Код судовладельца"
+  ],
+  "buildYard": [
+    "Build yard",
+    "Верфь постройки"
+  ],
+  "buildPlace": [
+    "Build place",
+    "Место постройки"
+  ],
+  "buildYear": [
+    "Build year",
+    "Год постройки"
+  ],
+  "shipBuilderNumber": [
+    "Ship builder hull",
+    "Заводской номер"
+  ],
+  "shipMaster": [
+    "Master",
+    "Капитан"
+  ],
+  "shipChiefMate": [
+    "Chief mate",
+    "Старший помощник капитана"
+  ],
+  "intakeWaterDensity": [
+    "Intake water density",
+    "Плотность забортной воды"
+  ],
+  "voyageDescription": [
+    "Voyage description",
+    "Описание рейса"
+  ],
+  "voyageCode": [
+    "Voyage code",
+    "Код рейса"
+  ],
+  "icingTypes": [
+    "Icing",
+    "Обледенение"
+  ],
+  "waterAreaTypes": [
+    "Water area",
+    "Акватория"
+  ],
+  "loadLineTypes": [
+    "Load line",
+    "Грузовая марка"
+  ],
+  "wettingDeck": [
+    "Wetting of deck timber cargo",
+    "Намокание палубного лесного груза"
+  ],
+  "t/m": [
+    "t/m",
+    "т/м"
+  ],
+  "t/m3": [
+    "t/m^3",
+    "т/м^3"
+  ],
+  "ETD": [
+    "ETD",
+    "ETD"
+  ],
+  "ETA": [
+    "ETA",
+    "ETA"
+  ],
+  "none": [
+    "None",
+    "Нет"
+  ],
+  "full": [
+    "Full",
+    "Полное"
+  ],
+  "partial": [
+    "Partial",
+    "Частичное"
+  ],
+  "summer": [
+    "Summer",
+    "Летняя"
+  ],
+  "winter": [
+    "Winter",
+    "Зимняя"
+  ],
+  "light": [
+    "Light",
+    "Легкая"
+  ],
+  "Winter North Atlantic": [
+    "Winter North Atlantic",
+    "Зимняя в Северной Атлантике"
+  ],
+  "Tropical": [
+    "Tropical",
+    "Тропическая"
+  ],
+  "Fresh water in summer": [
+    "Fresh water in summer",
+    "Летняя в пресной воде"
+  ],
+  "Tropical fresh water": [
+    "Tropical fresh water",
+    "Тропическая в пресной воде"
+  ],
+  "Summer timber": [
+    "Summer timber",
+    "Лесная летняя"
+  ],
+  "Winter timber": [
+    "Winter timber",
+    "Лесная зимняя"
+  ],
+  "Winter North Atlantic timber": [
+    "Winter North Atlantic timber",
+    "Лесная зимняя в Северной Атлантике"
+  ],
+  "Tropical timber": [
+    "Tropical timber",
+    "Лесная тропическая"
+  ],
+  "Fresh water in summer timber": [
+    "Fresh water in summer timber",
+    "Лесная летняя в пресной воде"
+  ],
+  "Tropical fresh water timber": [
+    "Tropical fresh water timber",
+    "Лесная тропическая в пресной воде"
+  ],
+  "Subdivision LL": [
+    "Subdivision LL",
+    "ГВЛ деления на отсеки"
+  ],
+  "harbor": [
+    "Harbor",
+    "Порт"
+  ],
+  "sea": [
+    "Sea",
+    "Море"
+  ],
+  "section01_figure": [
+    "Section 01. Figure",
+    "Глава 01. Изображение судна"
+  ],
+  "section02_table": [
+    "Section 02. Table",
+    "Глава 02. Таблица"
+  ],
+  "chapter01_ballast": [
+    "Chapter 01. Ballast",
+    "Глава 01. Балласт"
+  ],
+  "chapter02_storeTanks": [
+    "Chapter 02. Store tanks",
+    "Глава 02. Цистерны запаса"
+  ],
+  "chapter03_stores": [
+    "Chapter 03. Stores",
+    "Глава 03. Прочие запасы"
+  ],
+  "chapter04_bulkCargo": [
+    "Chapter 04. Bulk cargo",
+    "Глава 04. Навалочный груз"
+  ],
+  "chapter05_unitCargo": [
+    "Chapter 05. Unit cargo",
+    "Глава 05. Генеральный груз"
+  ],
+  "chapter06_containers": [
+    "Chapter 06. Containers",
+    "Глава 06. Контейнеры"
+  ],
+  "section01_type": [
+    "Section 01. Container Type",
+    "Глава 01. Типы контейнеров"
+  ],
+  "section02_location": [
+    "Section 02. Container Location",
+    "Глава 02. Размещение контейнеров"
+  ],
+  "section03_workingProcedure": [
+    "Section 03. Working Procedure",
+    "Глава 03. Работа с контейнерами"
+  ],
+  "part03_loading": [
+    "Part 04. Loading",
+    "Часть 04. Загрузка судна"
+  ],
+  "section01_leverFigure": [
+    "Section 01. Lever figure",
+    "Глава 01. График плеч остойчивости"
+  ],
+  "part03_shipInfo_subtitle": [
+    "Ship info",
+    "Информация по судну и рейсу"
+  ],
+  "part04_loading_subtitle": [
+    "Loading",
+    "Загрузка судна"
+  ],
+  "part05_stability_subtitle": [
+    "Stability",
+    "Страница \"Остойчивость\""
+  ],
+  "part06_strength_subtitle": [
+    "Strength",
+    "Страница \"Прочность\""
+  ],
+  "part10_technicalSupport_subtitle": [
+    "Technical support",
+    "Техническая поддержка"
+  ],
+  "part01_overview": [
+    "Part 01. Overview",
+    "Часть 01. Обзор"
+  ],
+  "part02_operatingProcedure": [
+    "Part 02. Operating procedure",
+    "Часть 02. Порядок работы"
+  ],
+  "part03_mainScreen": [
+    "Part 03. Main Screen",
+    "Часть 03. Главный экран"
+  ],
+  "part04_shipInfo": [
+    "Part 04. Ship info",
+    "Часть 04. Информация по судну"
+  ],
+  "part05_loading": [
+    "Part 05. Loading",
+    "Часть 05. Загрузка судна"
+  ],
+  "part06_draft": [
+    "Part 06. Draft",
+    "Часть 06. Посадка"
+  ],
+  "part08_stability": [
+    "Part 08. Stability",
+    "Часть 08. Остойчивость"
+  ],
+  "part07_strength": [
+    "Part 07. Strength",
+    "Часть 07. Прочность"
+  ],
+  "part10_technicalSupport": [
+    "Part 10. Technical support",
+    "Часть 10. Техническая поддержка"
+  ],
+  "section02_criteriaStability": [
+    "Section 02. Criteria of stability",
+    "Глава 02. Таблица критериев остойчивости"
+  ],
+  "section03_parametresStability": [
+    "Section 03. Parameters of stability",
+    "Глава 03. Таблица параметров остойчивости"
+  ],
+  "section04_damageStability": [
+    "Section 04. Damage of stability",
+    "Глава 04. Аварийная остойчивость"
+  ],
+  "chapter01_programm": [
+    "Chapter 01. Programme information",
+    "Глава 01. Сведения о программе"
+  ],
+  "section01_programmInfo": [
+    "Section 02. Software name",
+    "Глава 02. Наименование ПО"
+  ],
+  "section02_programmPurpose": [
+    "Section 02. Software purpose",
+    "Глава 02. Назначение программы"
+  ],
+  "section03_programmFunction": [
+    "Section 03. Software functions",
+    "Глава 03. Функции программы"
+  ],
+  "chapter02_ship": [
+    "Chapter 02. Ship information",
+    "Глава 02. Сведения о судне"
+  ],
+  "section01_shipInfo": [
+    "Section 01. Ship parameters",
+    "Глава 01. Параметры судна"
+  ],
+  "section02_documentation": [
+    "Section. Used documentation",
+    "Глава 02. Используемая документация"
+  ],
+  "chapter01_hardware": [
+    "Глава 01. Hardware",
+    "Глава 01. Аппаратное обеспечение"
+  ],
+  "chapter02_settingSetup": [
+    "Chapter 02. System Setup",
+    "Глава 02. Настройка системы"
+  ],
+  "chapter03_installation": [
+    "Chapter 03. Installation",
+    "Глава 03. Установка программы"
+  ],
+  "chapter04_check": [
+    "Chapter 04. Periodic inspections",
+    "Глава 04. Периодические проверки"
+  ],
+  "navigationArea": [
+    "Navigation area",
+    "Район плавания"
+  ],
+  "not found": [
+    "Not found",
+    "Не найдено"
+  ],
+  "Bad state: no element": [
+    "Not found",
+    "Не найдено"
+  ],
+  "fetch error": [
+    "Fetch error",
+    "Ошибка загрузки"
+  ],
+  "checking of containers port references failed": [
+    "Checking of containers port references failed",
+    "Не удалось проверить ссылки портов на контейнеры"
+  ],
+  "ETA must be before ETD": [
+    "ETA must be before ETD",
+    "ETA должен быть раньше ETD"
+  ],
+  "ETD must be after ETA": [
+    "ETD must be after ETA",
+    "ETD должен быть позже ETA"
+  ],
+  "Slot to put container not found": [
+    "Slot to put container not found",
+    "Слот для размещения контейнера не найден"
+  ],
+  "Slot not found": [
+    "Slot not found",
+    "Слот не найден"
+  ],
+  "Collection corrupted during operation execution": [
+    "Collection corrupted during operation execution",
+    "Коллекция повреждена во время выполнения операции"
+  ],
+  "unknown field to update": [
+    "Unknown field to update",
+    "Неизвестное поле для обновления"
+  ],
+  "no rows updated": [
+    "Record for updating not found",
+    "Запись для обновления не обнаружена"
+  ],
+  "Cancel": [
+    "Cancel",
+    "Отмена"
+  ],
+  "Confirm": [
+    "Confirm",
+    "Подтвердить"
+  ],
+  "Ok": [
+    "OK",
+    "ОК"
+  ],
+  "Draft limit is used": [
+    "Draft limit is used",
+    "Используется лимит по осадке"
+  ],
+  "Draft limit is not used": [
+    "Draft limit is not used",
+    "Лимит по осадке не используется"
+  ],
+  "Port name": [
+    "Port name",
+    "Имя порта"
+  ],
+  "ETA - ETD range overlap with another waypoint": [
+    "ETA - ETD range overlap with another waypoint",
+    "Промежуток ETA - ETD пересекается с другой точкой маршрута"
+  ],
+  "take into account in the criteria": [
+    "Take into account in the criteria",
+    "Учитывать в критериях"
+  ],
+  "Delete anyway": [
+    "Delete anyway",
+    "Удалить все равно"
+  ],
+  "Delete waypoint": [
+    "Delete waypoint",
+    "Удалить точку маршрута"
+  ],
+  "Add waypoint": [
+    "Add waypoint",
+    "Добавить точку маршрута"
+  ],
+  "Container with this waypoint as POL or POD exists": [
+    "Container with this waypoint as POL or POD exists",
+    "Существует контейнер для которого эта точка маршрута задана как POL или POD"
+  ],
+  "Deleting of this waypoint will clear all container's POL and POD record with this waypoint": [
+    "Deleting of this waypoint will clear all container's POL and POD record with this waypoint",
+    "Удаление этой точки маршрута приведет к сбросу всех записей о POL и POD для контейнеров, связанных с этой точкой"
+  ],
+  "30ft_indicator": [
+    "*",
+    "*"
+  ],
+  "criteria successfully passed": [
+    "Criteria successfully passed",
+    "Критериев выполнено"
+  ],
+  "criteria failed": [
+    "Criteria failed",
+    "Критериев не выполнено"
+  ],
+  "criterion passed": [
+    "Criterion passed",
+    "Критерий выполняется"
+  ],
+  "criterion failed": [
+    "Criterion failed",
+    "Критерий не выполняется"
+  ],
+  "draft criteria": [
+    "Draft criteria",
+    "Критерии посадки"
+  ],
+  "Back": [
+    "Back",
+    "Назад"
+  ],
+  "General cargos": [
+    "General",
+    "Генеральный"
+  ],
+  "General cargo": [
+    "General cargo",
+    "Генеральный груз"
+  ],
+  "isOnDeck": [
+    "Deck",
+    "Палубный"
+  ],
+  "isTimber": [
+    "Timber",
+    "Лесной"
+  ],
+  "Add container": [
+    "Add container",
+    "Добавить контейнер"
+  ],
+  "Delete container": [
+    "Delete container",
+    "Удалить контейнер"
+  ],
+  "Load container": [
+    "Load container",
+    "Загрузить контейнер"
+  ],
+  "Unload container": [
+    "Unload container",
+    "Выгрузить контейнер"
+  ],
+  "Correction": [
+    "correction",
+    "поправка"
+  ],
+  "inf": [
+    "∞",
+    "∞"
+  ],
+  "deg": [
+    "°",
+    "°"
+  ],
+  "draught": [
+    "Draught",
+    "Осадка"
+  ]
 }

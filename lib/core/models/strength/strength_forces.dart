@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/frame/frame.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force.dart';
 ///
@@ -80,6 +81,8 @@ class PgBendingMoments implements StrengthForces {
 }
 ///
 Sql _buildPgFetchAllSql(String valueType) {
+  final shipId = const Setting('shipId').toInt;
+  final projectId = int.tryParse(const Setting('projectId').toString());
   return Sql(
     sql: """
           SELECT DISTINCT
@@ -97,6 +100,9 @@ Sql _buildPgFetchAllSql(String valueType) {
               index AS "index",
               start_x AS "x"
             FROM computed_frame_space
+            WHERE
+              ship_id = $shipId AND
+              project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
             UNION
             SELECT
               project_id AS "projectId",
@@ -104,9 +110,16 @@ Sql _buildPgFetchAllSql(String valueType) {
               index + 1 AS "index",
               end_x AS "x"
             FROM computed_frame_space
+            WHERE
+              ship_id = $shipId AND
+              project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
           ) AS cf
           ON
-            (sr.index = cf.index AND sr.ship_id = cf.ship_id)
+            (
+              sr.index = cf.index AND
+              sr.ship_id = cf.ship_id AND
+              sr.project_id IS NOT DISTINCT FROM cf.project_id
+            )
           ORDER BY "frameIndex";
         """,
   );

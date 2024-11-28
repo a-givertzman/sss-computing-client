@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/heel_trim/heel_trim.dart';
 import 'package:sss_computing_client/core/models/heel_trim/json_heel_trim.dart';
 ///
@@ -20,6 +21,7 @@ class PgHeelTrim {
   ///
   /// Fetch and return [HeelTrim] from postgres DB.
   Future<Result<HeelTrim, Failure<String>>> fetch() {
+    final shipId = const Setting('shipId').toInt;
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -38,7 +40,9 @@ class PgHeelTrim {
             trim AS "trim"
           FROM
             heel_trim_general
-          WHERE ship_id = 1 LIMIT 1;
+          WHERE
+            ship_id = $shipId
+          LIMIT 1;
         """,
       ),
       entryBuilder: (row) => JsonHeelTrim(json: {

@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core.dart';
+import 'package:provider/provider.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
+import 'package:sss_computing_client/core/widgets/general_info_widget.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/stability/widgets/stability_body.dart';
 ///
 class StabilityPage extends StatelessWidget {
-  final Stream<DsDataPoint<bool>> _appRefreshStream;
-  final void Function() _fireRefreshEvent;
-  final CalculationStatus _calculationStatusNotifier;
+  final int _pageIndex;
   ///
   const StabilityPage({
     super.key,
-    required Stream<DsDataPoint<bool>> appRefreshStream,
-    required void Function() fireRefreshEvent,
-    required CalculationStatus calculationStatusNotifier,
-  })  : _appRefreshStream = appRefreshStream,
-        _fireRefreshEvent = fireRefreshEvent,
-        _calculationStatusNotifier = calculationStatusNotifier;
+    required int pageIndex,
+  }) : _pageIndex = pageIndex;
   //
   @override
   Widget build(BuildContext context) {
@@ -24,18 +19,23 @@ class StabilityPage extends StatelessWidget {
     return Scaffold(
       // ignore: deprecated_member_use
       backgroundColor: theme.colorScheme.background,
-      body: Row(
-        children: [
-          NavigationPanel(
-            selectedPageIndex: 2,
-            appRefreshStream: _appRefreshStream,
-            fireRefreshEvent: _fireRefreshEvent,
-            calculationStatusNotifier: _calculationStatusNotifier,
-          ),
-          Expanded(
-            child: StabilityBody(appRefreshStream: _appRefreshStream),
-          ),
-        ],
+      body: Consumer<CalculationStatus>(
+        builder: (_, status, __) => Row(
+          children: [
+            NavigationPanel(
+              selectedPageIndex: _pageIndex,
+              calculationStatusNotifier: status,
+              trailing: GeneralInfoWidget(
+                appRefreshStream: status.refreshStream,
+              ),
+            ),
+            Expanded(
+              child: StabilityBody(
+                appRefreshStream: status.refreshStream,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

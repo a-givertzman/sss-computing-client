@@ -83,7 +83,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                     ),
                     authToken: _authToken,
                     tableName: 'compartment',
-                    fieldName: 'name',
+                    fieldName: 'name_rus',
                     filter: {'id': cargo.id},
                     toValue: toValue,
                   ),
@@ -185,22 +185,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                 )) {
                   Ok(value: true) => const Ok(null),
                   Ok(value: false) => Err(Failure(
-                      message: 'X1 !≤ Xg',
-                      stackTrace: StackTrace.current,
-                    )),
-                },
-              ),
-              CompoundFieldDataValidation(
-                ownId: 'lcg',
-                otherId: 'x1',
-                validateValues: (lcg, x1) =>
-                    switch (const LessThanOrEqualTo().swapped().process(
-                          double.tryParse(lcg) ?? 0.0,
-                          double.tryParse(x1) ?? 0.0,
-                        )) {
-                  Ok(value: true) => const Ok(null),
-                  Ok(value: false) => Err(Failure(
-                      message: 'X1 !≤ Xg',
+                      message: const Localized('X1 !≤ Xg').v,
                       stackTrace: StackTrace.current,
                     )),
                 },
@@ -215,22 +200,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                 )) {
                   Ok(value: true) => const Ok(null),
                   Ok(value: false) => Err(Failure(
-                      message: 'Xg !≤ X2',
-                      stackTrace: StackTrace.current,
-                    )),
-                },
-              ),
-              CompoundFieldDataValidation(
-                ownId: 'x2',
-                otherId: 'lcg',
-                validateValues: (x2, lcg) =>
-                    switch (const LessThanOrEqualTo().swapped().process(
-                          double.tryParse(x2) ?? 0.0,
-                          double.tryParse(lcg) ?? 0.0,
-                        )) {
-                  Ok(value: true) => const Ok(null),
-                  Ok(value: false) => Err(Failure(
-                      message: 'Xg !≤ X2',
+                      message: const Localized('Xg !≤ X2').v,
                       stackTrace: StackTrace.current,
                     )),
                 },
@@ -244,22 +214,7 @@ class _OtherStoresCargoBodyState extends State<OtherStoresCargoBody> {
                 )) {
                   Ok(value: true) => const Ok(null),
                   Ok(value: false) => Err(Failure(
-                      message: 'X1 !< X2',
-                      stackTrace: StackTrace.current,
-                    )),
-                },
-              ),
-              CompoundFieldDataValidation(
-                ownId: 'x2',
-                otherId: 'x1',
-                validateValues: (x2, x1) =>
-                    switch (const LessThan().swapped().process(
-                          double.tryParse(x2) ?? 0.0,
-                          double.tryParse(x1) ?? 0.0,
-                        )) {
-                  Ok(value: true) => const Ok(null),
-                  Ok(value: false) => Err(Failure(
-                      message: 'X1 !< X2',
+                      message: const Localized('X1 !< X2').v,
                       stackTrace: StackTrace.current,
                     )),
                 },

@@ -37,11 +37,7 @@ class BaySlotFigure {
         : slot.containerId != null
             ? occupiedColor
             : emptyColor;
-    final fillColor = _isFlyover
-        ? flyoverColor
-        : slot.bay.isEven
-            ? FreightContainerType.type1A.color
-            : FreightContainerType.type1C.color;
+    final fillColor = _isFlyover ? flyoverColor : _slotWithContainerColor(slot);
     final fillOpacity = const Setting('opacityLow').toDouble;
     return RectangularCuboidFigure(
       paints: [
@@ -74,5 +70,13 @@ class BaySlotFigure {
       start: Vector3(slot.leftX, slot.leftY, slot.minHeight),
       end: Vector3(slot.rightX, slot.rightY, slot.maxHeight),
     );
+  }
+  //
+  Color _slotWithContainerColor(Slot slot) {
+    return slot.isThirtyFt
+        ? FreightContainerType.type1B.color
+        : slot.bay.isEven
+            ? FreightContainerType.type1A.color
+            : FreightContainerType.type1C.color;
   }
 }

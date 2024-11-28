@@ -6,12 +6,12 @@ import 'package:sss_computing_client/core/models/criterion/criterion.dart';
 import 'package:sss_computing_client/core/models/number_math_relation/number_math_relation.dart';
 ///
 /// Widget that check criterion and
-/// dusplays it data in readable view.
+/// displays it data in readable view.
 class CriterionIndicator extends StatelessWidget {
   final Criterion _criterion;
   ///
   /// Creates widget that check criterion and
-  /// dusplays it data in readable view.
+  /// displays it data in readable view.
   const CriterionIndicator({
     super.key,
     required Criterion criterion,
@@ -33,9 +33,11 @@ class CriterionIndicator extends StatelessWidget {
           relation: criterionRelation.operator,
           passed: isPassed,
           errorMessage: isPassed
-              ? null
+              ? const Localized(
+                  'criterion passed',
+                ).v
               : const Localized(
-                  'Actual and limit values did not pass relation test',
+                  'criterion failed',
                 ).v,
           label: _criterion.name,
           labelMessage: _criterion.description,

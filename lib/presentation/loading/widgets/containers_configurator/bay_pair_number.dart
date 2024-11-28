@@ -5,6 +5,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/containers_con
 ///
 /// Widget to display bay pair number.
 class BayPairNumber extends StatelessWidget {
+  final bool _isThirtyFt;
   final bool _isVisible;
   final int? _oddBayNumber;
   final int? _evenBayNumber;
@@ -16,11 +17,13 @@ class BayPairNumber extends StatelessWidget {
   /// [slots] used to determine whether to display title in 40 foots mode or not.
   const BayPairNumber({
     super.key,
+    required bool isThirtyFt,
     bool isVisible = false,
     int? oddBayNumber,
     int? evenBayNumber,
     List<Slot> slots = const [],
   })  : _isVisible = isVisible,
+        _isThirtyFt = isThirtyFt,
         _oddBayNumber = oddBayNumber,
         _evenBayNumber = evenBayNumber,
         _slots = slots;
@@ -50,6 +53,7 @@ class BayPairNumber extends StatelessWidget {
             withFortyFoots: _slots.any(
               (slot) => slot.bay.isEven && slot.containerId != null,
             ),
+            isThirtyFt: _isThirtyFt,
             oddBayNumber: _oddBayNumber,
             evenBayNumber: _evenBayNumber,
           ).title(),

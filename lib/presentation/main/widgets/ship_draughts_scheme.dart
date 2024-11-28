@@ -42,6 +42,14 @@ class ShipDraughtsScheme extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
+    final shipId = const Setting('shipId').toInt;
+    final minX = const Setting('shipMinX_m').toDouble;
+    final maxX = const Setting('shipMaxX_m').toDouble;
+    final minY = const Setting('shipMinY_m').toDouble;
+    final maxY = const Setting('shipMaxY_m').toDouble;
+    final minZ = const Setting('shipMinZ_m').toDouble;
+    final maxZ = const Setting('shipMaxZ_m').toDouble;
+    final draftGapZ = const Setting('shipDraftGapZ_m').toDouble;
     return FutureBuilderWidget(
       refreshStream: _appRefreshStream,
       onFuture: FieldRecord<PathProjections>(
@@ -53,7 +61,7 @@ class ShipDraughtsScheme extends StatelessWidget {
         toValue: (value) => JsonSvgPathProjections(
           json: json.decode(value),
         ),
-        filter: {'id': 1},
+        filter: {'id': shipId},
       ).fetch,
       caseData: (context, hullProjections, _) {
         return FutureBuilderWidget(
@@ -77,8 +85,8 @@ class ShipDraughtsScheme extends StatelessWidget {
               pathProjections: hullProjections,
             );
             final waterlineFigure = RectangularCuboidFigure(
-              start: Vector3(-140.0, -40.0, -40.0),
-              end: Vector3(140.0, 40.0, 0.0),
+              start: Vector3(minX * 2, minY * 2, (minZ - draftGapZ) * 2),
+              end: Vector3(maxX * 2, maxY * 2, 0.0),
               paints: [
                 Paint()
                   ..color = Colors.blue.withOpacity(0.25)
@@ -111,10 +119,10 @@ class ShipDraughtsScheme extends StatelessWidget {
                   flex: 1,
                   child: SchemeLayout(
                     fit: BoxFit.contain,
-                    minX: -10.0,
-                    maxX: 10.0,
-                    minY: -15.0,
-                    maxY: 15.0,
+                    minX: minY,
+                    maxX: maxY,
+                    minY: minZ - draftGapZ,
+                    maxY: maxZ,
                     yAxisReversed: true,
                     buildContent: (ctx, transform) => Stack(
                       children: [
@@ -128,8 +136,8 @@ class ShipDraughtsScheme extends StatelessWidget {
                             waterlineFigure,
                             TransformedProjectionFigure(
                               figure: LineSegmentFigure(
-                                start: const Offset(-20.0, 0.0),
-                                end: const Offset(20.0, 0.0),
+                                start: Offset(minY * 2, 0.0),
+                                end: Offset(maxY * 2, 0.0),
                                 paints: [
                                   Paint()
                                     ..color = Colors.white
@@ -143,9 +151,9 @@ class ShipDraughtsScheme extends StatelessWidget {
                         ),
                         SchemeText(
                           text:
-                              '${const Localized('Heel').v} ${heelAngle.toStringAsFixed(2)}${const Localized('°').v}',
-                          offset: const Offset(0.0, 10.0),
+                              '${const Localized('Heel').v} ${heelAngle.toStringAsFixed(2)}${const Localized('deg').v}',
                           alignment: const Alignment(0.0, 2.0),
+                          offset: Offset(0.0, maxZ),
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
@@ -183,10 +191,10 @@ class ShipDraughtsScheme extends StatelessWidget {
                   flex: 7,
                   child: SchemeLayout(
                     fit: BoxFit.contain,
-                    minX: -70.0,
-                    maxX: 70.0,
-                    minY: -15.0,
-                    maxY: 15.0,
+                    minX: minX,
+                    maxX: maxX,
+                    minY: minZ - draftGapZ,
+                    maxY: maxZ,
                     yAxisReversed: true,
                     buildContent: (ctx, transform) => Stack(
                       children: [
@@ -200,8 +208,8 @@ class ShipDraughtsScheme extends StatelessWidget {
                             waterlineFigure,
                             TransformedProjectionFigure(
                               figure: LineSegmentFigure(
-                                start: const Offset(-140.0, 0.0),
-                                end: const Offset(140.0, 0.0),
+                                start: Offset(minX * 2, 0.0),
+                                end: Offset(maxX * 2, 0.0),
                                 paints: [
                                   Paint()
                                     ..color = Colors.white
@@ -215,22 +223,22 @@ class ShipDraughtsScheme extends StatelessWidget {
                         ),
                         SchemeText(
                           text:
-                              '${const Localized('Trim').v} ${trimAngle.toStringAsFixed(2)}${const Localized('°').v}',
+                              '${const Localized('Trim').v} ${trimAngle.toStringAsFixed(2)}${const Localized('deg').v}',
                           alignment: const Alignment(0.0, 2.0),
-                          offset: const Offset(0.0, 10.0),
+                          offset: Offset(0.0, maxZ),
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
                         SchemeText(
                           text: const Localized('AFT').v,
-                          offset: const Offset(-70.0, 0.0),
+                          offset: Offset(minX, 0.0),
                           alignment: const Alignment(2.0, 0.0),
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
                         SchemeText(
                           text: const Localized('FWD').v,
-                          offset: const Offset(70.0, 0.0),
+                          offset: Offset(maxX, 0.0),
                           alignment: const Alignment(-2.0, 0.0),
                           style: labelStyle,
                           layoutTransform: transform,

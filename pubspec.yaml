@@ -1,13 +1,16 @@
 name: sss_computing_client
 description: "Client application for the SSS-Computing project."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 0.0.1
 
 environment:
-  sdk: '>=3.2.5 <4.0.0'
+  sdk: ">=3.2.5 <4.0.0"
 
 dependencies:
   flutter:
+    sdk: flutter
+  # needed for date and time picker dialogs
+  flutter_localizations:
     sdk: flutter
   hmi_core:
     git:
@@ -32,6 +35,16 @@ dependencies:
   vector_math: ^2.1.4
   path_drawing: ^1.0.1
   scrollable_positioned_list: ^0.3.8
+  markdown_widget: ^2.3.2+6
+  flutter_svg: ^2.0.9
+  flutter_math_fork: ^0.7.2
+  markdown: ^7.2.2
+  html: ^0.15.5
+  scroll_to_index: ^3.0.1
+  path: ^1.9.0
+  flutter_colorpicker: ^1.1.0
+  flutter_localization: ^0.2.2
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -40,7 +53,6 @@ dev_dependencies:
   dart_code_metrics: ^5.1.0
   flutter_lints: ^3.0.1
 
-
 flutter:
   uses-material-design: true
   assets:
@@ -48,29 +60,43 @@ flutter:
     - assets/img/
     - assets/settings/
     - assets/translations/
-
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+    - assets/unicodes/
+    - assets/docs/
+    - assets/image/
+    - assets/image/program_sheets/ru/sheet03_mainScreen/
+    - assets/image/program_sheets/ru/sheet04_shipinfo/
+    - assets/image/program_sheets/ru/sheet05_loading/
+    - assets/image/program_sheets/ru/sheet07_strength/
+    - assets/image/program_sheets/ru/sheet08_stability/
+    - assets/image/program_sheets/ru/sheet05_loading/tab01_ballast/
+    - assets/image/program_sheets/ru/sheet05_loading/tab02_storeTanks/
+    - assets/image/program_sheets/ru/sheet05_loading/tab03_stores/
+    - assets/image/program_sheets/ru/sheet05_loading/tab04_bulkCargo/
+    - assets/image/program_sheets/ru/sheet05_loading/tab06_containers/
+    - assets/docs/user-guide/ru/
+    - assets/reference/
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-1_clasification.pdf
+    - assets/docs/user-guide/ru/part01_overview/
+    - assets/docs/user-guide/ru/part02_operatingProcedure/
+    - assets/docs/user-guide/ru/part03_mainScreen/
+    - assets/docs/user-guide/ru/part04_shipInfo/
+    - assets/docs/user-guide/ru/part05_loading/
+    - assets/docs/user-guide/ru/part08_stability/
+    - assets/docs/user-guide/ru/part06_draft/
+    - assets/docs/user-guide/ru/part07_strength/
+    - assets/docs/user-guide/ru/part01_overview/chapter01_prorgamm/
+    - assets/docs/user-guide/ru/part01_overview/chapter02_ship/
+    - assets/docs/user-guide/ru/part05_loading/chapter01_ballast/
+    - assets/docs/user-guide/ru/part05_loading/chapter02_storeTanks/
+    - assets/docs/user-guide/ru/part05_loading/chapter03_stores/
+    - assets/docs/user-guide/ru/part05_loading/chapter04_bulkCargo/
+    - assets/docs/user-guide/ru/part05_loading/chapter05_unitCargo/
+    - assets/docs/user-guide/ru/part05_loading/chapter06_containers/
+    - assets/reference/IMO/internationalConvention/LL_66_88.pdf
+    - assets/reference/OCX/gost_r_iso_10303-216-2023-1.pdf
+    - assets/reference/RMRS/Guidelines/ships_&_offshore_installations/2-030101-046_LL_66_88.pdf
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-1_clasification.pdf
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-4_stability.pdf
+    - assets/reference/RMRS/Rules/classification_&_construction_of_ships_&_offshore_installations/Ships_(primary_group)/Sea-Going_Ships/2-020101-174-5_subdivision.pdf
+    - assets/reference/RMRS/Rules/different_types_of_ships/2-020101-013-E.pdf

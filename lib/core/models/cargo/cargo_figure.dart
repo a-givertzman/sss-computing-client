@@ -23,30 +23,75 @@ class CargoFigure {
     final color = _cargo.type.color;
     final fillOpacity = const Setting('opacityHigh').toDouble;
     return switch (_cargo.paths) {
-      final PathProjections projections => PathProjectionsFigure(
-          paints: [
-            Paint()
-              ..color = color
-              ..style = PaintingStyle.stroke,
-            Paint()
-              ..color = color.withOpacity(fillOpacity)
-              ..style = PaintingStyle.fill,
-          ],
-          pathProjections: projections,
+      final PathProjections projections => _pathFigure(
+          projections,
+          color,
+          fillOpacity,
+        ),
+      _ => _cuboidFigure(
+          color,
+          fillOpacity,
+        ),
+    };
+  }
+  //
+  Figure _pathFigure(
+    PathProjections projections,
+    Color color,
+    double fillOpacity,
+  ) =>
+      PathProjectionsFigure(
+        paints: [
+          Paint()
+            ..color = color
+            ..style = PaintingStyle.stroke,
+          Paint()
+            ..color = color.withOpacity(fillOpacity)
+            ..style = PaintingStyle.fill,
+        ],
+        pathProjections: projections,
+      );
+  //
+  Figure _cuboidFigure(
+    Color color,
+    double fillOpacity,
+  ) {
+    final paints = [
+      Paint()
+        ..color = color
+        ..strokeWidth = const Setting('strokeWidth').toDouble
+        ..style = PaintingStyle.stroke,
+      Paint()
+        ..color = color.withOpacity(fillOpacity)
+        ..style = PaintingStyle.fill,
+    ];
+    return switch (_cargo) {
+      Cargo(
+        :final double x1,
+        :final double x2,
+        :final double y1,
+        :final double y2,
+        :final double z1,
+        :final double z2,
+      ) =>
+        RectangularCuboidFigure(
+          paints: paints,
+          start: Vector3(x1, y1, z1),
+          end: Vector3(x2, y2, z2),
         ),
       _ => CombinedFigure(
-          paints: [
-            Paint()
-              ..color = color
-              ..strokeWidth = const Setting('strokeWidth').toDouble
-              ..style = PaintingStyle.stroke,
-            Paint()
-              ..color = color.withOpacity(fillOpacity)
-              ..style = PaintingStyle.fill,
-          ],
+          paints: paints,
           figureOne: LineSegment3DFigure(
-            start: Vector3(_cargo.x1, _cargo.tcg ?? 0.0, _cargo.vcg ?? 0.0),
-            end: Vector3(_cargo.x2, _cargo.tcg ?? 0.0, _cargo.vcg ?? 0.0),
+            start: Vector3(
+              _cargo.x1,
+              _cargo.tcg ?? 0.0,
+              _cargo.vcg ?? 0.0,
+            ),
+            end: Vector3(
+              _cargo.x2,
+              _cargo.tcg ?? 0.0,
+              _cargo.vcg ?? 0.0,
+            ),
           ),
           figureTwo: RectangularCuboidFigure.fromCenter(
             center: Vector3(

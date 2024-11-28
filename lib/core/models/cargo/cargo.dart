@@ -47,16 +47,16 @@ abstract interface class Cargo {
   double get x2;
   ///
   /// Offset of the near [Cargo] side from the midship
-  double get y1;
+  double? get y1;
   ///
   /// Offset of the far [Cargo] side from the midship
-  double get y2;
+  double? get y2;
   ///
   /// Offset of the bottom [Cargo] side from the midship
-  double get z1;
+  double? get z1;
   ///
   /// Offset of the top [Cargo] side from the midship
-  double get z2;
+  double? get z2;
   ///
   /// x-moment of inertia of the free surface of the water
   double? get mfsx;
@@ -73,7 +73,13 @@ abstract interface class Cargo {
   /// indicator that determines whether cargo is shiftable
   bool get shiftable;
   ///
-  /// TODO: update doc
+  /// indicator that determines whether cargo is on deck
+  bool get isOnDeck;
+  ///
+  /// indicator that determines whether cargo is timber
+  bool get isTimber;
+  ///
+  /// Returns [PathProjections] for the [Cargo]
   PathProjections? get paths;
   ///
   /// Returns [Map] representation of the [Cargo]

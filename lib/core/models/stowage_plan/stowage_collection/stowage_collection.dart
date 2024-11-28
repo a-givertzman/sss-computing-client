@@ -5,14 +5,15 @@ import 'package:sss_computing_client/core/models/stowage_plan/slot/slot.dart';
 abstract interface class StowageCollection {
   ///
   /// Returns stowage slot
-  /// at position specified by [bay], [row] and [tier] numbers.
+  /// at position specified by [bay], [row] and [tier] numbers with [isThirtyFt] flag.
   ///
   /// Returns `null` if stowage slot at specified position does not exist.
   Slot? findSlot(
     int bay,
     int row,
-    int tier,
-  );
+    int tier, {
+    bool isThirtyFt = false,
+  });
   ///
   /// Returns a list of stowage slots filtered by the specified criteria.
   ///
@@ -22,7 +23,7 @@ abstract interface class StowageCollection {
   /// Otherwise, all slots will be included or passed to the [shouldIncludeSlot] callback.
   ///
   /// The optional [shouldIncludeSlot] parameter can be used to filter slots
-  /// after filtering by [bay], [row] and [tier] numbers.
+  /// after filtering by [bay], [row] and [tier] numbers with [isThirtyFt] flag.
   /// If [shouldIncludeSlot] callback is provided it must return `true` for slots
   /// that should be included in the returned list
   /// and `false` for slots that should be excluded.
@@ -30,6 +31,7 @@ abstract interface class StowageCollection {
     int? bay,
     int? row,
     int? tier,
+    bool? isThirtyFt,
     bool Function(Slot slot)? shouldIncludeSlot,
   });
   ///
@@ -52,8 +54,13 @@ abstract interface class StowageCollection {
   void addAllSlots(List<Slot> slots);
   ///
   /// Removes slot from stowage collection, if presents,
-  /// at position specified by [bay], [row] and [tier] numbers.
-  void removeSlot(int bay, int row, int tier);
+  /// at position specified by [bay], [row] and [tier] numbers with [isThirtyFt] flag.
+  void removeSlot(
+    int bay,
+    int row,
+    int tier, {
+    bool isThirtyFt = false,
+  });
   ///
   /// Removes all slots from stowage collection.
   void removeAllSlots();

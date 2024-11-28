@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/cargo/cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_ballast_tanks.dart';
+import 'package:sss_computing_client/core/models/cargo/pg_general_cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_hold_cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_others.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_stores_tanks.dart';
@@ -15,6 +16,7 @@ import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/tabs/tab_setting.dart';
 import 'package:sss_computing_client/core/widgets/tabs/tabs_view_widget.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/containers_configurator/containers_configurator.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/general_cargo_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/hold_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/other_stores_configurator.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/store_tanks_configurator.dart';
@@ -56,6 +58,7 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
   late final Cargos _ballastTanks;
   late final Cargos _storesTanks;
   late final Cargos _storesOthers;
+  late final Cargos _generalCargos;
   late final Cargos _holdCargos;
   late final FreightContainers _freightContainers;
   late final Waypoints _waypoints;
@@ -75,6 +78,11 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
       authToken: widget._authToken,
     );
     _storesOthers = PgStoresOthers(
+      apiAddress: widget._apiAddress,
+      dbName: widget._dbName,
+      authToken: widget._authToken,
+    );
+    _generalCargos = PgGeneralCargos(
       apiAddress: widget._apiAddress,
       dbName: widget._dbName,
       authToken: widget._authToken,
@@ -148,6 +156,21 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
             onFuture: _storesOthers.fetchAll,
             caseData: (_, otherStores, __) => OtherStoresConfigurator(
               cargos: otherStores,
+              appRefreshStream: widget._appRefreshStream,
+              fireRefreshEvent: widget._fireRefreshEvent,
+              apiAddress: widget._apiAddress,
+              dbName: widget._dbName,
+              authToken: widget._authToken,
+            ),
+          ),
+        ),
+        TabSetting(
+          label: const Localized('General cargos').v,
+          content: FutureBuilderWidget(
+            refreshStream: widget._appRefreshStream,
+            onFuture: _generalCargos.fetchAll,
+            caseData: (_, generalCargos, __) => GeneralCargoConfigurator(
+              cargos: generalCargos,
               appRefreshStream: widget._appRefreshStream,
               fireRefreshEvent: widget._fireRefreshEvent,
               apiAddress: widget._apiAddress,

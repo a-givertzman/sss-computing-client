@@ -134,7 +134,7 @@ class _FValueIndicator extends StatelessWidget {
   Widget _buildErrorWidget(BuildContext context, Failure error) {
     final theme = Theme.of(context);
     return Tooltip(
-      message: '${const Localized('Data loading error').v}: ${error.message}',
+      message: Localized('${error.message}').v,
       child: Icon(
         Icons.error_outline,
         color: theme.stateColors.error,

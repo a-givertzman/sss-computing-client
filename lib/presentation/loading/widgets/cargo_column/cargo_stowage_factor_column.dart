@@ -6,6 +6,7 @@ import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
+import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
 /// Creates [TableColumn] for [Cargo] stowage factor.
@@ -66,7 +67,7 @@ class CargoStowageFactorColumn implements TableColumn<Cargo, double?> {
   @override
   Validator? get validator => const Validator(
         cases: [
-          MinLengthValidationCase(1),
+          RequiredValidationCase(),
           RealValidationCase(),
         ],
       );
@@ -86,9 +87,9 @@ class CargoStowageFactorColumn implements TableColumn<Cargo, double?> {
   }
   //
   @override
-  Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
+  Cargo copyRowWith(Cargo cargo, double? density) => JsonCargo(
         json: cargo.asMap()
-          ..['density'] = switch (parseToValue(text)) {
+          ..['density'] = switch (density) {
             final double value => 1.0 / value,
             null => null,
           },

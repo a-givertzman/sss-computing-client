@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/extensions/strings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_all_cargos.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
@@ -75,6 +76,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
   @override
   Widget build(BuildContext context) {
     final blockPadding = const Setting('blockPadding').toDouble;
+    final shipId = const Setting('shipId').toInt;
     return Padding(
       padding: EdgeInsets.all(blockPadding),
       child: Column(
@@ -106,7 +108,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                     toValue: (value) => JsonSvgPathProjections(
                       json: json.decode(value),
                     ),
-                    filter: {'id': 1},
+                    filter: {'id': shipId},
                   ).fetch,
                   caseData: (context, hull, _) => FutureBuilderWidget(
                     refreshStream: widget._appRefreshStream,
@@ -119,7 +121,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                       toValue: (value) => JsonSvgPathProjections(
                         json: json.decode(value),
                       ),
-                      filter: {'id': 1},
+                      filter: {'id': shipId},
                     ).fetch,
                     caseData: (context, hullBeauty, _) => CargoSchemes(
                       cargos: _cargos,
@@ -137,7 +139,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
           ),
           SizedBox(height: blockPadding),
           Expanded(
-            child: EditingTable(
+            child: EditingTable<Cargo>(
               selectedRow: _selectedCargo,
               rowHeight: const Setting('tableRowHeight').toDouble,
               onRowTap: _toggleCargo,
@@ -154,7 +156,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                     ),
                     authToken: widget._authToken,
                     tableName: 'compartment',
-                    fieldName: 'name',
+                    fieldName: 'name_rus',
                     filter: {'id': cargo.id},
                     toValue: toValue,
                   ),
@@ -286,6 +288,11 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
-    BottomMessage.error(message: message).show(context);
+    BottomMessage.error(
+      message: message.truncate(),
+      displayDuration: Duration(
+        milliseconds: const Setting('errorMessageDisplayDuration').toInt,
+      ),
+    ).show(context);
   }
 }

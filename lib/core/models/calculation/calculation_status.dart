@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
 ///
 /// Model for controlling status of calculation
 /// and notifying widgets when it changes.
 class CalculationStatus extends ChangeNotifier {
+  final _refreshController = StreamController<DsDataPoint<bool>>.broadcast();
   bool _isInProcess = false;
   String? _message;
   String? _errorMessage;
@@ -38,4 +41,15 @@ class CalculationStatus extends ChangeNotifier {
     _isInProcess = false;
     notifyListeners();
   }
+  ///
+  Stream<DsDataPoint<bool>> get refreshStream => _refreshController.stream;
+  ///
+  void fireRefreshEvent() => _refreshController.add(DsDataPoint(
+        type: DsDataType.bool,
+        name: DsPointName('/refresh'),
+        value: true,
+        status: DsStatus.ok,
+        timestamp: '',
+        cot: DsCot.req,
+      ));
 }

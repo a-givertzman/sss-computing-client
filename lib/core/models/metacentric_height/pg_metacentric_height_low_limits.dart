@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/json_metacentric_height_limit.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/metacentric_height_limits.dart';
 import 'package:sss_computing_client/core/models/metacentric_height/metacentric_height_limit.dart';
@@ -22,6 +23,8 @@ class PgMetacentricHeightLowLimits implements MetacentricHeightLimits {
   @override
   Future<Result<List<MetacentricHeightLimit>, Failure<String>>>
       fetchAll() async {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -33,7 +36,10 @@ class PgMetacentricHeightLowLimits implements MetacentricHeightLimits {
           low_limit AS "low",
           high_limit AS "high",
           draft AS "dependentValue"
-        FROM metacentric_height_low_limit;
+        FROM metacentric_height_low_limit
+        WHERE
+          ship_id = $shipId AND
+          project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'};
       """),
       entryBuilder: (row) => JsonMetacentricHeightLimit(json: row),
     );

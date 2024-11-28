@@ -30,27 +30,29 @@ class StowageMap implements StowageCollection {
   ///
   /// Creates empty stowage plan.
   factory StowageMap.empty() => StowageMap._({});
-  ///
   //
   @override
   Slot? findSlot(
     int bay,
     int row,
-    int tier,
-  ) =>
-      _plan[_SlotKey(bay, row, tier).value()];
+    int tier, {
+    bool isThirtyFt = false,
+  }) =>
+      _plan[_SlotKey(bay, row, tier, isThirtyFt: isThirtyFt).value()];
   //
   @override
   List<Slot> toFilteredSlotList({
     int? bay,
     int? row,
     int? tier,
+    bool? isThirtyFt,
     bool Function(Slot slot)? shouldIncludeSlot,
   }) =>
       _plan.values.where((slot) {
         if (bay != null && slot.bay != bay) return false;
         if (row != null && slot.row != row) return false;
         if (tier != null && slot.tier != tier) return false;
+        if (isThirtyFt != null && slot.isThirtyFt != isThirtyFt) return false;
         if (shouldIncludeSlot?.call(slot) == false) return false;
         return true;
       }).toList();
@@ -68,8 +70,13 @@ class StowageMap implements StowageCollection {
   }
   //
   @override
-  void removeSlot(int bay, int row, int tier) {
-    _plan.remove(_SlotKey(bay, row, tier).value());
+  void removeSlot(
+    int bay,
+    int row,
+    int tier, {
+    bool isThirtyFt = false,
+  }) {
+    _plan.remove(_SlotKey(bay, row, tier, isThirtyFt: isThirtyFt).value());
   }
   //
   @override
@@ -107,27 +114,36 @@ class _SlotKey {
   /// [ISO 9711-1, 3.3](https://www.iso.org/ru/standard/17568.html)
   final int _tier;
   ///
+  /// Either slot is 30ft for container or not
+  final bool _isThirtyFt;
+  ///
   /// Creates [_SlotKey] from given [bay], [row] and [tier] numbers.
   const _SlotKey(
     int bay,
     int row,
-    int tier,
-  )   : _tier = tier,
+    int tier, {
+    bool isThirtyFt = false,
+  })  : _tier = tier,
         _row = row,
-        _bay = bay;
+        _bay = bay,
+        _isThirtyFt = isThirtyFt;
   ///
   /// Creates [_SlotKey] from given [slot].
   factory _SlotKey.fromSlot(Slot slot) => _SlotKey(
         slot.bay,
         slot.row,
         slot.tier,
+        isThirtyFt: slot.isThirtyFt,
       );
   ///
   /// Returns string representation of slot key in format BBRRTT.
   String value() => toString();
   ///
   /// Returns string representation of slot key in format BBRRTT.
+  ///
+  /// Suffix T for 30ft containers will be added
+  /// (e.g. `020304T`, for bay `2`, row `3`, tier `4` and isThirtyFt = `true`).
   @override
   String toString() =>
-      '${_bay.toString().padLeft(2, '0')}${_row.toString().padLeft(2, '0')}${_tier.toString().padLeft(2, '0')}';
+      '${_bay.toString().padLeft(2, '0')}${_row.toString().padLeft(2, '0')}${_tier.toString().padLeft(2, '0')}${_isThirtyFt ? 'T' : ''}';
 }

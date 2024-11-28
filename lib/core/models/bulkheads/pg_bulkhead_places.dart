@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead_place.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead_places.dart';
@@ -26,6 +27,8 @@ class PgBulkheadPlaces implements BulkheadPlaces {
   //
   @override
   Future<Result<List<BulkheadPlace>, Failure<String>>> fetchAll() async {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -36,13 +39,14 @@ class PgBulkheadPlaces implements BulkheadPlaces {
                 bp.id AS "id",
                 bp.project_id AS "projectId",
                 bp.ship_id AS "shipId",
-                bp.name AS "name",
+                bp.name_rus AS "name",
                 bp.bulkhead_id AS "bulkheadId",
                 bp.hold_group_id AS "holdGroupId"
             FROM
                 bulkhead_place AS bp
             WHERE
-                bp.ship_id = 1
+                bp.ship_id = $shipId AND
+                bp.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
             ORDER BY "id" DESC;
             """,
       ),
@@ -72,14 +76,13 @@ class PgBulkheadPlaces implements BulkheadPlaces {
                 bp.id AS "id",
                 bp.project_id AS "projectId",
                 bp.ship_id AS "shipId",
-                bp.name AS "name",
+                bp.name_rus AS "name",
                 bp.bulkhead_id AS "bulkheadId",
                 bp.hold_group_id AS "holdGroupId"
             FROM
                 bulkhead_place AS bp
             WHERE
-                bp.ship_id = 1
-                AND bp.id = $id
+                bp.id = $id
             ORDER BY "id" DESC;
             """,
       ),

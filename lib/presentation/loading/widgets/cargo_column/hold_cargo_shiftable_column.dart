@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
-import 'package:sss_computing_client/core/widgets/async_action_checkbox.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/check_box_cell_widget.dart';
 ///
 /// [TableColumn] for hold [Cargo] shiftable.
 class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
+  final ThemeData _theme;
   final ValueRecord<bool> Function(
     Cargo data,
     bool Function(String text) toValue,
@@ -23,7 +25,9 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
       Cargo,
       bool Function(String),
     ) buildRecord,
-  }) : _buildRecord = buildRecord;
+    required ThemeData theme,
+  })  : _theme = theme,
+        _buildRecord = buildRecord;
   //
   @override
   String get key => 'shiftable';
@@ -72,8 +76,8 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
   String parseToString(bool value) => '$value';
   //
   @override
-  Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['shiftable'] = parseToValue(text),
+  Cargo copyRowWith(Cargo cargo, bool value) => JsonCargo(
+        json: cargo.asMap()..['shiftable'] = value,
       );
   //
   @override
@@ -85,82 +89,15 @@ class HoldCargoShiftableColumn implements TableColumn<Cargo, bool> {
   //
   @override
   Widget? buildCell(context, cargo, updateValue) {
-    final theme = Theme.of(context);
-    return _CargoShiftableWidget(
-      isShiftable: cargo.shiftable,
-      activeColor: theme.colorScheme.primary,
-      indicatorColor: theme.colorScheme.onSurface,
-      onUpdate: (value) => _buildRecord(cargo, parseToValue)
-          .persist(value.toString())
-          .then(
-            (result) => switch (result) {
-              Ok(:final value) => () {
-                  updateValue(value.toString());
-                  return const Ok<void, Failure>(null);
-                }(),
-              Err(:final error) => Err<void, Failure>(error),
-            },
-          )
-          .onError(
-            (error, stackTrace) => Err(Failure(
-              message: '$error',
-              stackTrace: stackTrace,
-            )),
-          ),
-    );
-  }
-}
-///
-class _CargoShiftableWidget extends StatelessWidget {
-  final bool _isShiftable;
-  final Color _activeColor;
-  final Color _indicatorColor;
-  final Future<ResultF<void>> Function(bool value) _onUpdate;
-  ///
-  const _CargoShiftableWidget({
-    required bool isShiftable,
-    required Color activeColor,
-    required Color indicatorColor,
-    required Future<ResultF<void>> Function(bool value) onUpdate,
-  })  : _isShiftable = isShiftable,
-        _activeColor = activeColor,
-        _indicatorColor = indicatorColor,
-        _onUpdate = onUpdate;
-  //
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        vertical: 2.0,
-      ),
-      child: Center(
-        child: AsyncActionCheckbox(
-          activeColor: _activeColor,
-          indicatorColor: _indicatorColor,
-          initialValue: _isShiftable,
-          onChanged: (value) => _updateValue(context, value),
-        ),
+    return Theme(
+      data: _theme,
+      child: CheckboxCellWidget(
+        value: cargo.shiftable,
+        onUpdate: (value) => _buildRecord(cargo, parseToValue)
+            .persist(value.toString())
+            .convertFailure()
+            .then((result) => result.map((value) => updateValue(value))),
       ),
     );
-  }
-  //
-  Future<void> _updateValue(BuildContext context, bool? value) async {
-    if (value == null) return;
-    return _onUpdate(value)
-        .then((result) => switch (result) {
-              Ok() => const Log('_CargoShiftableWidget | _onUpdate')
-                  .info('value updated'),
-              Err(:final error) => context.mounted
-                  ? _showErrorMessage(context, '${error.message}')
-                  : null
-            })
-        .onError(
-          (error, _) =>
-              context.mounted ? _showErrorMessage(context, '$error') : null,
-        );
-  }
-  //
-  void _showErrorMessage(BuildContext context, String message) async {
-    BottomMessage.error(message: message).show(context);
   }
 }
