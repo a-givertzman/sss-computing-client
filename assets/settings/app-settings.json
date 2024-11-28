@@ -17,7 +17,7 @@
     "calculationScriptName": "sss-computing-strength",
     "shipId": 1,
     "projectId": "null",
-    "api-host": "10.131.145.119",
+    "api-host": "0.0.0.0",
     "api-port": 8080,
     "api-auth-token": "cma-ysz-api-auth-token",
     "api-database": "sss-computing",
