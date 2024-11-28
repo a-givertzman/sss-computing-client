@@ -61,8 +61,12 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                             child: StrengthForceChart(
                               caption: const Localized('Bending moment').v,
                               barColor: barValueColor,
-                              minY: -150.0,
-                              maxY: 100.0,
+                              minY: const Setting(
+                                'bendingMomentsLimitLow_MN*m',
+                              ).toDouble,
+                              maxY: const Setting(
+                                'bendingMomentsLimitHigh_MN*m',
+                              ).toDouble,
                               xAxis: const ChartAxis(
                                 labelsSpaceReserved: 25.0,
                                 captionSpaceReserved: 0.0,
@@ -109,8 +113,12 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                             child: StrengthForceChart(
                               caption: const Localized('Shear force').v,
                               barColor: barValueColor,
-                              minY: -50.0,
-                              maxY: 50.0,
+                              minY: const Setting(
+                                'shearForcesLimitLow_MN',
+                              ).toDouble,
+                              maxY: const Setting(
+                                'shearForcesLimitHigh_MN',
+                              ).toDouble,
                               xAxis: const ChartAxis(
                                 labelsSpaceReserved: 25.0,
                                 captionSpaceReserved: 0.0,

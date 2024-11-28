@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/container/freight_container.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/container/freight_containers.dart';
@@ -23,6 +24,8 @@ class PgFreightContainers implements FreightContainers {
   //
   @override
   Future<Result<List<FreightContainer>, Failure<String>>> fetchAll() {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       database: _dbName,
@@ -41,6 +44,9 @@ class PgFreightContainers implements FreightContainers {
           c.pol_waypoint_id AS "polWaypointId",
           c.pod_waypoint_id AS "podWaypointId"
         FROM container AS c
+        WHERE
+          c.ship_id = $shipId AND
+          c.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
         ORDER BY id;
       '''),
       entryBuilder: (row) => JsonFreightContainer.fromRow(row),
@@ -64,6 +70,8 @@ class PgFreightContainers implements FreightContainers {
         Failure(message: voyageWaypointsError, stackTrace: StackTrace.current),
       );
     }
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       database: _dbName,
@@ -85,8 +93,8 @@ class PgFreightContainers implements FreightContainers {
         )
         VALUES
            ${containers.map((container) => '(${[
-                1,
-                'NULL',
+                shipId,
+                projectId ?? 'NULL',
                 "'${container.type.isoCode}'",
                 container.serialCode,
                 "'${container.typeCode}'",

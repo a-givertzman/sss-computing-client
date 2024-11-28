@@ -159,7 +159,6 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
         validator: const Validator(cases: [
           IntValidationCase(),
           RequiredValidationCase(),
-          MinLengthValidationCase(1),
           MaxLengthValidationCase(1),
         ]),
       ),
@@ -503,9 +502,7 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
                             label: const Localized(
                               'Save',
                             ).v,
-                            onPressed: _isFormValid() && _isAnyFieldChanged()
-                                ? _trySaveData
-                                : null,
+                            onPressed: _isFormValid() ? _trySaveData : null,
                           ),
                         ],
                       ),
@@ -526,13 +523,7 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
     );
   }
   //
-  bool _isFormValid() => _formKey.currentState?.validate() ?? false;
-  //
-  bool _isAnyFieldChanged() => _fieldDataList.values
-      .where(
-        (data) => data.isChanged,
-      )
-      .isNotEmpty;
+  bool _isFormValid() => _formKey.currentState?.validate() ?? true;
   //
   void _onFieldChanged() => setState(() {
         return;

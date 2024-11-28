@@ -1,6 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/core/models/bulkheads/bulkhead.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_draggable_widget.dart';
 import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_empty_widget.dart';
 ///
@@ -8,6 +10,7 @@ import 'package:sss_computing_client/presentation/bulkheads/widgets/bulkhead_emp
 class BulkheadRemovedSection extends StatefulWidget {
   final String _label;
   final double _bulkheadHeight;
+  final List<Bulkhead> _bulkheads;
   final List<int> _bulkheadIds;
   final void Function(int bulkheadId)? _onBulkheadDropped;
   /// Creates widget displaying section with removed grain bulkhead.
@@ -19,10 +22,12 @@ class BulkheadRemovedSection extends StatefulWidget {
     super.key,
     required String label,
     required double bulkheadHeight,
+    required List<Bulkhead> bulkheads,
     List<int> bulkheadIds = const [],
     void Function(int)? onBulkheadDropped,
   })  : _label = label,
         _bulkheadHeight = bulkheadHeight,
+        _bulkheads = bulkheads,
         _bulkheadIds = bulkheadIds,
         _onBulkheadDropped = onBulkheadDropped;
   //
@@ -89,7 +94,13 @@ class _BulkheadRemovedSectionState extends State<BulkheadRemovedSection> {
                           ? BulkheadDraggableWidget(
                               data: widget._bulkheadIds[index],
                               height: widget._bulkheadHeight,
-                              label: const Localized('Grain bulkhead').v,
+                              label: widget._bulkheads
+                                      .firstWhereOrNull(
+                                        (b) =>
+                                            b.id == widget._bulkheadIds[index],
+                                      )
+                                      ?.name ??
+                                  const Localized('Grain bulkhead').v,
                             )
                           : BulkheadEmptyWidget(
                               height: widget._bulkheadHeight,

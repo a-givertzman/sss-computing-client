@@ -28,6 +28,30 @@ enum FreightContainerType {
     _fourtyFtColor,
   ),
   ///
+  /// 30 ft low standard height container,
+  type1B(
+    '1B',
+    _thirtyFtLengthCode,
+    _lowStandardHeightCode,
+    _thirtyFtColor,
+  ),
+  ///
+  /// 30 ft standard height container,
+  type1BB(
+    '1BB',
+    _thirtyFtLengthCode,
+    _standardHeightCode,
+    _thirtyFtColor,
+  ),
+  ///
+  /// 30 ft low standard height container,
+  type1BBB(
+    '1BBB',
+    _thirtyFtLengthCode,
+    _highCubeHeightCode,
+    _thirtyFtColor,
+  ),
+  ///
   /// 20 ft low standard height container,
   type1C(
     '1C',
@@ -53,6 +77,8 @@ enum FreightContainerType {
   );
   /// Length code of 20ft container
   static const int _twentyFtLengthCode = 2;
+  /// Length code of 30ft container
+  static const int _thirtyFtLengthCode = 3;
   /// Length code of 40ft container
   static const int _fourtyFtLengthCode = 4;
   /// Height code of low standard height container
@@ -63,10 +89,14 @@ enum FreightContainerType {
   static const int _highCubeHeightCode = 5;
   /// Color of 20ft container
   static const Color _twentyFtColor = Colors.green;
+  /// Color of 30ft container
+  static const Color _thirtyFtColor = Colors.purple;
   /// Color of 40ft container
   static const Color _fourtyFtColor = Colors.blue;
   /// Length of 20ft container, measured in meters
   static const double _twentyFtLength = 6.058;
+  /// Length of 30ft container, measured in meters
+  static const double _thirtyFtLength = 9.125;
   /// Length of 40ft container, measured in meters
   static const double _fourtyFtLength = 12.192;
   /// Height of low standard height container, measured in meters
@@ -96,6 +126,7 @@ enum FreightContainerType {
   /// Length of container, measured in meters
   double get length => switch (lengthCode) {
         _twentyFtLengthCode => _twentyFtLength,
+        _thirtyFtLengthCode => _thirtyFtLength,
         _fourtyFtLengthCode => _fourtyFtLength,
         _ => double.nan,
       };

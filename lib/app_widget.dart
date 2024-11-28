@@ -69,7 +69,7 @@ class _AppWidgetState extends State<AppWidget> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: _themeSwitch.themeData,
-        home: const MainPage(),
+        home: const MainPage(pageIndex: 0),
       ),
     );
   }

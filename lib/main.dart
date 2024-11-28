@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart' hide Localizations;
 import 'package:hmi_core/hmi_core.dart';
-import 'package:sss_computing_client/core/models/subscripting/subscripting.dart';
+
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
 import 'package:sss_computing_client/app_widget.dart';
 
@@ -24,13 +24,7 @@ void main() async {
           ),
         ),
       );
-      await AppSubscripting.initialize(
-        jsonMap: JsonMap.fromTextFile(
-          const TextFile.asset(
-            'assets/unicodes/unicodes.json',
-          ),
-        ),
-      );
+
       final appThemeSwitch = AppThemeSwitch();
       runApp(AppWidget(themeSwitch: appThemeSwitch));
     },

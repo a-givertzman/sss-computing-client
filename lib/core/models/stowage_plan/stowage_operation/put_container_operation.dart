@@ -17,6 +17,8 @@ class PutContainerOperation implements StowageOperation {
   final int _row;
   /// Tier number of slot where container should be put.
   final int _tier;
+  /// Either slot to put is 30 ft or not.
+  final bool _isThirtyFt;
   ///
   /// Creates operation that puts the given [container] to stowage slot
   /// at specified position.
@@ -27,10 +29,12 @@ class PutContainerOperation implements StowageOperation {
     required int bay,
     required int row,
     required int tier,
+    bool isThirtyFt = false,
   })  : _container = container,
         _bay = bay,
         _row = row,
-        _tier = tier;
+        _tier = tier,
+        _isThirtyFt = isThirtyFt;
   ///
   /// Puts container to slot at specified position in [collection].
   ///
@@ -39,7 +43,7 @@ class PutContainerOperation implements StowageOperation {
   @override
   ResultF<void> execute(StowageCollection collection) {
     final previousCollection = collection.copy();
-    return _findSlot(_bay, _row, _tier, collection)
+    return _findSlot(_bay, _row, _tier, _isThirtyFt, collection)
         .andThen(
           (slotToResize) {
             final shouldResizeSlot =
@@ -50,6 +54,7 @@ class PutContainerOperation implements StowageOperation {
                     bay: _bay,
                     row: _row,
                     tier: _tier,
+                    isThirtyFt: _isThirtyFt,
                   ).execute(collection)
                 : const Ok(null);
           },
@@ -67,7 +72,7 @@ class PutContainerOperation implements StowageOperation {
   ///
   /// Puts container to slot at specified position in [collection].
   ResultF<void> _putContainer(StowageCollection collection) {
-    return _findSlot(_bay, _row, _tier, collection).andThen(
+    return _findSlot(_bay, _row, _tier, _isThirtyFt, collection).andThen(
       (existingSlot) {
         return existingSlot.withContainer(_container);
       },
@@ -92,12 +97,14 @@ class PutContainerOperation implements StowageOperation {
     int bay,
     int row,
     int tier,
+    bool isThirtyFt,
     StowageCollection stowageCollection,
   ) {
     final existingSlot = stowageCollection.findSlot(
       bay,
       row,
       tier,
+      isThirtyFt: isThirtyFt,
     );
     if (existingSlot == null) {
       return Err(Failure(

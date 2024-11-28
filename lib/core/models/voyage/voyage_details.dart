@@ -45,7 +45,7 @@ final class JsonVoyageDetails implements VoyageDetails {
   ///   "wettingDeck": "10.0", // String
   ///   "icingTypes": [{'id': 1, 'name': 'full', 'isActive': true}, ...], // String, JsonOptionsField
   ///   "waterAreaTypes": [{'id': 1, 'name': 'port', 'isActive': true}, ...], // String, JsonOptionsField
-  ///   "draftMarkTypes": [{'id': 1, 'name': 'full', 'isActive': true}, ...], // String, JsonOptionsField
+  ///   "loadLineTypes": [{'id': 1, 'name': 'full', 'isActive': true}, ...], // String, JsonOptionsField
   /// }
   /// ```
   ///
@@ -58,7 +58,7 @@ final class JsonVoyageDetails implements VoyageDetails {
       'wettingDeck': row['wettingDeck'] as String,
       'icingTypes': json.encode(row['icingTypes']),
       'waterAreaTypes': json.encode(row['waterAreaTypes']),
-      'draftMarkTypes': json.encode(row['draftMarkTypes']),
+      'loadLineTypes': json.encode(row['loadLineTypes']),
       'voyageDescription': row['voyageDescription'] as String,
     });
   }
@@ -83,7 +83,7 @@ final class JsonVoyageDetails implements VoyageDetails {
   //
   @override
   OptionsField<String> get loadLine => JsonOptionsField.fromRowField(
-        json.decode(_json['draftMarkTypes'] as String),
+        json.decode(_json['loadLineTypes'] as String),
       );
   //
   @override

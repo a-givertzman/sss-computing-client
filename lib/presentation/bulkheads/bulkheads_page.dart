@@ -16,14 +16,13 @@ class BulkheadsPage extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final navigator = Navigator.of(context);
     return Scaffold(
       // ignore: deprecated_member_use
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         leading: Tooltip(
-          message: const Localized('Back').v,
+          message: const Localized('Назад').v,
           child: TooltipVisibility(
             visible: false,
             child: BackButton(

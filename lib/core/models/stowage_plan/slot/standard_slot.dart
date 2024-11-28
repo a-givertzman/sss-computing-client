@@ -23,6 +23,9 @@ class StandardSlot implements Slot {
   final bool isActive;
   //
   @override
+  final bool isThirtyFt;
+  //
+  @override
   final int bay;
   //
   @override
@@ -67,6 +70,7 @@ class StandardSlot implements Slot {
   /// will be identical.
   const StandardSlot({
     this.isActive = true,
+    this.isThirtyFt = false,
     required this.bay,
     required this.row,
     required this.tier,
@@ -100,6 +104,7 @@ class StandardSlot implements Slot {
   ///   "maxHeight": 12.59, // double
   ///   "minVerticalSeparation": 0.0, // double
   ///   "isActive": true, // bool
+  ///   "isThirtyFt": false // bool
   /// }
   factory StandardSlot.fromRow(Map<String, dynamic> row) => StandardSlot(
         containerId: row['containerId'] as int?,
@@ -116,12 +121,14 @@ class StandardSlot implements Slot {
         maxHeight: row['maxHeight'] as double,
         minVerticalSeparation: row['minVerticalSeparation'] as double,
         isActive: row['isActive'] as bool,
+        isThirtyFt: row['isThirtyFt'] as bool,
       );
   //
   @override
   Slot activate() {
     return StandardSlot(
       isActive: true,
+      isThirtyFt: isThirtyFt,
       bay: bay,
       row: row,
       tier: tier,
@@ -142,6 +149,7 @@ class StandardSlot implements Slot {
   Slot deactivate() {
     return StandardSlot(
       isActive: false,
+      isThirtyFt: isThirtyFt,
       bay: bay,
       row: row,
       tier: tier,
@@ -179,6 +187,7 @@ class StandardSlot implements Slot {
     if (rightZUpper > maxHeight) return const Ok(null);
     return Ok(StandardSlot(
       isActive: isActive,
+      isThirtyFt: isThirtyFt,
       bay: bay,
       row: row,
       tier: tierUpper,
@@ -206,6 +215,7 @@ class StandardSlot implements Slot {
     }
     return Ok(StandardSlot(
       isActive: isActive,
+      isThirtyFt: isThirtyFt,
       bay: bay,
       row: row,
       tier: tier,
@@ -226,6 +236,7 @@ class StandardSlot implements Slot {
   ResultF<Slot> empty() {
     return Ok(StandardSlot(
       isActive: isActive,
+      isThirtyFt: isThirtyFt,
       bay: bay,
       row: row,
       tier: tier,
@@ -245,6 +256,7 @@ class StandardSlot implements Slot {
   @override
   Slot copy() => StandardSlot(
         isActive: isActive,
+        isThirtyFt: isThirtyFt,
         bay: bay,
         row: row,
         tier: tier,
@@ -283,6 +295,7 @@ class StandardSlot implements Slot {
     }
     return Ok(StandardSlot(
       isActive: isActive,
+      isThirtyFt: isThirtyFt,
       bay: bay,
       row: row,
       tier: tier,
@@ -311,6 +324,7 @@ class StandardSlot implements Slot {
     }
     return Ok(StandardSlot(
       isActive: isActive,
+      isThirtyFt: isThirtyFt,
       bay: bay,
       row: row,
       tier: tier,

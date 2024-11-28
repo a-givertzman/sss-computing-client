@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/frame/frame.dart';
 import 'package:sss_computing_client/core/models/limit_type.dart';
 import 'package:sss_computing_client/core/models/strength/strength_force_limit.dart';
@@ -101,6 +102,8 @@ class PgBendingMomentLimits implements StrengthForceLimits {
 }
 ///
 Sql _buildPgFetchAllSql(String forceType) {
+  final shipId = const Setting('shipId').toInt;
+  final projectId = int.tryParse(const Setting('projectId').toString());
   return Sql(
     sql: """
           SELECT
@@ -109,8 +112,18 @@ Sql _buildPgFetchAllSql(String forceType) {
             sfl.frame_x AS "frameX",
             sfl.limit_type::TEXT AS "limitType",
             sfl.value / 1000.0 AS value
-          FROM strength_force_limit AS sfl
-          WHERE sfl.force_type = '$forceType';
+          FROM
+            strength_force_limit AS sfl
+            JOIN ship AS s ON
+              sfl.ship_id = s.id
+            JOIN ship_water_area AS swa ON
+              s.water_area_id = swa.id
+          WHERE
+            sfl.force_type = '$forceType' AND
+            sfl.limit_area::TEXT = swa.name AND
+            sfl.ship_id = $shipId AND
+            sfl.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
+          ;
         """,
   );
 }
@@ -124,7 +137,7 @@ StrengthForceLimit _mapDbReplyToValue(Map<String, dynamic> row) {
       'low' => LimitType.low,
       'high' => LimitType.high,
       _ => throw Failure<String>(
-          message: 'Incorrect value for LimitType of StrenghForceLimit',
+          message: 'Incorrect value for LimitType of StrengthForceLimit',
           stackTrace: StackTrace.current,
         ),
     },

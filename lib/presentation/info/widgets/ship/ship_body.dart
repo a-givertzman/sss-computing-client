@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/extensions/strings.dart';
 import 'package:sss_computing_client/core/models/ship/ship_details.dart';
 import 'package:sss_computing_client/core/widgets/disabled_widget.dart';
 import 'package:sss_computing_client/core/widgets/edit_on_tap_widget/edit_on_tap_field.dart';
@@ -10,6 +11,7 @@ import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/table/table_nullable_cell.dart';
 import 'package:sss_computing_client/core/widgets/zebra_stripped_list/zebra_stripped_list.dart';
 import 'package:sss_computing_client/core/models/ship/pg_ship_details.dart';
+
 ///
 /// Ship Info body displaying the [EditableZebraList] with the ship details
 class ShipBody extends StatefulWidget {
@@ -21,6 +23,7 @@ class ShipBody extends StatefulWidget {
   @override
   State<ShipBody> createState() => _ShipBodyState();
 }
+
 ///
 class _ShipBodyState extends State<ShipBody> {
   late bool _isLoading;
@@ -39,6 +42,7 @@ class _ShipBodyState extends State<ShipBody> {
     );
     super.initState();
   }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -65,6 +69,7 @@ class _ShipBodyState extends State<ShipBody> {
       ),
     );
   }
+
   //
   Future<Result<String, Failure<String>>> _onItemChange({
     required String key,
@@ -89,16 +94,18 @@ class _ShipBodyState extends State<ShipBody> {
       whenComplete?.call();
     });
   }
+
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
     final durationMs = const Setting('errorMessageDisplayDuration').toInt;
     BottomMessage.error(
-      message: message,
+      message: message.truncate(),
       displayDuration: Duration(milliseconds: durationMs),
     ).show(context);
   }
 }
+
 ///
 class _BuildItems extends StatefulWidget {
   final JsonShipDetails _shipDetails;
@@ -106,6 +113,7 @@ class _BuildItems extends StatefulWidget {
     String key,
     String value,
   ) _onItemChanged;
+
   ///
   const _BuildItems({
     required JsonShipDetails shipDetails,
@@ -119,6 +127,7 @@ class _BuildItems extends StatefulWidget {
   @override
   State<_BuildItems> createState() => _BuildItemsState();
 }
+
 ///
 class _BuildItemsState extends State<_BuildItems> {
   late ScrollController _scrollController;
@@ -128,12 +137,14 @@ class _BuildItemsState extends State<_BuildItems> {
     _scrollController = ScrollController();
     super.initState();
   }
+
   //
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -170,10 +181,10 @@ class _BuildItemsState extends State<_BuildItems> {
       ],
     );
   }
+
   Widget _buildValueWidget(MapEntry<String, dynamic> item) {
     final theme = Theme.of(context);
     if (widget._shipDetails.isFieldEditable(item.key)) {
-      /// TODO validation
       return EditOnTapField(
         initialValue: item.value,
         maxLines: 5,

@@ -17,6 +17,8 @@ class RemoveContainerOperation implements StowageOperation {
   final int _row;
   /// Tier number of slot where container should be put.
   final int _tier;
+  /// Either slot to remove is for 30ft container or not.
+  final bool _isThirtyFt;
   ///
   /// Creates operation that removes container from stowage slot
   /// at specified position.
@@ -26,9 +28,11 @@ class RemoveContainerOperation implements StowageOperation {
     required int bay,
     required int row,
     required int tier,
+    bool isThirtyFt = false,
   })  : _bay = bay,
         _row = row,
-        _tier = tier;
+        _tier = tier,
+        _isThirtyFt = isThirtyFt;
   ///
   /// Removes container from slot at specified position in [collection],
   /// and resizes slot to standard slot height
@@ -41,9 +45,6 @@ class RemoveContainerOperation implements StowageOperation {
     final previousCollection = collection.copy();
     return _delContainer(collection)
         .andThen(
-          (_) => _delContainer(collection),
-        )
-        .andThen(
           (slotToResize) {
             final shouldResizeSlot =
                 (slotToResize.rightZ - slotToResize.leftZ) !=
@@ -54,6 +55,7 @@ class RemoveContainerOperation implements StowageOperation {
                     bay: _bay,
                     row: _row,
                     tier: _tier,
+                    isThirtyFt: _isThirtyFt,
                   ).execute(collection)
                 : const Ok(null);
           },
@@ -67,7 +69,7 @@ class RemoveContainerOperation implements StowageOperation {
   }
   ///
   ResultF<Slot> _delContainer(StowageCollection collection) {
-    return _findSlot(_bay, _row, _tier, collection).andThen(
+    return _findSlot(_bay, _row, _tier, _isThirtyFt, collection).andThen(
       (existingSlot) {
         return existingSlot.empty();
       },
@@ -93,9 +95,15 @@ class RemoveContainerOperation implements StowageOperation {
     int bay,
     int row,
     int tier,
+    bool isThirtyFt,
     StowageCollection stowageCollection,
   ) {
-    final existingSlot = stowageCollection.findSlot(bay, row, tier);
+    final existingSlot = stowageCollection.findSlot(
+      bay,
+      row,
+      tier,
+      isThirtyFt: isThirtyFt,
+    );
     if (existingSlot == null) {
       return Err(Failure(
         message: 'Slot not found',

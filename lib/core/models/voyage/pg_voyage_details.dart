@@ -4,7 +4,8 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/options_field/options_field.dart';
 import 'package:sss_computing_client/core/models/voyage/voyage_details.dart';
-/// Voyage details collections that are stored in postgres DB.
+///
+/// Voyage details that are stored in postgres DB.
 class PgVoyageDetails {
   static const _log = Log('PgVoyageDetails');
   final ApiAddress _apiAddress;
@@ -18,7 +19,7 @@ class PgVoyageDetails {
         _dbName = dbName,
         _authToken = authToken;
   ///
-  /// Creates [ShipDetails] collection that stored in postgres DB.
+  /// Creates [VoyageDetails] that are stored in postgres DB.
   ///
   /// * [apiAddress] – [ApiAddress] of server that interact with database;
   /// * [dbName] – name of the database;
@@ -77,7 +78,7 @@ class PgVoyageDetails {
             )
             GROUP BY ship_id
           ),
-          draft_mark_options AS (
+          load_line_options AS (
             SELECT
               ship_id,
               json_agg(json_build_object(
@@ -87,15 +88,16 @@ class PgVoyageDetails {
               )) AS "options"
             FROM (
               SELECT
-                sdm.ship_id AS "ship_id",
-                dmt.id AS "option_id",
-                dmt.name AS "option_name",
-                sdm.is_active AS "is_option_active"
-              FROM ship_draft_mark AS sdm
-              JOIN draft_mark_type AS dmt ON sdm.draft_mark_type_id = dmt.id
+                sllt.ship_id AS "ship_id",
+                llt.id AS "option_id",
+                llt.name AS "option_name",
+                sllt.is_active AS "is_option_active"
+              FROM ship_available_load_line_types AS sllt
+              JOIN load_line_type AS llt ON sllt.load_line_type_id = llt.id
               WHERE
-                sdm.ship_id = $shipId AND
-                sdm.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
+                sllt.ship_id = $shipId AND
+                sllt.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
+              ORDER BY llt.id
             )
             GROUP BY ship_id
           )
@@ -107,7 +109,7 @@ class PgVoyageDetails {
           wdt.value::TEXT AS "wettingDeck",
           ito.options AS "icingTypes",
           wao.options AS "waterAreaTypes",
-          dmo.options AS "draftMarkTypes"
+          llo.options AS "loadLineTypes"
         FROM ship AS s
         JOIN ship_parameters AS wd ON
           s.id = wd.ship_id AND
@@ -124,8 +126,8 @@ class PgVoyageDetails {
           s.id = ito.ship_id
         JOIN water_area_options AS wao ON
           s.id = wao.ship_id
-        JOIN draft_mark_options AS dmo ON
-          s.id = dmo.ship_id
+        JOIN load_line_options AS llo ON
+          s.id = llo.ship_id
         WHERE
           s.id = $shipId
         ;
@@ -310,18 +312,18 @@ class PgVoyageDetails {
       sqlBuilder: (_, __) => Sql(sql: '''
         DO \$\$ BEGIN
           UPDATE
-            ship_draft_mark
+            ship_available_load_line_types
           SET
             is_active = FALSE
           WHERE
             ship_id = $shipId AND
             project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'};
           UPDATE
-            ship_draft_mark
+            ship_available_load_line_types
           SET
             is_active = TRUE
           WHERE
-            draft_mark_type_id = ${value.id} AND
+            load_line_type_id = ${value.id} AND
             ship_id = $shipId AND
             project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'};
         END \$\$;
