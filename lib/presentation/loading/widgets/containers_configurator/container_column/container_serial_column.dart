@@ -69,9 +69,8 @@ class ContainerSerialColumn implements TableColumn<FreightContainer, int> {
   }
   //
   @override
-  FreightContainer copyRowWith(FreightContainer container, String text) {
-    final newContainerData = container.asMap()
-      ..['serialCode'] = parseToValue(text);
+  FreightContainer copyRowWith(FreightContainer container, int value) {
+    final newContainerData = container.asMap()..['serialCode'] = value;
     return JsonFreightContainer.fromRow(newContainerData);
   }
   //

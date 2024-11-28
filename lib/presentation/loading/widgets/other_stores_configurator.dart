@@ -161,7 +161,7 @@ class _OtherStoresConfiguratorState extends State<OtherStoresConfigurator> {
           ),
           SizedBox(height: blockPadding),
           Expanded(
-            child: EditingTable(
+            child: EditingTable<Cargo>(
               selectedRow: _selectedCargo,
               rowHeight: const Setting('tableRowHeight').toDouble,
               onRowTap: _toggleCargo,

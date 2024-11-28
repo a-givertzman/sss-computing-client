@@ -86,9 +86,9 @@ class CargoStowageFactorColumn implements TableColumn<Cargo, double?> {
   }
   //
   @override
-  Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
+  Cargo copyRowWith(Cargo cargo, double? density) => JsonCargo(
         json: cargo.asMap()
-          ..['density'] = switch (parseToValue(text)) {
+          ..['density'] = switch (density) {
             final double value => 1.0 / value,
             null => null,
           },

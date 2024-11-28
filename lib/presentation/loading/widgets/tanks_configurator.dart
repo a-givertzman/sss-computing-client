@@ -137,7 +137,7 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
           ),
           SizedBox(height: blockPadding),
           Expanded(
-            child: EditingTable(
+            child: EditingTable<Cargo>(
               selectedRow: _selectedCargo,
               rowHeight: const Setting('tableRowHeight').toDouble,
               onRowTap: _toggleCargo,

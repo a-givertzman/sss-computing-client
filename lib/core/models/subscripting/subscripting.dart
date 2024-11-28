@@ -1,5 +1,4 @@
 import 'package:hmi_core/hmi_core.dart';
-
 import 'package:sss_computing_client/core/models/subscripting/unicode.dart';
 
 ///  To handle subscript and superscript for [Text] using Unicode

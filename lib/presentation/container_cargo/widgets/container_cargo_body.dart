@@ -202,9 +202,9 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
       'pol': FieldData<Waypoint?>(
         id: 'pol',
         label: const Localized('POL').v,
-        toValue: (text) =>
-            widget._waypoints.firstWhereOrNull((w) => w.portCode == text),
-        toText: (value) => value?.portCode ?? '–',
+        toValue: (id) =>
+            widget._waypoints.firstWhereOrNull((w) => w.id.toString() == id),
+        toText: (waypoint) => waypoint?.id.toString() ?? '-1',
         initialValue: widget._waypoints
             .sorted(
               (a, b) => a.eta.compareTo(b.eta),
@@ -212,18 +212,18 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
             .firstOrNull,
         buildFormField: (value, updateValue) => VoyageWaypointDropdown(
           initialValue: widget._waypoints.firstWhereOrNull(
-            (w) => w.portCode == value,
+            (w) => w.id.toString() == value,
           ),
           values: widget._waypoints,
-          onWaypointChanged: (w) => updateValue(w.portCode),
+          onWaypointChanged: (w) => updateValue(w.id.toString()),
         ),
       ),
       'pod': FieldData<Waypoint?>(
         id: 'pod',
         label: const Localized('POD').v,
-        toValue: (text) =>
-            widget._waypoints.firstWhereOrNull((w) => w.portCode == text),
-        toText: (value) => value?.portCode ?? '–',
+        toValue: (id) =>
+            widget._waypoints.firstWhereOrNull((w) => w.id.toString() == id),
+        toText: (waypoint) => waypoint?.id.toString() ?? '-1',
         initialValue: widget._waypoints
             .sorted(
               (a, b) => a.eta.compareTo(b.eta),
@@ -231,10 +231,10 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
             .lastOrNull,
         buildFormField: (value, updateValue) => VoyageWaypointDropdown(
           initialValue: widget._waypoints.firstWhereOrNull(
-            (w) => w.portCode == value,
+            (w) => w.id.toString() == value,
           ),
           values: widget._waypoints,
-          onWaypointChanged: (w) => updateValue(w.portCode),
+          onWaypointChanged: (w) => updateValue(w.id.toString()),
         ),
       ),
       'containersNumber': FieldData<int>(
@@ -455,7 +455,8 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
                                 final polData = _fieldDataList['pol']!;
                                 final pol =
                                     polData.toValue(polData.controller.text)
-                                        as Waypoint;
+                                        as Waypoint?;
+                                if (pol == null) return '–';
                                 return '${pol.eta.formatRU()} – ${pol.etd.formatRU()}';
                               },
                             ),
@@ -466,7 +467,8 @@ class _ContainerCargoBodyState extends State<ContainerCargoBody> {
                                 final podData = _fieldDataList['pod']!;
                                 final pod =
                                     podData.toValue(podData.controller.text)
-                                        as Waypoint;
+                                        as Waypoint?;
+                                if (pod == null) return '–';
                                 return '${pod.eta.formatRU()} – ${pod.etd.formatRU()}';
                               },
                             ),

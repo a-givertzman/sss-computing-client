@@ -27,6 +27,12 @@ abstract interface class Waypoint {
   /// Color of the waypoint.
   Color get color;
   ///
+  /// Draft limit for ship at this waypoint, measured in meters.
+  double get draftLimit;
+  ///
+  /// Either [draftLimit] is used or not.
+  bool get useDraftLimit;
+  ///
   /// Returns waypoint as map.
   Map<String, dynamic> asMap();
 }

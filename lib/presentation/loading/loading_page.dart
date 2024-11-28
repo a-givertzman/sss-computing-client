@@ -1,16 +1,13 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:provider/provider.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/loading_page_body.dart';
 ///
 /// Page for configuring ship cargos.
 class LoadingPage extends StatefulWidget {
-  final Stream<DsDataPoint<bool>> _appRefreshStream;
-  final void Function() _fireRefreshEvent;
-  final CalculationStatus _calculationStatusNotifier;
   ///
   /// Creates page for configuring ship cargos.
   ///
@@ -21,12 +18,7 @@ class LoadingPage extends StatefulWidget {
   /// between many instances of calculation button.
   const LoadingPage({
     super.key,
-    required Stream<DsDataPoint<bool>> appRefreshStream,
-    required void Function() fireRefreshEvent,
-    required CalculationStatus calculationStatusNotifier,
-  })  : _appRefreshStream = appRefreshStream,
-        _fireRefreshEvent = fireRefreshEvent,
-        _calculationStatusNotifier = calculationStatusNotifier;
+  });
   //
   @override
   State<LoadingPage> createState() => _LoadingPageState();
@@ -53,24 +45,24 @@ class _LoadingPageState extends State<LoadingPage> {
     return Scaffold(
       // ignore: deprecated_member_use
       backgroundColor: theme.colorScheme.background,
-      body: Row(
-        children: [
-          NavigationPanel(
-            selectedPageIndex: 4,
-            appRefreshStream: widget._appRefreshStream,
-            fireRefreshEvent: widget._fireRefreshEvent,
-            calculationStatusNotifier: widget._calculationStatusNotifier,
-          ),
-          Expanded(
-            child: LoadingPageBody(
-              appRefreshStream: widget._appRefreshStream,
-              fireRefreshEvent: widget._fireRefreshEvent,
-              apiAddress: _apiAddress,
-              dbName: _dbName,
-              authToken: _authToken,
+      body: Consumer<CalculationStatus>(
+        builder: (_, status, __) => Row(
+          children: [
+            NavigationPanel(
+              selectedPageIndex: 4,
+              calculationStatusNotifier: status,
             ),
-          ),
-        ],
+            Expanded(
+              child: LoadingPageBody(
+                appRefreshStream: status.refreshStream,
+                fireRefreshEvent: status.fireRefreshEvent,
+                apiAddress: _apiAddress,
+                dbName: _dbName,
+                authToken: _authToken,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -12,10 +12,10 @@ abstract interface class TableColumn<D, V> {
   /// Returns [FieldType] of [V].
   FieldType get type;
   ///
-  /// Rturns title of [TableColumn].
+  /// Returns title of [TableColumn].
   String get name;
   ///
-  /// Returns string representation for [null] value.
+  /// Returns string representation for `null` value.
   String get nullValue;
   ///
   /// Returns default [V] value.
@@ -27,13 +27,13 @@ abstract interface class TableColumn<D, V> {
   /// Returns alignment for [TableColumn] cell.
   Alignment get cellAlignment;
   ///
-  /// [TableColumn] can either grow or not.
+  /// Returns grow factor to use for this [TableColumn].
   double? get grow;
   ///
-  /// Returns width for [TableColumn].
+  /// Returns width to use for this [TableColumn].
   double? get width;
   ///
-  /// Is standard [EditingTable] editor used.
+  /// Is standard [EditingTable] editor used or not.
   bool get useDefaultEditing;
   ///
   /// [TableColumn] can either resize or not.
@@ -51,16 +51,21 @@ abstract interface class TableColumn<D, V> {
   /// Converts and returns value to its string representation.
   String parseToString(V value);
   ///
-  /// Returns new copy of column data with provided value.
-  D copyRowWith(D rowData, String text);
+  /// Returns new copy of row data with provided column value.
+  D copyRowWith(D rowData, V value);
   ///
   /// Builds and returns [ValueRecord] for column data.
   ValueRecord<V>? buildRecord(D rowData, V Function(String text) toValue);
   ///
-  /// Builds and returns widget for column cell.
+  /// Builds and returns widget for column cell preview
+  /// (if [useDefaultEditing] is `true` after double tap on cell
+  /// standard [EditingTable] editor will be used, otherwise
+  /// editing should be handled by widget returned by [buildCell] if needed).
+  ///
+  /// [updateValue] can be used to update column value in [rowData].
   Widget? buildCell(
     BuildContext context,
     D rowData,
-    void Function(String text) updateValue,
+    void Function(V value) updateValue,
   );
 }

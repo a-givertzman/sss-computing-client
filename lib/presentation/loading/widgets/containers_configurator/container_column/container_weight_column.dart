@@ -67,9 +67,8 @@ class ContainerWeightColumn implements TableColumn<FreightContainer, double> {
   }
   //
   @override
-  FreightContainer copyRowWith(FreightContainer container, String text) {
-    final newContainerData = container.asMap()
-      ..['grossWeight'] = parseToValue(text);
+  FreightContainer copyRowWith(FreightContainer container, double value) {
+    final newContainerData = container.asMap()..['grossWeight'] = value;
     return JsonFreightContainer.fromRow(newContainerData);
   }
   //

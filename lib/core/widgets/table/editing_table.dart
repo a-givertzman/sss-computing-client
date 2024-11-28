@@ -10,7 +10,7 @@ import 'package:sss_computing_client/core/widgets/table/edit_on_tap_cell.dart';
 ///
 /// Widget that displays [T] list in form of table with editing fields.
 class EditingTable<T> extends StatefulWidget {
-  final List<TableColumn> _columns;
+  final List<TableColumn<T, dynamic>> _columns;
   final List<T> _rows;
   final void Function(T rowData)? _onRowTap;
   final void Function(T rowData)? _onRowDoubleTap;
@@ -31,7 +31,7 @@ class EditingTable<T> extends StatefulWidget {
   /// * [rowHeight] – table row height.
   const EditingTable({
     super.key,
-    required List<TableColumn> columns,
+    required List<TableColumn<T, dynamic>> columns,
     required List<T> rows,
     void Function(T rowData)? onRowTap,
     void Function(T rowData)? onRowDoubleTap,
@@ -68,9 +68,9 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
             grow: column.grow,
             sortable: true,
             resizable: column.isResizable,
-            stringValue: column.type == FieldType.string
-                ? (rowData) => column.extractValue(rowData)
-                : null,
+            stringValue: (row) => column.parseToString(
+              column.extractValue(row),
+            ),
             doubleValue: column.type == FieldType.real
                 ? (rowData) => column.extractValue(rowData)
                 : null,
@@ -101,32 +101,21 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
   @override
   Widget build(BuildContext context) {
     _highlightRow(widget._selectedRow);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(
-          height: const Setting('padding', factor: 1.0).toDouble,
-        ),
-        Expanded(
-          flex: 1,
-          child: TableView<T>(
-            model: _model..replaceRows(widget._rows),
-            cellHeight: widget._rowHeight,
-            scrollController: _scrollController,
-            cellPadding: EdgeInsets.zero,
-            onRowTap: (rowData) => widget._onRowTap?.call(rowData),
-            onRowDoubleTap: (rowData) => widget._onRowDoubleTap?.call(rowData),
-            tableBorderColor: Colors.transparent,
-          ),
-        ),
-      ],
+    return TableView<T>(
+      model: _model..replaceRows(widget._rows),
+      cellHeight: widget._rowHeight,
+      scrollController: _scrollController,
+      cellPadding: EdgeInsets.zero,
+      onRowTap: (rowData) => widget._onRowTap?.call(rowData),
+      onRowDoubleTap: (rowData) => widget._onRowDoubleTap?.call(rowData),
+      tableBorderColor: Colors.transparent,
     );
   }
   ///
   Widget _buildPreviewCell(
     BuildContext context,
     DaviRow<T> row,
-    TableColumn column,
+    TableColumn<T, Object?> column,
   ) {
     return column.buildCell(
           context,
@@ -160,7 +149,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
   Widget _buildEditableCell(
     BuildContext context,
     DaviRow<T> row,
-    TableColumn column,
+    TableColumn<T, Object?> column,
   ) {
     final theme = Theme.of(context);
     return EditOnTapCell(
@@ -180,8 +169,8 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
                     Err(:final error) => Err(error),
                   }) ??
           Future.value(Ok(value)),
-      onSubmitted: (value) => widget._onRowUpdate?.call(
-        column.copyRowWith(row.data, value),
+      onSubmitted: (text) => widget._onRowUpdate?.call(
+        column.copyRowWith(row.data, column.parseToValue(text)),
         row.data,
       ),
       validator: column.validator,
@@ -196,7 +185,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
   Widget _buildCell(
     BuildContext context,
     DaviRow<T> row,
-    TableColumn column,
+    TableColumn<T, Object?> column,
   ) {
     return column.useDefaultEditing
         ? _buildEditableCell(

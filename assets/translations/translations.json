@@ -131,25 +131,6 @@
     "Select cargo type to display",
     "Выбрать тип груза для отображения"
   ],
-  "Page not found": ["Page not found", "Страница не найдена"],
-  "ft": ["t.fr", "т.шп"],
-  "fr": ["fr", "шп"],
-  "Side": ["Side", "Сбоку"],
-  "Top": ["Top", "Сверху"],
-  "Righting lever": ["Righting lever", "Плечо остойчивости"],
-  "Angle of heel": ["Angle of heel", "Угол крена"],
-  "h": ["GM", "h"],
-  "radian": ["rad", "рад"],
-  "dso": ["SSC", "ДСО"],
-  "ddo": ["DSC", "ДДО"],
-  "Parameter": ["Parameter", "Параметр"],
-  "to port side": ["to port side", "на левый борт"],
-  "to starboard": ["to starboard", "на правый борт"],
-  "Stability criterions": ["Stability criterions", "Критерии остойчивости"],
-  "Actual and limit values did not pass relation test": [
-    "Actual and limit values did not pass relation test",
-    "Актуальное значение не соответствует заданному лимиту"
-  ],
   "m^3": ["m³", "м³"],
   "t/m^3": ["t/m³", "т/м³"],
   "m^3/t": ["m³/t", "м³/т"],
@@ -318,35 +299,36 @@
   "Add": ["Add", "Добавить"],
   "Delete": ["Delete", "Удалить"],
   "Draft limit": ["Draft limit", "Макс. осадка"],
-  "call_sign": ["Call sign", "Позывной"],
-  "ship_name": ["Ship name", "Наименование судна"],
+  "callSign": ["Call sign", "Позывной"],
+  "shipName": ["Ship name", "Наименование судна"],
   "imo": ["IMO Number", "Номер ИМО"],
-  "ship_type": ["Ship Type", "Тип судна"],
-  "ship_classification": [
+  "mmsi": ["MMSI", "MMSI"],
+  "shipType": ["Ship Type", "Тип судна"],
+  "shipClassification": [
     "Classification Society",
     "Классификационное общество"
   ],
   "registration": ["Registration number", "Регистровый номер"],
   "registration_port": ["Registration port", "Порт приписки"],
-  "flag_state": ["Flag state", "Флаг приписки"],
-  "ship_owner": ["Owner", "Cудовладелец"],
-  "ship_owner_code": ["Owner code", "Код судовладельца"],
-  "build_yard": ["Build yard", "Верфь постройки"],
-  "build_place": ["Build place", "Место постройки"],
-  "build_year": ["Build year", "Год постройки"],
-  "ship_builder_number": ["Ship builder hull", "Заводской номер"],
-  "ship_master": ["Master", "Капитан"],
-  "ship_chief_mate": ["Chief mate", "Старший помощник капитана"],
-  "water_area": ["Water area", "Акватория"],
-  "intake_water_density": ["Intake water density", "Плотность забортной воды"],
-  "voyage_description": ["Voyage description", "Описание рейса"],
-  "voyage_code": ["Voyage code", "Код рейса"],
-  "icing": ["Icing", "Обледенение"],
-  "wetting_deck": [
+  "flagState": ["Flag state", "Флаг приписки"],
+  "shipOwner": ["Owner", "Cудовладелец"],
+  "shipOwnerCode": ["Owner code", "Код судовладельца"],
+  "buildYard": ["Build yard", "Верфь постройки"],
+  "buildPlace": ["Build place", "Место постройки"],
+  "buildYear": ["Build year", "Год постройки"],
+  "shipBuilderNumber": ["Ship builder hull", "Заводской номер"],
+  "shipMaster": ["Master", "Капитан"],
+  "shipChiefMate": ["Chief mate", "Старший помощник капитана"],
+  "intakeWaterDensity": ["Intake water density", "Плотность забортной воды"],
+  "voyageDescription": ["Voyage description", "Описание рейса"],
+  "voyageCode": ["Voyage code", "Код рейса"],
+  "icingTypes": ["Icing", "Обледенение"],
+  "waterAreaTypes": ["Water area", "Акватория"],
+  "draftMarkTypes": ["Load line", "Грузовая марка"],
+  "wettingDeck": [
     "Wetting of deck timber cargo",
     "Намокание палубного лесного груза"
   ],
-  "load_line": ["Load line", "Грузовая марка"],
   "t/m": ["t/m", "т/м"],
   "t/m3": ["t/m^3", "т/м^3"],
   "ETD": ["ETD", "ETD"],
@@ -448,5 +430,67 @@
   "chapter04_check": [
     "Chapter 04. Periodic inspections",
     "Глава 04. Периодические проверки"
+  ],
+  "navigationArea": ["Navigation area", "Район плавания"],
+  "not found": ["Not found", "Не найдено"],
+  "fetch error": ["Fetch error", "Ошибка загрузки"],
+  "checking of containers port references failed": [
+    "Checking of containers port references failed",
+    "Не удалось проверить ссылки портов на контейнеры"
+  ],
+  "ETA must be before ETD": [
+    "ETA must be before ETD",
+    "ETA должен быть раньше ETD"
+  ],
+  "ETD must be after ETA": [
+    "ETD must be after ETA",
+    "ETD должен быть позже ETA"
+  ],
+  "Slot to put container not found": [
+    "Slot to put container not found",
+    "Слот для размещения контейнера не найден"
+  ],
+  "Slot not found": ["Slot not found", "Слот не найден"],
+  "Collection corrupted during operation execution": [
+    "Collection corrupted during operation execution",
+    "Коллекция повреждена во время выполнения операции"
+  ],
+  "unknown field to update": [
+    "Unknown field to update",
+    "Неизвестное поле для обновления"
+  ],
+  "no rows updated": [
+    "Record for updating not found",
+    "Запись для обновления не обнаружена"
+  ],
+  "Cancel": ["Cancel", "Отмена"],
+  "Confirm": ["Confirm", "Подтвердить"],
+  "Ok": ["OK", "ОК"],
+  "Draft limit is used": [
+    "Draft limit is used",
+    "Используется лимит по осадке"
+  ],
+  "Draft limit is not used": [
+    "Draft limit is not used",
+    "Лимит по осадке не используется"
+  ],
+  "Port name": ["Port name", "Имя порта"],
+  "ETA - ETD range overlap with another waypoint": [
+    "ETA - ETD range overlap with another waypoint",
+    "Промежуток ETA - ETD пересекается с другой точкой маршрута"
+  ],
+  "take into account in the criteria": [
+    "Take into account in the criteria",
+    "Учитывать в критериях"
+  ],
+  "Delete anyway": ["Delete anyway", "Удалить все равно"],
+  "Delete waypoint": ["Delete waypoint", "Удалить точку маршрута"],
+  "Container with this waypoint as POL or POD exists": [
+    "Container with this waypoint as POL or POD exists",
+    "Существует контейнер для которого эта точка маршрута задана как POL или POD"
+  ],
+  "Deleting of this waypoint will clear all container's POL and POD record with this waypoint": [
+    "Deleting of this waypoint will clear all container's POL and POD record with this waypoint",
+    "Удаление этой точки маршрута приведет к сбросу всех записей о POL и POD для контейнеров, связанных с этой точкой"
   ]
 }
