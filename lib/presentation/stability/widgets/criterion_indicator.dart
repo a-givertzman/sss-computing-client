@@ -100,7 +100,7 @@ class _CriterionIndicatorView extends StatelessWidget {
     final theme = Theme.of(context);
     final textStyle = Theme.of(context).textTheme.bodyMedium;
     final color = _color ?? theme.colorScheme.onSurface;
-    final passedColor = _passedColor ?? Colors.lightGreen;
+    final passedColor = _passedColor ?? Theme.of(context).stateColors.on;
     final errorColor = _errorColor ?? theme.alarmColors.class3;
     final padding = const Setting('padding').toDouble;
     return Column(

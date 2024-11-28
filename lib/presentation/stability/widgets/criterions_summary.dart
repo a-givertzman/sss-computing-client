@@ -28,7 +28,7 @@ class CriterionsSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textStyle = _textStyle ?? theme.textTheme.bodyLarge;
-    final passedColor = _passedColor ?? Colors.lightGreen;
+    final passedColor = _passedColor ?? Theme.of(context).stateColors.on;
     final errorColor = _errorColor ?? theme.stateColors.alarm;
     final summary = _getSummary(_criterions);
     final passed = summary.where((passed) => passed);

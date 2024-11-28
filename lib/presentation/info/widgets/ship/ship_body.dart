@@ -11,7 +11,6 @@ import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/table/table_nullable_cell.dart';
 import 'package:sss_computing_client/core/widgets/zebra_stripped_list/zebra_stripped_list.dart';
 import 'package:sss_computing_client/core/models/ship/pg_ship_details.dart';
-
 ///
 /// Ship Info body displaying the [EditableZebraList] with the ship details
 class ShipBody extends StatefulWidget {
@@ -23,7 +22,6 @@ class ShipBody extends StatefulWidget {
   @override
   State<ShipBody> createState() => _ShipBodyState();
 }
-
 ///
 class _ShipBodyState extends State<ShipBody> {
   late bool _isLoading;
@@ -42,7 +40,6 @@ class _ShipBodyState extends State<ShipBody> {
     );
     super.initState();
   }
-
   //
   @override
   Widget build(BuildContext context) {
@@ -69,7 +66,6 @@ class _ShipBodyState extends State<ShipBody> {
       ),
     );
   }
-
   //
   Future<Result<String, Failure<String>>> _onItemChange({
     required String key,
@@ -94,7 +90,6 @@ class _ShipBodyState extends State<ShipBody> {
       whenComplete?.call();
     });
   }
-
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
@@ -105,7 +100,6 @@ class _ShipBodyState extends State<ShipBody> {
     ).show(context);
   }
 }
-
 ///
 class _BuildItems extends StatefulWidget {
   final JsonShipDetails _shipDetails;
@@ -113,7 +107,6 @@ class _BuildItems extends StatefulWidget {
     String key,
     String value,
   ) _onItemChanged;
-
   ///
   const _BuildItems({
     required JsonShipDetails shipDetails,
@@ -127,7 +120,6 @@ class _BuildItems extends StatefulWidget {
   @override
   State<_BuildItems> createState() => _BuildItemsState();
 }
-
 ///
 class _BuildItemsState extends State<_BuildItems> {
   late ScrollController _scrollController;
@@ -137,14 +129,12 @@ class _BuildItemsState extends State<_BuildItems> {
     _scrollController = ScrollController();
     super.initState();
   }
-
   //
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
-
   //
   @override
   Widget build(BuildContext context) {
@@ -181,7 +171,6 @@ class _BuildItemsState extends State<_BuildItems> {
       ],
     );
   }
-
   Widget _buildValueWidget(MapEntry<String, dynamic> item) {
     final theme = Theme.of(context);
     if (widget._shipDetails.isFieldEditable(item.key)) {
@@ -189,7 +178,7 @@ class _BuildItemsState extends State<_BuildItems> {
         initialValue: item.value,
         maxLines: 5,
         iconColor: theme.colorScheme.primary,
-        errorColor: theme.alarmColors.class3,
+        errorColor: theme.stateColors.error,
         onSubmit: (value) => Future.value(Ok(value)),
         onSubmitted: (value) => widget._onItemChanged(item.key, value),
       );
