@@ -4,7 +4,8 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/options_field/options_field.dart';
 import 'package:sss_computing_client/core/models/voyage/voyage_details.dart';
-/// Voyage details collections that are stored in postgres DB.
+///
+/// Voyage details that are stored in postgres DB.
 class PgVoyageDetails {
   static const _log = Log('PgVoyageDetails');
   final ApiAddress _apiAddress;
@@ -18,7 +19,7 @@ class PgVoyageDetails {
         _dbName = dbName,
         _authToken = authToken;
   ///
-  /// Creates [ShipDetails] collection that stored in postgres DB.
+  /// Creates [VoyageDetails] that are stored in postgres DB.
   ///
   /// * [apiAddress] – [ApiAddress] of server that interact with database;
   /// * [dbName] – name of the database;

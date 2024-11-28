@@ -3,16 +3,15 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/general_parameter/json_parameter_value.dart';
 import 'package:sss_computing_client/core/models/general_parameter/parameter_value.dart';
-import 'package:sss_computing_client/core/models/stability_parameter/stability_parameter.dart';
 ///
-/// [StabilityParameter] collection that stored in postgres DB.
+/// [ParameterValue] collection that stored in postgres DB.
 class PgParameterValues {
   static const _log = Log('PgParameterValues');
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
   ///
-  /// Creates [StabilityParameter] collection that stored in postgres DB.
+  /// Creates [ParameterValue] collection that stored in postgres DB.
   ///
   /// * [apiAddress] – [ApiAddress] of server that interact with database;
   /// * [dbName] – name of the database;
