@@ -4,8 +4,11 @@ import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
+import 'package:sss_computing_client/core/models/number_math_relation/greater_than_or_equal_to.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
+import 'package:sss_computing_client/core/validation/number_math_relation_validation_case.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
+import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
 /// Creates [TableColumn] for [Cargo] weight.
@@ -63,10 +66,16 @@ class CargoWeightColumn implements TableColumn<Cargo, double?> {
   bool get isResizable => true;
   //
   @override
-  Validator? get validator => const Validator(
+  Validator? get validator => Validator(
         cases: [
-          MinLengthValidationCase(1),
-          RealValidationCase(),
+          const RequiredValidationCase(),
+          const RealValidationCase(),
+          NumberMathRelationValidationCase(
+            relation: const GreaterThanOrEqualTo(),
+            secondValue: 0.0,
+            toValue: (text) => parseToValue(text) ?? 0.0,
+            customMessage: const Localized('weight cannot be negative').v,
+          ),
         ],
       );
   //
@@ -78,12 +87,12 @@ class CargoWeightColumn implements TableColumn<Cargo, double?> {
   //
   @override
   String parseToString(double? value) {
-    return (value ?? 0.0).toStringAsFixed(1);
+    return (value ?? 0).toStringAsFixed(2);
   }
   //
   @override
-  Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['weight'] = parseToValue(text),
+  Cargo copyRowWith(Cargo cargo, double? value) => JsonCargo(
+        json: cargo.asMap()..['weight'] = value,
       );
   //
   @override

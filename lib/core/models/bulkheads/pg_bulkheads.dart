@@ -1,6 +1,7 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:sss_computing_client/core/future_result_extension.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/core/extensions/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkheads.dart';
 import 'package:sss_computing_client/core/models/bulkheads/json_bulkhead.dart';
@@ -26,6 +27,8 @@ class PgBulkheads implements Bulkheads {
   //
   @override
   Future<Result<List<Bulkhead>, Failure<String>>> fetchAll() async {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -36,7 +39,7 @@ class PgBulkheads implements Bulkheads {
                 b.id AS "id",
                 b.project_id AS "projectId",
                 b.ship_id AS "shipId",
-                b.name AS "name",
+                b.name_rus AS "name",
                 b.mass AS "mass",
                 bp.mass_shift_x AS "lcg",
                 bp.mass_shift_y AS "tcg",
@@ -49,7 +52,8 @@ class PgBulkheads implements Bulkheads {
                   b.ship_id = bp.ship_id AND
                   b.project_id IS NOT DISTINCT FROM bp.project_id
             WHERE
-                b.ship_id = 1
+                b.ship_id = $shipId AND
+                b.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
             ORDER BY "id";
             """,
       ),
@@ -60,6 +64,8 @@ class PgBulkheads implements Bulkheads {
   //
   @override
   Future<Result<List<Bulkhead>, Failure<String>>> fetchAllRemoved() async {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -70,7 +76,7 @@ class PgBulkheads implements Bulkheads {
                 b.id AS "id",
                 b.project_id AS "projectId",
                 b.ship_id AS "shipId",
-                b.name AS "name",
+                b.name_rus AS "name",
                 b.mass AS "mass",
                 bp.mass_shift_x AS "lcg",
                 bp.mass_shift_y AS "tcg",
@@ -83,16 +89,18 @@ class PgBulkheads implements Bulkheads {
                   b.ship_id = bp.ship_id AND
                   b.project_id IS NOT DISTINCT FROM bp.project_id
             WHERE
-                b.ship_id = 1
-                AND (
+                b.ship_id = $shipId AND
+                b.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'} AND
+                (
                   b.id NOT IN (
                     SELECT
                       bp.bulkhead_id
                     FROM
                       bulkhead_place AS bp
                     WHERE
-                      bp.ship_id = 1
-                      AND bp.bulkhead_id IS DISTINCT FROM NULL
+                      bp.ship_id = $shipId AND
+                      bp.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'} AND
+                      bp.bulkhead_id IS DISTINCT FROM NULL
                     )
                 )
             ORDER BY "id";
@@ -115,7 +123,7 @@ class PgBulkheads implements Bulkheads {
                 b.id AS "id",
                 b.project_id AS "projectId",
                 b.ship_id AS "shipId",
-                b.name AS "name",
+                b.name_rus AS "name",
                 b.mass AS "mass",
                 bp.mass_shift_x AS "lcg",
                 bp.mass_shift_y AS "tcg",
@@ -128,8 +136,7 @@ class PgBulkheads implements Bulkheads {
                   b.ship_id = bp.ship_id AND
                   b.project_id IS NOT DISTINCT FROM bp.project_id
             WHERE
-                b.ship_id = 1
-                AND b.id = $id
+              b.id = $id
             ORDER BY "id";
             """,
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sss_computing_client/core/models/bulkheads/bulkhead.dart';
+import 'package:sss_computing_client/core/models/hex_color.dart';
 import 'package:sss_computing_client/core/models/voyage/waypoint.dart';
 ///
 /// [Waypoint] that parses itself from json map.
@@ -25,9 +26,11 @@ class JsonWaypoint implements Waypoint {
   ///   "shipId": 1, // int
   ///   "portName": "Port Name", // String
   ///   "portCode": "Port Code", // String
-  ///   "eta": "2022-01-01 00:00:00", // String?
-  ///   "etd": "2022-01-01 00:00:00", // String?
+  ///   "eta": "2022-01-01 00:00:00", // String
+  ///   "etd": "2022-01-01 00:00:00", // String
   ///   "color": "#000000", // String
+  ///   "draftLimit": 1.0, // double
+  ///   "useDraftLimit": true // bool
   /// }
   /// ```
   factory JsonWaypoint.fromRow(Map<String, dynamic> row) => JsonWaypoint(
@@ -40,6 +43,35 @@ class JsonWaypoint implements Waypoint {
           'eta': row['eta'] as String,
           'etd': row['etd'] as String,
           'color': row['color'] as String,
+          'draftLimit': row['draftLimit'] as double,
+          'useDraftLimit': row['useDraftLimit'] as bool,
+        },
+      );
+  ///
+  /// Creates [JsonWaypoint] with default values.
+  ///
+  /// Some fields can be overridden by passed parameters.
+  factory JsonWaypoint.emptyWith({
+    String? portName,
+    String? portCode,
+    DateTime? eta,
+    DateTime? etd,
+    Color? color,
+    double? draftLimit,
+    bool? useDraftLimit,
+  }) =>
+      JsonWaypoint(
+        json: {
+          'id': -1,
+          'projectId': -1,
+          'shipId': -1,
+          'portName': portName ?? '–',
+          'portCode': portCode ?? '–',
+          'eta': (eta ?? DateTime.now()).toString(),
+          'etd': (etd ?? DateTime.now()).toString(),
+          'color': color ?? '#000000',
+          'draftLimit': draftLimit ?? 0.0,
+          'useDraftLimit': useDraftLimit ?? false,
         },
       );
   //
@@ -65,16 +97,14 @@ class JsonWaypoint implements Waypoint {
   DateTime get etd => DateTime.parse(_json['etd'] as String);
   //
   @override
-  Color get color => fromHexString(_json['color']) ?? defaultColor;
+  Color get color => HexColor(_json['color'] as String).color();
+  //
+  @override
+  double get draftLimit => _json['draftLimit'];
+  //
+  @override
+  bool get useDraftLimit => _json['useDraftLimit'];
   //
   @override
   Map<String, dynamic> asMap() => Map.from(_json);
-  //
-  Color? fromHexString(String hexString) {
-    final normalizedHexString = hexString.replaceFirst('#', '').padLeft(8, 'F');
-    if (normalizedHexString.length != 8) return null;
-    final hexValue = int.tryParse(normalizedHexString, radix: 16);
-    if (hexValue == null) return null;
-    return Color(hexValue);
-  }
 }

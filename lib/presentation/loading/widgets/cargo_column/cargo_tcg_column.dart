@@ -6,6 +6,7 @@ import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
+import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
 /// [TableColumn] for [Cargo] TCG.
@@ -65,7 +66,7 @@ class CargoTCGColumn implements TableColumn<Cargo, double?> {
   @override
   Validator? get validator => const Validator(
         cases: [
-          MinLengthValidationCase(1),
+          RequiredValidationCase(),
           RealValidationCase(),
         ],
       );
@@ -82,8 +83,8 @@ class CargoTCGColumn implements TableColumn<Cargo, double?> {
   }
   //
   @override
-  Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['tcg'] = parseToValue(text),
+  Cargo copyRowWith(Cargo cargo, double? value) => JsonCargo(
+        json: cargo.asMap()..['tcg'] = value,
       );
   //
   @override

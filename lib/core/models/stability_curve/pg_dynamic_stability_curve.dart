@@ -1,6 +1,7 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart' hide Curve;
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/stability_curve/curve.dart';
 ///
 /// Dynamic stabilty [Curve] stored in Postgres DB.
@@ -23,6 +24,8 @@ final class PgDynamicStabilityCurve implements Curve {
   //
   @override
   Future<Result<List<Offset>, Failure<String>>> points() {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -35,7 +38,10 @@ final class PgDynamicStabilityCurve implements Curve {
             angle AS "x",
             value_ddo AS "y"
           FROM stability_diagram
-          WHERE ship_id = 1 AND angle >= 0.0
+          WHERE
+            ship_id = $shipId AND
+            project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'} AND
+            angle >= 0.0
           ORDER BY angle ASC;
         """,
       ),

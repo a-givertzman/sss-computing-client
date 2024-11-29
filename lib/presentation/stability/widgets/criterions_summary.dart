@@ -28,7 +28,7 @@ class CriterionsSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textStyle = _textStyle ?? theme.textTheme.bodyLarge;
-    final passedColor = _passedColor ?? Colors.lightGreen;
+    final passedColor = _passedColor ?? Theme.of(context).stateColors.on;
     final errorColor = _errorColor ?? theme.stateColors.alarm;
     final summary = _getSummary(_criterions);
     final passed = summary.where((passed) => passed);
@@ -39,7 +39,7 @@ class CriterionsSummary extends StatelessWidget {
         _SummaryItem(
           value: passed.length,
           message:
-              '${passed.length} ${const Localized('criteria successfully passed').v}',
+              '${const Localized('criteria successfully passed').v}: ${passed.length}',
           color: passedColor,
           icon: Icons.check_circle_outline,
           style: textStyle,
@@ -47,7 +47,7 @@ class CriterionsSummary extends StatelessWidget {
         const SizedBox(width: 4.0),
         _SummaryItem(
           value: failed.length,
-          message: '${failed.length} ${const Localized('criteria failed').v}',
+          message: '${const Localized('criteria failed').v}: ${failed.length}',
           color: errorColor,
           icon: Icons.error_outline,
           style: textStyle,

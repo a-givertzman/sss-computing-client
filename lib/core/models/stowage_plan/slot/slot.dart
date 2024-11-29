@@ -11,6 +11,9 @@ abstract interface class Slot {
   /// When slot is not active, it cannot be occupied with container.
   bool get isActive;
   ///
+  /// Either [Slot] is for 30ft container or not.
+  bool get isThirtyFt;
+  ///
   /// Bay number of stowage slot,
   /// in accordance with stowage numbering system for rows
   /// [ISO 9711-1, 3.1](https://www.iso.org/ru/standard/17568.html)

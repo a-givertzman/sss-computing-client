@@ -39,6 +39,7 @@ class _StabilityParametersTableState extends State<StabilityParametersTable> {
           cellAlignment: Alignment.centerRight,
           name: const Localized('Value').v,
           stringValue: (data) => data.value.toStringAsFixed(2),
+          doubleValue: (data) => data.value,
         ),
       ],
     );

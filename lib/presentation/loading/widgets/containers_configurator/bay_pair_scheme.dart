@@ -15,11 +15,27 @@ import 'package:sss_computing_client/presentation/loading/widgets/containers_con
 class BayPairScheme extends StatefulWidget {
   final int? _oddBayNumber;
   final int? _evenBayNumber;
+  final bool _isThirtyFt;
   final List<Slot> _slots;
   final List<Slot> _selectedSlots;
-  final void Function(int bay, int row, int tier)? _onSlotTap;
-  final void Function(int bat, int row, int tier)? _onSlotDoubleTap;
-  final void Function(int bat, int row, int tier)? _onSlotSecondaryTap;
+  final void Function(
+    int bay,
+    int row,
+    int tier,
+    bool isThirtyFt,
+  )? _onSlotTap;
+  final void Function(
+    int bat,
+    int row,
+    int tier,
+    bool isThirtyFt,
+  )? _onSlotDoubleTap;
+  final void Function(
+    int bat,
+    int row,
+    int tier,
+    bool isThirtyFt,
+  )? _onSlotSecondaryTap;
   final bool Function(Slot slot)? _isFlyoverSlot;
   final bool Function(Slot slot)? _shouldRenderEmptySlot;
   ///
@@ -39,9 +55,10 @@ class BayPairScheme extends StatefulWidget {
     required int? oddBayNumber,
     required int? evenBayNumber,
     required List<Slot> selectedSlots,
-    void Function(int, int, int)? onSlotTap,
-    void Function(int, int, int)? onSlotDoubleTap,
-    void Function(int, int, int)? onSlotSecondaryTap,
+    required bool isThirtyFt,
+    void Function(int, int, int, bool)? onSlotTap,
+    void Function(int, int, int, bool)? onSlotDoubleTap,
+    void Function(int, int, int, bool)? onSlotSecondaryTap,
     bool Function(Slot)? isFlyoverSlot,
     bool Function(Slot)? shouldRenderEmptySlot,
     List<Slot> slots = const [],
@@ -49,6 +66,7 @@ class BayPairScheme extends StatefulWidget {
         _evenBayNumber = evenBayNumber,
         _slots = slots,
         _selectedSlots = selectedSlots,
+        _isThirtyFt = isThirtyFt,
         _onSlotTap = onSlotTap,
         _onSlotDoubleTap = onSlotDoubleTap,
         _onSlotSecondaryTap = onSlotSecondaryTap,
@@ -113,13 +131,15 @@ class _BayPairSchemeState extends State<BayPairScheme> {
     final labelStyle = theme.textTheme.labelLarge;
     const figurePlane = FigurePlane.yz;
     final (minX, maxX) = (
-      const Setting('shipMinY').toDouble,
-      const Setting('shipMaxY').toDouble
+      const Setting('shipMinY_m').toDouble,
+      const Setting('shipMaxY_m').toDouble
     );
     final (minY, maxY) = (
-      const Setting('shipMinZ').toDouble,
-      const Setting('shipMaxZ').toDouble
+      const Setting('shipMinWithGapZ_m').toDouble,
+      const Setting('shipMaxWithGapZ_m').toDouble
     );
+    final holdDeckSeparationZ =
+        const Setting('shipHoldDeckSeparationZ_m').toDouble;
     const schemeHorizontalPad = 1.0;
     const schemeVerticalPad = 1.0;
     return SchemeLayout(
@@ -162,16 +182,19 @@ class _BayPairSchemeState extends State<BayPairScheme> {
                       slot.bay,
                       slot.row,
                       slot.tier,
+                      slot.isThirtyFt,
                     ),
                     onDoubleTap: () => widget._onSlotDoubleTap?.call(
                       slot.bay,
                       slot.row,
                       slot.tier,
+                      slot.isThirtyFt,
                     ),
                     onSecondaryTap: () => widget._onSlotSecondaryTap?.call(
                       slot.bay,
                       slot.row,
                       slot.tier,
+                      slot.isThirtyFt,
                     ),
                   ),
                 ),
@@ -191,16 +214,19 @@ class _BayPairSchemeState extends State<BayPairScheme> {
                       slot.bay,
                       slot.row,
                       slot.tier,
+                      slot.isThirtyFt,
                     ),
                     onDoubleTap: () => widget._onSlotDoubleTap?.call(
                       slot.bay,
                       slot.row,
                       slot.tier,
+                      slot.isThirtyFt,
                     ),
                     onSecondaryTap: () => widget._onSlotSecondaryTap?.call(
                       slot.bay,
                       slot.row,
                       slot.tier,
+                      slot.isThirtyFt,
                     ),
                   ),
                 ),
@@ -215,16 +241,18 @@ class _BayPairSchemeState extends State<BayPairScheme> {
                   isSelected: true,
                 ).slotFigure(slot),
                 layoutTransform: transform,
-                onTap: () => widget._onSlotTap?.call(-1, -1, -1),
+                onTap: () => widget._onSlotTap?.call(-1, -1, -1, false),
                 onDoubleTap: () => widget._onSlotDoubleTap?.call(
                   slot.bay,
                   slot.row,
                   slot.tier,
+                  slot.isThirtyFt,
                 ),
                 onSecondaryTap: () => widget._onSlotSecondaryTap?.call(
                   slot.bay,
                   slot.row,
                   slot.tier,
+                  slot.isThirtyFt,
                 ),
               ),
             ),
@@ -233,6 +261,7 @@ class _BayPairSchemeState extends State<BayPairScheme> {
             text: const Localized('Bay No.').v +
                 BayPairTitle(
                   withFortyFoots: _withFourtyFtContainers,
+                  isThirtyFt: widget._isThirtyFt,
                   oddBayNumber: widget._oddBayNumber,
                   evenBayNumber: widget._evenBayNumber,
                 ).title(),
@@ -245,7 +274,7 @@ class _BayPairSchemeState extends State<BayPairScheme> {
             text: '$_containersNumberOnDeck',
             offset: Offset(
               maxX - schemeHorizontalPad,
-              minY + (maxY - minY) / 2 + schemeVerticalPad,
+              holdDeckSeparationZ + schemeVerticalPad,
             ),
             style: labelStyle,
             alignment: Alignment.centerLeft,
@@ -255,7 +284,7 @@ class _BayPairSchemeState extends State<BayPairScheme> {
             text: '$_containersNumberInHold',
             offset: Offset(
               maxX - schemeHorizontalPad,
-              minY + (maxY - minY) / 2 - schemeVerticalPad,
+              holdDeckSeparationZ - schemeVerticalPad,
             ),
             style: labelStyle,
             alignment: Alignment.centerLeft,

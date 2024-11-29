@@ -1,6 +1,7 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:sss_computing_client/core/future_result_extension.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/core/extensions/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/stability_parameter/json_stability_parameter.dart';
 import 'package:sss_computing_client/core/models/stability_parameter/stability_parameter.dart';
 import 'package:sss_computing_client/core/models/stability_parameter/stability_parameters.dart';
@@ -26,6 +27,8 @@ class PgStabilityParameters implements StabilityParameters {
   //
   @override
   Future<Result<List<StabilityParameter>, Failure<String>>> fetchAll() async {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -47,7 +50,8 @@ class PgStabilityParameters implements StabilityParameters {
               JOIN parameter_data AS pd ON ph.id = pd.parameter_id
             WHERE
               (cp.criterion_id IS NOT NULL OR cp.always_visible = TRUE) AND
-              pd.ship_id = 1
+              pd.ship_id = $shipId AND
+              pd.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
             ORDER BY "title";
             """,
       ),

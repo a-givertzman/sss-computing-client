@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
+import 'package:sss_computing_client/core/extensions/strings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo_use_max_mfs_record.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_all_cargos.dart';
@@ -77,6 +78,7 @@ class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
   @override
   Widget build(BuildContext context) {
     final blockPadding = const Setting('blockPadding').toDouble;
+    final shipId = const Setting('shipId').toInt;
     return Padding(
       padding: EdgeInsets.all(blockPadding),
       child: Column(
@@ -108,7 +110,7 @@ class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
                     toValue: (value) => JsonSvgPathProjections(
                       json: json.decode(value),
                     ),
-                    filter: {'id': 1},
+                    filter: {'id': shipId},
                   ).fetch,
                   caseData: (context, hull, _) => FutureBuilderWidget(
                     refreshStream: widget._appRefreshStream,
@@ -121,7 +123,7 @@ class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
                       toValue: (value) => JsonSvgPathProjections(
                         json: json.decode(value),
                       ),
-                      filter: {'id': 1},
+                      filter: {'id': shipId},
                     ).fetch,
                     caseData: (context, hullBeauty, _) => CargoSchemes(
                       cargos: _cargos,
@@ -139,7 +141,7 @@ class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
           ),
           SizedBox(height: blockPadding),
           Expanded(
-            child: EditingTable(
+            child: EditingTable<Cargo>(
               selectedRow: _selectedCargo,
               rowHeight: const Setting('tableRowHeight').toDouble,
               onRowTap: _toggleCargo,
@@ -156,7 +158,7 @@ class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
                     ),
                     authToken: widget._authToken,
                     tableName: 'compartment',
-                    fieldName: 'name',
+                    fieldName: 'name_rus',
                     filter: {'id': cargo.id},
                     toValue: toValue,
                   ),
@@ -233,6 +235,7 @@ class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
                   useDefaultEditing: false,
                 ),
                 CargoUseMaxMfsColumn(
+                  theme: Theme.of(context),
                   buildRecord: (cargo, toValue) => CargoUseMaxMfsRecord(
                     dbName: widget._dbName,
                     apiAddress: ApiAddress(
@@ -300,6 +303,11 @@ class _StoreTanksConfiguratorState extends State<StoreTanksConfigurator> {
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
-    BottomMessage.error(message: message).show(context);
+    BottomMessage.error(
+      message: message.truncate(),
+      displayDuration: Duration(
+        milliseconds: const Setting('errorMessageDisplayDuration').toInt,
+      ),
+    ).show(context);
   }
 }

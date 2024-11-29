@@ -6,6 +6,7 @@ import 'package:sss_computing_client/core/models/record/value_record.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/container/freight_container.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/container/json_freight_container.dart';
 import 'package:sss_computing_client/core/validation/real_validation_case.dart';
+import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
 /// [TableColumn] for [FreightContainer] weight.
@@ -50,7 +51,7 @@ class ContainerWeightColumn implements TableColumn<FreightContainer, double> {
   @override
   Validator? get validator => const Validator(
         cases: [
-          MinLengthValidationCase(1),
+          RequiredValidationCase(),
           RealValidationCase(),
         ],
       );
@@ -63,13 +64,12 @@ class ContainerWeightColumn implements TableColumn<FreightContainer, double> {
   //
   @override
   String parseToString(double? value) {
-    return (value ?? defaultValue).toStringAsFixed(1);
+    return (value ?? defaultValue).toStringAsFixed(2);
   }
   //
   @override
-  FreightContainer copyRowWith(FreightContainer container, String text) {
-    final newContainerData = container.asMap()
-      ..['grossWeight'] = parseToValue(text);
+  FreightContainer copyRowWith(FreightContainer container, double value) {
+    final newContainerData = container.asMap()..['grossWeight'] = value;
     return JsonFreightContainer.fromRow(newContainerData);
   }
   //

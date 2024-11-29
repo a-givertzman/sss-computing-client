@@ -148,10 +148,10 @@ class _PassStatusWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    const passedColor = Colors.lightGreen;
+    final passedColor = Theme.of(context).stateColors.on;
     final errorColor = theme.alarmColors.class3;
     return isPassed
-        ? const Icon(
+        ? Icon(
             Icons.done,
             color: passedColor,
           )

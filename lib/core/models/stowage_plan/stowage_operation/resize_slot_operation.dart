@@ -27,6 +27,8 @@ class ResizeSlotOperation implements StowageOperation {
   final int _row;
   /// Tier number of slot where container should be put.
   final int _tier;
+  /// Either slot to resize is 30ft or not.
+  final bool _isThirtyFt;
   ///
   /// Creates operation that resizes stowage slot at specified position.
   ///
@@ -38,10 +40,12 @@ class ResizeSlotOperation implements StowageOperation {
     required int bay,
     required int row,
     required int tier,
+    bool isThirtyFt = false,
   })  : _height = height,
         _bay = bay,
         _row = row,
-        _tier = tier;
+        _tier = tier,
+        _isThirtyFt = isThirtyFt;
   ///
   /// Resize stowage slot at specified position.
   ///
@@ -76,6 +80,7 @@ class ResizeSlotOperation implements StowageOperation {
       bay: _bay,
       row: _row,
       tier: _tier,
+      isThirtyFt: _isThirtyFt,
     );
     final pairedSlotToResize = collection.findSlot(
       switch (_bay.isOdd) {
@@ -84,6 +89,7 @@ class ResizeSlotOperation implements StowageOperation {
       },
       _row,
       _tier,
+      isThirtyFt: _isThirtyFt,
     );
     if (pairedSlotToResize != null) {
       final resizePairedResult = _resizeSlot(
@@ -91,6 +97,7 @@ class ResizeSlotOperation implements StowageOperation {
         bay: pairedSlotToResize.bay,
         row: pairedSlotToResize.row,
         tier: pairedSlotToResize.tier,
+        isThirtyFt: _isThirtyFt,
       );
       return resizeSpecifiedResult.and(resizePairedResult);
     } else {
@@ -104,8 +111,9 @@ class ResizeSlotOperation implements StowageOperation {
     required int bay,
     required int row,
     required int tier,
+    required bool isThirtyFt,
   }) {
-    return _findSlot(bay, row, tier, collection)
+    return _findSlot(bay, row, tier, isThirtyFt, collection)
         .andThen((existingSlot) => existingSlot.resizeToHeight(_height))
         .map((resizedSlot) => collection.addSlot(resizedSlot));
   }
@@ -155,6 +163,7 @@ class ResizeSlotOperation implements StowageOperation {
         tierToChange += _nextTierStep) {
       final oldSlotsInTier = previousCollection.toFilteredSlotList(
         tier: tierToChange,
+        isThirtyFt: _isThirtyFt,
         shouldIncludeSlot: (slot) => slot.bay.isOdd && slot.row == _row,
       );
       for (final oldSlot in oldSlotsInTier) {
@@ -162,19 +171,18 @@ class ResizeSlotOperation implements StowageOperation {
           oldSlot.bay,
           oldSlot.row,
           oldSlot.tier - _nextTierStep,
+          isThirtyFt: _isThirtyFt,
         );
         if (newBottomSlot == null) {
-          return Err(Failure(
-            message: 'Collection corrupted during operation execution',
-            stackTrace: StackTrace.current,
-          ));
+          collection.addSlot(oldSlot);
+        } else {
+          final newLeftZ =
+              newBottomSlot.rightZ + newBottomSlot.minVerticalSeparation;
+          final copyResult = oldSlot
+              .shiftByZ(newLeftZ - oldSlot.leftZ)
+              .map((shiftedSlot) => collection.addSlot(shiftedSlot));
+          if (copyResult.isErr()) return copyResult;
         }
-        final newLeftZ =
-            newBottomSlot.rightZ + newBottomSlot.minVerticalSeparation;
-        final copyResult = oldSlot
-            .shiftByZ(newLeftZ - oldSlot.leftZ)
-            .map((shiftedSlot) => collection.addSlot(shiftedSlot));
-        if (copyResult.isErr()) return copyResult;
       }
     }
     return const Ok(null);
@@ -192,6 +200,7 @@ class ResizeSlotOperation implements StowageOperation {
         tierToChange += _nextTierStep) {
       final oldSlotsInTier = previousCollection.toFilteredSlotList(
         tier: tierToChange,
+        isThirtyFt: _isThirtyFt,
         shouldIncludeSlot: (slot) => slot.bay.isEven && slot.row == _row,
       );
       for (final oldSlot in oldSlotsInTier) {
@@ -199,6 +208,7 @@ class ResizeSlotOperation implements StowageOperation {
             .toFilteredSlotList(
               row: oldSlot.row,
               tier: oldSlot.tier - _nextTierStep,
+              isThirtyFt: _isThirtyFt,
               shouldIncludeSlot: (slot) =>
                   slot.bay == oldSlot.bay ||
                   slot.bay == oldSlot.bay - 1 ||
@@ -207,15 +217,13 @@ class ResizeSlotOperation implements StowageOperation {
             .map((s) => s.rightZ + s.minVerticalSeparation)
             .maxOrNull;
         if (newLeftZ == null) {
-          return Err(Failure(
-            message: 'Collection corrupted during operation execution',
-            stackTrace: StackTrace.current,
-          ));
+          collection.addSlot(oldSlot);
+        } else {
+          final copyResult = oldSlot
+              .shiftByZ(newLeftZ - oldSlot.leftZ)
+              .map((shiftedSlot) => collection.addSlot(shiftedSlot));
+          if (copyResult.isErr()) return copyResult;
         }
-        final copyResult = oldSlot
-            .shiftByZ(newLeftZ - oldSlot.leftZ)
-            .map((shiftedSlot) => collection.addSlot(shiftedSlot));
-        if (copyResult.isErr()) return copyResult;
       }
     }
     return const Ok(null);
@@ -237,16 +245,18 @@ class ResizeSlotOperation implements StowageOperation {
     int bay,
     int row,
     int tier,
+    bool isThirtyFt,
     StowageCollection stowageCollection,
   ) {
     final existingSlot = stowageCollection.findSlot(
       bay,
       row,
       tier,
+      isThirtyFt: isThirtyFt,
     );
     if (existingSlot == null) {
       return Err(Failure(
-        message: 'Slot to resize not found',
+        message: 'Slot not found',
         stackTrace: StackTrace.current,
       ));
     }

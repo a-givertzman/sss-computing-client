@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:provider/provider.dart';
 import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/widgets/calculation/run_calculation_button.dart';
 import 'package:sss_computing_client/core/widgets/error_message_widget.dart';
 import 'package:sss_computing_client/presentation/drafts/drafts_page.dart';
+import 'package:sss_computing_client/presentation/info/info_page.dart';
 import 'package:sss_computing_client/presentation/loading/loading_page.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
 import 'package:sss_computing_client/presentation/stability/stability_page.dart';
@@ -13,21 +15,18 @@ import 'package:sss_computing_client/presentation/strength/strength_page.dart';
 /// App main navigation widget.
 class NavigationPanel extends StatelessWidget {
   final int? _selectedPageIndex;
-  final Stream<DsDataPoint<bool>> _appRefreshStream;
-  final void Function() _fireRefreshEvent;
   final CalculationStatus _calculationStatusNotifier;
+  final Widget? _trailing;
   ///
   /// Creates app main navigation widget.
   const NavigationPanel({
     super.key,
     required int? selectedPageIndex,
-    required Stream<DsDataPoint<bool>> appRefreshStream,
-    required void Function() fireRefreshEvent,
     required CalculationStatus calculationStatusNotifier,
+    Widget? trailing,
   })  : _selectedPageIndex = selectedPageIndex,
-        _appRefreshStream = appRefreshStream,
-        _fireRefreshEvent = fireRefreshEvent,
-        _calculationStatusNotifier = calculationStatusNotifier;
+        _calculationStatusNotifier = calculationStatusNotifier,
+        _trailing = trailing;
   //
   @override
   Widget build(BuildContext context) {
@@ -53,10 +52,18 @@ class NavigationPanel extends StatelessWidget {
         leading: Padding(
           padding: EdgeInsets.all(const Setting('blockPadding').toDouble),
           child: RunCalculationButton(
-            fireRefreshEvent: _fireRefreshEvent,
+            fireRefreshEvent: _calculationStatusNotifier.fireRefreshEvent,
             calculationStatusNotifier: _calculationStatusNotifier,
           ),
         ),
+        trailing: _trailing != null
+            ? Expanded(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: _trailing,
+                ),
+              )
+            : null,
         destinations: [
           NavigationRailDestination(
             icon: const Icon(Icons.home_outlined),
@@ -64,14 +71,9 @@ class NavigationPanel extends StatelessWidget {
             label: Text(const Localized('Main').v),
           ),
           NavigationRailDestination(
-            icon: const Icon(Icons.analytics_outlined),
-            selectedIcon: const Icon(Icons.analytics),
-            label: Text(const Localized('Strength').v),
-          ),
-          NavigationRailDestination(
-            icon: const Icon(Icons.video_stable_outlined),
-            selectedIcon: const Icon(Icons.video_stable),
-            label: Text(const Localized('Stability').v),
+            icon: const Icon(Icons.pallet),
+            selectedIcon: const Icon(Icons.pallet),
+            label: Text(const Localized('Loading').v),
           ),
           NavigationRailDestination(
             icon: const RotatedBox(
@@ -85,9 +87,19 @@ class NavigationPanel extends StatelessWidget {
             label: Text(const Localized('Drafts').v),
           ),
           NavigationRailDestination(
-            icon: const Icon(Icons.pallet),
-            selectedIcon: const Icon(Icons.pallet),
-            label: Text(const Localized('Loading').v),
+            icon: const Icon(Icons.analytics_outlined),
+            selectedIcon: const Icon(Icons.analytics),
+            label: Text(const Localized('Strength').v),
+          ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.video_stable_outlined),
+            selectedIcon: const Icon(Icons.video_stable),
+            label: Text(const Localized('Stability').v),
+          ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.info_outline),
+            selectedIcon: const Icon(Icons.info),
+            label: Text(const Localized('Info').v),
           ),
         ],
         selectedIndex: _selectedPageIndex,
@@ -97,11 +109,7 @@ class NavigationPanel extends StatelessWidget {
             case 0:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => MainPage(
-                    appRefreshStream: _appRefreshStream,
-                    fireRefreshEvent: _fireRefreshEvent,
-                    calculationStatusNotifier: _calculationStatusNotifier,
-                  ),
+                  builder: (context) => const MainPage(pageIndex: 0),
                   settings: const RouteSettings(name: '/MainPage'),
                 ),
               );
@@ -109,70 +117,62 @@ class NavigationPanel extends StatelessWidget {
             case 1:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => StrengthPage(
-                    appRefreshStream: _appRefreshStream,
-                    fireRefreshEvent: _fireRefreshEvent,
-                    calculationStatusNotifier: _calculationStatusNotifier,
-                  ),
-                  settings: const RouteSettings(name: '/StrengthPage'),
+                  builder: (context) => const LoadingPage(pageIndex: 1),
+                  settings: const RouteSettings(name: '/LoadingPage'),
                 ),
               );
               return;
             case 2:
-              Navigator.of(context).push(
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => StabilityPage(
-                    appRefreshStream: _appRefreshStream,
-                    fireRefreshEvent: _fireRefreshEvent,
-                    calculationStatusNotifier: _calculationStatusNotifier,
-                  ),
-                  settings: const RouteSettings(name: '/StabilityPage'),
+                  builder: (context) => const DraftsPage(pageIndex: 2),
+                  settings: const RouteSettings(name: '/DraftsPage'),
                 ),
               );
               return;
             case 3:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => DraftsPage(
-                    appRefreshStream: _appRefreshStream,
-                    fireRefreshEvent: _fireRefreshEvent,
-                    calculationStatusNotifier: _calculationStatusNotifier,
-                  ),
-                  settings: const RouteSettings(name: '/DraftsPage'),
+                  builder: (context) => const StrengthPage(pageIndex: 3),
+                  settings: const RouteSettings(name: '/StrengthPage'),
                 ),
               );
               return;
             case 4:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => LoadingPage(
-                    appRefreshStream: _appRefreshStream,
-                    fireRefreshEvent: _fireRefreshEvent,
-                    calculationStatusNotifier: _calculationStatusNotifier,
-                  ),
-                  settings: const RouteSettings(name: '/LoadingPage'),
+                  builder: (context) => const StabilityPage(pageIndex: 4),
+                  settings: const RouteSettings(name: '/StabilityPage'),
+                ),
+              );
+              return;
+            case 5:
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const InfoPage(pageIndex: 5),
+                  settings: const RouteSettings(name: '/InfoPage'),
                 ),
               );
               return;
             default:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => Row(
-                    children: [
-                      NavigationPanel(
-                        selectedPageIndex: null,
-                        appRefreshStream: _appRefreshStream,
-                        fireRefreshEvent: _fireRefreshEvent,
-                        calculationStatusNotifier: _calculationStatusNotifier,
-                      ),
-                      Expanded(
-                        child: Scaffold(
-                          body: ErrorMessageWidget(
-                            message: const Localized('Page not found').v,
+                  builder: (context) => Consumer<CalculationStatus>(
+                    builder: (_, status, __) => Row(
+                      children: [
+                        NavigationPanel(
+                          selectedPageIndex: null,
+                          calculationStatusNotifier: status,
+                        ),
+                        Expanded(
+                          child: Scaffold(
+                            body: ErrorMessageWidget(
+                              message: const Localized('Page not found').v,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   settings: const RouteSettings(name: '/NotFoundPage'),
                 ),

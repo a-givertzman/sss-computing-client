@@ -159,9 +159,11 @@ Widget _defaultCaseLoading(BuildContext _) => const Center(
 /// Default indicator builder for [FutureBuilderWidget] error state
 Widget _defaultCaseError(BuildContext _, Object error, void Function() retry) =>
     ErrorMessageWidget(
-      error: Failure(message: '$error', stackTrace: StackTrace.current),
-      message: const Localized('Data loading error').v,
-      // onConfirm: retry,
+      error: Failure(
+        message: Localized('$error').v,
+        stackTrace: StackTrace.current,
+      ),
+      message: '',
     );
 ///
 /// Default indicator builder for [FutureBuilderWidget] empty-data state

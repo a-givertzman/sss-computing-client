@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/frame/frame.dart';
 ///
 /// Interface for controlling collection of [Frames].
@@ -26,6 +27,8 @@ class PgFramesTheoretical implements Frames {
   //
   @override
   Future<Result<List<Frame>, Failure<String>>> fetchAll() async {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -38,6 +41,8 @@ class PgFramesTheoretical implements Frames {
                 index AS "index",
                 start_x AS "x"
               FROM computed_frame_space AS cfs
+              WHERE ship_id = $shipId AND
+              project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
               UNION
               SELECT
                 project_id AS "projectId",
@@ -45,11 +50,12 @@ class PgFramesTheoretical implements Frames {
                 index + 1 AS "index",
                 end_x AS "x"
               FROM computed_frame_space
-              WHERE ship_id = 1
+              WHERE ship_id = $shipId AND
+              project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
               ORDER BY "index";
             """,
       ),
-      entryBuilder: (row) => JsonFrame(json: row),
+      entryBuilder: (row) => JsonFrame.fromRow(row),
     );
     return switch (await sqlAccess.fetch()) {
       Ok(value: final frames) => Ok(frames),
@@ -78,6 +84,8 @@ class PgFramesReal implements Frames {
   //
   @override
   Future<Result<List<Frame>, Failure<String>>> fetchAll() async {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -90,11 +98,13 @@ class PgFramesReal implements Frames {
               frame_index AS "index",
               pos_x AS "x"
             FROM physical_frame
-            WHERE ship_id = 1
+            WHERE
+              ship_id = $shipId AND
+              project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
             ORDER BY "index";
          """,
       ),
-      entryBuilder: (row) => JsonFrame(json: row),
+      entryBuilder: (row) => JsonFrame.fromRow(row),
     );
     return switch (await sqlAccess.fetch()) {
       Ok(value: final frames) => Ok(frames),

@@ -1,6 +1,7 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:sss_computing_client/core/future_result_extension.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/core/extensions/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/container/freight_container.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/slot/slot.dart';
 import 'package:sss_computing_client/core/models/stowage_plan/slot/standard_slot.dart';
@@ -37,6 +38,8 @@ class PgStowageCollection {
   ///
   /// Fetches and returns [StowageCollection].
   Future<ResultF<StowageCollection>> fetch() {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       database: _dbName,
       address: _apiAddress,
@@ -56,8 +59,12 @@ class PgStowageCollection {
           cs.min_vertical_separation AS "minVerticalSeparation",
           cs.min_height AS "minHeight",
           cs.max_height AS "maxHeight",
-          cs.is_active AS "isActive"
+          cs.is_active AS "isActive",
+          cs.is_thirty_ft AS "isThirtyFt"
         FROM container_slot AS cs
+        WHERE
+          cs.ship_id = $shipId AND
+          cs.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
         ORDER BY id;
         '''),
       entryBuilder: (row) => StandardSlot.fromRow(row),
@@ -81,6 +88,7 @@ class PgStowageCollection {
     required int bay,
     required int row,
     required int tier,
+    required bool isThirtyFt,
   }) async {
     final backup = _stowageCollection.copy();
     final putResult = PutContainerOperation(
@@ -88,6 +96,7 @@ class PgStowageCollection {
       bay: bay,
       row: row,
       tier: tier,
+      isThirtyFt: isThirtyFt,
     ).execute(_stowageCollection);
     final alreadyOccupiedSlot = backup
         .toFilteredSlotList(
@@ -96,10 +105,17 @@ class PgStowageCollection {
         .firstOrNull;
     final delResult = switch (alreadyOccupiedSlot) {
       null => const Ok<void, Failure>(null),
-      Slot(:final bay, :final row, :final tier) => RemoveContainerOperation(
+      Slot(
+        :final bay,
+        :final row,
+        :final tier,
+        :final isThirtyFt,
+      ) =>
+        RemoveContainerOperation(
           bay: bay,
           row: row,
           tier: tier,
+          isThirtyFt: isThirtyFt,
         ).execute(_stowageCollection),
     };
     final saveResult = switch (putResult.and(delResult)) {
@@ -118,12 +134,14 @@ class PgStowageCollection {
     required int bay,
     required int row,
     required int tier,
+    required bool isThirtyFt,
   }) async {
     final backup = _stowageCollection.copy();
     final removeResult = RemoveContainerOperation(
       bay: bay,
       row: row,
       tier: tier,
+      isThirtyFt: isThirtyFt,
     ).execute(_stowageCollection);
     final saveResult = switch (removeResult) {
       Ok() => await _save(),
@@ -139,28 +157,39 @@ class PgStowageCollection {
   ///
   /// Saves current [StowageCollection] state to Postgres DB.
   Future<ResultF<void>> _save() {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sql = """
       DO \$\$ BEGIN
-      DELETE FROM container_slot;
-      INSERT INTO
-        container_slot (
-          container_id,
-          bay_number,
-          row_number,
-          tier_number,
-          bound_x1,
-          bound_x2,
-          bound_y1,
-          bound_y2,
-          bound_z1,
-          bound_z2,
-          min_vertical_separation,
-          min_height,
-          max_height,
-          is_active
-        )
-      VALUES
-        ${_stowageCollection.toFilteredSlotList().map((slot) => '(${[
+        DELETE FROM
+          container_slot
+        WHERE
+          ship_id = $shipId AND
+          project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'};
+        INSERT INTO
+          container_slot (
+            ship_id,
+            project_id,
+            container_id,
+            bay_number,
+            row_number,
+            tier_number,
+            bound_x1,
+            bound_x2,
+            bound_y1,
+            bound_y2,
+            bound_z1,
+            bound_z2,
+            min_vertical_separation,
+            min_height,
+            max_height,
+            is_active,
+            is_thirty_ft
+          )
+        VALUES
+          ${_stowageCollection.toFilteredSlotList().map((slot) => '(${[
+              shipId,
+              '${projectId ?? 'NULL'}',
               '${slot.containerId ?? 'NULL'}',
               '${slot.bay}',
               '${slot.row}',
@@ -175,6 +204,7 @@ class PgStowageCollection {
               _numberToText(slot.minHeight),
               _numberToText(slot.maxHeight),
               slot.isActive ? 'TRUE' : 'FALSE',
+              slot.isThirtyFt ? 'TRUE' : 'FALSE',
             ].join(', ')})').join(',')};
       END \$\$;
     """;

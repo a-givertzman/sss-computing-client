@@ -39,6 +39,7 @@ class UpdateSlotsStatusOperation implements StowageOperation {
         .andThen((_) => _deactivateDanglingSlotsInRow(collection))
         .andThen((_) => _deactivateOverlappedOddSlots(collection))
         .andThen((_) => _deactivateOverlappedEvenSlots(collection))
+        .andThen((_) => _deactivateOverlappingWithThirtyFtBays(collection))
         .andThen((_) => _deactivateOddSlotsAboveEven(collection))
         .andThen((_) => _deactivateEvenSlotsBelowOdd(collection))
         .inspectErr((_) => _restoreFromBackup(collection, previousCollection));
@@ -65,12 +66,14 @@ class UpdateSlotsStatusOperation implements StowageOperation {
       (bay) {
         _deactivateDanglingSlotsInRowBay(
           bay.number,
+          bay.isThirtyFt,
           _minDeckTier,
           _maxDeckTier,
           collection,
         );
         _deactivateDanglingSlotsInRowBay(
           bay.number,
+          bay.isThirtyFt,
           _minHoldTier,
           _maxHoldTier,
           collection,
@@ -82,6 +85,7 @@ class UpdateSlotsStatusOperation implements StowageOperation {
   ///
   ResultF<void> _deactivateDanglingSlotsInRowBay(
     int bay,
+    bool isThirtyFt,
     int minTier,
     int maxTier,
     StowageCollection collection,
@@ -91,12 +95,14 @@ class UpdateSlotsStatusOperation implements StowageOperation {
         bay,
         _row,
         currentTier,
+        isThirtyFt: isThirtyFt,
       );
       if (currentSlot == null) continue;
       if (currentSlot.containerId != null) break;
       final belowSlots = collection.toFilteredSlotList(
         row: _row,
         tier: currentTier - _nextTierStep,
+        isThirtyFt: isThirtyFt,
         shouldIncludeSlot: (s) => bay.isEven
             ? s.bay == bay - 1 || s.bay == bay + 1 || s.bay == bay
             : s.bay == bay,
@@ -120,11 +126,13 @@ class UpdateSlotsStatusOperation implements StowageOperation {
           slot.bay + 1,
           slot.row,
           slot.tier,
+          isThirtyFt: slot.isThirtyFt,
         ), // next even slot
         collection.findSlot(
           slot.bay - 1,
           slot.row,
           slot.tier,
+          isThirtyFt: slot.isThirtyFt,
         ), // previous even slot
       ];
       if (overlappedSlot.any((s) => s?.containerId != null)) {
@@ -145,27 +153,57 @@ class UpdateSlotsStatusOperation implements StowageOperation {
           slot.bay + 1,
           slot.row,
           slot.tier,
+          isThirtyFt: slot.isThirtyFt,
         ), // next odd slot
         collection.findSlot(
           slot.bay - 1,
           slot.row,
           slot.tier,
+          isThirtyFt: slot.isThirtyFt,
         ), // previous odd slot
         collection.findSlot(
           slot.bay + 2,
           slot.row,
           slot.tier,
+          isThirtyFt: slot.isThirtyFt,
         ), // next even slot
         collection.findSlot(
           slot.bay - 2,
           slot.row,
           slot.tier,
+          isThirtyFt: slot.isThirtyFt,
         ), // previous even slot
       ];
       if (overlappedSlot.any((s) => s?.containerId != null)) {
         collection.addSlot(slot.deactivate());
       }
     });
+    return const Ok(null);
+  }
+  ///
+  ResultF<void> _deactivateOverlappingWithThirtyFtBays(
+    StowageCollection collection,
+  ) {
+    for (final bay in _iterateBays(collection)) {
+      final isAnyContainerInstalled = collection
+          .toFilteredSlotList(
+            row: _row,
+            bay: bay.number,
+            isThirtyFt: bay.isThirtyFt,
+          )
+          .any((s) => s.containerId != null);
+      if (!isAnyContainerInstalled) continue;
+      collection
+          .toFilteredSlotList(
+            row: _row,
+            isThirtyFt: !bay.isThirtyFt,
+            shouldIncludeSlot: (s) => switch (bay.number.isOdd) {
+              true => s.bay == bay.number || s.bay == bay.number - 1,
+              false => s.bay == bay.number || s.bay == bay.number + 1,
+            },
+          )
+          .forEach((s) => collection.addSlot(s.deactivate()));
+    }
     return const Ok(null);
   }
   ///
@@ -204,6 +242,7 @@ class UpdateSlotsStatusOperation implements StowageOperation {
         bay,
         _row,
         tier,
+        isThirtyFt: false,
       );
       if (currentSlot?.containerId != null) {
         collection
@@ -212,7 +251,7 @@ class UpdateSlotsStatusOperation implements StowageOperation {
               shouldIncludeSlot: (s) =>
                   (s.bay == bay - 1 || s.bay == bay + 1) &&
                   s.tier > tier &&
-                  s.tier <= maxTier &&
+                  !s.isThirtyFt &&
                   s.isActive,
             )
             .forEach(
@@ -259,6 +298,7 @@ class UpdateSlotsStatusOperation implements StowageOperation {
         bay,
         _row,
         tier,
+        isThirtyFt: false,
       );
       if (currentSlot?.containerId != null) {
         collection
@@ -267,7 +307,7 @@ class UpdateSlotsStatusOperation implements StowageOperation {
               shouldIncludeSlot: (s) =>
                   (s.bay == bay - 1 || s.bay == bay + 1) &&
                   s.tier < tier &&
-                  s.tier >= minTier &&
+                  !s.isThirtyFt &&
                   s.isActive,
             )
             .forEach(
@@ -292,14 +332,14 @@ class UpdateSlotsStatusOperation implements StowageOperation {
   /// present in the stowage plan.
   ///
   /// If [sort] is true, the collection is sorted in descending order.
-  Iterable<({int number})> _iterateBays(
+  Iterable<({int number, bool isThirtyFt})> _iterateBays(
     StowageCollection collection, {
     bool sort = false,
   }) {
     final uniqueBays = collection
         .toFilteredSlotList()
         .map(
-          (slot) => (number: slot.bay),
+          (slot) => (number: slot.bay, isThirtyFt: slot.isThirtyFt),
         )
         .toSet()
         .toList();

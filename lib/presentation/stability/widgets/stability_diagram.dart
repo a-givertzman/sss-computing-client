@@ -96,7 +96,7 @@ class StabilityDiagram extends StatelessWidget {
                 labelsSpaceReserved: 32,
                 caption:
                     '${const Localized('Angle of heel').v}, ${theta0 < 0.0 ? const Localized('to port side').v : const Localized('to starboard').v}',
-                valueUnit: const Localized('°').v,
+                valueUnit: const Localized('deg').v,
                 isLabelsVisible: true,
                 isCaptionVisible: true,
               ),
@@ -136,14 +136,14 @@ class StabilityDiagram extends StatelessWidget {
               xLabels: [
                 DiagramXValueLabel(
                   caption:
-                      'θ₀ (${theta0.abs().toStringAsFixed(1)}${const Localized('°').v})',
+                      'θ₀ (${theta0.abs().toStringAsFixed(1)}${const Localized('deg').v})',
                   value: theta0.abs(),
                   color: labelsColor,
                   style: labelsStyle,
                 ),
                 DiagramXValueLabel(
                   caption:
-                      'θ₀ + 1 ${const Localized('radian').v} (${(theta0.abs() + radians2Degrees).toStringAsFixed(1)}${const Localized('°').v}))',
+                      'θ₀ + 1 ${const Localized('radian').v} (${(theta0.abs() + radians2Degrees).toStringAsFixed(1)}${const Localized('deg').v}))',
                   value: theta0.abs() + radians2Degrees,
                   color: labelsColor,
                   style: labelsStyle,
@@ -172,7 +172,8 @@ class StabilityDiagram extends StatelessWidget {
   }) =>
       curves.fold(initialValue, (curr, curve) {
         final curveMaxY = curve
-            .reduce(
+            .fold(
+              Offset(initialValue, initialValue),
               (curr, next) => curr.dy > next.dy ? curr : next,
             )
             .dy;

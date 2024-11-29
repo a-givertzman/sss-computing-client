@@ -1,6 +1,7 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:sss_computing_client/core/future_result_extension.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/core/extensions/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/draft/draft.dart';
 import 'package:sss_computing_client/core/models/draft/drafts.dart';
 import 'package:sss_computing_client/core/models/draft/json_draft.dart';
@@ -26,6 +27,8 @@ class PgDrafts implements Drafts {
   //
   @override
   Future<Result<List<Draft>, Failure<String>>> fetchAll() async {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final sqlAccess = SqlAccess(
       address: _apiAddress,
       authToken: _authToken ?? '',
@@ -40,7 +43,9 @@ class PgDrafts implements Drafts {
               dmr.x AS "x",
               dmr.y AS "y"
             FROM draft_mark_result AS dmr
-            WHERE dmr.ship_id = 1
+            WHERE
+              dmr.ship_id = $shipId AND
+              dmr.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
             ORDER BY dmr.id;
             """,
       ),

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:sss_computing_client/core/extensions/future_result_extension.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
@@ -31,6 +33,8 @@ class HoldCargosSqlAccess {
   ///
   /// Retrieves and returns list of hold compartment [Cargo].
   Future<ResultF<List<Cargo>>> fetch() {
+    final shipId = const Setting('shipId').toInt;
+    final projectId = int.tryParse(const Setting('projectId').toString());
     final filterQuery = _filter?.entries
         .map(
           (entry) => switch (entry.value) {
@@ -55,6 +59,7 @@ class HoldCargosSqlAccess {
                 JOIN hold_part AS hp ON
                     hp.group_index >= hc.group_start_index
                     AND hp.group_index <= hc.group_end_index
+                    AND hc.group_id = hp.group_id
                     AND hc.ship_id = hp.ship_id
                     AND hc.project_id IS NOT DISTINCT FROM hp.project_id
                 GROUP BY
@@ -63,7 +68,7 @@ class HoldCargosSqlAccess {
                 hc.id AS "id",
                 hc.ship_id AS "shipId",
                 hc.project_id AS "projectId",
-                hc.name AS "name",
+                hc.name_rus AS "name",
                 hc.mass AS "mass",
                 hc.density AS "density",
                 hc.stowage_factor AS "stowageFactor",
@@ -90,55 +95,20 @@ class HoldCargosSqlAccess {
             JOIN cargo_general_category AS cgc ON
                 cc.general_category_id = cgc.id
             WHERE
-                hc.ship_id = 1
+                hc.ship_id = $shipId AND
+                hc.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
                 ${filterQuery == null ? '' : 'AND ($filterQuery)'}
             ORDER BY
                 hc.id ASC;
             """,
       ),
-      entryBuilder: _buildCargoEntry,
-    )
-        .fetch()
-        .then<Result<List<Cargo>, Failure<String>>>(
-          (result) => switch (result) {
-            Ok(value: final cargos) => Ok(cargos),
-            Err(:final error) => Err(Failure(
-                message: '$error',
-                stackTrace: StackTrace.current,
-              )),
-          },
-        )
-        .onError(
-          (error, stackTrace) => Err(Failure(
-            message: '$error',
-            stackTrace: stackTrace,
-          )),
-        );
-  }
-  //
-  JsonCargo _buildCargoEntry(Map<String, dynamic> row) => JsonCargo(json: {
-        'shipId': row['shipId'] as int,
-        'projectId': row['projectId'] as int?,
-        'id': row['id'] as int?,
-        'name': row['name'] as String?,
-        'weight': row['mass'] as double?,
-        'volume': row['volume'] as double?,
-        'density': row['density'] as double?,
-        'stowageFactor': row['stowageFactor'] as double?,
-        'level': row['level'] as double?,
-        'x1': row['x1'] as double?,
-        'x2': row['x2'] as double?,
-        'vcg': row['vcg'] as double?,
-        'lcg': row['lcg'] as double?,
-        'tcg': row['tcg'] as double?,
-        'type': row['type'] as String,
-        'shiftable': row['shiftable'] as bool,
-        'useMaxMfs': false,
-        'path': switch (row['pathList']) {
+      entryBuilder: (row) => JsonCargo.fromRow(row
+        ..['path'] = switch (row['pathList']) {
           String pathList => _formatPathList(pathList),
           _ => null,
-        },
-      });
+        }),
+    ).fetch().convertFailure();
+  }
   //
   String _formatPathList(String pathList) => json
       .decode(pathList)

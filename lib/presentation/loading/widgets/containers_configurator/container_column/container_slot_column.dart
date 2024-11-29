@@ -56,7 +56,7 @@ class ContainerSlotColumn implements TableColumn<FreightContainer, String> {
   String extractValue(FreightContainer container) {
     final slot = _findSlot(container);
     if (slot == null) return nullValue;
-    return '${slot.bay.toString().padLeft(2, '0')}${slot.row.toString().padLeft(2, '0')}${slot.tier.toString().padLeft(2, '0')}';
+    return _slotKey(slot);
   }
   //
   @override
@@ -86,4 +86,12 @@ class ContainerSlotColumn implements TableColumn<FreightContainer, String> {
       )
       .map((s) => s.copy())
       .firstOrNull;
+  //
+  // Returns slot key in format BBRRTT
+  String _slotKey(Slot slot) {
+    final bay = slot.bay.toString().padLeft(2, '0');
+    final row = slot.row.toString().padLeft(2, '0');
+    final tier = slot.tier.toString().padLeft(2, '0');
+    return '$bay$row$tier';
+  }
 }

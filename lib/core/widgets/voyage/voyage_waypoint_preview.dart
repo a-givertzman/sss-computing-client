@@ -30,9 +30,10 @@ class VoyageWaypointPreview extends StatelessWidget {
     );
     final waypoint = _waypoint;
     return waypoint == null
-        ? Text(
-            '-',
-            style: textStyle,
+        ? Row(
+            children: [
+              Expanded(child: Text('—', style: textStyle)),
+            ],
           )
         : Row(
             crossAxisAlignment: CrossAxisAlignment.center,

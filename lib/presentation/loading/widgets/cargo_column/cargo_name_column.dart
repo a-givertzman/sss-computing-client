@@ -5,6 +5,7 @@ import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 import 'package:sss_computing_client/core/models/field/field_type.dart';
 import 'package:sss_computing_client/core/models/record/value_record.dart';
+import 'package:sss_computing_client/core/validation/required_validation_case.dart';
 import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 ///
 /// Creates [TableColumn] for [Cargo] name.
@@ -64,7 +65,7 @@ class CargoNameColumn implements TableColumn<Cargo, String?> {
   @override
   Validator? get validator => const Validator(
         cases: [
-          MinLengthValidationCase(1),
+          RequiredValidationCase(),
         ],
       );
   //
@@ -78,8 +79,8 @@ class CargoNameColumn implements TableColumn<Cargo, String?> {
   String parseToString(String? value) => value ?? nullValue;
   //
   @override
-  Cargo copyRowWith(Cargo cargo, String text) => JsonCargo(
-        json: cargo.asMap()..['name'] = parseToValue(text),
+  Cargo copyRowWith(Cargo cargo, String? value) => JsonCargo(
+        json: cargo.asMap()..['name'] = value,
       );
   //
   @override

@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # needed for date and time picker dialogs
+  flutter_localizations:
+    sdk: flutter
   hmi_core:
     git:
       url: https://github.com/a-givertzman/hmi_core.git
@@ -32,6 +35,9 @@ dependencies:
   vector_math: ^2.1.4
   path_drawing: ^1.0.1
   scrollable_positioned_list: ^0.3.8
+  flutter_colorpicker: ^1.1.0
+  flutter_localization: ^0.2.2
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -48,7 +54,6 @@ flutter:
     - assets/img/
     - assets/settings/
     - assets/translations/
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
