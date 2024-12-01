@@ -78,11 +78,22 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
                 ? (rowData) => column.extractValue(rowData)
                 : null,
             dataComparator: switch (column.type) {
-              FieldType.date => (row1, row2, _) => column
-                  .extractValue(row1)
-                  .compareTo(column.extractValue(row2)),
+              FieldType.date => (row1, row2, _) {
+                  final value1 = column.extractValue(row1);
+                  final value2 = column.extractValue(row2);
+                  if (value1 == null && value2 == null) {
+                    return 0;
+                  }
+                  if (value1 == null) {
+                    return -1;
+                  }
+                  if (value2 == null) {
+                    return 1;
+                  }
+                  return value1.compareTo(value2);
+                },
               FieldType.bool => (row1, _, __) =>
-                  column.extractValue(row1) as bool ? 1 : -1,
+                  column.extractValue(row1) == true ? 1 : -1,
               _ => null,
             },
             width: column.width ?? 100.0,
