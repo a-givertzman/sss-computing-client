@@ -935,6 +935,7 @@
     "Sea",
     "Море"
   ],
+
   "section01_figure": [
     "Section 01. Figure",
     "Глава 01. Изображение судна"
@@ -1023,6 +1024,10 @@
     "Part 04. Ship info",
     "Часть 04. Информация по судну"
   ],
+  "part02_shipInfo": [
+    "Part 04. Ship info",
+    "Часть 04. Информация по судну"
+  ],
   "part05_loading": [
     "Part 05. Loading",
     "Часть 05. Загрузка судна"
@@ -1059,7 +1064,7 @@
     "Chapter 01. Programme information",
     "Глава 01. Сведения о программе"
   ],
-  "chapter01_prorgramm": [
+  "chapter01_prorgamm": [
     "Chapter 01. Programme information",
     "Глава 01. Сведения о программе"
   ],
@@ -1099,6 +1104,15 @@
     "Chapter 03. Installation",
     "Глава 03. Установка программы"
   ],
+  "chapter01_shipInfo": [
+    "Chapter 01. Ship information",
+    "Глава 01. Основные данные по судну"
+  ],
+  "chapter02_wayinfo": [
+    "Chapter 02. Flight data",
+    "Глава 02. Данные по рейсу"
+  ],
+
   "user_guide": [
     "User guide",
     "Руководство"
