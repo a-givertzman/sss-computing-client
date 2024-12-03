@@ -1059,6 +1059,10 @@
     "Chapter 01. Programme information",
     "Глава 01. Сведения о программе"
   ],
+  "chapter01_prorgramm": [
+    "Chapter 01. Programme information",
+    "Глава 01. Сведения о программе"
+  ],
   "section01_programmInfo": [
     "Section 02. Software name",
     "Глава 02. Наименование ПО"
@@ -1095,6 +1099,11 @@
     "Chapter 03. Installation",
     "Глава 03. Установка программы"
   ],
+  "user_guide": [
+    "User guide",
+    "Руководство"
+  ],
+
   "chapter04_check": [
     "Chapter 04. Periodic inspections",
     "Глава 04. Периодические проверки"
