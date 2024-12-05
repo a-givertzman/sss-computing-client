@@ -64,7 +64,7 @@ class MetacentricHeightIndicator extends StatelessWidget {
               apiAddress: _apiAddress,
               authToken: _authToken,
               toValue: (value) => double.parse(value),
-              filter: {'ship_id': 1},
+              filter: {'ship_id': shipId},
             ).fetch,
             caseLoading: (context) => _buildCaseLoading(),
             caseData: (context, draft, _) {
@@ -77,7 +77,7 @@ class MetacentricHeightIndicator extends StatelessWidget {
                   apiAddress: _apiAddress,
                   authToken: _authToken,
                   toValue: (value) => double.parse(value),
-                  filter: {'ship_id': 1},
+                  filter: {'ship_id': shipId},
                 ).fetch,
                 caseLoading: (context) => _buildCaseLoading(),
                 caseData: (context, displacement, _) {
@@ -137,7 +137,10 @@ class MetacentricHeightIndicator extends StatelessWidget {
           apiAddress: _apiAddress,
           authToken: _authToken,
           toValue: (value) => double.parse(value),
-          filter: {'parameter_id': 18},
+          filter: {
+            'parameter_id': 18,
+            'ship_id': const Setting('shipId').toInt,
+          },
         ).fetch(),
         title: const Localized('Metacentric height').v,
         valueUnit: const Localized('m').v,

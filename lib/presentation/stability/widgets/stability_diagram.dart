@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/chart/chart_axis.dart';
 import 'package:sss_computing_client/core/models/record/field_record.dart';
 import 'package:sss_computing_client/core/models/stability_curve/metacentric_height_line.dart';
@@ -42,6 +43,7 @@ class StabilityDiagram extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
+    final shipId = const Setting('shipId').toInt;
     final theme = Theme.of(context);
     final labelsColor = theme.colorScheme.primary;
     final gridColor = theme.colorScheme.primary;
@@ -55,7 +57,10 @@ class StabilityDiagram extends StatelessWidget {
         apiAddress: _apiAddress,
         authToken: _authToken,
         toValue: (value) => double.parse(value),
-        filter: {'parameter_id': 18},
+        filter: {
+          'parameter_id': 18,
+          'ship_id': shipId,
+        },
       ).fetch,
       caseData: (context, h, _) => FutureBuilderWidget(
         refreshStream: _appRefreshStream,
@@ -66,7 +71,10 @@ class StabilityDiagram extends StatelessWidget {
           apiAddress: _apiAddress,
           authToken: _authToken,
           toValue: (value) => double.parse(value),
-          filter: {'parameter_id': 7},
+          filter: {
+            'parameter_id': 7,
+            'ship_id': shipId,
+          },
         ).fetch,
         caseData: (context, theta0, _) => FutureBuilderWidget(
           refreshStream: _appRefreshStream,
