@@ -6,6 +6,7 @@ import 'package:sss_computing_client/core/models/calculation/calculation_status.
 import 'package:sss_computing_client/core/widgets/general_info_widget.dart';
 import 'package:sss_computing_client/core/widgets/mini_side_bar/mini_sidebar.dart';
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
+import 'package:sss_computing_client/presentation/info/widgets/projects/projects_body.dart';
 import 'package:sss_computing_client/presentation/info/widgets/voyage/voyage_body.dart';
 import 'widgets/ship/ship_body.dart';
 ///
@@ -28,7 +29,7 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
   late List<Tab> _tabs;
   @override
   void initState() {
-    _tabs = ['Ship data', 'Voyage data']
+    _tabs = ['Ship data', 'Voyage data', 'Saved projects']
         .map(
           (e) => Tab(
             text: Localized(e).v,
@@ -94,9 +95,13 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                             child: TabBarView(
                               physics: const NeverScrollableScrollPhysics(),
                               controller: _tabController,
-                              children: const [
-                                ShipBody(),
-                                VoyageBody(),
+                              children: [
+                                const ShipBody(),
+                                const VoyageBody(),
+                                ProjectsBody(
+                                  appRefreshStream: status.refreshStream,
+                                  fireRefreshEvent: status.fireRefreshEvent,
+                                ),
                               ],
                             ),
                           ),
