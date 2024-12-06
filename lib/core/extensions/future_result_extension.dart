@@ -14,20 +14,53 @@ extension FutureResultExtension<T> on Future<Result<T, Failure<dynamic>>> {
   /// If an error occurs during the execution of this [Future] (e.g., due to a timeout),
   /// the returned [Future] will be completed with a [Result] containing
   /// a [Failure] with a string representation of this error.
-  Future<Result<T, Failure<String>>> convertFailure() {
+  ///
+  /// By default, [Failure] message will be a string representation of the original error.
+  /// Using [errorMessage] this behavior can be changed.
+  Future<Result<T, Failure<String>>> convertFailure({
+    String Function(Failure error)? errorMessage,
+  }) {
     return then<Result<T, Failure<String>>>(
       (result) => switch (result) {
         Ok(:final value) => Ok(value),
         Err(:final error) => Err(Failure(
-            message: '$error',
+            message: errorMessage?.call(error) ?? '$error',
             stackTrace: StackTrace.current,
           )),
       },
     ).catchError(
       (error) => Err<T, Failure<String>>(Failure(
-        message: '$error',
+        message: errorMessage?.call(error) ?? '$error',
         stackTrace: StackTrace.current,
       )),
     );
   }
+  ///
+  /// Logs result of the future using the provided [log]
+  /// and returns result of the original future untouched.
+  ///
+  /// By default, log value and error as its string representation.
+  /// Using [okMessage] and [errorMessage] this behavior can be changed.
+  ///
+  /// If [message] is provided, it will be used as starting log message.
+  Future<Result<T, Failure<dynamic>>> logResult(
+    Log log, {
+    String? message,
+    String Function(T value)? okMessage,
+    String Function(Failure error)? errorMessage,
+  }) =>
+      then((result) {
+        if (message != null) log.info(message);
+        return result
+            .inspect(
+              (value) => log.info(
+                okMessage?.call(value) ?? 'value: $value',
+              ),
+            )
+            .inspectErr(
+              (error) => log.error(
+                errorMessage?.call(error) ?? 'error: $error',
+              ),
+            );
+      });
 }

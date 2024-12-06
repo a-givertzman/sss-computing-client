@@ -432,5 +432,21 @@
   "z1": ["Z1", "Z1"],
   "z2": ["Z2", "Z2"],
   "weight cannot be negative": ["Weight cannot be negative", "Масса не может быть отрицательной"],
-  "cannot be negative": ["Value cannot be negative", "Значение не может быть отрицательным"]
+  "cannot be negative": ["Value cannot be negative", "Значение не может быть отрицательным"],
+  "saved projects": ["Saved projects", "Сохраненные проекты"],
+  "projects": ["Projects", "Проекты"],
+  "save date": ["Save date", "Дата сохранения"],
+  "project loaded": ["Opened", "Открыт"],
+  "save project": ["Save", "Сохранить"],
+  "save project as": ["Save as", "Сохранить как"],
+  "load project": ["Open", "Открыть"],
+  "delete project": ["Delete", "Удалить"],
+  "Enter project details": ["Enter project name", "Введите имя проекта"],
+  "Replace project?": ["Replace project?", "Заменить проект?"],
+  "Project with same name already exists.": ["Project with same name already exists.", "Проект с таким именем уже существует."],
+  "Replace it with new project?": ["Replace it with new project?", "Заменить его новым проектом?"],
+  "Replace": ["Replace", "Заменить"],
+  "deleting error": ["Deleting error", "Ошибка удаления"],
+  "loading error": ["Loading error", "Ошибка загрузки"],
+  "saving error": ["Saving error", "Ошибка сохранения"]
 }
