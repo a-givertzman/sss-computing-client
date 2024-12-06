@@ -14,6 +14,7 @@ import 'package:sss_computing_client/core/widgets/disabled_widget.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table.dart';
 import 'package:sss_computing_client/core/widgets/table/editing_table_column.dart';
 import 'package:sss_computing_client/presentation/info/widgets/projects/save_as_dialog.dart';
+
 ///
 /// Widget that displays projects and allows to switch between them
 /// or create new one;
@@ -21,6 +22,7 @@ class ProjectsWidget extends StatefulWidget {
   final List<Project> _projects;
   final Projects _projectsCollection;
   final void Function() _onProjectLoaded;
+
   ///
   /// Creates widget that displays [projects] and allows to switch between them
   /// or create new one using [projectsCollection];
@@ -38,6 +40,7 @@ class ProjectsWidget extends StatefulWidget {
   @override
   State<ProjectsWidget> createState() => _ProjectsWidgetState();
 }
+
 ///
 class _ProjectsWidgetState extends State<ProjectsWidget> {
   late final List<Project> _projects;
@@ -83,6 +86,7 @@ class _ProjectsWidgetState extends State<ProjectsWidget> {
     ];
     super.initState();
   }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -110,7 +114,7 @@ class _ProjectsWidgetState extends State<ProjectsWidget> {
               const Spacer(),
               SizedBox(width: blockPadding),
               FilledButton.icon(
-                icon: const Icon(Icons.download_rounded),
+                icon: const Icon(Icons.unarchive_outlined),
                 label: Text(const Localized('Load project').v),
                 onPressed: _selectedProject != null
                     ? () => _handleProjectLoad(_selectedProject!)
@@ -138,6 +142,7 @@ class _ProjectsWidgetState extends State<ProjectsWidget> {
       ),
     );
   }
+
   //
   void _toggleProjectSelection(Project? project) {
     if (project?.id == _selectedProject?.id) {
@@ -150,6 +155,7 @@ class _ProjectsWidgetState extends State<ProjectsWidget> {
       });
     }
   }
+
   //
   void _handleUpdateResult(Future<Result<void, Failure<String>>> updateResult) {
     setState(() {
@@ -170,12 +176,14 @@ class _ProjectsWidgetState extends State<ProjectsWidget> {
       });
     });
   }
+
   //
   void _handleProjectSave() {
     _handleUpdateResult(
       widget._projectsCollection.add(JsonProject.emptyWith()),
     );
   }
+
   //
   void _handleProjectSaveAs() {
     showDialog(
@@ -205,6 +213,7 @@ class _ProjectsWidgetState extends State<ProjectsWidget> {
       ),
     );
   }
+
   //
   Future<bool?> _confirmProjectReplacing(Project project) => showDialog<bool>(
         context: context,
@@ -224,12 +233,14 @@ class _ProjectsWidgetState extends State<ProjectsWidget> {
       widget._projectsCollection.load(project),
     );
   }
+
   //
   void _handleProjectDelete(Project project) {
     _handleUpdateResult(
       widget._projectsCollection.remove(project),
     );
   }
+
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
