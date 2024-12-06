@@ -4,6 +4,7 @@ import 'package:sss_computing_client/core/extensions/future_result_extension.dar
 import 'package:sss_computing_client/core/models/projects/json_project.dart';
 import 'package:sss_computing_client/core/models/projects/project.dart';
 import 'package:sss_computing_client/core/models/projects/projects.dart';
+
 ///
 /// [Project] collection stored in postgres database.
 class PgProjects implements Projects {
@@ -11,6 +12,7 @@ class PgProjects implements Projects {
   final ApiAddress apiAddress;
   final String dbName;
   final String authToken;
+
   ///
   /// Creates [Project] collection stored in postgres database.
   ///
@@ -44,22 +46,15 @@ ORDER BY
 ''',
       ),
       entryBuilder: (row) => JsonProject.fromRow(row),
-    ).fetch().convertFailure().then(
-          (result) => result
-              .inspect(
-                (project) => _log.info('project saved'),
-              )
-              .inspectErr(
-                (error) => _log.error('$error'),
-              )
-              .mapErr(
-                (error) => Failure(
-                  message: 'fetch error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-        );
+    )
+        .fetch()
+        .logResult(
+          _log,
+          infoMessage: (projects) => 'projects fetched: ${projects.length}',
+        )
+        .convertFailure(errorMessage: (_) => 'fetch error');
   }
+
   //
   @override
   Future<Result<void, Failure<String>>> add(Project project) {
@@ -80,22 +75,15 @@ WHERE
 ''',
       ),
       entryBuilder: (row) => JsonProject.fromRow(row),
-    ).fetch().convertFailure().then(
-          (result) => result
-              .inspect(
-                (_) => _log.info('project ${project.name} saved'),
-              )
-              .inspectErr(
-                (error) => _log.error('$error'),
-              )
-              .mapErr(
-                (error) => Failure(
-                  message: 'saving error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-        );
+    )
+        .fetch()
+        .logResult(
+          _log,
+          infoMessage: (_) => 'project "${project.name}" added',
+        )
+        .convertFailure(errorMessage: (_) => 'saving error');
   }
+
   //
   @override
   Future<Result<void, Failure<String>>> replace(Project old, Project project) {
@@ -122,22 +110,15 @@ END \$\$;
 ''',
       ),
       entryBuilder: (row) => JsonProject.fromRow(row),
-    ).fetch().convertFailure().then(
-          (result) => result
-              .inspect(
-                (_) => _log.info('project ${project.name} replaced'),
-              )
-              .inspectErr(
-                (error) => _log.error('$error'),
-              )
-              .mapErr(
-                (error) => Failure(
-                  message: 'saving error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-        );
+    )
+        .fetch()
+        .logResult(
+          _log,
+          infoMessage: (_) => 'project "${project.name}" replaced',
+        )
+        .convertFailure(errorMessage: (_) => 'saving error');
   }
+
   //
   @override
   Future<Result<void, Failure<String>>> load(Project project) {
@@ -154,22 +135,15 @@ WHERE
   id = ${project.id};
 ''',
       ),
-    ).fetch().convertFailure().then(
-          (result) => result
-              .inspect(
-                (_) => _log.info('project ${project.name} loaded'),
-              )
-              .inspectErr(
-                (error) => _log.error('$error'),
-              )
-              .mapErr(
-                (error) => Failure(
-                  message: 'loading error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-        );
+    )
+        .fetch()
+        .logResult(
+          _log,
+          infoMessage: (_) => 'project "${project.name}" loaded',
+        )
+        .convertFailure(errorMessage: (_) => 'loading error');
   }
+
   //
   @override
   Future<Result<void, Failure<String>>> remove(Project project) {
@@ -184,20 +158,12 @@ WHERE
   id = ${project.id};
 ''',
       ),
-    ).fetch().convertFailure().then(
-          (result) => result
-              .inspect(
-                (_) => _log.info('project ${project.name} deleted'),
-              )
-              .inspectErr(
-                (error) => _log.error('$error'),
-              )
-              .mapErr(
-                (error) => Failure(
-                  message: 'deleting error',
-                  stackTrace: StackTrace.current,
-                ),
-              ),
-        );
+    )
+        .fetch()
+        .logResult(
+          _log,
+          infoMessage: (_) => 'project "${project.name}" removed',
+        )
+        .convertFailure(errorMessage: (_) => 'deleting error');
   }
 }
