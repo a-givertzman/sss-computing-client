@@ -3,12 +3,10 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/validation/required_validation_case.dart';
-
 ///
 /// Dialog for saving project with custom name.
 class SaveAsDialog extends StatefulWidget {
   final void Function(String name) _onSave;
-
   ///
   /// Creates dialog for saving project with custom name.
   ///
@@ -20,7 +18,6 @@ class SaveAsDialog extends StatefulWidget {
   @override
   State<SaveAsDialog> createState() => _SaveAsDialogState();
 }
-
 //
 class _SaveAsDialogState extends State<SaveAsDialog> {
   late final GlobalKey<FormState> _formKey;
@@ -37,14 +34,12 @@ class _SaveAsDialogState extends State<SaveAsDialog> {
     ]);
     super.initState();
   }
-
   //
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
   //
   @override
   Widget build(BuildContext context) {
@@ -75,7 +70,6 @@ class _SaveAsDialogState extends State<SaveAsDialog> {
       ],
     );
   }
-
   //
   bool get _isFormValid => _formKey.currentState?.validate() ?? false;
   //
@@ -84,7 +78,6 @@ class _SaveAsDialogState extends State<SaveAsDialog> {
       return;
     });
   }
-
   //
   void _onSave() {
     if (_isFormValid) {
