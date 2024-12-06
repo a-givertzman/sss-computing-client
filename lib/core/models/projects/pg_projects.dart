@@ -4,15 +4,13 @@ import 'package:sss_computing_client/core/extensions/future_result_extension.dar
 import 'package:sss_computing_client/core/models/projects/json_project.dart';
 import 'package:sss_computing_client/core/models/projects/project.dart';
 import 'package:sss_computing_client/core/models/projects/projects.dart';
-
 ///
 /// [Project] collection stored in postgres database.
 class PgProjects implements Projects {
-  static const _log = Log('PgProjects');
+  static const _log = Log('PgProjects | ');
   final ApiAddress apiAddress;
   final String dbName;
   final String authToken;
-
   ///
   /// Creates [Project] collection stored in postgres database.
   ///
@@ -50,11 +48,11 @@ ORDER BY
         .fetch()
         .logResult(
           _log,
-          infoMessage: (projects) => 'projects fetched: ${projects.length}',
+          message: 'fetching projects',
+          okMessage: (projects) => 'projects fetched: ${projects.length}',
         )
         .convertFailure(errorMessage: (_) => 'fetch error');
   }
-
   //
   @override
   Future<Result<void, Failure<String>>> add(Project project) {
@@ -79,11 +77,11 @@ WHERE
         .fetch()
         .logResult(
           _log,
-          infoMessage: (_) => 'project "${project.name}" added',
+          message: 'saving project "${project.name}"',
+          okMessage: (_) => 'project "${project.name}" added',
         )
         .convertFailure(errorMessage: (_) => 'saving error');
   }
-
   //
   @override
   Future<Result<void, Failure<String>>> replace(Project old, Project project) {
@@ -114,11 +112,11 @@ END \$\$;
         .fetch()
         .logResult(
           _log,
-          infoMessage: (_) => 'project "${project.name}" replaced',
+          message: 'replacing project "${project.name}"',
+          okMessage: (_) => 'project "${project.name}" replaced',
         )
         .convertFailure(errorMessage: (_) => 'saving error');
   }
-
   //
   @override
   Future<Result<void, Failure<String>>> load(Project project) {
@@ -139,11 +137,11 @@ WHERE
         .fetch()
         .logResult(
           _log,
-          infoMessage: (_) => 'project "${project.name}" loaded',
+          message: 'loading project "${project.name}"',
+          okMessage: (_) => 'project "${project.name}" loaded',
         )
         .convertFailure(errorMessage: (_) => 'loading error');
   }
-
   //
   @override
   Future<Result<void, Failure<String>>> remove(Project project) {
@@ -162,7 +160,8 @@ WHERE
         .fetch()
         .logResult(
           _log,
-          infoMessage: (_) => 'project "${project.name}" removed',
+          message: 'removing project "${project.name}"',
+          okMessage: (_) => 'project "${project.name}" removed',
         )
         .convertFailure(errorMessage: (_) => 'deleting error');
   }

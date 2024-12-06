@@ -1,5 +1,4 @@
 import 'package:hmi_core/hmi_core.dart';
-
 ///
 /// Extension for [Future] returning [Result].
 extension FutureResultExtension<T> on Future<Result<T, Failure<dynamic>>> {
@@ -16,7 +15,7 @@ extension FutureResultExtension<T> on Future<Result<T, Failure<dynamic>>> {
   /// the returned [Future] will be completed with a [Result] containing
   /// a [Failure] with a string representation of this error.
   ///
-  /// By default, the [Failure] message will be a string representation of the original error.
+  /// By default, [Failure] message will be a string representation of the original error.
   /// Using [errorMessage] this behavior can be changed.
   Future<Result<T, Failure<String>>> convertFailure({
     String Function(Failure error)? errorMessage,
@@ -25,7 +24,7 @@ extension FutureResultExtension<T> on Future<Result<T, Failure<dynamic>>> {
       (result) => switch (result) {
         Ok(:final value) => Ok(value),
         Err(:final error) => Err(Failure(
-            message: '$error',
+            message: errorMessage?.call(error) ?? '$error',
             stackTrace: StackTrace.current,
           )),
       },
@@ -36,29 +35,32 @@ extension FutureResultExtension<T> on Future<Result<T, Failure<dynamic>>> {
       )),
     );
   }
-
   ///
-  /// Logs the result of the future and returns the original future untouched.
+  /// Logs result of the future using the provided [log]
+  /// and returns result of the original future untouched.
   ///
-  /// By default, the [Future] will log the value and the error as its string representation.
+  /// By default, log value and error as its string representation.
+  /// Using [okMessage] and [errorMessage] this behavior can be changed.
   ///
-  /// Using [infoMessage] and [errorMessage] this behavior can be changed.
+  /// If [message] is provided, it will be used as starting log message.
   Future<Result<T, Failure<dynamic>>> logResult(
     Log log, {
-    String Function(T value)? infoMessage,
+    String? message,
+    String Function(T value)? okMessage,
     String Function(Failure error)? errorMessage,
   }) =>
-      then(
-        (result) => result
+      then((result) {
+        if (message != null) log.info(message);
+        return result
             .inspect(
               (value) => log.info(
-                infoMessage?.call(value) ?? 'value: $value',
+                okMessage?.call(value) ?? 'value: $value',
               ),
             )
             .inspectErr(
               (error) => log.error(
                 errorMessage?.call(error) ?? 'error: $error',
               ),
-            ),
-      );
+            );
+      });
 }
