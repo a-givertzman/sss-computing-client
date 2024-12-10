@@ -140,8 +140,8 @@ class _BayPairSchemeState extends State<BayPairScheme> {
     );
     final holdDeckSeparationZ =
         const Setting('shipHoldDeckSeparationZ_m').toDouble;
-    const schemeHorizontalPad = 1.0;
-    const schemeVerticalPad = 1.0;
+    final schemeHorizontalPad = const Setting('shipSchemeGap_m').toDouble;
+    final schemeVerticalPad = const Setting('shipSchemeGap_m').toDouble;
     return SchemeLayout(
       fit: BoxFit.contain,
       minX: minX,
@@ -274,7 +274,7 @@ class _BayPairSchemeState extends State<BayPairScheme> {
             text: '$_containersNumberOnDeck',
             offset: Offset(
               maxX - schemeHorizontalPad,
-              holdDeckSeparationZ + schemeVerticalPad,
+              holdDeckSeparationZ - schemeVerticalPad,
             ),
             style: labelStyle,
             alignment: Alignment.centerLeft,
@@ -284,7 +284,7 @@ class _BayPairSchemeState extends State<BayPairScheme> {
             text: '$_containersNumberInHold',
             offset: Offset(
               maxX - schemeHorizontalPad,
-              holdDeckSeparationZ - schemeVerticalPad,
+              holdDeckSeparationZ + schemeVerticalPad,
             ),
             style: labelStyle,
             alignment: Alignment.centerLeft,
