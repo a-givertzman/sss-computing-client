@@ -27,7 +27,7 @@ class JsonDraft implements Draft {
           'shipId': row['shipId'] as int,
           'projectId': row['projectId'] as int?,
           'label': row['label'] as String,
-          'value': row['value'] as double,
+          'value': row['value'] as double?,
           'x': row['x'] as double,
           'y': row['y'] as double,
         },
@@ -43,7 +43,7 @@ class JsonDraft implements Draft {
   String get label => _json['label'];
   //
   @override
-  double get value => _json['value'];
+  double? get value => _json['value'];
   //
   @override
   double get x => _json['x'];

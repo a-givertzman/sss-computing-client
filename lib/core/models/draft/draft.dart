@@ -12,7 +12,7 @@ abstract interface class Draft {
   String get label;
   ///
   /// Draft value.
-  double get value;
+  double? get value;
   ///
   /// Offset from midship.
   double get x;
