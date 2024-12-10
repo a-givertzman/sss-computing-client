@@ -199,7 +199,7 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
           content: FutureBuilderWidget(
             refreshStream: widget._appRefreshStream,
             onFuture: _freightContainers.fetchAll,
-            caseData: (_, containers, refetchContainers) => FutureBuilderWidget(
+            caseData: (_, containers, refetchAll) => FutureBuilderWidget(
               refreshStream: widget._appRefreshStream,
               onFuture: _pgStowageCollection.fetch,
               caseData: (_, stowageCollection, __) => FutureBuilderWidget(
@@ -210,7 +210,7 @@ class _LoadingPageBodyState extends State<LoadingPageBody> {
                   freightContainersCollection: _freightContainers,
                   containers: containers,
                   waypoints: waypoints,
-                  refetchContainers: refetchContainers,
+                  refetchContainers: refetchAll,
                 ),
               ),
             ),

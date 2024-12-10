@@ -152,6 +152,31 @@ class PgStowageCollection {
     );
   }
   ///
+  /// Removes containers from all occupied slots in [StowageCollection].
+  Future<ResultF<void>> removeAllContainers() async {
+    final backup = _stowageCollection.copy();
+    final slotsWithContainers = _stowageCollection.toFilteredSlotList(
+      shouldIncludeSlot: (s) => s.containerId != null,
+    );
+    ResultF<void> removeResult = const Ok(null);
+    for (final slot in slotsWithContainers) {
+      removeResult = removeResult.andThen(
+        (_) => RemoveContainerOperation(
+          bay: slot.bay,
+          row: slot.row,
+          tier: slot.tier,
+        ).execute(_stowageCollection),
+      );
+    }
+    final saveResult = switch (removeResult) {
+      Ok() => await _save(),
+      Err(:final error) => Err(error),
+    };
+    return saveResult.inspectErr(
+      (_) => _restoreFrom(backup),
+    );
+  }
+  ///
   /// Returns fetched [StowageCollection].
   StowageCollection get stowageCollection => _stowageCollection;
   ///
