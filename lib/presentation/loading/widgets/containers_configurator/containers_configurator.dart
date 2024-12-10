@@ -175,7 +175,8 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
               ),
               SizedBox(width: blockPadding),
               FilledButton.icon(
-                onPressed: _handleDeleteAllContainers,
+                onPressed:
+                    _containers.isNotEmpty ? _handleDeleteAllContainers : null,
                 icon: const Icon(Icons.delete_rounded),
                 label: Text(const Localized('Delete all containers').v),
               ),

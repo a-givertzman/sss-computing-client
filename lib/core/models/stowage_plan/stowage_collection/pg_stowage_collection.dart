@@ -165,6 +165,7 @@ class PgStowageCollection {
           bay: slot.bay,
           row: slot.row,
           tier: slot.tier,
+          isThirtyFt: slot.isThirtyFt,
         ).execute(_stowageCollection),
       );
     }
