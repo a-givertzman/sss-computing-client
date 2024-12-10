@@ -43,13 +43,15 @@ class ShipDraughtsScheme extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final shipId = const Setting('shipId').toInt;
-    final minX = const Setting('shipMinX_m').toDouble;
-    final maxX = const Setting('shipMaxX_m').toDouble;
-    final minY = const Setting('shipMinY_m').toDouble;
-    final maxY = const Setting('shipMaxY_m').toDouble;
-    final minZ = const Setting('shipMinZ_m').toDouble;
-    final maxZ = const Setting('shipMaxZ_m').toDouble;
-    final draftGapZ = const Setting('shipDraftGapZ_m').toDouble;
+    final minX = const Setting('shipMinWithGapX_m').toDouble;
+    final maxX = const Setting('shipMaxWithGapX_m').toDouble;
+    final minY = const Setting('shipMinWithGapY_m').toDouble;
+    final maxY = const Setting('shipMaxWithGapY_m').toDouble;
+    final minZ = const Setting('shipMinWithGapZ_m').toDouble;
+    final maxZ = const Setting('shipMaxWithGapZ_m').toDouble;
+    final draftGapZ = const Setting('shipDraftGap_m').toDouble;
+    final schemeGap = const Setting('shipSchemeGap_m').toDouble;
+    final padding = const Setting('padding').toDouble;
     return FutureBuilderWidget(
       refreshStream: _appRefreshStream,
       onFuture: FieldRecord<PathProjections>(
@@ -152,22 +154,25 @@ class ShipDraughtsScheme extends StatelessWidget {
                         SchemeText(
                           text:
                               '${const Localized('Heel').v} ${heelAngle.toStringAsFixed(2)}${const Localized('deg').v}',
-                          alignment: const Alignment(0.0, 2.0),
-                          offset: Offset(0.0, maxZ),
+                          alignment: Alignment.bottomCenter,
+                          offset: Offset(
+                            minY + (maxY - minY) / 2,
+                            maxZ - schemeGap,
+                          ),
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
                         SchemeText(
                           text: const Localized('PS').v,
-                          offset: const Offset(-10.0, 0.0),
-                          alignment: const Alignment(2.0, 0.0),
+                          offset: Offset(minY + schemeGap, 0.0),
+                          alignment: Alignment.centerRight,
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
                         SchemeText(
                           text: const Localized('SB').v,
-                          offset: const Offset(10.0, 0.0),
-                          alignment: const Alignment(-2.0, 0.0),
+                          offset: Offset(maxY - schemeGap, 0.0),
+                          alignment: Alignment.centerLeft,
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
@@ -186,9 +191,9 @@ class ShipDraughtsScheme extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: padding),
                 Flexible(
-                  flex: 7,
+                  flex: 5,
                   child: SchemeLayout(
                     fit: BoxFit.contain,
                     minX: minX,
@@ -224,22 +229,25 @@ class ShipDraughtsScheme extends StatelessWidget {
                         SchemeText(
                           text:
                               '${const Localized('Trim').v} ${trimAngle.toStringAsFixed(2)}${const Localized('deg').v}',
-                          alignment: const Alignment(0.0, 2.0),
-                          offset: Offset(0.0, maxZ),
+                          alignment: Alignment.bottomCenter,
+                          offset: Offset(
+                            minX + (maxX - minX) / 2,
+                            maxZ - schemeGap,
+                          ),
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
                         SchemeText(
                           text: const Localized('AFT').v,
-                          offset: Offset(minX, 0.0),
-                          alignment: const Alignment(2.0, 0.0),
+                          offset: Offset(minX + schemeGap, 0.0),
+                          alignment: Alignment.centerRight,
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
                         SchemeText(
                           text: const Localized('FWD').v,
-                          offset: Offset(maxX, 0.0),
-                          alignment: const Alignment(-2.0, 0.0),
+                          offset: Offset(maxX - schemeGap, 0.0),
+                          alignment: Alignment.centerLeft,
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
@@ -313,7 +321,8 @@ class _DraughtLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final radians = -degrees2Radians * angle;
     final dy = tan(radians) * (draughtShift - massShift);
-    final dx = draughtShift / cos(radians);
+    final cosine = cos(radians);
+    final dx = cosine != 0.0 ? draughtShift / cosine : 0.0;
     return Stack(
       children: [
         SchemeFigure(

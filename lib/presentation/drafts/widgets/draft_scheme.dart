@@ -70,6 +70,7 @@ class _DraftSchemeState extends State<DraftScheme> {
     final maxX = const Setting('shipMaxX_m').toDouble;
     final minY = const Setting('shipMinY_m').toDouble;
     final maxY = const Setting('shipMaxY_m').toDouble;
+    final schemeGap = const Setting('shipSchemeGap_m').toDouble;
     return FutureBuilderWidget(
       refreshStream: widget._appRefreshStream,
       onFuture: FieldRecord<PathProjections>(
@@ -169,15 +170,21 @@ class _DraftSchemeState extends State<DraftScheme> {
                         ),
                         SchemeText(
                           text: const Localized('PS').v,
-                          offset: Offset(0.0, minY),
-                          alignment: const Alignment(0.0, 2.0),
+                          offset: Offset(
+                            minX + (maxX - minX) / 2.0,
+                            minY + schemeGap,
+                          ),
+                          alignment: Alignment.bottomCenter,
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
                         SchemeText(
                           text: const Localized('SB').v,
-                          offset: Offset(0.0, maxY),
-                          alignment: const Alignment(0.0, -2.0),
+                          offset: Offset(
+                            minX + (maxX - minX) / 2.0,
+                            maxY - schemeGap,
+                          ),
+                          alignment: Alignment.topCenter,
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
