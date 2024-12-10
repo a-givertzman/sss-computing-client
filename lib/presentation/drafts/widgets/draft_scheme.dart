@@ -62,14 +62,12 @@ class _DraftSchemeState extends State<DraftScheme> {
     final theme = Theme.of(context);
     final padding = const Setting('padding').toDouble;
     final labelStyle = theme.textTheme.labelLarge?.copyWith(
-      backgroundColor: theme.colorScheme.primary.withOpacity(
-        const Setting('opacityLow').toDouble,
-      ),
+      backgroundColor: theme.colorScheme.primary,
     );
-    final minX = const Setting('shipMinX_m').toDouble;
-    final maxX = const Setting('shipMaxX_m').toDouble;
-    final minY = const Setting('shipMinY_m').toDouble;
-    final maxY = const Setting('shipMaxY_m').toDouble;
+    final minX = const Setting('shipMinWithGapX_m').toDouble;
+    final maxX = const Setting('shipMaxWithGapX_m').toDouble;
+    final minY = const Setting('shipMinWithGapY_m').toDouble;
+    final maxY = const Setting('shipMaxWithGapY_m').toDouble;
     final schemeGap = const Setting('shipSchemeGap_m').toDouble;
     return FutureBuilderWidget(
       refreshStream: widget._appRefreshStream,
@@ -250,15 +248,13 @@ class _DraftSchemeState extends State<DraftScheme> {
         (draft) {
           final String localizedLabel =
               draft.label.split(' ').map((word) => Localized(word).v).join(' ');
+          final String? value = draft.value?.toStringAsFixed(2);
           return SchemeText(
             text:
-                '$localizedLabel ${draft.value.toStringAsFixed(2)} ${const Localized('m').v}',
+                '$localizedLabel ${value != null ? '$value ${const Localized('m').v}' : '—'}',
             style: style,
             offset: Offset(draft.x, draft.y),
-            alignment: Alignment(
-              0.0,
-              draft.y < 0.0 ? -2.0 : 2.0,
-            ),
+            alignment: Alignment.center,
             layoutTransform: layoutTransform,
           );
         },

@@ -110,9 +110,7 @@ class ShipDraughtsScheme extends StatelessWidget {
               ..translate(0.0, -draught);
             final theme = Theme.of(context);
             final labelStyle = theme.textTheme.labelLarge?.copyWith(
-              backgroundColor: theme.colorScheme.primary.withOpacity(
-                const Setting('opacityLow').toDouble,
-              ),
+              backgroundColor: theme.colorScheme.primary,
             );
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -164,15 +162,21 @@ class ShipDraughtsScheme extends StatelessWidget {
                         ),
                         SchemeText(
                           text: const Localized('PS').v,
-                          offset: Offset(minY + schemeGap, 0.0),
-                          alignment: Alignment.centerRight,
+                          offset: Offset(
+                            minY + schemeGap,
+                            minZ - draftGapZ + schemeGap,
+                          ),
+                          alignment: Alignment.topRight,
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
                         SchemeText(
                           text: const Localized('SB').v,
-                          offset: Offset(maxY - schemeGap, 0.0),
-                          alignment: Alignment.centerLeft,
+                          offset: Offset(
+                            maxY - schemeGap,
+                            minZ - draftGapZ + schemeGap,
+                          ),
+                          alignment: Alignment.topLeft,
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
@@ -239,15 +243,21 @@ class ShipDraughtsScheme extends StatelessWidget {
                         ),
                         SchemeText(
                           text: const Localized('AFT').v,
-                          offset: Offset(minX + schemeGap, 0.0),
-                          alignment: Alignment.centerRight,
+                          offset: Offset(
+                            minX + schemeGap,
+                            minZ - draftGapZ + schemeGap,
+                          ),
+                          alignment: Alignment.topRight,
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
                         SchemeText(
                           text: const Localized('FWD').v,
-                          offset: Offset(maxX - schemeGap, 0.0),
-                          alignment: Alignment.centerLeft,
+                          offset: Offset(
+                            maxX - schemeGap,
+                            minZ - draftGapZ + schemeGap,
+                          ),
+                          alignment: Alignment.topLeft,
                           style: labelStyle,
                           layoutTransform: transform,
                         ),
