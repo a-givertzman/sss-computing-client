@@ -9,6 +9,7 @@
     "strokeWidth": 2.0,
     "formFieldWidth": 425.0,
     "actionButtonHeight": 32.0,
+    "iconSizeMedium": 20.0,
     "animationDuration": 500,
     "errorMessageDisplayDuration": 5000,
     "colorLabelBorderRadius": 4.0,
