@@ -95,7 +95,11 @@ class _BuildItem<T> extends StatelessWidget {
           ),
           title: Text(
             Localized(item.title).v,
-            style: _buildTextStyle(isParent: isParent, theme: theme),
+            style: _buildTextStyle(
+              error: item.localisationError,
+              isParent: isParent,
+              theme: theme,
+            ),
           ),
           leading: _buildLeading(isParent: isParent, padding: padding),
           trailing: _buildTrailing(isParent),
@@ -140,13 +144,20 @@ class _BuildItem<T> extends StatelessWidget {
   TextStyle? _buildTextStyle({
     required bool isParent,
     required ThemeData theme,
+    required bool error,
   }) {
-    return switch (isParent) {
-      true => theme.textTheme.titleMedium,
+    return (switch (isParent) {
+      true => theme.textTheme.titleMedium?.copyWith(
+          color: error ? theme.colorScheme.error : null,
+        ),
       false => theme.textTheme.bodySmall?.copyWith(
-          color: item.isEqualTo(selected) ? theme.primaryColor : null,
+          color: error
+              ? theme.colorScheme.error
+              : item.isEqualTo(selected)
+                  ? theme.primaryColor
+                  : null,
         )
-    };
+    });
   }
 
   Widget? _buildTrailing(bool isParent) {

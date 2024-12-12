@@ -58,7 +58,9 @@ final class LoadMarkdownInfo implements LoadDirectoryInfo {
       dirName: info.name,
       title: CleanMarkdownTitle(title).clean(),
     ).tr;
+
     return info.copyWith(
+      titleError: title == info.name,
       title: localisedTitle,
       subs: await _loadTitles(info.subs),
     );

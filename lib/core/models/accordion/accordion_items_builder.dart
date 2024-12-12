@@ -59,11 +59,13 @@ class AssetsAccordions
         AccordionItem<List<String>>(
           title: item.title,
           data: data,
+          localisationError: item.titleError,
         ),
       ];
     }
 
     return AccordionItem<List<String>>(
+      localisationError: item.titleError,
       title: item.title,
       data: data,
       children: children,

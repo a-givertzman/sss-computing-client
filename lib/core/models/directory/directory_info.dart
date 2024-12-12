@@ -27,12 +27,19 @@ class AssetsDirectoryInfo implements DirectoryInfo {
   final List<String> assets;
   @override
   final List<AssetsDirectoryInfo> subs;
+
+  /// A combination of The first line of the file as the title and the localised part.
+  /// - It is localized
   final String title;
+
+  /// `true` if the file does not have a title.
+  final bool titleError;
 
   AssetsDirectoryInfo(
     this.name,
     this.path, {
     this.title = '',
+    this.titleError = false,
     List<String>? assets,
     List<AssetsDirectoryInfo>? subs,
   })  : assets = assets ?? [],
@@ -79,6 +86,7 @@ class AssetsDirectoryInfo implements DirectoryInfo {
     String? name,
     String? path,
     String? title,
+    bool? titleError,
     List<String>? assets,
     List<AssetsDirectoryInfo>? subs,
   }) {
@@ -88,6 +96,7 @@ class AssetsDirectoryInfo implements DirectoryInfo {
       title: title ?? this.title,
       assets: assets ?? List.from(this.assets),
       subs: subs ?? List.from(this.subs),
+      titleError: titleError ?? this.titleError,
     );
   }
 
