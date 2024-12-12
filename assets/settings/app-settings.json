@@ -9,6 +9,7 @@
     "strokeWidth": 2.0,
     "formFieldWidth": 425.0,
     "actionButtonHeight": 32.0,
+    "iconSizeMedium": 20.0,
     "animationDuration": 500,
     "errorMessageDisplayDuration": 5000,
     "colorLabelBorderRadius": 4.0,
@@ -44,5 +45,8 @@
     "bendingMomentsLimitLow_MN*m": -350.0,
     "bendingMomentsLimitHigh_MN*m": 350.0,
     "bendingMomentsInterval_MN*m": 50.0,
-    "diagramBarColor": "#B2FF5B"
+    "diagramBarColor": "#B2FF5B",
+    "reportNameDefaultPrefix": "boardtrix_report",
+    "reportExtension": "pdf",
+    "backendResponseTimeout_ms": 15000
 }
