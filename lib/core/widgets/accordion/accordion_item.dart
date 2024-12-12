@@ -2,23 +2,28 @@
 final class AccordionItem<T> {
   /// Item title
   final String title;
+  //
   bool _isOpen;
-
+  //
   /// Item data
   final T? data;
 
   /// Item children, sub-items of the current item
   final List<AccordionItem<T>> children;
 
+  /// - `True` if the `title` was not correctly localised.
+  /// - `False` if the `title` was correctly localised.
+  final bool localisationError;
+
   AccordionItem({
     required this.title,
     this.data,
     bool isOpen = false,
+    this.localisationError = false,
     this.children = const [],
   }) : _isOpen = isOpen;
 
   bool get isOpen {
-    //
     return _isOpen;
   }
 
