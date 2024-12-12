@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-
 ///
 /// Button to start asynchronous action.
 class AsyncActionButton extends StatefulWidget {
@@ -11,7 +10,6 @@ class AsyncActionButton extends StatefulWidget {
   final IconData? _icon;
   final double _labelLineHeight;
   final Future<void> Function()? _onPressed;
-
   ///
   /// Creates button to start asynchronous action.
   ///
@@ -37,7 +35,6 @@ class AsyncActionButton extends StatefulWidget {
   @override
   State<AsyncActionButton> createState() => _AsyncActionButtonState();
 }
-
 ///
 class _AsyncActionButtonState extends State<AsyncActionButton> {
   late bool _isInProgress;
@@ -46,12 +43,10 @@ class _AsyncActionButtonState extends State<AsyncActionButton> {
     _isInProgress = false;
     super.initState();
   }
-
   //
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     final iconSize = const Setting('iconSizeMedium').toDouble;
     return SizedBox(
       height: widget._height,
@@ -72,7 +67,7 @@ class _AsyncActionButtonState extends State<AsyncActionButton> {
         ),
         style: ButtonStyle(
           textStyle: WidgetStateProperty.resolveWith<TextStyle?>(
-            (states) => theme.textTheme.titleLarge?.copyWith(
+            (states) => theme.textTheme.titleMedium?.copyWith(
               color: theme.colorScheme.onPrimary,
               height: widget._labelLineHeight,
             ),
@@ -81,7 +76,6 @@ class _AsyncActionButtonState extends State<AsyncActionButton> {
       ),
     );
   }
-
   //
   void Function()? _getOnPressed() =>
       (widget._onPressed != null && !_isInProgress)

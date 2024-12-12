@@ -4,16 +4,13 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/projects/pg_projects.dart';
 import 'package:sss_computing_client/core/models/projects/projects.dart';
-import 'package:sss_computing_client/core/widgets/file_picking_widget.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/info/widgets/projects/projects_widget.dart';
-
 ///
 /// Widget that displays projects and allows to manage them.
 class ProjectsBody extends StatefulWidget {
   final Stream<DsDataPoint<bool>> _appRefreshStream;
   final void Function() _fireRefreshEvent;
-
   ///
   /// Creates widget that displays projects and allows to manage them.
   ///
@@ -28,7 +25,6 @@ class ProjectsBody extends StatefulWidget {
   @override
   State<ProjectsBody> createState() => _ProjectsBodyState();
 }
-
 ///
 class _ProjectsBodyState extends State<ProjectsBody> {
   late final Projects _projectsCollection;
@@ -45,7 +41,6 @@ class _ProjectsBodyState extends State<ProjectsBody> {
     );
     super.initState();
   }
-
   //
   @override
   Widget build(BuildContext context) {
@@ -73,14 +68,6 @@ class _ProjectsBodyState extends State<ProjectsBody> {
                   projectsCollection: _projectsCollection,
                   onProjectLoaded: widget._fireRefreshEvent,
                 ),
-              ),
-            ),
-            Expanded(
-              child: DirectoryPickingWidget(
-                title: const Localized('Report').v,
-                selectionButtonLabel: const Localized('Select directory').v,
-                proceedButtonLabel: const Localized('Generate report').v,
-                proceedPicked: (path) => print(path),
               ),
             ),
           ],
