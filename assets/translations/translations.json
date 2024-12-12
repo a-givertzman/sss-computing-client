@@ -448,5 +448,16 @@
   "Replace": ["Replace", "Заменить"],
   "deleting error": ["Deleting error", "Ошибка удаления"],
   "loading error": ["Loading error", "Ошибка загрузки"],
-  "saving error": ["Saving error", "Ошибка сохранения"]
+  "saving error": ["Saving error", "Ошибка сохранения"],
+  "Enter report details": ["Enter report details", "Введите детали отчета"],
+  "Report save path": ["Save path", "Путь сохранения"],
+  "Choose directory to save report": ["Choose directory", "Выберите директорию"],
+  "Failed to pick path": ["Failed to pick path", "Не удалось выбрать путь"],
+  "Report file name": ["File name", "Имя файла"],
+  "Choose directory": ["Choose", "Выбрать"],
+  "Clear directory": ["Clear", "Очистить"],
+  "Invalid characters found. Available for use: A-Z, a-z, А-Я, а-я, 0-9, ), (, _, -": [
+    "Invalid characters found. Available for use: A-Z, a-z, А-Я, а-я, 0-9, ), (, _, -",
+    "Найдены недопустимые символы. Доступны для использования: А-Z, a-z, А-Я, а-я, 0-9, ), (, _, -"
+  ]
 }

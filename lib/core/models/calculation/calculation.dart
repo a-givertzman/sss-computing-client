@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_app_settings.dart';
 ///
 /// Model for running calculations on backend and processing results.
 class Calculation {
@@ -26,10 +27,13 @@ class Calculation {
   ///
   /// Starts calculation and returns its result.
   Future<Result<void, Failure<String>>> fetch() {
+    final timeout = Duration(
+      milliseconds: const Setting('backendResponseTimeout_ms').toInt,
+    );
     return ApiRequest(
       authToken: _authToken,
       address: _apiAddress,
-      timeout: const Duration(seconds: 15),
+      timeout: timeout,
       query: ExecutableQuery(
         script: _scriptName,
         params: _scriptParams,
