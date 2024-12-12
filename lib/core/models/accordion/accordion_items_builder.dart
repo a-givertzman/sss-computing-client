@@ -17,6 +17,9 @@ abstract interface class AccordionItems<T, A> {
   AccordionItem<A> createFrom(T item, {int parents = 0});
 }
 
+/// Typedef for a list of [AccordionItem] with [List<String>]
+typedef AssetsAccordionsList = List<AccordionItem<List<String>>>;
+
 /// Creates [AccordionItem]s from [AssetsDirectoryInfo]s
 class AssetsAccordions
     implements AccordionItems<AssetsDirectoryInfo, List<String>> {
@@ -30,7 +33,6 @@ class AssetsAccordions
 
   @override
   List<AccordionItem<List<String>>> build() {
-
     return items.map(createFrom).toList();
   }
 
@@ -42,25 +44,27 @@ class AssetsAccordions
   }) {
     final includeChildren = parents < deep;
     data ??= item.allAssets;
+
     var children = switch (includeChildren) {
       false => <AccordionItem<List<String>>>[],
       true => item.subs
-          .map((e) => createFrom(e, parents: parents + 1, data: data))
+          .map(
+            (e) => createFrom(e, parents: parents + 1, data: data),
+          )
           .toList(),
     };
 
     if (children.isEmpty && parents == 0) {
       children = [
-        // ...children,
         AccordionItem<List<String>>(
-          title: item.name,
+          title: item.title,
           data: data,
         ),
       ];
     }
 
     return AccordionItem<List<String>>(
-      title: item.name,
+      title: item.title,
       data: data,
       children: children,
     );

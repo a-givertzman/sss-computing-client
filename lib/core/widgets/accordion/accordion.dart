@@ -18,11 +18,13 @@ class AccordionWidget<T> extends StatefulWidget {
   @override
   State<AccordionWidget<T>> createState() => _AccordionWidgetState<T>();
 }
+
 class _AccordionWidgetState<T> extends State<AccordionWidget<T>> {
   @override
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -44,6 +46,7 @@ class _AccordionWidgetState<T> extends State<AccordionWidget<T>> {
     );
   }
 }
+
 /// Builds an Accordion [item] widget and its children.
 /// And handles all edge cases.
 class _BuildItem<T> extends StatelessWidget {
@@ -54,15 +57,20 @@ class _BuildItem<T> extends StatelessWidget {
     required this.selected,
     required this.onOpened,
   });
+
   /// The item to build
   final AccordionItem<T> item;
+
   /// The currently selected item
   final AccordionItem? selected;
+
   /// The number of [parents]. Used to determine if the item is a parent
   /// or a child.
   final int parents;
+
   /// Called when an item is selected
   final ValueChanged<AccordionItem<T>> onSelected;
+
   /// Called when an item is opened
   final ValueChanged<AccordionItem<T>> onOpened;
   @override
@@ -116,6 +124,7 @@ class _BuildItem<T> extends StatelessWidget {
       ],
     );
   }
+
   Widget? _buildLeading({required bool isParent, double? padding}) {
     return switch (isParent) {
       true => null,
@@ -139,6 +148,7 @@ class _BuildItem<T> extends StatelessWidget {
         )
     };
   }
+
   Widget? _buildTrailing(bool isParent) {
     return switch (!isParent || !item.hasChildren) {
       true => null,

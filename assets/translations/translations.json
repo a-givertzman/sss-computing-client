@@ -1010,7 +1010,7 @@
   ],
   "part01_overview": [
     "Part 01. Overview",
-    "Часть 01. Обзор"
+    "Часть 01. Общие сведения"
   ],
   "part02_operatingProcedure": [
     "Part 02. Operating procedure",
@@ -1297,5 +1297,17 @@
   "draught": [
     "Draught",
     "Осадка"
+  ],
+  "chapter": [
+    "Chapter",
+    "Глава"
+  ],
+  "section": [
+    "Section",
+    "Глава"
+  ],
+  "part": [
+    "Part",
+    "Часть"
   ]
 }

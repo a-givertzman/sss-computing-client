@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:sss_computing_client/core/models/accordion/accordion_items_builder.dart';
 import 'package:sss_computing_client/core/models/accordion/accordion_model.dart';
-import 'package:sss_computing_client/core/models/directory/dir_merger.dart';
-import 'package:sss_computing_client/core/models/directory/directory_grouper.dart';
+import 'package:sss_computing_client/core/models/directory/directory_file.dart';
+import 'package:sss_computing_client/core/models/directory/directory_info.dart';
 import 'package:sss_computing_client/core/models/docs_manifest/doc_manifest.dart';
 import 'package:sss_computing_client/core/widgets/accordion/accordion.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
@@ -26,7 +26,9 @@ class MarkdownViewerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilderWidget(
-        onFuture: MarkdownManifest(relativePath).loadAssets,
+        onFuture: LoadMarkdownInfo(
+          MarkdownManifest(relativePath).loadAssets(),
+        ).load,
         caseData: (_, assets, __) {
           return _BodyWidget(
             assets,
@@ -42,7 +44,7 @@ class _BodyWidget extends StatefulWidget {
   const _BodyWidget(this.assets, {this.currentAsset});
 
   /// List of assets paths
-  final List<String> assets;
+  final List<AssetsDirectoryInfo> assets;
 
   /// Current asset
   final String? currentAsset;
@@ -55,12 +57,10 @@ class _BodyWidgetState extends State<_BodyWidget> {
   late MarkdownAccordionModel _markdownAccordion;
   @override
   void initState() {
-    final grouped = AssestDirectoryInfoGrouper(widget.assets).grouped();
     final items = AssetsAccordions(
-      AssetsDirectoryInfoMerger(grouped).merge(),
+      widget.assets,
       deep: 2,
     ).build();
-
     _markdownAccordion = MarkdownAccordionModel(items)
       ..initialiseCurrentItem(
         currentAsset: widget.currentAsset,

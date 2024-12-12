@@ -27,10 +27,12 @@ class AssetsDirectoryInfo implements DirectoryInfo {
   final List<String> assets;
   @override
   final List<AssetsDirectoryInfo> subs;
+  final String title;
 
   AssetsDirectoryInfo(
     this.name,
     this.path, {
+    this.title = '',
     List<String>? assets,
     List<AssetsDirectoryInfo>? subs,
   })  : assets = assets ?? [],
@@ -69,6 +71,24 @@ class AssetsDirectoryInfo implements DirectoryInfo {
       return true;
     }
     return false;
+  }
+
+  /// Creates a copy of this directory with the given changes.
+  /// - A new instance is returned.
+  AssetsDirectoryInfo copyWith({
+    String? name,
+    String? path,
+    String? title,
+    List<String>? assets,
+    List<AssetsDirectoryInfo>? subs,
+  }) {
+    return AssetsDirectoryInfo(
+      name ?? this.name,
+      path ?? this.path,
+      title: title ?? this.title,
+      assets: assets ?? List.from(this.assets),
+      subs: subs ?? List.from(this.subs),
+    );
   }
 
   @override
