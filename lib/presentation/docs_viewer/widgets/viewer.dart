@@ -11,22 +11,23 @@ import 'package:sss_computing_client/presentation/docs_viewer/customisation/cust
 import 'package:sss_computing_client/presentation/docs_viewer/customisation/custom_node.dart';
 import 'package:sss_computing_client/presentation/docs_viewer/customisation/latex/latex_node.dart';
 import 'package:sss_computing_client/presentation/docs_viewer/customisation/latex/latex_syntax.dart';
-
+///
 /// Viewer widget for markdown docs
 class ViewerWidget extends StatefulWidget {
   const ViewerWidget({super.key, required this.paths});
+  /// Paths to markdown files.
   final List<String> paths;
-
+  ///
   @override
   State<ViewerWidget> createState() => _ViewerWidgetState();
 }
-
+///
 class _ViewerWidgetState extends State<ViewerWidget> {
   @override
   void initState() {
     super.initState();
   }
-
+  ///
   @override
   Widget build(BuildContext context) {
     return StreamBuilderWidget<String>(
@@ -37,11 +38,12 @@ class _ViewerWidgetState extends State<ViewerWidget> {
     );
   }
 }
-
+///
 class _BuildBody extends StatefulWidget {
   const _BuildBody({required this.data});
+  /// Markdown data.
   final String data;
-
+  ///
   @override
   State<_BuildBody> createState() => __BuildBodyState();
 }
@@ -51,16 +53,15 @@ class __BuildBodyState extends State<_BuildBody> {
   @override
   void initState() {
     _tocController = TocController();
-
     super.initState();
   }
-
+  ///
   @override
   void dispose() {
     _tocController.dispose();
     super.dispose();
   }
-
+  ///
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

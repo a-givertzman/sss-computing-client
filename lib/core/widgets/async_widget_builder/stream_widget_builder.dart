@@ -4,7 +4,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/widgets/async_widget_builder/async_snapshot_state.dart';
 
 import 'package:sss_computing_client/core/widgets/error_message_widget.dart';
-
+/// A contract for widgets that display data from a stream.
 abstract class AsyncBuilderWidget<T> extends StatefulWidget {
   const AsyncBuilderWidget({
     super.key,
@@ -15,14 +15,19 @@ abstract class AsyncBuilderWidget<T> extends StatefulWidget {
     this.validateData,
     this.refreshStream,
   });
+  /// The widget to display while the stream is loading.
   final Widget Function(BuildContext)? caseLoading;
+  /// The widget to display if the stream contains data.
   final Widget Function(BuildContext, T, Retry? retry) caseData;
-
+  /// The widget to display if the stream contains an error.
   final Widget Function(BuildContext, Object, {Retry? retry})? caseError;
+  /// The widget to display if the stream is empty.
   final Widget Function(BuildContext, {Retry? retry})? caseNothing;
+  /// A function to validate data received from the stream.
   final bool Function(T)? validateData;
+  /// Refresh stream
   final Stream<DsDataPoint<bool>>? refreshStream;
-
+  ///
   Widget builder(
     BuildContext context,
     AsyncSnapshot<ResultF<T>> snapshot, {
@@ -53,13 +58,14 @@ abstract class AsyncBuilderWidget<T> extends StatefulWidget {
     };
   }
 }
-
+/// A widget that displays data from a stream.
 class StreamBuilderWidget<T> extends AsyncBuilderWidget<T> {
   const StreamBuilderWidget({
     super.key,
     required this.stream,
     required super.caseData,
   });
+  /// The stream to listen to.
   final Stream<ResultF<T>> stream;
   @override
   State<StreamBuilderWidget<T>> createState() => _StreamBuilderWidgetState();
@@ -77,7 +83,6 @@ class _StreamBuilderWidgetState<T> extends State<StreamBuilderWidget<T>> {
     );
   }
 }
-
 ///
 /// Default indicator builder for [FutureBuilderWidget] loading state
 Widget _defaultCaseLoading(BuildContext _) => const Center(

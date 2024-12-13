@@ -5,7 +5,6 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/widgets/activate_on_tap_builder_widget.dart';
 import 'package:sss_computing_client/core/widgets/prefixed_widget/prefixed_widget.dart';
-
 ///
 /// Field that can be edited after activation by tap
 class EditOnTapField extends StatefulWidget {
@@ -20,7 +19,6 @@ class EditOnTapField extends StatefulWidget {
   final int maxLines;
   final String? _label;
   final String? _hintText;
-
   ///
   /// Creates [EditOnTapField] that can be edited
   /// after activation by tap
@@ -47,12 +45,10 @@ class EditOnTapField extends StatefulWidget {
         _initialValue = initialValue,
         _label = label,
         _hintText = hintText;
-
   ///
   @override
   State<EditOnTapField> createState() => _EditOnTapFieldState();
 }
-
 ///
 class _EditOnTapFieldState extends State<EditOnTapField> {
   TextEditingController? _controller;
@@ -68,14 +64,12 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
     _isInProcess = false;
     super.initState();
   }
-
   //
   @override
   void dispose() {
     _handleEditingEnd();
     super.dispose();
   }
-
   //
   void _handleEditingStart() {
     _controller = TextEditingController(text: _initialValue);
@@ -86,8 +80,7 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
     _focusNode = FocusNode();
     _focusNode?.requestFocus();
   }
-
-  ///
+  //
   void _handleEditingEnd() {
     _controller?.dispose();
     _controller = null;
@@ -96,7 +89,6 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
     _validationError = null;
     _error = null;
   }
-
   ///
   Future<ResultF<void>> _handleValueSave(String value) async {
     if (_validationError != null) {
@@ -130,7 +122,6 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
         return Err(error);
     }
   }
-
   ///
   void _handleValueChange(String value) {
     if (_error != null) {
@@ -145,7 +136,6 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
       });
     }
   }
-
   ///
   @override
   Widget build(BuildContext context) {
@@ -198,7 +188,6 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
             )),
     );
   }
-
   //
   List<Widget> _buildActions(double iconSize, void Function() deactivate) {
     if (_isInProcess) {
@@ -216,7 +205,6 @@ class _EditOnTapFieldState extends State<EditOnTapField> {
       if (!_isInProcess && _error != null) _buildErrorIndicator(iconSize),
     ];
   }
-
   //
   Widget _buildSaveButton(double iconSize, void Function() deactivate) =>
       SizedBox(

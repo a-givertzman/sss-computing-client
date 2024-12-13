@@ -1,21 +1,17 @@
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:sss_computing_client/presentation/docs_viewer/customisation/svg_support.dart';
-
-/// Custom node to support [SVG]s and images
 ///
+/// Custom node to support [SVG]s and images
 /// Supports both local and remote [SVG]s
 class CustomImgNode {
   /// Attributes of the node like [src], [alt]
   final Map<String, String> attributes;
-
   /// [MarkdownConfig]
   final MarkdownConfig config;
-
   /// [WidgetVisitor]
   final WidgetVisitor visitor;
-
   CustomImgNode(this.attributes, this.config, this.visitor);
-
+  ///
   SpanNode build() {
     final url = attributes['src'] ?? '';
     final attr = switch (url.startsWith('http')) {

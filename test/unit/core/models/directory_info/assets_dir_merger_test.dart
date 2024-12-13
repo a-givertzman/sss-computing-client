@@ -3,11 +3,12 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/models/directory/dir_merger.dart';
 import 'package:sss_computing_client/core/models/directory/directory_grouper.dart';
 import 'package:sss_computing_client/core/models/directory/directory_info.dart';
-
+///
 void main() {
+  ///
   TestWidgetsFlutterBinding.ensureInitialized();
   Log.initialize(level: LogLevel.debug);
-
+  ///
   group('Assets Directory merger tests', () {
     late List<AssetsDirectoryInfo> dirs;
     setUp(() {

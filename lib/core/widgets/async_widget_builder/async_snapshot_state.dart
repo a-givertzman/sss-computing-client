@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-
 ///
 /// Function called to request data again. Returns Future with value [Ok]
 /// if the data was received successfully, and Future with the value [Failure]
 /// otherwise (e.g.,if future completed with error or was aborted).
 typedef Retry = Future<ResultF<void>> Function();
-
+///
 /// State of [AsyncSnapshot] for [AsyncBuilderWidget]
 sealed class AsyncSnapshotState<T> {
   factory AsyncSnapshotState.fromSnapshot(
@@ -48,24 +47,26 @@ sealed class AsyncSnapshotState<T> {
     };
   }
 }
-
 ///
+/// Loading state for [AsyncBuilderWidget]
+/// - when [AsyncSnapshot.connectionState] is [ConnectionState.waiting]
 final class AsyncLoadingState implements AsyncSnapshotState<Never> {
   const AsyncLoadingState();
 }
-
-///
+/// Nothing state for [AsyncBuilderWidget]
 final class AsyncNothingState implements AsyncSnapshotState<Never> {
   const AsyncNothingState();
 }
-
-///
+/// Data state for [AsyncBuilderWidget]
+/// - when [AsyncSnapshot.connectionState] is [ConnectionState.done]
+/// - and [AsyncSnapshot.hasData] is true.
 final class AsyncDataState<T> implements AsyncSnapshotState<T> {
   final T data;
   const AsyncDataState(this.data);
 }
-
-///
+/// Error state for [AsyncBuilderWidget]
+/// - when [AsyncSnapshot.connectionState] is [ConnectionState.done]
+/// - and [AsyncSnapshot.hasData] is false
 final class AsyncErrorState implements AsyncSnapshotState<Never> {
   final Failure error;
   const AsyncErrorState(this.error);

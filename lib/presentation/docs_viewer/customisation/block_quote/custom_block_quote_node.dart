@@ -8,12 +8,12 @@ import 'package:sss_computing_client/presentation/docs_viewer/customisation/bloc
 /// A block quote marker, optionally preceded by up to three spaces of indentation
 /// The custome blockquote node supports Alerts
 class CustomBlockquoteNode extends ElementNode {
-  final BlockquoteConfig config;
-  final WidgetVisitor visitor;
+  final BlockquoteConfig _config;
+  final WidgetVisitor _visitor;
+  /// The alert
   final BlockQuoteAlert alert;
-
-  CustomBlockquoteNode(this.config, this.visitor, {required this.alert});
-
+  CustomBlockquoteNode(this._config, this._visitor, {required this.alert});
+  //
   @override
   TextSpan get childrenSpan {
     return TextSpan(
@@ -34,7 +34,7 @@ class CustomBlockquoteNode extends ElementNode {
       }).toList(),
     );
   }
-
+  //
   @override
   InlineSpan build() {
     return WidgetSpan(
@@ -44,27 +44,27 @@ class CustomBlockquoteNode extends ElementNode {
           border: Border(
             left: BorderSide(
               color: alert.color,
-              width: config.sideWith,
+              width: _config.sideWith,
             ),
           ),
         ),
-        padding: config.padding,
-        margin: config.margin,
+        padding: _config.padding,
+        margin: _config.margin,
         child: ProxyRichText(
           childrenSpan,
-          richTextBuilder: visitor.richTextBuilder,
+          richTextBuilder: _visitor.richTextBuilder,
         ),
       ),
     );
   }
-
+  //
   @override
-  TextStyle? get style => TextStyle(color: config.textColor).merge(parentStyle);
-
+  TextStyle? get style => TextStyle(color: _config.textColor).merge(parentStyle);
+  //
   WidgetSpan _buildIcon() {
     return WidgetSpan(
       child: Padding(
-        padding: EdgeInsets.only(bottom: config.padding.left),
+        padding: EdgeInsets.only(bottom: _config.padding.left),
         child: Row(
           children: [
             Icon(

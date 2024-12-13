@@ -2,21 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 
 import 'package:markdown_widget/markdown_widget.dart';
-
+///
 /// A customised [SpanNode] for LaTex.
 /// uses [Math.tex] to generate the [SpanNode]
 class LatexNode extends SpanNode {
   /// the attributes of the [LatexNode]
   final Map<String, String> attributes;
-
   /// the text content.
   final String textContent;
-
   /// The style and other configs of the markdown.
   final MarkdownConfig config;
-
   LatexNode(this.attributes, this.textContent, this.config);
-
+  ///
   @override
   InlineSpan build() {
     final content = attributes['content'] ?? '';
@@ -30,7 +27,6 @@ class LatexNode extends SpanNode {
       // textStyle: TextStyle(),
       // textStyle: style.copyWith(color: isDark ? Colors.white : Colors.black),
       textScaleFactor: 1,
-
       onErrorFallback: (error) {
         return Text(
           textContent,
@@ -38,7 +34,6 @@ class LatexNode extends SpanNode {
         );
       },
     );
-
     return WidgetSpan(
       alignment: PlaceholderAlignment.middle,
       child: !isInline

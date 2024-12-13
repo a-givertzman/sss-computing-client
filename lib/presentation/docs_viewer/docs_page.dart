@@ -8,13 +8,11 @@ import 'package:sss_computing_client/core/models/docs_manifest/doc_manifest.dart
 import 'package:sss_computing_client/core/widgets/accordion/accordion.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
 import 'package:sss_computing_client/presentation/docs_viewer/widgets/viewer.dart';
-
 ///
 /// The page to render local [Mockdown] docs using [mardown_widget] library.
 class MarkdownViewerPage extends StatelessWidget {
   /// Relative asset path to load
   final String relativePath;
-
   /// Current asset path
   final String? currentPath;
   const MarkdownViewerPage({
@@ -39,20 +37,18 @@ class MarkdownViewerPage extends StatelessWidget {
     );
   }
 }
-
+///
 class _BodyWidget extends StatefulWidget {
   const _BodyWidget(this.assets, {this.currentAsset});
-
   /// List of assets paths
   final List<AssetsDirectoryInfo> assets;
-
   /// Current asset
   final String? currentAsset;
-
+  ///
   @override
   State<_BodyWidget> createState() => _BodyWidgetState();
 }
-
+///
 class _BodyWidgetState extends State<_BodyWidget> {
   late MarkdownAccordionModel _markdownAccordion;
   @override
@@ -67,7 +63,7 @@ class _BodyWidgetState extends State<_BodyWidget> {
       );
     super.initState();
   }
-
+  ///
   @override
   Widget build(BuildContext context) {
     final padding = const Setting('padding').toDouble;

@@ -1,7 +1,7 @@
 import 'package:sss_computing_client/core/models/directory/directory_info.dart';
 
 import '../widgets/accordion/accordion_item.dart';
-
+///
 /// List extensions
 extension ListExt<T> on List<T> {
   /// Returns the first element that matches the given [test]

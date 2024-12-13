@@ -5,22 +5,18 @@ import 'package:sss_computing_client/core/models/calculation/calculation_status.
 import 'package:sss_computing_client/presentation/core/theme/app_theme_switch.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
 import 'package:window_manager/window_manager.dart';
-
 ///
 class AppWidget extends StatefulWidget {
   final AppThemeSwitch _themeSwitch;
-
   ///
   const AppWidget({
     super.key,
     required AppThemeSwitch themeSwitch,
   }) : _themeSwitch = themeSwitch;
-
   ///
   @override
   State<AppWidget> createState() => _AppWidgetState(themeSwitch: _themeSwitch);
 }
-
 ///
 class _AppWidgetState extends State<AppWidget> {
   final AppThemeSwitch _themeSwitch;
@@ -52,7 +48,6 @@ class _AppWidgetState extends State<AppWidget> {
     );
     super.initState();
   }
-
   //
   @override
   void dispose() {
@@ -60,7 +55,6 @@ class _AppWidgetState extends State<AppWidget> {
     // _appRefreshController.close();
     super.dispose();
   }
-
   //
   @override
   Widget build(BuildContext context) {
@@ -73,7 +67,6 @@ class _AppWidgetState extends State<AppWidget> {
       ),
     );
   }
-
   ///
   void _themeSwitchListener() {
     if (mounted) {

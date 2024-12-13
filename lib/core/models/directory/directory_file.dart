@@ -6,7 +6,7 @@ import 'package:sss_computing_client/core/models/directory/overview_asset.dart';
 
 import 'directory_grouper.dart';
 import 'directory_info.dart';
-
+///
 /// A contract for loading a directory info
 abstract class LoadDirectoryInfo {
   /// Load a directory info
@@ -16,14 +16,13 @@ abstract class LoadDirectoryInfo {
   /// - loaded titles
   Future<ResultF<List<DirectoryInfo>>> load();
 }
-
+///
 /// Load markdown directory and return a list of [DirectoryInfo] with:
 /// - grouped directories
 /// - merged directories
 /// - localised titles
 final class LoadMarkdownInfo implements LoadDirectoryInfo {
   final Future<ResultF<List<String>>> _assets;
-
   LoadMarkdownInfo(this._assets);
   @override
   Future<ResultF<List<AssetsDirectoryInfo>>> load() async {
@@ -37,19 +36,16 @@ final class LoadMarkdownInfo implements LoadDirectoryInfo {
         return const Ok([]);
     }
   }
-
   Future<List<AssetsDirectoryInfo>> _loadTitles(
     List<AssetsDirectoryInfo> items,
   ) async {
     return await Future.wait(items.map(_loadTitle));
   }
-
   Future<AssetsDirectoryInfo> _loadTitle(AssetsDirectoryInfo info) async {
     final overviewPath = MarkdownOverviewAsset(
       directoryName: info.name,
       assets: info.allAssets,
     ).findPath();
-
     final title = switch (overviewPath.isEmpty) {
       false => await MarkdownDirectoryTitle().loadTitle(overviewPath),
       _ => info.name
@@ -58,7 +54,6 @@ final class LoadMarkdownInfo implements LoadDirectoryInfo {
       dirName: info.name,
       title: CleanMarkdownTitle(title).clean(),
     ).tr;
-
     return info.copyWith(
       titleError: title == info.name,
       title: localisedTitle,
@@ -66,16 +61,16 @@ final class LoadMarkdownInfo implements LoadDirectoryInfo {
     );
   }
 }
-
+///
 /// Clean the markdown overview.
 /// - removes special characters from the overview.
 /// - removes empty lines from the overview.
 /// - returns the cleaned overview.
 final class CleanMarkdownTitle {
   final String _title;
-
   CleanMarkdownTitle(this._title);
-
+  /// Clean the markdown overview.
+  /// - removes special characters from the overview.
   String clean() {
     //final headerPattern = RegExp(r'^\#+\s*(.*)');
     //final pattern = RegExp(r'\#+');

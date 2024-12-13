@@ -2,13 +2,13 @@ import 'package:sss_computing_client/core/extensions/lists.dart';
 import 'package:sss_computing_client/core/models/directory/dir_merger.dart';
 
 import 'package:sss_computing_client/core/models/directory/directory_info.dart';
-
+///
 /// Directory grouper
 abstract interface class DirectoryGrouper {
   /// Group paths into directories and subdirectories.
   List<DirectoryInfo> grouped();
 }
-
+///
 /// Groups assets directories
 final class AssestDirectoryInfoGrouper implements DirectoryGrouper {
   final List<String> _paths;
@@ -17,24 +17,21 @@ final class AssestDirectoryInfoGrouper implements DirectoryGrouper {
     this._paths, {
     String parentPath = 'assets/docs/user-guide/ru',
   }) : _parentPath = parentPath;
-
+  //
   @override
   List<AssetsDirectoryInfo> grouped() {
     return AssetsDirectoryInfoMerger(
       _paths.map(_group).reduce((e, a) => [...e, ...a]),
     ).merge();
   }
-
   List<AssetsDirectoryInfo> _group(String path) {
     final List<AssetsDirectoryInfo> directories = [];
     for (var path in _paths) {
       final directory = _createDirectory(path, _parentPath);
       _addDirectoryRecursively(directory, directories);
     }
-
     return directories;
   }
-
   AssetsDirectoryInfo _createDirectory(String path, String parentPath) {
     List<String> pathComponents =
         path.replaceFirst('$parentPath/', '').split('/');
@@ -42,7 +39,6 @@ final class AssestDirectoryInfoGrouper implements DirectoryGrouper {
     final directoryName = (pathComponents.isEmpty ? path : pathComponents.first)
         .replaceAll(RegExp(r'\.[^.]+$'), '');
     final directoryPath = '$parentPath/$directoryName';
-
     final assets = <String>[];
     final subs = <AssetsDirectoryInfo>[];
     if (subDirectories.isNotEmpty) {
@@ -51,7 +47,6 @@ final class AssestDirectoryInfoGrouper implements DirectoryGrouper {
     } else {
       assets.add(path);
     }
-
     return AssetsDirectoryInfo(
       directoryName,
       directoryPath,
@@ -59,7 +54,6 @@ final class AssestDirectoryInfoGrouper implements DirectoryGrouper {
       subs: subs,
     );
   }
-
   /// Add directory down the tree recursively
   ///Recursively add directories and assets to maintain the correct structure
   _addDirectoryRecursively(

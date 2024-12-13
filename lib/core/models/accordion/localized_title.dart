@@ -1,29 +1,31 @@
 import 'package:hmi_core/hmi_core.dart';
 
+/// A contract for localising the localised part title of the directory.
 abstract class LocalizedTitle {
-  /// The translated title
+  /// The translated title.
   String get tr;
 }
 
+/// a class that returns the localised title for the accordion.
 final class AccordionLocalizedTitle implements LocalizedTitle {
   final String title;
   AccordionLocalizedTitle(this.title);
-
+  //
   @override
   String get tr => throw UnimplementedError();
 }
 
 /// Localises the camel case directory name
 final class DocsLocalizedTitle implements LocalizedTitle {
+  DocsLocalizedTitle({required this.dirName, required this.title});
   /// the camel case directory name
   final String dirName;
-
   /// the title of the document
   final String title;
-  DocsLocalizedTitle({required this.dirName, required this.title});
+  //
   @override
   String get tr => _localizeDirName();
-
+  //
   String _localizeDirName() {
     return dirName.replaceAllMapped(
       RegExp(r'([a-zA-Z]+)(\d+)(_?[a-zA-Z]+)'),
@@ -32,7 +34,6 @@ final class DocsLocalizedTitle implements LocalizedTitle {
         final digits = m[2] ?? '';
         //final title = m[3] ?? '';
         final formattedDigits = digits.isNotEmpty ? ' $digits. ' : ' ';
-
         return '${Localized(leading).v}$formattedDigits$title';
       },
     );

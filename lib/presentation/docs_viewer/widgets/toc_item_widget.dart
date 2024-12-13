@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-
+///
 /// Table of contents item widget
 class TocItemWidget extends StatefulWidget {
   const TocItemWidget({
@@ -11,25 +11,27 @@ class TocItemWidget extends StatefulWidget {
     required this.currentToc,
     required this.onSelected,
   });
-
   /// Table of contents item data
   final TocItemBuilderData data;
-
   /// TOC controller
   final TocController tocController;
-
   /// Currently selected TOC
   final Toc currentToc;
-
   /// Callback when TOC item is selected
   final ValueChanged<Toc> onSelected;
-
   @override
   State<TocItemWidget> createState() => _TocItemWidgetState();
 }
 
+///
 class _TocItemWidgetState extends State<TocItemWidget> {
-  final AutoScrollController controller = AutoScrollController();
+  late final AutoScrollController _controller;
+  @override
+  void initState() {
+    _controller = AutoScrollController();
+    super.initState();
+  }
+  //
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
@@ -56,16 +58,15 @@ class _TocItemWidgetState extends State<TocItemWidget> {
           widget.tocController.jumpToIndex(widget.currentToc.widgetIndex);
         },
       );
-      return wrapByAutoScroll(widget.data.index, child, controller);
+      return wrapByAutoScroll(widget.data.index, child, _controller);
     });
   }
 }
-
-class _TocHeadingConfig extends HeadingConfig {
+///
+final class _TocHeadingConfig extends HeadingConfig {
   @override
   final TextStyle style;
   @override
   final String tag;
-
   _TocHeadingConfig(this.style, this.tag);
 }

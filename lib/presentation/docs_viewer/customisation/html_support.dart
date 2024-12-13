@@ -4,15 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:html/dom_parsing.dart';
 import 'package:markdown_widget/markdown_widget.dart';
-
+import 'package:sss_computing_client/presentation/docs_viewer/patterns/html_pattern.dart';
+///
 /// a helper class with HTML supports methods
-class HtmlSupport {
-  static final RegExp svgReg =
-      RegExp(r'<svg[^>]*>', multiLine: true, caseSensitive: true);
-
-  static final RegExp htmlRep =
-      RegExp(r'<[^>]*>', multiLine: true, caseSensitive: true);
-
+final class HtmlSupport {
   ///use [htmlToMarkdown] to convert HTML in [m.Text] to [m.Node]
   static htmlToMarkdown(h.Node? node, int deep, List<m.Node> mNodes) {
     if (node == null) return;
@@ -29,7 +24,6 @@ class HtmlSupport {
       mNodes.add(element);
     }
   }
-
   ///parse [m.Node] to [h.Node] for HTML manipulations
   static List<SpanNode> parseHtml(
     m.Text node, {
@@ -42,7 +36,7 @@ class HtmlSupport {
         visitor?.splitRegExp ?? WidgetVisitor.defaultSplitRegExp,
         '',
       );
-      if (!text.contains(htmlRep)) return [TextNode(text: node.text)];
+      if (!text.contains(HtmlPattern().pattern)) return [TextNode(text: node.text)];
       h.DocumentFragment document = parseFragment(text);
       return HtmlToSpanVisitor(visitor: visitor, parentStyle: parentStyle)
           .toVisit(document.nodes.toList());
@@ -52,24 +46,22 @@ class HtmlSupport {
     }
   }
 }
-
 ///
-class HtmlElement extends m.Element {
+/// a [m.Element] with text content
+final class HtmlElement extends m.Element {
   // final String textConten
   HtmlElement(super.tag, super.children, String textContent);
 }
-
+///
 /// a [TreeVisitor] that converts [h.Node] to [SpanNode]
 class HtmlToSpanVisitor extends TreeVisitor {
   final List<SpanNode> _spans = [];
   final List<SpanNode> _spansStack = [];
   final WidgetVisitor visitor;
   final TextStyle parentStyle;
-
   HtmlToSpanVisitor({WidgetVisitor? visitor, TextStyle? parentStyle})
       : visitor = visitor ?? WidgetVisitor(),
         parentStyle = parentStyle ?? const TextStyle();
-
   List<SpanNode> toVisit(List<h.Node> nodes) {
     _spans.clear();
     for (final node in nodes) {
