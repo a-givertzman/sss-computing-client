@@ -7,6 +7,7 @@ import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_widgets/hmi_widgets.dart';
 import 'package:sss_computing_client/core/extensions/strings.dart';
 import 'package:sss_computing_client/core/models/cargo/cargo.dart';
+import 'package:sss_computing_client/core/models/cargo/cargo_use_max_mfs_record.dart';
 import 'package:sss_computing_client/core/models/cargo/pg_all_cargos.dart';
 import 'package:sss_computing_client/core/models/frame/frames.dart';
 import 'package:sss_computing_client/core/models/figure/json_svg_path_projections.dart';
@@ -21,6 +22,7 @@ import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/c
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_name_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_tcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_type_column.dart';
+import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_use_max_mfs_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_vcg_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_volume_column.dart';
 import 'package:sss_computing_client/presentation/loading/widgets/cargo_column/cargo_weight_column.dart';
@@ -231,6 +233,19 @@ class _TanksConfiguratorState extends State<TanksConfigurator> {
                 ),
                 const CargoMFSXColumn(
                   useDefaultEditing: false,
+                ),
+                CargoUseMaxMfsColumn(
+                  theme: Theme.of(context),
+                  buildRecord: (cargo, toValue) => CargoUseMaxMfsRecord(
+                    apiAddress: ApiAddress(
+                      host: widget._apiAddress.host,
+                      port: widget._apiAddress.port,
+                    ),
+                    dbName: widget._dbName,
+                    authToken: widget._authToken,
+                    id: cargo.id,
+                    toValue: toValue,
+                  ),
                 ),
               ],
               rows: _cargos,

@@ -8,6 +8,7 @@ import 'package:sss_computing_client/core/models/draft/json_draft.dart';
 ///
 /// [Drafts] collection that stored in postgres DB.
 class PgDrafts implements Drafts {
+  static const _log = Log('PgDrafts | ');
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
@@ -34,23 +35,53 @@ class PgDrafts implements Drafts {
       authToken: _authToken ?? '',
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
-        sql: """
-            SELECT
-              dmr.project_id AS "projectId",
-              dmr.ship_id AS "shipId",
-              dmr.name AS "label",
-              dmr.value AS "value",
-              dmr.x AS "x",
-              dmr.y AS "y"
-            FROM draft_mark_result AS dmr
-            WHERE
-              dmr.ship_id = $shipId AND
-              dmr.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
-            ORDER BY dmr.id;
-            """,
+        sql: '''
+WITH draft_marks AS (
+  SELECT
+    dm.name AS "name",
+    dm.criterion_id AS "criterion_id",
+    dm.ship_id AS "ship_id",
+    dm.project_id AS "project_id",
+    avg(dm.x) AS "x",
+    avg(dm.y) AS "y"
+  FROM
+    draft_mark AS dm
+  GROUP BY
+    dm.criterion_id, dm.name, dm.ship_id, dm.project_id
+)
+SELECT
+  dm.ship_id AS "shipId",
+  dm.project_id AS "projectId",
+  dm.name AS "label",
+  dm.x AS "x",
+  dm.y AS "y",
+  pd.result AS "value"
+FROM
+  draft_marks AS dm
+LEFT JOIN
+  parameter_data AS pd ON
+  dm.ship_id = pd.ship_id AND
+  dm.project_id IS NOT DISTINCT FROM pd.project_id AND
+  dm.criterion_id = pd.parameter_id
+WHERE
+  dm.ship_id = $shipId AND
+  dm.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'} AND
+  dm.y <> 0.0
+ORDER BY
+  dm.name, dm.x, dm.y;
+''',
       ),
       entryBuilder: (row) => JsonDraft.fromRow(row),
     );
-    return sqlAccess.fetch().convertFailure();
+    return sqlAccess
+        .fetch()
+        .logResult(
+          _log,
+          message: 'fetching drafts',
+          okMessage: (_) => 'drafts fetched',
+        )
+        .convertFailure(
+          errorMessage: 'fetch error',
+        );
   }
 }

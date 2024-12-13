@@ -1,7 +1,7 @@
 import 'package:hmi_core/hmi_core.dart';
 ///
 /// Extension for [Future] returning [Result].
-extension FutureResultExtension<T> on Future<Result<T, Failure<dynamic>>> {
+extension FutureResultExtension<V, E> on Future<Result<V, Failure<E>>> {
   ///
   /// Returns new future with transformed [Result].
   ///
@@ -17,20 +17,20 @@ extension FutureResultExtension<T> on Future<Result<T, Failure<dynamic>>> {
   ///
   /// By default, [Failure] message will be a string representation of the original error.
   /// Using [errorMessage] this behavior can be changed.
-  Future<Result<T, Failure<String>>> convertFailure({
-    String Function(Failure error)? errorMessage,
+  Future<Result<V, Failure<String>>> convertFailure({
+    String? errorMessage,
   }) {
-    return then<Result<T, Failure<String>>>(
+    return then<Result<V, Failure<String>>>(
       (result) => switch (result) {
         Ok(:final value) => Ok(value),
         Err(:final error) => Err(Failure(
-            message: errorMessage?.call(error) ?? '$error',
+            message: errorMessage ?? '$error',
             stackTrace: StackTrace.current,
           )),
       },
     ).catchError(
-      (error) => Err<T, Failure<String>>(Failure(
-        message: errorMessage?.call(error) ?? '$error',
+      (error) => Err<V, Failure<String>>(Failure(
+        message: errorMessage ?? '$error',
         stackTrace: StackTrace.current,
       )),
     );
@@ -43,11 +43,11 @@ extension FutureResultExtension<T> on Future<Result<T, Failure<dynamic>>> {
   /// Using [okMessage] and [errorMessage] this behavior can be changed.
   ///
   /// If [message] is provided, it will be used as starting log message.
-  Future<Result<T, Failure<dynamic>>> logResult(
+  Future<Result<V, Failure<E>>> logResult(
     Log log, {
     String? message,
-    String Function(T value)? okMessage,
-    String Function(Failure error)? errorMessage,
+    String Function(V value)? okMessage,
+    String Function(Failure<E> error)? errorMessage,
   }) =>
       then((result) {
         if (message != null) log.info(message);

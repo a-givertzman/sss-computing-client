@@ -167,6 +167,19 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
                     ? _removeSelectedContainer
                     : null,
               ),
+              SizedBox(width: blockPadding),
+              FilledButton.icon(
+                onPressed: _handleUnloadAllContainers,
+                icon: const Icon(Icons.clear_rounded),
+                label: Text(const Localized('Clear bay plan').v),
+              ),
+              SizedBox(width: blockPadding),
+              FilledButton.icon(
+                onPressed:
+                    _containers.isNotEmpty ? _handleDeleteAllContainers : null,
+                icon: const Icon(Icons.delete_rounded),
+                label: Text(const Localized('Delete all containers').v),
+              ),
             ],
           ),
           SizedBox(height: blockPadding),
@@ -276,6 +289,36 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
         const Log('Remove container').error(error);
         _showErrorMessage(error.message);
     }
+  }
+  //
+  void _handleUnloadAllContainers() {
+    widget._pgStowageCollection.removeAllContainers().then((result) {
+      switch (result) {
+        case Ok():
+          if (mounted) {
+            setState(() {
+              return;
+            });
+          }
+        case Err(:final error):
+          const Log('Unload all containers').error(error);
+          _showErrorMessage(error.message);
+      }
+    });
+  }
+  //
+  void _handleDeleteAllContainers() {
+    widget._freightContainersCollection.removeAll(_containers).then((result) {
+      switch (result) {
+        case Ok():
+          if (mounted) {
+            widget._refetchContainers();
+          }
+        case Err(:final error):
+          const Log('Delete all containers').error(error);
+          _showErrorMessage(error.message);
+      }
+    });
   }
   //
   void _onTableRowUpdate(newContainer, oldContainer) {

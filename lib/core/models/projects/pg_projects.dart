@@ -51,7 +51,7 @@ ORDER BY
           message: 'fetching projects',
           okMessage: (projects) => 'projects fetched: ${projects.length}',
         )
-        .convertFailure(errorMessage: (_) => 'fetch error');
+        .convertFailure(errorMessage: 'fetch error');
   }
   //
   @override
@@ -80,7 +80,7 @@ WHERE
           message: 'saving project "${project.name}"',
           okMessage: (_) => 'project "${project.name}" added',
         )
-        .convertFailure(errorMessage: (_) => 'saving error');
+        .convertFailure(errorMessage: 'saving error');
   }
   //
   @override
@@ -115,7 +115,7 @@ END \$\$;
           message: 'replacing project "${project.name}"',
           okMessage: (_) => 'project "${project.name}" replaced',
         )
-        .convertFailure(errorMessage: (_) => 'saving error');
+        .convertFailure(errorMessage: 'saving error');
   }
   //
   @override
@@ -140,7 +140,7 @@ WHERE
           message: 'loading project "${project.name}"',
           okMessage: (_) => 'project "${project.name}" loaded',
         )
-        .convertFailure(errorMessage: (_) => 'loading error');
+        .convertFailure(errorMessage: 'loading error');
   }
   //
   @override
@@ -163,6 +163,6 @@ WHERE
           message: 'removing project "${project.name}"',
           okMessage: (_) => 'project "${project.name}" removed',
         )
-        .convertFailure(errorMessage: (_) => 'deleting error');
+        .convertFailure(errorMessage: 'deleting error');
   }
 }

@@ -13,10 +13,15 @@ abstract interface class FreightContainers {
     List<FreightContainer> containers,
   );
   ///
-  /// Remove container by [id] from [FreightContainers] collection.
+  /// Remove all [containers] from [FreightContainers] collection.
+  Future<Result<void, Failure<String>>> removeAll(
+    List<FreightContainer> containers,
+  );
+  ///
+  /// Remove entry by [id] from [FreightContainers] collection.
   Future<Result<void, Failure<String>>> removeById(int id);
   ///
-  /// Update container in [FreightContainers] collection from [oldData] to [newData].
+  /// Update entry in [FreightContainers] collection from [oldData] to [newData].
   Future<Result<void, Failure<String>>> update(
     FreightContainer newData,
     FreightContainer oldData,

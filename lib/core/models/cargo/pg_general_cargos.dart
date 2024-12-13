@@ -6,8 +6,9 @@ import 'package:sss_computing_client/core/models/cargo/cargo.dart';
 import 'package:sss_computing_client/core/models/cargo/cargos.dart';
 import 'package:sss_computing_client/core/models/cargo/json_cargo.dart';
 ///
-/// Stores general [Cargos] collection stored in postgres DB.
+/// General [Cargos] collection stored in postgres DB.
 class PgGeneralCargos implements Cargos {
+  static const _log = Log('PgGeneralCargos | ');
   final String _dbName;
   final ApiAddress _apiAddress;
   final String? _authToken;
@@ -35,11 +36,8 @@ SELECT
   c.project_id AS "projectId",
   c.ship_id AS "shipId",
   c.id AS "id",
-  c.name_rus AS "name",
+  c.name AS "name",
   c.mass AS "mass",
-  c.volume AS "volume",
-  c.density AS "density",
-  (c.volume / c.volume_max) * 100.0 AS "level",
   c.bound_x1 AS "x1",
   c.bound_x2 AS "x2",
   c.bound_y1 AS "y1",
@@ -49,25 +47,11 @@ SELECT
   c.mass_shift_x AS "lcg",
   c.mass_shift_y AS "tcg",
   c.mass_shift_z AS "vcg",
-  CASE
-    WHEN c.use_max_m_f_s = TRUE THEN c.max_m_f_s_x
-    ELSE c.m_f_s_x
-  END AS "mfsx",
-  CASE
-    WHEN c.use_max_m_f_s = TRUE THEN c.max_m_f_s_y
-    ELSE c.m_f_s_y
-  END AS "mfsy",
-  c.svg_paths AS "path",
-  cc.key::TEXT AS "type",
-  c.use_max_m_f_s AS "useMaxMfs",
-  CASE
-    WHEN cc.matter_type = 'bulk' THEN TRUE
-    ELSE FALSE
-  END AS "shiftable",
   c.is_on_deck AS "isOnDeck",
-  c.is_timber AS "isTimber"
+  c.timber AS "isTimber",
+  cc.key AS "type"
 FROM
-  compartment AS c
+  cargo AS c
   JOIN cargo_category AS cc ON c.category_id = cc.id
   JOIN cargo_general_category AS cgc ON cc.general_category_id = cgc.id
 WHERE
@@ -79,7 +63,16 @@ ORDER BY
 """,
       ),
       entryBuilder: (row) => JsonCargo.fromRow(row),
-    ).fetch().convertFailure();
+    )
+        .fetch()
+        .logResult(
+          _log,
+          message: 'fetching general cargos',
+          okMessage: (cargos) => '${cargos.length} general cargos fetched',
+        )
+        .convertFailure(
+          errorMessage: 'fetch error',
+        );
   }
   //
   @override
@@ -94,11 +87,8 @@ SELECT
   c.project_id AS "projectId",
   c.ship_id AS "shipId",
   c.id AS "id",
-  c.name_rus AS "name",
+  c.name AS "name",
   c.mass AS "mass",
-  c.volume AS "volume",
-  c.density AS "density",
-  (c.volume / c.volume_max) * 100.0 AS "level",
   c.bound_x1 AS "x1",
   c.bound_x2 AS "x2",
   c.bound_y1 AS "y1",
@@ -108,25 +98,11 @@ SELECT
   c.mass_shift_x AS "lcg",
   c.mass_shift_y AS "tcg",
   c.mass_shift_z AS "vcg",
-  CASE
-    WHEN c.use_max_m_f_s = TRUE THEN c.max_m_f_s_x
-    ELSE c.m_f_s_x
-  END AS "mfsx",
-  CASE
-    WHEN c.use_max_m_f_s = TRUE THEN c.max_m_f_s_y
-    ELSE c.m_f_s_y
-  END AS "mfsy",
-  c.svg_paths AS "path",
-  cc.key::TEXT AS "type",
-  c.use_max_m_f_s AS "useMaxMfs",
-  CASE
-    WHEN cc.matter_type = 'bulk' THEN TRUE
-    ELSE FALSE
-  END AS "shiftable",
   c.is_on_deck AS "isOnDeck",
-  c.is_timber AS "isTimber"
+  c.timber AS "isTimber",
+  cc.key AS "type"
 FROM
-  compartment AS c
+  cargo AS c
   JOIN cargo_category AS cc ON c.category_id = cc.id
   JOIN cargo_general_category AS cgc ON cc.general_category_id = cgc.id
 WHERE
@@ -136,7 +112,9 @@ ORDER BY
 """,
       ),
       entryBuilder: (row) => JsonCargo.fromRow(row),
-    ).fetch().convertFailure().then(
+    )
+        .fetch()
+        .then<Result<Cargo, Failure<String>>>(
           (result) => switch (result) {
             Ok(value: final cargos) => cargos.isNotEmpty
                 ? Ok(cargos.first)
@@ -149,6 +127,14 @@ ORDER BY
                 stackTrace: StackTrace.current,
               )),
           },
+        )
+        .convertFailure(
+          errorMessage: 'fetch error',
+        )
+        .logResult(
+          _log,
+          message: 'fetching general cargo by id: $id',
+          okMessage: (cargo) => 'general cargo fetched, id: ${cargo.id}',
         );
   }
   ///
@@ -162,13 +148,22 @@ ORDER BY
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-              INSERT INTO compartment
-                (ship_id, project_id, space_id, active, category_id, name_rus, mass, mass_shift_x, mass_shift_y, mass_shift_z, bound_x1, bound_x2, bound_y1, bound_y2, bound_z1, bound_z2)
+              INSERT INTO cargo
+                (ship_id, project_id, category_id, name, mass, mass_shift_x, mass_shift_y, mass_shift_z, bound_x1, bound_x2, bound_y1, bound_y2, bound_z1, bound_z2)
               VALUES
-                ($shipId, ${projectId ?? 'NULL'}, (SELECT MAX(space_id) + 1 FROM compartment), TRUE, 14, '${cargo.name}', ${cargo.weight}, ${cargo.lcg}, ${cargo.tcg}, ${cargo.vcg}, ${cargo.x1}, ${cargo.x2}, ${cargo.y1}, ${cargo.y2}, ${cargo.z1}, ${cargo.z2});
+                ($shipId, ${projectId ?? 'NULL'}, 14, '${cargo.name}', ${cargo.weight}, ${cargo.lcg}, ${cargo.tcg}, ${cargo.vcg}, ${cargo.x1}, ${cargo.x2}, ${cargo.y1}, ${cargo.y2}, ${cargo.z1}, ${cargo.z2});
             """,
       ),
-    ).fetch().convertFailure();
+    )
+        .fetch()
+        .convertFailure(
+          errorMessage: 'saving error',
+        )
+        .logResult(
+          _log,
+          message: 'saving general cargo',
+          okMessage: (_) => 'general cargo saved',
+        );
   }
   ///
   /// Remove cargo from general [Cargo] collection.
@@ -179,9 +174,18 @@ ORDER BY
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
         sql: """
-              DELETE FROM compartment WHERE id = ${cargo.id};
+              DELETE FROM cargo WHERE id = ${cargo.id};
             """,
       ),
-    ).fetch().convertFailure();
+    )
+        .fetch()
+        .convertFailure(
+          errorMessage: 'deleting error',
+        )
+        .logResult(
+          _log,
+          message: 'removing general cargo, id: ${cargo.id}',
+          okMessage: (_) => 'general cargo removed, id: ${cargo.id}',
+        );
   }
 }

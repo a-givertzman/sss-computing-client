@@ -73,7 +73,9 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                                 captionSpaceReserved: 0.0,
                               ),
                               yAxis: ChartAxis(
-                                valueInterval: 25,
+                                valueInterval: const Setting(
+                                  'bendingMomentsInterval_MN*m',
+                                ).toDouble,
                                 labelsSpaceReserved: 60.0,
                                 captionSpaceReserved: 15.0,
                                 isCaptionVisible: true,
@@ -125,7 +127,9 @@ class _StrengthPageBodyState extends State<StrengthPageBody> {
                                 captionSpaceReserved: 0.0,
                               ),
                               yAxis: ChartAxis(
-                                valueInterval: 10,
+                                valueInterval: const Setting(
+                                  'shearForcesInterval_MN',
+                                ).toDouble,
                                 labelsSpaceReserved: 60.0,
                                 captionSpaceReserved: 15.0,
                                 isCaptionVisible: true,

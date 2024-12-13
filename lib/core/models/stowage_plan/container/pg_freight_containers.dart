@@ -135,6 +135,34 @@ class PgFreightContainers implements FreightContainers {
   }
   //
   @override
+  Future<Result<void, Failure<String>>> removeAll(
+    List<FreightContainer> containers,
+  ) async {
+    final slotReferenceError = await _validateStowagePlanReferences(containers);
+    if (slotReferenceError != null) {
+      return Err(
+        Failure(message: slotReferenceError, stackTrace: StackTrace.current),
+      );
+    }
+    final sqlAccess = SqlAccess(
+      address: _apiAddress,
+      database: _dbName,
+      authToken: _authToken ?? '',
+      sqlBuilder: (_, __) => Sql(sql: '''
+        DO \$\$ BEGIN
+        DELETE FROM container
+        WHERE id IN (${containers.map((c) => c.id).join(', ')});
+        END \$\$;
+      '''),
+      entryBuilder: (row) => JsonFreightContainer.fromRow(row),
+    );
+    return sqlAccess
+        .fetch()
+        .then((result) => result.and(const Ok(null)))
+        .convertFailure();
+  }
+  //
+  @override
   Future<Result<void, Failure<String>>> update(
     FreightContainer newData,
     FreightContainer oldData,
@@ -243,6 +271,37 @@ class PgFreightContainers implements FreightContainers {
                   ? const Localized('POL must be before POD').v
                   : null,
             Err() => const Localized('Check of POL and POD order fails.').v,
+          },
+        );
+  }
+  //
+  Future<String?> _validateStowagePlanReferences(
+    List<FreightContainer> containers,
+  ) async {
+    final sqlAccess = SqlAccess(
+      address: _apiAddress,
+      database: _dbName,
+      authToken: _authToken ?? '',
+      sqlBuilder: (_, __) => Sql(sql: '''
+        SELECT
+          cs.id AS "id"
+        FROM
+          container_slot AS cs
+        WHERE
+          cs.container_id IN (${containers.map((c) => c.id).join(', ')});
+      '''),
+      entryBuilder: (row) => row,
+    );
+    return sqlAccess.fetch().convertFailure().then(
+          (result) => switch (result) {
+            Ok(value: final rows) => rows.isNotEmpty
+                ? const Localized(
+                    'cannot delete container that is loaded into slot',
+                  ).v
+                : null,
+            Err() => const Localized(
+                'checking of containers slot references failed',
+              ).v,
           },
         );
   }

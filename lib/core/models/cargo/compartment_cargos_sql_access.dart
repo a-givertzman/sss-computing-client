@@ -78,9 +78,7 @@ class CompartmentCargosSqlAccess {
               CASE
                   WHEN cc.matter_type = 'bulk' THEN TRUE
                   ELSE FALSE
-              END AS "shiftable",
-              c.is_on_deck AS "isOnDeck",
-              c.is_timber AS "isTimber"
+              END AS "shiftable"
             FROM
               compartment AS c
               JOIN cargo_category AS cc ON c.category_id = cc.id
