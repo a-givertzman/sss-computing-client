@@ -4,10 +4,13 @@ import 'package:sss_computing_client/core/widgets/accordion/accordion_item.dart'
 /// A contract to model the [AccordionItem]s for the [AccordionWidget].
 /// - Used with [AccordionWidget]
 abstract interface class AccordionModel<T> {
+  ///
   /// List of accordion items for the [AccordionWidget]
   List<AccordionItem<T>> get items;
+  ///
   /// Callback for when an item is selected.
   onItemSelected(AccordionItem<T> item);
+  ///
   /// The current [AccordionItem]
   /// - Initialized in the [create] method
   /// - If the [currentPath] is null or does not exist, the first item will be used
