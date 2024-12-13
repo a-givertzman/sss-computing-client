@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_translate.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:sss_computing_client/presentation/docs_viewer/customisation/block_quote/block_alert.dart';
-
+///
 ///Tag: [MarkdownTag.blockquote]
 ///
 /// A block quote marker, optionally preceded by up to three spaces of indentation

@@ -44,13 +44,14 @@ class _BodyWidget extends StatefulWidget {
   final List<AssetsDirectoryInfo> assets;
   /// Current asset
   final String? currentAsset;
-  ///
+  //
   @override
   State<_BodyWidget> createState() => _BodyWidgetState();
 }
 ///
 class _BodyWidgetState extends State<_BodyWidget> {
   late MarkdownAccordionModel _markdownAccordion;
+  //
   @override
   void initState() {
     final items = AssetsAccordions(
@@ -63,7 +64,7 @@ class _BodyWidgetState extends State<_BodyWidget> {
       );
     super.initState();
   }
-  ///
+  //
   @override
   Widget build(BuildContext context) {
     final padding = const Setting('padding').toDouble;

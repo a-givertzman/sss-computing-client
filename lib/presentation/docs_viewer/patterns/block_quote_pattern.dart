@@ -1,5 +1,4 @@
 import 'md_pattern.dart';
-
 ///
 /// Pattern for block quotes.
 /// - [!note] - [!tip] - [!important] - [!caution] - [!warning]
@@ -10,7 +9,7 @@ final class BlockQuotePattern implements MDPattern {
         r'\[!??(note|tip|important|caution|warning)\]',
         caseSensitive: false,
       );
-
+  //
   @override
   bool isMatch(String text) {
     return text.contains(pattern);

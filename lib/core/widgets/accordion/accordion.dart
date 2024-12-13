@@ -126,7 +126,8 @@ class _BuildItem<T> extends StatelessWidget {
       ],
     );
   }
-  //
+  /// 
+  /// Builds the leading widget
   Widget? _buildLeading({required bool isParent, double? padding}) {
     return switch (isParent) {
       true => null,
@@ -138,7 +139,8 @@ class _BuildItem<T> extends StatelessWidget {
         },
     };
   }
-  //
+  ///
+  /// builds the text style with the correct color.
   TextStyle? _buildTextStyle({
     required bool isParent,
     required ThemeData theme,
@@ -157,7 +159,8 @@ class _BuildItem<T> extends StatelessWidget {
         )
     });
   }
-  //
+  ///
+  /// Builds the trailing icon.
   Widget? _buildTrailing(bool isParent) {
     return switch (!isParent || !item.hasChildren) {
       true => null,

@@ -10,8 +10,10 @@ class CustomImgNode {
   final MarkdownConfig config;
   /// [WidgetVisitor]
   final WidgetVisitor visitor;
+  //
   CustomImgNode(this.attributes, this.config, this.visitor);
   ///
+  /// Builds the [SpanNode] from the [attributes].
   SpanNode build() {
     final url = attributes['src'] ?? '';
     final attr = switch (url.startsWith('http')) {

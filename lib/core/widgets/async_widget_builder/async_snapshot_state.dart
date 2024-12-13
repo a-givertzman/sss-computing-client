@@ -53,21 +53,27 @@ sealed class AsyncSnapshotState<T> {
 final class AsyncLoadingState implements AsyncSnapshotState<Never> {
   const AsyncLoadingState();
 }
+///
 /// Nothing state for [AsyncBuilderWidget]
 final class AsyncNothingState implements AsyncSnapshotState<Never> {
   const AsyncNothingState();
 }
+///
 /// Data state for [AsyncBuilderWidget]
 /// - when [AsyncSnapshot.connectionState] is [ConnectionState.done]
 /// - and [AsyncSnapshot.hasData] is true.
 final class AsyncDataState<T> implements AsyncSnapshotState<T> {
+  /// The actual data.
   final T data;
+  //
   const AsyncDataState(this.data);
 }
+///
 /// Error state for [AsyncBuilderWidget]
 /// - when [AsyncSnapshot.connectionState] is [ConnectionState.done]
 /// - and [AsyncSnapshot.hasData] is false
 final class AsyncErrorState implements AsyncSnapshotState<Never> {
+  /// The error that occurred.
   final Failure error;
   const AsyncErrorState(this.error);
 }

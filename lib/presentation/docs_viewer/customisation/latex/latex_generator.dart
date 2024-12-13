@@ -6,7 +6,8 @@ import 'package:markdown_widget/markdown_widget.dart';
 class LatexGenerator extends SpanNodeGeneratorWithTag {
   static const latexTag = 'latex';
   LatexGenerator({required super.tag, required super.generator});
-  //
+  ///
+  /// Factory constructor for [LatexGenerator] from [SpanNodeGenerator]
   factory LatexGenerator.latex(
       {required SpanNode Function(Element, MarkdownConfig, WidgetVisitor)
           generator,}) {

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:sss_computing_client/core/widgets/async_widget_builder/async_snapshot_state.dart';
-
 import 'package:sss_computing_client/core/widgets/error_message_widget.dart';
+///
 /// A contract for widgets that display data from a stream.
 abstract class AsyncBuilderWidget<T> extends StatefulWidget {
   const AsyncBuilderWidget({
@@ -15,6 +15,7 @@ abstract class AsyncBuilderWidget<T> extends StatefulWidget {
     this.validateData,
     this.refreshStream,
   });
+  ///
   /// The widget to display while the stream is loading.
   final Widget Function(BuildContext)? caseLoading;
   /// The widget to display if the stream contains data.
@@ -58,6 +59,7 @@ abstract class AsyncBuilderWidget<T> extends StatefulWidget {
     };
   }
 }
+///
 /// A widget that displays data from a stream.
 class StreamBuilderWidget<T> extends AsyncBuilderWidget<T> {
   const StreamBuilderWidget({
@@ -67,10 +69,11 @@ class StreamBuilderWidget<T> extends AsyncBuilderWidget<T> {
   });
   /// The stream to listen to.
   final Stream<ResultF<T>> stream;
+  //
   @override
   State<StreamBuilderWidget<T>> createState() => _StreamBuilderWidgetState();
 }
-
+///
 class _StreamBuilderWidgetState<T> extends State<StreamBuilderWidget<T>> {
   @override
   Widget build(BuildContext context) {
@@ -88,7 +91,6 @@ class _StreamBuilderWidgetState<T> extends State<StreamBuilderWidget<T>> {
 Widget _defaultCaseLoading(BuildContext _) => const Center(
       child: CupertinoActivityIndicator(),
     );
-
 ///
 /// Default indicator builder for [FutureBuilderWidget] error state
 Widget _defaultCaseError(
@@ -101,7 +103,6 @@ Widget _defaultCaseError(
       message: const Localized('Data loading error').v,
       // onConfirm: retry,
     );
-
 ///
 /// Default indicator builder for [FutureBuilderWidget] empty-data state
 Widget _defaultCaseNothing(BuildContext _, {void Function()? retry}) =>

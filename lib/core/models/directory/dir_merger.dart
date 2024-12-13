@@ -32,6 +32,7 @@ class AssetsDirectoryInfoMerger implements DirectoryInfoMerger {
     }
     return _clean(mergedDirs);
   }
+  ///
   /// Clean subdirectories
   List<AssetsDirectoryInfo> _clean(List<AssetsDirectoryInfo> assets) {
     return assets.where((dir) {

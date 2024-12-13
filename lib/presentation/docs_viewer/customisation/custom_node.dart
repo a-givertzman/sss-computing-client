@@ -11,7 +11,7 @@ class CustomTextNode extends ElementNode {
   final MarkdownConfig _config;
   final WidgetVisitor _visitor;
   CustomTextNode(this._text, this._config, this._visitor);
-
+  //
   @override
   void onAccepted(SpanNode parent) {
     final textStyle = _config.p.textStyle.merge(parentStyle);

@@ -24,6 +24,7 @@ final class HtmlSupport {
       mNodes.add(element);
     }
   }
+  ///
   ///parse [m.Node] to [h.Node] for HTML manipulations
   static List<SpanNode> parseHtml(
     m.Text node, {
@@ -76,7 +77,7 @@ class HtmlToSpanVisitor extends TreeVisitor {
     _spansStack.clear();
     return result;
   }
-
+  //
   @override
   void visitText(h.Text node) {
     final last = _spansStack.last;
@@ -85,7 +86,7 @@ class HtmlToSpanVisitor extends TreeVisitor {
       last.accept(textNode);
     }
   }
-
+  //
   @override
   void visitElement(h.Element node) {
     final localName = node.localName ?? '';

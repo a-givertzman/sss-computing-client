@@ -22,7 +22,6 @@ class TocItemWidget extends StatefulWidget {
   @override
   State<TocItemWidget> createState() => _TocItemWidgetState();
 }
-
 ///
 class _TocItemWidgetState extends State<TocItemWidget> {
   late final AutoScrollController _controller;

@@ -9,10 +9,11 @@ abstract class MDPattern {
 ///
 /// Pattern for markdown SVG.
 final class SVGPattern implements MDPattern {
+  //
   @override
   RegExp get pattern =>
       RegExp(r'<svg[^>]*>', multiLine: true, caseSensitive: true);
-  ///
+  //
   @override
   bool isMatch(String text) {
     return text.contains(pattern);

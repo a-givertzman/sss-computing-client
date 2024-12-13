@@ -21,7 +21,7 @@ class MarkdownAccordionModel implements AccordionModel<List<String>> {
   @override
   final List<AccordionItem<List<String>>> items;
   AccordionItem<List<String>>? _currentItem;
-  //
+  ///
   /// The current [AccordionItem] payload
   List<String> get currentAssets => currentItem?.data ?? [];
   //
@@ -39,7 +39,7 @@ class MarkdownAccordionModel implements AccordionModel<List<String>> {
       _currentItem = item;
     }
   }
-  //
+  ///
   /// Set the current [AccordionItem]
   /// - If the [currentPath] is null or does not exist, the first item will be used.
   initialiseCurrentItem({String? currentAsset}) {

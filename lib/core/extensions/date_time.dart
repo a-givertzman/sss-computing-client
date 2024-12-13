@@ -1,6 +1,6 @@
-
 import 'package:sss_computing_client/core/extensions/strings.dart';
 ///
+/// Extensions for [DateTime].
 extension DateTimeExt on DateTime {
   ///
   /// Formats the [DateTime] into a 'dd.mm.yy hh:mm tz' string.

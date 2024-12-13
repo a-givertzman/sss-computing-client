@@ -38,7 +38,7 @@ class AssetsDirectoryInfo implements DirectoryInfo {
     List<AssetsDirectoryInfo>? subs,
   })  : assets = assets ?? [],
         subs = subs ?? [];
-
+  //
   addSub(AssetsDirectoryInfo sub) {
     subs.add(sub);
   }

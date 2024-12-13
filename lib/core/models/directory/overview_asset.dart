@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 ///
 /// A contract to find a overview asset.
 abstract class OverviewAsset {
+  ///
   /// finds a overview asset.
   String findPath();
 }
@@ -11,8 +12,11 @@ abstract class OverviewAsset {
 /// - the overview asset name matches the directory name.
 /// - returns an empty string if not found.
 final class MarkdownOverviewAsset implements OverviewAsset {
+  ///
   final String _directoryName;
+  ///
   final List<String> _assets;
+  ///
   MarkdownOverviewAsset({
     required String directoryName,
     required List<String> assets,

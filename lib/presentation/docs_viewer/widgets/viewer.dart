@@ -15,14 +15,16 @@ import 'package:sss_computing_client/presentation/docs_viewer/customisation/late
 /// Viewer widget for markdown docs
 class ViewerWidget extends StatefulWidget {
   const ViewerWidget({super.key, required this.paths});
+  ///
   /// Paths to markdown files.
   final List<String> paths;
-  ///
+  //
   @override
   State<ViewerWidget> createState() => _ViewerWidgetState();
 }
 ///
 class _ViewerWidgetState extends State<ViewerWidget> {
+  //
   @override
   void initState() {
     super.initState();
@@ -41,27 +43,29 @@ class _ViewerWidgetState extends State<ViewerWidget> {
 ///
 class _BuildBody extends StatefulWidget {
   const _BuildBody({required this.data});
+  ///
   /// Markdown data.
   final String data;
-  ///
+  //
   @override
   State<_BuildBody> createState() => __BuildBodyState();
 }
-
+///
 class __BuildBodyState extends State<_BuildBody> {
   late TocController _tocController;
+  //
   @override
   void initState() {
     _tocController = TocController();
     super.initState();
   }
-  ///
+  //
   @override
   void dispose() {
     _tocController.dispose();
     super.dispose();
   }
-  ///
+  //
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

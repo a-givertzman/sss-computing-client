@@ -30,6 +30,7 @@ class MarkdownManifest implements DocumentManifest<AssetsDirectoryInfo> {
   final String path;
   //
   MarkdownManifest(this.path);
+  //
   @override
   Future<ResultF<List<String>>> loadAssets() async {
     return await AssetManifest.loadFromAssetBundle(rootBundle)

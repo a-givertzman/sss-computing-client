@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
-
 import 'package:markdown_widget/markdown_widget.dart';
 ///
 /// A customised [SpanNode] for LaTex.
@@ -13,7 +12,7 @@ class LatexNode extends SpanNode {
   /// The style and other configs of the markdown.
   final MarkdownConfig config;
   LatexNode(this.attributes, this.textContent, this.config);
-  ///
+  //
   @override
   InlineSpan build() {
     final content = attributes['content'] ?? '';

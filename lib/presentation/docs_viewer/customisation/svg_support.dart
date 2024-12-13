@@ -4,15 +4,20 @@ import 'package:markdown_widget/markdown_widget.dart';
 ///
 /// A [SpanNode] for [local] and [remote] SVGs.
 class SvgNode extends SpanNode {
-  final Map<String, String> attributes;
-  final MarkdownConfig config;
-  final double? width;
-  SvgNode({required this.attributes, required this.config, this.width});
   ///
+  final Map<String, String> _attributes;
+  ///
+  /// The [MarkdownConfig] for the document.
+  final MarkdownConfig config;
+  ///
+  final double? _width;
+  //
+  SvgNode({required Map<String, String> attributes, required this.config, double? width}) : _width = width,  _attributes = attributes;
+  //
   @override
   InlineSpan build() {
-    final url = attributes['src'] ?? '';
-    final alt = attributes['alt'] ?? '';
+    final url = _attributes['src'] ?? '';
+    final alt = _attributes['alt'] ?? '';
     final isNetSvg = url.startsWith('http');
     final imgWidget = isNetSvg
         ? SvgPicture.network(
@@ -22,7 +27,7 @@ class SvgNode extends SpanNode {
         : SvgPicture.asset(
             url,
             semanticsLabel: alt,
-            width: width,
+            width: _width,
           );
 
     return WidgetSpan(
@@ -37,7 +42,7 @@ class SvgRawNode extends SpanNode {
   final String svg;
   //
   SvgRawNode({required this.svg});
-  ///
+  //
   @override
   InlineSpan build() {
     return WidgetSpan(
