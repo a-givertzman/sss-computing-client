@@ -93,7 +93,7 @@ class _ShipBodyState extends State<ShipBody> {
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
-    final durationMs = const Setting('errorMessageDisplayDuration').toInt;
+    final durationMs = const Setting('errorMessageDisplayDuration_ms').toInt;
     BottomMessage.error(
       message: message.truncate(),
       displayDuration: Duration(milliseconds: durationMs),

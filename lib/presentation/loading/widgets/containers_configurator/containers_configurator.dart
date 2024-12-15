@@ -370,7 +370,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     _bayPairsScrollController.scrollTo(
       index: bayPairIndex,
       duration: Duration(
-        milliseconds: const Setting('animationDuration').toInt,
+        milliseconds: const Setting('animationDuration_ms').toInt,
       ),
       alignment: 0.5,
     );
@@ -494,7 +494,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     BottomMessage.error(
       message: message.truncate(),
       displayDuration: Duration(
-        milliseconds: const Setting('errorMessageDisplayDuration').toInt,
+        milliseconds: const Setting('errorMessageDisplayDuration_ms').toInt,
       ),
     ).show(context);
   }

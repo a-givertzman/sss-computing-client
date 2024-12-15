@@ -229,7 +229,7 @@ class _EditingTableState<T> extends State<EditingTable<T>> {
             ),
             curve: Curves.easeOut,
             duration: Duration(
-              milliseconds: const Setting('animationDuration').toInt,
+              milliseconds: const Setting('animationDuration_ms').toInt,
             ),
           );
         }

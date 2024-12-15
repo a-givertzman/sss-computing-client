@@ -145,7 +145,7 @@ class _FieldDataFormState extends State<FieldDataForm> {
     BottomMessage.error(
       message: message,
       displayDuration: Duration(
-        milliseconds: const Setting('errorMessageDisplayDuration').toInt,
+        milliseconds: const Setting('errorMessageDisplayDuration_ms').toInt,
       ),
     ).show(context);
   }

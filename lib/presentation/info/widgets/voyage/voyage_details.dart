@@ -218,7 +218,7 @@ class _VoyageDetailsWidgetState extends State<VoyageDetailsWidget> {
   //
   void _showErrorMessage(String message) {
     if (!mounted) return;
-    final durationMs = const Setting('errorMessageDisplayDuration').toInt;
+    final durationMs = const Setting('errorMessageDisplayDuration_ms').toInt;
     BottomMessage.error(
       message: Localized(message).v,
       displayDuration: Duration(milliseconds: durationMs),

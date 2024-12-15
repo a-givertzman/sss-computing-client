@@ -1,0 +1,966 @@
+{
+    "Grain Bulkhead 1": [
+        "Grain Bulkhead 1",
+        "Зерновая переборка 1"
+    ],
+    "Grain Bulkhead 2": [
+        "Grain Bulkhead 2",
+        "Зерновая переборка 2"
+    ],
+    "Hold 1. Fr. 105 ": [
+        "Hold 1. Fr. 105 ",
+        "Трюм 1. Шп. 105 "
+    ],
+    "Hold 1. Fr. 93": [
+        "Hold 1. Fr. 93",
+        "Трюм 1. Шп. 93"
+    ],
+    "Hold 1. Fr. 97": [
+        "Hold 1. Fr. 97",
+        "Трюм 1. Шп. 97"
+    ],
+    "Hold 1.Stowage Position": [
+        "Hold 1.Stowage Position",
+        "Трюм 1.  По-походному "
+    ],
+    "Hold 2. Fr. 26": [
+        "Hold 2. Fr. 26",
+        "Трюм 2. Шп. 26"
+    ],
+    "Hold 2. Fr. 31": [
+        "Hold 2. Fr. 31",
+        "Трюм 2. Шп. 31"
+    ],
+    "Hold 2. Fr. 42": [
+        "Hold 2. Fr. 42",
+        "Трюм 2. Шп. 42"
+    ],
+    "Hold 2. Fr. 54": [
+        "Hold 2. Fr. 54",
+        "Трюм 2. Шп. 54"
+    ],
+    "Hold 2. Fr. 58": [
+        "Hold 2. Fr. 58",
+        "Трюм 2. Шп. 58"
+    ],
+    "Hold 2.Stowage Position": [
+        "Hold 2.Stowage Position",
+        "Трюм №2.  По-походному "
+    ],
+    "Ballast tank": [
+        "Ballast tank",
+        "Балластная цистерна"
+    ],
+    "Bulk cargo": [
+        "Bulk cargo",
+        "Груз навалочный"
+    ],
+    "Bulk cargo, shiftable": [
+        "Bulk cargo, shiftable",
+        "Груз навалочный, смещаемый"
+    ],
+    "Bulkhead": [
+        "Bulkhead",
+        "Зерновая переборка"
+    ],
+    "Cargo": [
+        "Cargo",
+        "Груз"
+    ],
+    "Container cargo": [
+        "Container cargo",
+        "Груз контейнерный"
+    ],
+    "Equipment": [
+        "Equipment",
+        "Оборудование"
+    ],
+    "Fresh & drinking water tank": [
+        "Fresh & drinking water tank",
+        "Цистерны питьевой и пресной воды"
+    ],
+    "Fuel tank": [
+        "Fuel tank",
+        "Цистерны топлива"
+    ],
+    "General cargo": [
+        "General cargo",
+        "Груз генеральный"
+    ],
+    "Hull": [
+        "Hull",
+        "Корпус"
+    ],
+    "Lubricating oil tank": [
+        "Lubricating oil tank",
+        "Цистерны масла"
+    ],
+    "Other stores": [
+        "Other stores",
+        "Прочие запасы"
+    ],
+    "Storage tank": [
+        "Storage tank",
+        "Цистерны запаса"
+    ],
+    "Sundry tank": [
+        "Sundry tank",
+        "Цистерны грязных жидкостей"
+    ],
+    "Urea tank": [
+        "Urea tank",
+        "Цистерны мочевины"
+    ],
+    "Ballast": [
+        "Ballast",
+        "Балласт"
+    ],
+    "LightShip": [
+        "LightShip",
+        "Порожнем"
+    ],
+    "Stores": [
+        "Stores",
+        "Запасы"
+    ],
+    "B4P": [
+        "B4P",
+        "БЦ 4 ЛБ"
+    ],
+    "B4S": [
+        "B4S",
+        "БЦ 4 Пр.Б"
+    ],
+    "Back Tank 4P": [
+        "Back Tank 4P",
+        "Борт. цистерна 4 ЛБ"
+    ],
+    "Back Tank 4S": [
+        "Back Tank 4S",
+        "Борт. цистерна 4 Пр.Б"
+    ],
+    "Bilge W. Coll. Tank": [
+        "Bilge W. Coll. Tank",
+        "Цистерна льяльных вод"
+    ],
+    "BWCT": [
+        "BWCT",
+        "ЦЛВ"
+    ],
+    "Cool Water Drain Tank": [
+        "Cool Water Drain Tank",
+        "Цистерна слива холодной воды"
+    ],
+    "CWDT": [
+        "CWDT",
+        "ЦСХВ"
+    ],
+    "DB1C": [
+        "DB1C",
+        "ТДД 1 ДП"
+    ],
+    "DB1P": [
+        "DB1P",
+        "ТДД 1 ЛБ"
+    ],
+    "DB1S": [
+        "DB1S",
+        "ТДД 1 Пр.Б"
+    ],
+    "DB2C": [
+        "DB2C",
+        "ТДД 2 ДП"
+    ],
+    "DB2P": [
+        "DB2P",
+        "ТДД 2 ЛБ"
+    ],
+    "DB2S": [
+        "DB2S",
+        "ТДД 2 Пр.Б"
+    ],
+    "DB3C": [
+        "DB3C",
+        "ТДД 3 ДП"
+    ],
+    "DB3P": [
+        "DB3P",
+        "ТДД 3 ЛБ"
+    ],
+    "DB3S": [
+        "DB3S",
+        "ТДД 3 Пр.Б"
+    ],
+    "DB4C": [
+        "DB4C",
+        "ТДД 4 ДП"
+    ],
+    "DB4P": [
+        "DB4P",
+        "ТДД 4 ЛБ"
+    ],
+    "DB4S": [
+        "DB4S",
+        "ТДД 4 Пр.Б"
+    ],
+    "DBottom Tank 1C": [
+        "DBottom Tank 1C",
+        "Танк ДД 1 ДП"
+    ],
+    "DBottom Tank 1P": [
+        "DBottom Tank 1P",
+        "Танк ДД 1 ЛБ"
+    ],
+    "DBottom Tank 1S": [
+        "DBottom Tank 1S",
+        "Танк ДД 1 Пр.Б"
+    ],
+    "DBottom Tank 2C": [
+        "DBottom Tank 2C",
+        "Танк ДД 2 ДП"
+    ],
+    "DBottom Tank 2P": [
+        "DBottom Tank 2P",
+        "Танк ДД 2 ЛБ"
+    ],
+    "DBottom Tank 2S": [
+        "DBottom Tank 2S",
+        "Танк ДД 2 Пр.Б"
+    ],
+    "DBottom Tank 3C": [
+        "DBottom Tank 3C",
+        "Танк ДД 3 ДП"
+    ],
+    "DBottom Tank 3P": [
+        "DBottom Tank 3P",
+        "Танк ДД 3 ЛБ"
+    ],
+    "DBottom Tank 3S": [
+        "DBottom Tank 3S",
+        "Танк ДД 3 Пр.Б"
+    ],
+    "DBottom Tank 4C": [
+        "DBottom Tank 4C",
+        "Танк ДД 4 ДП"
+    ],
+    "DBottom Tank 4P": [
+        "DBottom Tank 4P",
+        "Танк ДД 4 ЛБ"
+    ],
+    "DBottom Tank 4S": [
+        "DBottom Tank 4S",
+        "Танк ДД 4 Пр.Б"
+    ],
+    "Deck Well": [
+        "Deck Well",
+        "Палубный колодец"
+    ],
+    "Deep Tank": [
+        "Deep Tank",
+        "Диптанк"
+    ],
+    "Dirty Oil Tank": [
+        "Dirty Oil Tank",
+        "Цистерна грязного масла"
+    ],
+    "DOTK": [
+        "DOTK",
+        "ЦГМ"
+    ],
+    "DT": [
+        "DT",
+        "ДТ"
+    ],
+    "DW": [
+        "DW",
+        "ПК"
+    ],
+    "Emg. Sewage Tank": [
+        "Emg. Sewage Tank",
+        "Авар. сточная цистерна"
+    ],
+    "FLOT": [
+        "FLOT",
+        "ЦПГ"
+    ],
+    "Fore Peak Tank": [
+        "Fore Peak Tank",
+        "Форпик"
+    ],
+    "FP": [
+        "FP",
+        "ФП"
+    ],
+    "Fuel Leak Oil Tank": [
+        "Fuel Leak Oil Tank",
+        "Цистерна протечек газойля"
+    ],
+    "Gas Oil Day Tank": [
+        "Gas Oil Day Tank",
+        "Расходная цистерна газойля 1"
+    ],
+    "Gas Oil Day Tank 2": [
+        "Gas Oil Day Tank 2",
+        "Расходная цистерна газойля 2"
+    ],
+    "Gas Oil Tank1": [
+        "Gas Oil Tank1",
+        "Цистерна газойля 1"
+    ],
+    "Gas Oil Tank2": [
+        "Gas Oil Tank2",
+        "Цистерна газойля 2"
+    ],
+    "GDAY": [
+        "GDAY",
+        "РЦГ"
+    ],
+    "GDY2": [
+        "GDY2",
+        "РЦГ 2"
+    ],
+    "GSOT1": [
+        "GSOT1",
+        "ЦГ1"
+    ],
+    "GSOT2": [
+        "GSOT2",
+        "ЦГ2"
+    ],
+    "HDAY": [
+        "HDAY",
+        "ЦРТ"
+    ],
+    "HFO Day Tank": [
+        "HFO Day Tank",
+        "Цистерна расходного топлива"
+    ],
+    "HFO Settling Tank": [
+        "HFO Settling Tank",
+        "Цистерна отстойного топлива"
+    ],
+    "HSET": [
+        "HSET",
+        "ЦОТ"
+    ],
+    "HYD1": [
+        "HYD1",
+        "ЦГМ 1"
+    ],
+    "HYD2": [
+        "HYD2",
+        "ЦГМ 2"
+    ],
+    "Hydrolic Oil Tank 1": [
+        "Hydrolic Oil Tank 1",
+        "Цистерна гидравлического масла 1"
+    ],
+    "Hydrolic Oil Tank 2": [
+        "Hydrolic Oil Tank 2",
+        "Цистерна гидравлического масла 2"
+    ],
+    "LOAE": [
+        "LOAE",
+        "ЦСМ ВД"
+    ],
+    "LOME": [
+        "LOME",
+        "ЦСМ ГД"
+    ],
+    "LORE": [
+        "LORE",
+        "ЦСМ Р"
+    ],
+    "Lub. Oil Aux. Eng..": [
+        "Lub. Oil Aux. Eng..",
+        "Цистерна смазочного масла вспомогательного двигателя"
+    ],
+    "Lub. Oil Main Engine": [
+        "Lub. Oil Main Engine",
+        "Цистерна смазочного масла главного двигателя"
+    ],
+    "Lub. Oil Red. Eng.": [
+        "Lub. Oil Red. Eng.",
+        "Цистерна смазочного масла редуктора"
+    ],
+    "Overflow Tank": [
+        "Overflow Tank",
+        "Переливная цистерна"
+    ],
+    "OVFL": [
+        "OVFL",
+        "ПЦ"
+    ],
+    "SEWT": [
+        "SEWT",
+        "ЦСА"
+    ],
+    "Side Tank 1P": [
+        "Side Tank 1P",
+        "Борт. танк 1 ЛБ"
+    ],
+    "Side Tank 1S": [
+        "Side Tank 1S",
+        "Борт. танк 1 Пр.Б"
+    ],
+    "Side Tank 2P": [
+        "Side Tank 2P",
+        "Борт. танк 2 ЛБ"
+    ],
+    "Side Tank 2S": [
+        "Side Tank 2S",
+        "Борт. танк 2 Пр.Б"
+    ],
+    "Side Tank 3P": [
+        "Side Tank 3P",
+        "Борт. танк 3 ЛБ"
+    ],
+    "Side Tank 3S": [
+        "Side Tank 3S",
+        "Борт. танк 3 Пр.Б"
+    ],
+    "Side Tank 4P": [
+        "Side Tank 4P",
+        "Борт. танк 4 ЛБ"
+    ],
+    "Side Tank 4S": [
+        "Side Tank 4S",
+        "Борт. танк 4 Пр.Б"
+    ],
+    "Side Tank 5P": [
+        "Side Tank 5P",
+        "Борт. танк 5 ЛБ"
+    ],
+    "Side Tank 5S": [
+        "Side Tank 5S",
+        "Борт. танк 5 Пр.Б"
+    ],
+    "Side Tank 6P": [
+        "Side Tank 6P",
+        "Борт. танк 6 ЛБ"
+    ],
+    "Side Tank 6S": [
+        "Side Tank 6S",
+        "Борт. танк 6 Пр.Б"
+    ],
+    "Side Tank 7P": [
+        "Side Tank 7P",
+        "Борт. танк 7 ЛБ"
+    ],
+    "Side Tank 7S": [
+        "Side Tank 7S",
+        "Борт. танк 7 Пр.Б"
+    ],
+    "SLDG": [
+        "SLDG",
+        "ШЦ"
+    ],
+    "Sludge Tank": [
+        "Sludge Tank",
+        "Шламовая цистерна"
+    ],
+    "ST1P": [
+        "ST1P",
+        "БТ 1 ЛБ"
+    ],
+    "ST1S": [
+        "ST1S",
+        "БТ 1 Пр.Б"
+    ],
+    "ST2P": [
+        "ST2P",
+        "БТ 2 ЛБ"
+    ],
+    "ST2S": [
+        "ST2S",
+        "БТ 2 Пр.Б"
+    ],
+    "ST3P": [
+        "ST3P",
+        "БТ 3 ЛБ"
+    ],
+    "ST3S": [
+        "ST3S",
+        "БТ 3 Пр.Б"
+    ],
+    "ST4P": [
+        "ST4P",
+        "БТ 4 ЛБ"
+    ],
+    "ST4S": [
+        "ST4S",
+        "БТ 4 Пр.Б"
+    ],
+    "ST5P": [
+        "ST5P",
+        "БТ 5 ЛБ"
+    ],
+    "ST5S": [
+        "ST5S",
+        "БТ 5 Пр.Б"
+    ],
+    "ST6P": [
+        "ST6P",
+        "БТ 6 ЛБ"
+    ],
+    "ST6S": [
+        "ST6S",
+        "БТ 6 Пр.Б"
+    ],
+    "ST7P": [
+        "ST7P",
+        "БТ 7 ЛБ"
+    ],
+    "ST7S": [
+        "ST7S",
+        "БТ 7 Пр.Б"
+    ],
+    "Stem Tank P": [
+        "Stem Tank P",
+        "Ахтерпик ЛБ"
+    ],
+    "Stem Tank S": [
+        "Stem Tank S",
+        "Ахтерпик Пр.Б"
+    ],
+    "STTP": [
+        "STTP",
+        "АП ЛБ"
+    ],
+    "STTS": [
+        "STTS",
+        "АП Пр.Б"
+    ],
+    "THED": [
+        "THED",
+        "ЦКМ"
+    ],
+    "Thermic Oil Tank": [
+        "Thermic Oil Tank",
+        "Цистерна котельного масла"
+    ],
+    "Acceleration criterion": [
+        "Acceleration criterion",
+        "Критерий ускорения"
+    ],
+    "Area of LC between 30° & 40°": [
+        "Area of LC between 30° & 40°",
+        "Площадь ДСО от 30° до 40°"
+    ],
+    "Area of LC from grain displacement": [
+        "Area of LC from grain displacement",
+        "Площадь ДСО при смещении зерна"
+    ],
+    "Area of LC up to 30°": [
+        "Area of LC up to 30°",
+        "Площадь ДСО до 30°"
+    ],
+    "Area of LC up to 40°": [
+        "Area of LC up to 40°",
+        "Площадь ДСО до 40°"
+    ],
+    "Area of LC up to θₗₘₐₓ": [
+        "Area of LC up to θₗₘₐₓ",
+        "Площадь ДСО до θₗₘₐₓ"
+    ],
+    "Depth at forward perpendicular PS": [
+        "Depth at forward perpendicular PS",
+        "Высота на носовом перпендикуляре ЛБ"
+    ],
+    "Depth at forward perpendicular SB": [
+        "Depth at forward perpendicular SB",
+        "Высота на носовом перпендикуляре ПрБ"
+    ],
+    "Fresh water timber LL draft PS": [
+        "Fresh water timber LL draft PS",
+        "Осадка по лесную летнюю ГВЛ в пресной воде ЛБ"
+    ],
+    "Fresh water timber LL draft SB": [
+        "Fresh water timber LL draft SB",
+        "Осадка по лесную летнюю ГВЛ в пресной воде ПрБ"
+    ],
+    "Heel from grain displacement": [
+        "Heel from grain displacement",
+        "Крен от смещения зерна"
+    ],
+    "Heel on turning": [
+        "Heel on turning",
+        "Крен на циркуляции"
+    ],
+    "Heel with first maximum LC": [
+        "Heel with first maximum LC",
+        "Первый максимум ДСО"
+    ],
+    "Heel with maximum LC": [
+        "Heel with maximum LC",
+        "Максимальный угол ДСО"
+    ],
+    "LL draft SI16 (reserve)": [
+        "LL draft SI16 (reserve)",
+        "Осадка по ГВЛ Р16 (резерв)"
+    ],
+    "LL draft SI1 (reserve)": [
+        "LL draft SI1 (reserve)",
+        "Осадка по ГВЛ Р1 (резерв)"
+    ],
+    "Maximum aft trim": [
+        "Maximum aft trim",
+        "Максимальный дифферент на корму"
+    ],
+    "Maximum forward trim": [
+        "Maximum forward trim",
+        "Максимальный дифферент на нос"
+    ],
+    "Maximum LC": [
+        "Maximum LC",
+        "Максимальное плечо ДСО"
+    ],
+    "Maximum LC with icing": [
+        "Maximum LC with icing",
+        "Максимальное плечо ДСО при обледенении"
+    ],
+    "Maximum LC with timber": [
+        "Maximum LC with timber",
+        "Максимальное плечо ДСО для лесовоза"
+    ],
+    "Min. metacentric height": [
+        "Min. metacentric height",
+        "Исправленная метацентрическая высота"
+    ],
+    "Min. metacentric height due to subdivision index": [
+        "Min. metacentric height due to subdivision index",
+        "Минимальная метацентрическая высота деления на отсеки"
+    ],
+    "Reserve buoyncy in bow": [
+        "Reserve buoyncy in bow",
+        "Запас плавучести в носу"
+    ],
+    "Screw immersion PS": [
+        "Screw immersion PS",
+        "Заглубление винта ЛБ"
+    ],
+    "Screw immersion (reserve)": [
+        "Screw immersion (reserve)",
+        "Заглубление винта (резерв)"
+    ],
+    "Screw immersion SB": [
+        "Screw immersion SB",
+        "Заглубление винта ПрБ"
+    ],
+    "Summer timber LL draft PS": [
+        "Summer timber LL draft PS",
+        "Осадка по лесную летнюю ГВЛ ЛБ"
+    ],
+    "Summer timber LL draft SB": [
+        "Summer timber LL draft SB",
+        "Осадка по лесную летнюю ЛЛ ГВЛ ПрБ"
+    ],
+    "Tropical fresh water timber LL draft PS": [
+        "Tropical fresh water timber LL draft PS",
+        "Осадка по лесную тропическую ГВЛ в пресной воде ПрБ ЛБ"
+    ],
+    "Tropical fresh water timber LL draft SB": [
+        "Tropical fresh water timber LL draft SB",
+        "Осадка по лесную тропическую ГВЛ в пресной воде ПрБ"
+    ],
+    "Tropical timber LL draft PS": [
+        "Tropical timber LL draft PS",
+        "Осадка по лесную тропическую ГВЛ ЛБ"
+    ],
+    "Tropical timber LL draft SB": [
+        "Tropical timber LL draft SB",
+        "Осадка по лесную тропическую ГВЛ ПрБ"
+    ],
+    "Weather criterion": [
+        "Weather criterion",
+        "Критерий погоды"
+    ],
+    "Wind static heel": [
+        "Wind static heel",
+        "Статический крен от ветра"
+    ],
+    "Winter North Atlantic timber LL draft PS": [
+        "Winter North Atlantic timber LL draft PS",
+        "Осадка по лесную зимнюю ГВЛ в Северной Атлантике ГВЛ ЛБ"
+    ],
+    "Winter North Atlantic timber LL draft SB": [
+        "Winter North Atlantic timber LL draft SB",
+        "Осадка по лесную зимнюю ГВЛ в Северной Атлантике ГВЛ ПрБ"
+    ],
+    "Winter timber LL draft LW PS": [
+        "Winter timber LL draft LW PS",
+        "Осадка по лесную зимнюю ГВЛ ЛБ"
+    ],
+    "Winter timber LL draft SB": [
+        "Winter timber LL draft SB",
+        "Осадка по лесную зимнюю ГВЛ ПрБ"
+    ],
+    "Критерии остойчивости": [
+        "Критерии остойчивости",
+        "Stability criteria"
+    ],
+    "Критерии посадки": [
+        "Критерии посадки",
+        "Draught criteria"
+    ],
+    "Hold 1": [
+        "Hold 1",
+        "Трюм 1"
+    ],
+    "Hold 2": [
+        "Hold 2",
+        "Трюм 2"
+    ],
+    "Fresh water LL draft in summer PS": [
+        "Fresh water LL draft in summer PS",
+        "Осадка по летнюю ГВЛ в пресной воде ЛБ"
+    ],
+    "Fresh water LL draft in summer SB": [
+        "Fresh water LL draft in summer SB",
+        "Осадка по летнюю ГВЛ в пресной воде ПрБ"
+    ],
+    "Summer LL draft PS": [
+        "Summer LL draft PS",
+        "Осадка по летнюю ГВЛ ЛБ"
+    ],
+    "Summer LL draft SB": [
+        "Summer LL draft SB",
+        "Осадка по летнюю ГВЛ ПрБ"
+    ],
+    "Tropical fresh water LL draft PS": [
+        "Tropical fresh water LL draft PS",
+        "Осадка по тропическую ГВЛ в пресной воде ЛБ"
+    ],
+    "Tropical fresh water LL draft SB": [
+        "Tropical fresh water LL draft SB",
+        "Осадка по тропическую ГВЛ в пресной воде ПрБ"
+    ],
+    "Tropical LL draft PS": [
+        "Tropical LL draft PS",
+        "Осадка по тропическую ГВЛ ЛБ"
+    ],
+    "Tropical LL draft SB": [
+        "Tropical LL draft SB",
+        "Осадка по тропическую ГВЛ ПрБ"
+    ],
+    "Winter LL draft PS": [
+        "Winter LL draft PS",
+        "Осадка по зимнюю ГВЛ ЛБ"
+    ],
+    "Winter LL draft SB": [
+        "Winter LL draft SB",
+        "Осадка по зимнюю ГВЛ ПрБ"
+    ],
+    "Winter North Atlantic LL draft PS": [
+        "Winter North Atlantic LL draft PS",
+        "Осадка по зимнюю ГВЛ в Северной Атлантике ЛБ"
+    ],
+    "Winter North Atlantic LL draft SB": [
+        "Winter North Atlantic LL draft SB",
+        "Осадка по зимнюю ГВЛ в Северной Атлантике ПрБ"
+    ],
+    "Angle of down-flooding": [
+        "Angle of down-flooding",
+        "Угол заливания"
+    ],
+    "Area a": [
+        "Area a",
+        "Площадь a"
+    ],
+    "Area b": [
+        "Area b",
+        "Площадь b"
+    ],
+    "Dynamic windage heeling angle": [
+        "Dynamic windage heeling angle",
+        "Ветровой динамический угол крена"
+    ],
+    "Dynamic windage heeling lever": [
+        "Dynamic windage heeling lever",
+        "Плечо динамического ветрового кренящего момента"
+    ],
+    "Heeling angle of second point of intersection with": [
+        "Heeling angle of second point of intersection with",
+        "Угол второго пересечения $l_w2}$ с ДСО"
+    ],
+    "Heeling angle with maximum difference": [
+        "Heeling angle with maximum difference",
+        "Крен при макс. разности кривой кренящих моментов и ДСО"
+    ],
+    "Heeling moment due to the transverse shift of grain": [
+        "Heeling moment due to the transverse shift of grain",
+        "Кренящий момент от смещения зерна"
+    ],
+    "Open deck edge immersion angle": [
+        "Open deck edge immersion angle",
+        "Угол входа в воду кромки палубы"
+    ],
+    "Roll amplitude": [
+        "Roll amplitude",
+        "Амплитуда качки"
+    ],
+    "Roll period": [
+        "Roll period",
+        "Период качки"
+    ],
+    "Static windage heeling angle": [
+        "Static windage heeling angle",
+        "Ветровой статический угол крена"
+    ],
+    "Static windage heeling lever": [
+        "Static windage heeling lever",
+        "Плечо статического ветрового кренящего момента"
+    ],
+    "Sunset angle": [
+        "Sunset angle",
+        "Угол заката ДСО"
+    ],
+    "Trim": [
+        "Trim",
+        "Дифферент"
+    ],
+    "Vessel speed": [
+        "Vessel speed",
+        "Скорость судна"
+    ],
+    "Windage area": [
+        "Windage area",
+        "Площадь парусности"
+    ],
+    "Windage area lever": [
+        "Windage area lever",
+        "Плечо парусности"
+    ],
+    "Wind pressure": [
+        "Wind pressure",
+        "Давление ветра"
+    ],
+    "Screw immersion CL": [
+        "Screw immersion CL",
+        "Заглубление винта ДП"
+    ],
+    "Bulk carrier": [
+        "Bulk carrier",
+        "Навалочное судно"
+    ],
+    "Chemical tanker type 1": [
+        "Chemical tanker type 1",
+        "\\tХимовоз типа 1"
+    ],
+    "Chemical tanker type 2": [
+        "Chemical tanker type 2",
+        "Химовоз типа 2"
+    ],
+    "Chemical tanker type 3": [
+        "Chemical tanker type 3",
+        "Химовоз типа 3"
+    ],
+    "Container ship": [
+        "Container ship",
+        "Контейнеровоз"
+    ],
+    "Gas carrier CNG": [
+        "Gas carrier CNG",
+        "Газовоз CNG"
+    ],
+    "Gas carrier type 1G": [
+        "Gas carrier type 1G",
+        "Газовоз LG type 1G"
+    ],
+    "Gas carrier type 2G": [
+        "Gas carrier type 2G",
+        "Газовоз LG type 2G"
+    ],
+    "Gas carrier type 2PG": [
+        "Gas carrier type 2PG",
+        "Газовоз LG type 2PG"
+    ],
+    "Gas carrier type 3G": [
+        "Gas carrier type 3G",
+        "Газовоз LG type 3G"
+    ],
+    "General dry cargo ship": [
+        "General dry cargo ship",
+        "Судно, предназначенное для перевозки сухих генеральных грузов"
+    ],
+    "LNG bunkering ship": [
+        "LNG bunkering ship",
+        "Судно-бункеровщик СПГ"
+    ],
+    "Oil tanker": [
+        "Oil tanker",
+        "\\tНефтеналивное судно"
+    ],
+    "Ro-ro ship": [
+        "Ro-ro ship",
+        "\\tНакатное судно"
+    ],
+    "Tanker": [
+        "Tanker",
+        "\\tНаливное судно"
+    ],
+    "Timber carrier": [
+        "Timber carrier",
+        "Лесовоз"
+    ],
+    "%": [
+        "%",
+        "%"
+    ],
+    "deg": [
+        "deg",
+        "град"
+    ],
+    "g/ml": [
+        "g/ml",
+        "г/мл"
+    ],
+    "kN∙m": [
+        "kN∙m",
+        "кН∙м"
+    ],
+    "knot": [
+        "knot",
+        "уз"
+    ],
+    "m": [
+        "m",
+        "м"
+    ],
+    "m^2": [
+        "m^2",
+        "м^2"
+    ],
+    "m^3": [
+        "m^3",
+        "м^3"
+    ],
+    "m•rad": [
+        "m•rad",
+        "м∙рад"
+    ],
+    "m/s": [
+        "m/s",
+        "м/с"
+    ],
+    "Pa": [
+        "Pa",
+        "Па"
+    ],
+    "s": [
+        "s",
+        "с"
+    ],
+    "t": [
+        "t",
+        "т"
+    ],
+    "t•m": [
+        "t•m",
+        "т∙м"
+    ],
+    "t•m/cm": [
+        "t•m/cm",
+        "т∙м/см"
+    ]
+}
