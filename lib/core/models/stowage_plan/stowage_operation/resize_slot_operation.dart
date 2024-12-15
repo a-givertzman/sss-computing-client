@@ -132,6 +132,16 @@ class ResizeSlotOperation implements StowageOperation {
     StowageCollection collection,
     StowageCollection previousCollection,
   ) {
+    // Add all unchanged slots from same row and
+    // inverted isThirtyFt value
+    collection.addAllSlots(
+      previousCollection.toFilteredSlotList(
+        row: _row,
+        isThirtyFt: !_isThirtyFt,
+      ),
+    );
+    // Add all unchanged slots from same row and same
+    // isThirtyFt value
     final (minTierToSkip, maxTierToSkip) = _tier <= _maxHoldTier
         ? (_tier + _nextTierStep, _maxHoldTier)
         : (_tier + _nextTierStep, _maxDeckTier);
@@ -144,7 +154,8 @@ class ResizeSlotOperation implements StowageOperation {
       collection.addAllSlots(
         previousCollection.toFilteredSlotList(
           tier: tierToCopy,
-          shouldIncludeSlot: (s) => s.row == _row,
+          row: _row,
+          isThirtyFt: _isThirtyFt,
         ),
       );
     }
