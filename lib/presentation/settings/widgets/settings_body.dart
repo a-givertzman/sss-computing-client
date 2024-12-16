@@ -171,6 +171,7 @@ class _AppSettingsItem extends StatelessWidget {
     required Widget child,
   })  : _label = label,
         _child = child;
+  //
   @override
   Widget build(BuildContext context) => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
