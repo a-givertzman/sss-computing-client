@@ -36,8 +36,8 @@ class PgStabilityCriterions implements Criterions {
       sqlBuilder: (_, __) => Sql(
         sql: """
             SELECT
-              c.title_rus AS "name",
-              u.symbol_rus AS "unit",
+              c.title_eng AS "name",
+              u.symbol_eng AS "unit",
               c.math_relation::TEXT AS "relation",
               cv.actual_value AS "value",
               cv.limit_value AS "limit"

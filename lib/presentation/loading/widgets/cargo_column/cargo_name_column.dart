@@ -11,6 +11,7 @@ import 'package:sss_computing_client/core/widgets/table/table_column.dart';
 /// Creates [TableColumn] for [Cargo] name.
 class CargoNameColumn implements TableColumn<Cargo, String?> {
   final bool _useDefaultEditing;
+  final bool _useLocalization;
   final ValueRecord<String?> Function(
     Cargo data,
     String? Function(String text) toValue,
@@ -18,15 +19,18 @@ class CargoNameColumn implements TableColumn<Cargo, String?> {
   ///
   /// Creates [TableColumn] for [Cargo] name.
   ///
-  ///   [useDefaultEditing] either standard [EditingTable] editor is used or not.
-  ///   [buildRecord] build [ValueRecord] for [Cargo] name field.
+  ///   [useDefaultEditing] - either standard [EditingTable] editor is used or not.
+  ///   [useLocalization] - either value will be localized or not.
+  ///   [buildRecord] - build [ValueRecord] for [Cargo] name field.
   const CargoNameColumn({
     bool useDefaultEditing = false,
+    bool useLocalization = false,
     ValueRecord<String?> Function(
       Cargo,
       String? Function(String),
     )? buildRecord,
   })  : _useDefaultEditing = useDefaultEditing,
+        _useLocalization = useLocalization,
         _buildRecord = buildRecord;
   //
   @override
@@ -76,7 +80,13 @@ class CargoNameColumn implements TableColumn<Cargo, String?> {
   String? parseToValue(String text) => text;
   //
   @override
-  String parseToString(String? value) => value ?? nullValue;
+  String parseToString(String? value) {
+    if (_useLocalization) {
+      return value != null ? Localized(value).v : nullValue;
+    } else {
+      return value ?? nullValue;
+    }
+  }
   //
   @override
   Cargo copyRowWith(Cargo cargo, String? value) => JsonCargo(

@@ -36,9 +36,9 @@ class PgDraughtCriterions implements Criterions {
       sqlBuilder: (_, __) => Sql(
         sql: """
             SELECT
-              c.title_rus AS "name",
+              c.title_eng AS "name",
               c.math_relation::TEXT AS "relation",
-              u.symbol_rus AS "unit",
+              u.symbol_eng AS "unit",
               cv.ship_id,
               cv.project_id,
               cv.actual_value AS "value",

@@ -165,21 +165,7 @@ class _HoldConfiguratorState extends State<HoldConfigurator> {
               onRowUpdate: (_, oldCargo) => _refetchCargo(oldCargo),
               columns: [
                 const CargoTypeColumn(),
-                CargoNameColumn(
-                  useDefaultEditing: true,
-                  buildRecord: (cargo, toValue) => FieldRecord<String?>(
-                    dbName: widget._dbName,
-                    apiAddress: ApiAddress(
-                      host: widget._apiAddress.host,
-                      port: widget._apiAddress.port,
-                    ),
-                    authToken: widget._authToken,
-                    tableName: 'hold_compartment',
-                    fieldName: 'name_rus',
-                    filter: {'id': cargo.id},
-                    toValue: toValue,
-                  ),
-                ),
+                const CargoNameColumn(useLocalization: true),
                 CargoWeightColumn(
                   useDefaultEditing: true,
                   buildRecord: (cargo, toValue) => FieldRecord<double?>(

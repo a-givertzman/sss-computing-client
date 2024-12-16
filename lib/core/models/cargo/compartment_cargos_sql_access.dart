@@ -45,12 +45,13 @@ class CompartmentCargosSqlAccess {
       authToken: _authToken ?? '',
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
+        // TODO: remove COALESCE
         sql: """
             SELECT
               c.project_id AS "projectId",
               c.ship_id AS "shipId",
               c.id AS "id",
-              c.name_rus AS "name",
+              COALESCE(c.name_engl, c.name_rus) AS "name",
               c.mass AS "mass",
               c.volume AS "volume",
               c.density AS "density",

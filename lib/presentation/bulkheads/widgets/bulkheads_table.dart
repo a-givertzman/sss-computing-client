@@ -28,7 +28,7 @@ class _BulkheadsTableState extends State<BulkheadsTable> {
         DaviColumn(
           grow: 1,
           name: const Localized('Name').v,
-          stringValue: (data) => data.name,
+          stringValue: (data) => Localized(data.name).v,
         ),
         DaviColumn(
           grow: 1,

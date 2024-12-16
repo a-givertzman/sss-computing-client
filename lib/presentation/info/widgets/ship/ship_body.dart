@@ -183,7 +183,9 @@ class _BuildItemsState extends State<_BuildItems> {
         onSubmitted: (value) => widget._onItemChanged(item.key, value),
       );
     } else {
-      return NullableCellWidget(value: item.value);
+      return NullableCellWidget(
+        value: item.value != null ? Localized(item.value.toString()).v : null,
+      );
     }
   }
 }

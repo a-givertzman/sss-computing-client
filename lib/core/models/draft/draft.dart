@@ -17,7 +17,7 @@ abstract interface class Draft {
   /// Offset from midship.
   double get x;
   ///
-  /// Offset from OP. TODO: check correctness of OP name
+  /// Offset from OP.
   double get y;
   ///
   /// Returns [Map] representation of [Draft]

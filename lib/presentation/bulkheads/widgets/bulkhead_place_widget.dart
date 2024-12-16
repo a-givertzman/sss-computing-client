@@ -89,8 +89,9 @@ class _BulkheadPlaceWidgetState extends State<BulkheadPlaceWidget> {
                     data: data,
                     height: widget._bulkheadHeight,
                     label: widget._bulkheads
-                            .firstWhereOrNull((b) => b.id == data)
-                            ?.name ??
+                            .where((b) => b.id == data)
+                            .map((b) => Localized(b.name).v)
+                            .firstOrNull ??
                         const Localized('Grain bulkhead').v,
                   ),
                 null => BulkheadEmptyWidget(
@@ -104,7 +105,7 @@ class _BulkheadPlaceWidgetState extends State<BulkheadPlaceWidget> {
         _PlaceName(
           margin: widget._margin,
           padding: widget._padding,
-          name: widget._bulkheadPlace.name,
+          name: Localized(widget._bulkheadPlace.name).v,
         ),
       ],
     );
