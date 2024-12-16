@@ -58,9 +58,9 @@
   "FWD": ["FWD", "Нос"],
   "stern": ["AFT", "Корма"],
   "bow": ["FWD", "Нос"],
-  "AP": ["AP", "КП"],
-  "Avg": ["AFT", "Ср."],
-  "FP": ["FP", "НП"],
+  "Afterwards Perpendicular": ["AP", "КП"],
+  "Avg": ["Avg", "Ср."],
+  "Forward Perpendicular": ["FP", "НП"],
   "Mf.sx": ["Mf.sx", "Mf.sx"],
   "Mf.sy": ["Mf.sy", "Mf.sy"],
   "VCG": ["VCG", "z₉"],
@@ -459,5 +459,25 @@
   "Invalid characters found. Available for use: A-Z, a-z, А-Я, а-я, 0-9, ), (, _, -": [
     "Invalid characters found. Available for use: A-Z, a-z, А-Я, а-я, 0-9, ), (, _, -",
     "Найдены недопустимые символы. Доступны для использования: А-Z, a-z, А-Я, а-я, 0-9, ), (, _, -"
-  ]
+  ],
+  "Settings": ["Settings", "Настройки"],
+  "App settings": ["App settings", "Настройки приложения"],
+  "Unknown language": ["Unknown language", "Неизвестный язык"],
+  "Language": ["Language", "Язык"],
+  "ru": ["Russian", "Русский"],
+  "en": ["English", "Английский"],
+  "Error while loading language settings occurred": [
+    "Error while loading language settings occurred",
+    "Ошибка при загрузке настроек языка"
+  ],
+  "New language settings saved, please restart app to apply it": [
+    "New language settings saved, please restart app to apply it",
+    "Новые настройки языка сохранены, пожалуйста, перезагрузите приложение, чтобы применить их"
+  ],
+  "Cannot change application language settings, please try again": [
+    "Cannot change application language settings, please try again",
+    "Не получается изменить настройки языка приложения, пожалуйста, попробуйте ещё раз"
+  ],
+  "Clear bay plan": ["Clear bay plan", "Очистить план"],
+  "Delete all containers": ["Delete all containers", "Удалить все контейнеры"]
 }
