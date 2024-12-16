@@ -9,6 +9,7 @@ import 'package:sss_computing_client/presentation/drafts/drafts_page.dart';
 import 'package:sss_computing_client/presentation/info/info_page.dart';
 import 'package:sss_computing_client/presentation/loading/loading_page.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
+import 'package:sss_computing_client/presentation/settings/settings_page.dart';
 import 'package:sss_computing_client/presentation/stability/stability_page.dart';
 import 'package:sss_computing_client/presentation/strength/strength_page.dart';
 ///
@@ -101,6 +102,11 @@ class NavigationPanel extends StatelessWidget {
             selectedIcon: const Icon(Icons.info),
             label: Text(const Localized('Info').v),
           ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: const Icon(Icons.settings),
+            label: Text(const Localized('Settings').v),
+          ),
         ],
         selectedIndex: _selectedPageIndex,
         onDestinationSelected: (index) {
@@ -151,6 +157,14 @@ class NavigationPanel extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => const InfoPage(pageIndex: 5),
                   settings: const RouteSettings(name: '/InfoPage'),
+                ),
+              );
+              return;
+            case 6:
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(pageIndex: 6),
+                  settings: const RouteSettings(name: '/SettingsPage'),
                 ),
               );
               return;
