@@ -4,10 +4,11 @@ import 'package:sss_computing_client/core/models/calculation/calculation_status.
 import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/settings/widgets/settings_body.dart';
 ///
-///
+/// Page with application settings.
 class SettingsPage extends StatelessWidget {
   final int _pageIndex;
   ///
+  /// Creates page with application settings.
   const SettingsPage({
     super.key,
     required int pageIndex,
