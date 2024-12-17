@@ -14,8 +14,6 @@ abstract interface class VoyageDetails {
   OptionsField<String> get loadLine;
   /// Taken into account in calculations of settlement, strength and stability
   OptionsField<String> get icing;
-  /// Wetting of deck timber cargo
-  bool get wetting;
   /// A description of the voyage or cargo plan or any comment
   String? get description;
   /// The key-value pairs of the [VoyageDetails]
@@ -42,7 +40,6 @@ final class JsonVoyageDetails implements VoyageDetails {
   ///   "voyageCode": "Код рейса", // String
   ///   "voyageDescription": "Описание рейса", // String
   ///   "intakeWaterDensity": "1.025", // String
-  ///   "wettingDeck": "10.0", // String
   ///   "icingTypes": [{'id': 1, 'name': 'full', 'isActive': true}, ...], // String, JsonOptionsField
   ///   "waterAreaTypes": [{'id': 1, 'name': 'port', 'isActive': true}, ...], // String, JsonOptionsField
   ///   "loadLineTypes": [{'id': 1, 'name': 'full', 'isActive': true}, ...], // String, JsonOptionsField
@@ -55,7 +52,6 @@ final class JsonVoyageDetails implements VoyageDetails {
     return JsonVoyageDetails({
       'voyageCode': row['voyageCode'] as String,
       'intakeWaterDensity': row['intakeWaterDensity'] as String,
-      'wettingDeck': row['wettingDeck'] as String,
       'icingTypes': json.encode(row['icingTypes']),
       'waterAreaTypes': json.encode(row['waterAreaTypes']),
       'loadLineTypes': json.encode(row['loadLineTypes']),
@@ -69,9 +65,6 @@ final class JsonVoyageDetails implements VoyageDetails {
   @override
   double get density =>
       double.tryParse(_json['intakeWaterDensity'] ?? '') ?? 1.025;
-  //
-  @override
-  bool get wetting => bool.tryParse(_json['wettingDeck'] ?? '') ?? false;
   //
   @override
   String? get description => _json['voyageDescription'];
