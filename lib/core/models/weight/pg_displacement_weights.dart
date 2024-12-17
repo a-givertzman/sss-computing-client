@@ -39,45 +39,64 @@ class PgDisplacementWeights implements DisplacementWeights {
     return sqlAccess.fetch().convertFailure();
   }
   Sql _sql({required int shipId, required int? projectId}) => Sql(
-        sql: '${<({int valueId})>[
-          (valueId: 27),
-          (valueId: 25),
-          (valueId: 26),
-          (valueId: 29),
-          (valueId: 2),
-          (valueId: 28),
-          (valueId: 30),
-          (valueId: 31),
+        sql: '${<({int valueId, int lcgId, int tcgId, int vcgId, bool asHeader, bool asSubitem})>[
+          (valueId: 2, lcgId: 32, tcgId: 52, vcgId: -1, asHeader: false, asSubitem: false), // Displacement
+          (valueId: 28, lcgId: -1, tcgId: -1, vcgId: -1, asHeader: true, asSubitem: false), // DWT
+          (valueId: 27, lcgId: 61, tcgId: 66, vcgId: 72, asHeader: false, asSubitem: true), // Cargo
+          (valueId: 25, lcgId: 59, tcgId: 64, vcgId: 70, asHeader: false, asSubitem: true), // Ballast
+          (valueId: 26, lcgId: 60, tcgId: 65, vcgId: 71, asHeader: false, asSubitem: true), // Stores
+          (valueId: 30, lcgId: 62, tcgId: 68, vcgId: 74, asHeader: false, asSubitem: false), // Icing
+          (valueId: 31, lcgId: 63, tcgId: 69, vcgId: 75, asHeader: false, asSubitem: false), // Timber
+          (valueId: 29, lcgId: 58, tcgId: 77, vcgId: 78, asHeader: false, asSubitem: false), // Lightship
         ].map(
-              (ids) => _sqlQueryPart(
+              (parameters) => _sqlQueryPart(
                 shipId: shipId,
                 projectId: projectId,
-                valueParameterId: ids.valueId,
+                ids: (valueId: parameters.valueId, lcgId: parameters.lcgId, tcgId: parameters.tcgId, vcgId: parameters.vcgId),
+                options: (asHeader: parameters.asHeader, asSubitem: parameters.asSubitem),
               ),
-            ).join('\nUNION\n')};',
+            ).join('\nUNION ALL\n')};',
       );
   String _sqlQueryPart({
     required int shipId,
     required int? projectId,
-    required int valueParameterId,
+    required ({int valueId, int lcgId, int tcgId, int vcgId}) ids,
+    required ({bool asHeader, bool asSubitem}) options,
   }) =>
       // TODO: remove `COALESCE`
       '''
 SELECT
   vpd.result AS "value",
   COALESCE(vph.title_eng, vph.title_rus) AS "name",
-  NULL::REAL AS "lcg",
-  NULL::REAL AS "tcg",
-  NULL::REAL AS "vcg",
-  NULL::REAL AS "vcgCorrection"
+  lcgpd.result AS "lcg",
+  tcgpd.result AS "tcg",
+  vcgpd.result AS "vcg",
+  NULL::REAL AS "vcgCorrection",
+  ${options.asHeader ? 'TRUE' : 'FALSE'} AS "asHeader",
+  ${options.asSubitem ? 'TRUE' : 'FALSE'} AS "asSubitem"
 FROM
   parameter_data AS vpd
-JOIN
+LEFT JOIN
   parameter_head AS vph ON
     vpd.parameter_id = vph.id AND
     vpd.ship_id = $shipId AND
     vpd.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
+LEFT JOIN
+  parameter_data AS lcgpd ON
+    lcgpd.parameter_id = ${ids.lcgId} AND
+    lcgpd.ship_id = $shipId AND
+    lcgpd.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
+LEFT JOIN
+  parameter_data AS tcgpd ON
+    tcgpd.parameter_id = ${ids.tcgId} AND
+    tcgpd.ship_id = $shipId AND
+    tcgpd.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
+LEFT JOIN
+  parameter_data AS vcgpd ON
+    vcgpd.parameter_id = ${ids.vcgId} AND
+    vcgpd.ship_id = $shipId AND
+    vcgpd.project_id IS NOT DISTINCT FROM ${projectId ?? 'NULL'}
 WHERE
-  vpd.parameter_id = $valueParameterId
+  vpd.parameter_id = ${ids.valueId}
 ''';
 }

@@ -5,6 +5,12 @@ abstract interface class DisplacementWeight {
   /// Returns weight name
   String get name;
   ///
+  /// Returns true if weight is displayed as header and false otherwise.
+  bool get asHeader;
+  ///
+  /// Returns true if weight is displayed as subitem and false otherwise.
+  bool get asSubitem;
+  ///
   /// Returns weight value, measured in tonnes.
   double? get value;
   ///
