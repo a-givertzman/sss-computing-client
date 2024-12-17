@@ -30,7 +30,6 @@ class PgProjects implements Projects {
       database: dbName,
       authToken: authToken,
       sqlBuilder: (_, __) => Sql(
-        // TODO: update on the db side
         sql: '''
 SELECT
   dc.id AS "id",
@@ -38,7 +37,7 @@ SELECT
   dc.created_at AS "createdAt",
   dc.last_loaded_at AS "loadedAt",
   dc.is_active AS "isLoaded",
-  TRUE::BOOLEAN AS "isDeletable"
+  dc.is_deletable AS "isDeletable"
 FROM
   custom_metadata.db_checkpoint AS dc
 ORDER BY
