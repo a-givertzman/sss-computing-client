@@ -70,16 +70,6 @@ class _ProjectsWidgetState extends State<ProjectsWidget> {
             DateTime.tryParse(text) ?? DateTime.now(),
         parseToString: (DateTime value) => value.formatRU(),
       ),
-      EditingTableColumn<Project, bool>(
-        key: 'is_loaded',
-        name: const Localized('status').v,
-        grow: 1,
-        defaultValue: false,
-        extractValue: (project) => project.isLoaded,
-        parseToValue: (String text) => bool.tryParse(text) ?? false,
-        parseToString: (bool value) =>
-            value ? const Localized('project loaded').v : '—',
-      ),
     ];
     super.initState();
   }
@@ -120,9 +110,10 @@ class _ProjectsWidgetState extends State<ProjectsWidget> {
               FilledButton.icon(
                 icon: const Icon(Icons.delete_rounded),
                 label: Text(const Localized('Delete project').v),
-                onPressed: _selectedProject != null
-                    ? () => _handleProjectDelete(_selectedProject!)
-                    : null,
+                onPressed:
+                    _selectedProject != null && _selectedProject!.isDeletable
+                        ? () => _handleProjectDelete(_selectedProject!)
+                        : null,
               ),
             ],
           ),
@@ -219,16 +210,38 @@ class _ProjectsWidgetState extends State<ProjectsWidget> {
         },
       );
   //
-  void _handleProjectLoad(Project project) {
-    _handleUpdateResult(
-      widget._projectsCollection.load(project),
+  void _handleProjectLoad(Project project) async {
+    final confirmLoading = await showDialog<bool>(
+      context: context,
+      builder: (_) => ConfirmationDialog(
+        title: Text(const Localized('Open project?').v),
+        content: Text(const Localized('Current project will be overwritten').v),
+        confirmationButtonLabel: const Localized('Open').v,
+      ),
     );
+    if (confirmLoading ?? false) {
+      _handleUpdateResult(
+        widget._projectsCollection.load(project),
+      );
+    }
   }
   //
-  void _handleProjectDelete(Project project) {
-    _handleUpdateResult(
-      widget._projectsCollection.remove(project),
+  void _handleProjectDelete(Project project) async {
+    final confirmDeleting = await showDialog<bool>(
+      context: context,
+      builder: (_) => ConfirmationDialog(
+        title: Text(const Localized('Delete project?').v),
+        content: Text(const Localized(
+          'Project will be deleted and cannot be restored',
+        ).v),
+        confirmationButtonLabel: const Localized('Delete').v,
+      ),
     );
+    if (confirmDeleting ?? false) {
+      _handleUpdateResult(
+        widget._projectsCollection.remove(project),
+      );
+    }
   }
   //
   void _showErrorMessage(String message) {

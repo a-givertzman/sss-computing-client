@@ -19,6 +19,7 @@ class JsonProject implements Project {
   ///   "createdAt": "2022-01-01 00:00:00", // String
   ///   "loadedAt": "2022-01-01 00:00:00", // String?
   ///   "isLoaded": true, // bool
+  ///   "isDeletable": true // bool
   /// }
   factory JsonProject.fromRow(Map<String, dynamic> row) => JsonProject(
         json: {
@@ -27,6 +28,7 @@ class JsonProject implements Project {
           'createdAt': row['createdAt'] as String,
           'loadedAt': row['loadedAt'] as String?,
           'isLoaded': row['isLoaded'] as bool,
+          'isDeletable': row['isDeletable'] as bool,
         },
       );
   ///
@@ -63,6 +65,9 @@ class JsonProject implements Project {
   //
   @override
   bool get isLoaded => _json['isLoaded'];
+  //
+  @override
+  bool get isDeletable => _json['isDeletable'];
   //
   @override
   Map<String, dynamic> asMap() => Map.from(_json);

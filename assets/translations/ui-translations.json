@@ -479,5 +479,17 @@
     "Не получается изменить настройки языка приложения, пожалуйста, попробуйте ещё раз"
   ],
   "Clear bay plan": ["Clear bay plan", "Очистить план"],
-  "Delete all containers": ["Delete all containers", "Удалить все контейнеры"]
+  "Delete all containers": ["Delete all containers", "Удалить все контейнеры"],
+  "This project cannot be removed": ["This project cannot be removed", "Этот проект нельзя удалить"],
+  "Open project?": ["Open project?", "Открыть проект?"],
+  "Open": ["Open", "Открыть"],
+  "Delete project?": ["Delete project?", "Удалить проект?"],
+  "Current project will be overwritten": [
+    "Current project will be overwritten, and all changes will be lost if not saved.",
+    "Текущий проект будет перезаписан и все изменения будут потеряны, если не сохранены."
+  ],
+  "Project will be deleted and cannot be restored": [
+    "Project will be deleted and cannot be restored.",
+    "Проект будет удален и не может быть восстановлен."
+  ]
 }
