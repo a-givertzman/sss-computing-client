@@ -45,6 +45,7 @@ class PgShipDetails {
           s.flag_state::TEXT AS "flagState",
           s.ship_owner::TEXT AS "shipOwner",
           s.ship_owner_code::TEXT AS "shipOwnerCode",
+          s.yard_of_build::TEXT AS "buildYard",
           s.ship_builder_hull_number::TEXT AS "shipBuilderNumber",
           str.title_eng::TEXT AS "shipType",
           na.area::TEXT AS "navigationArea",

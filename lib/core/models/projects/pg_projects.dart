@@ -36,7 +36,8 @@ SELECT
   dc.name AS "name",
   dc.created_at AS "createdAt",
   dc.last_loaded_at AS "loadedAt",
-  dc.is_active AS "isLoaded"
+  dc.is_active AS "isLoaded",
+  dc.is_deletable AS "isDeletable"
 FROM
   custom_metadata.db_checkpoint AS dc
 ORDER BY
@@ -144,7 +145,13 @@ WHERE
   }
   //
   @override
-  Future<Result<void, Failure<String>>> remove(Project project) {
+  Future<Result<void, Failure<String>>> remove(Project project) async {
+    if (!project.isDeletable) {
+      return Err(Failure(
+        message: 'This project cannot be removed',
+        stackTrace: StackTrace.current,
+      ));
+    }
     return SqlAccess(
       address: apiAddress,
       database: dbName,

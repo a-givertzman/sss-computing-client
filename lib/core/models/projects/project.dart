@@ -17,6 +17,9 @@ abstract interface class Project {
   /// Either [Project] is source of currently loaded data or not
   bool get isLoaded;
   ///
+  /// Either [Project] can be deleted or not
+  bool get isDeletable;
+  ///
   /// Returns [Map] representation of [Project]
   Map<String, dynamic> asMap();
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sss_computing_client/core/extensions/date_time.dart';
+import 'package:hmi_core/hmi_core.dart' as hmi_core;
 ///
 /// Widget that displays a dateTime label and allows to change it.
 class DateTimeLabelPicker extends StatelessWidget {
@@ -30,13 +31,14 @@ class DateTimeLabelPicker extends StatelessWidget {
   }
   //
   void _pickDateAndTime(BuildContext context) async {
-    const String emptyLabel = '';
+    const emptyLabel = '';
+    const daysInYear = 365;
     final pickedDate = await showDatePicker(
       helpText: emptyLabel,
       context: context,
       initialDate: _dateTime,
       firstDate: DateTime.fromMillisecondsSinceEpoch(0),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: daysInYear * 2)),
       switchToInputEntryModeIcon: const Icon(Icons.keyboard_outlined),
       builder: _buildInputDialog,
     );
@@ -57,11 +59,15 @@ class DateTimeLabelPicker extends StatelessWidget {
   //
   Widget _buildInputDialog(BuildContext context, Widget? child) {
     return Localizations(
-      locale: const Locale('ru'),
+      locale: switch (hmi_core.Localizations().appLang) {
+        hmi_core.AppLang.en => const Locale('en'),
+        hmi_core.AppLang.ru => const Locale('ru'),
+        hmi_core.AppLang.de => const Locale('de'),
+        hmi_core.AppLang.fr => const Locale('fr'),
+      },
       delegates: const [
         GlobalWidgetsLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
       ],
       child: Theme(
         data: Theme.of(context).copyWith(
