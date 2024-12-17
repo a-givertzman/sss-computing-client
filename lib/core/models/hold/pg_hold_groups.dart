@@ -33,12 +33,13 @@ class PgHoldGroups implements HoldGroups {
       authToken: _authToken ?? '',
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
+        // TODO: remove COALESCE
         sql: """
             SELECT
                 hg.id AS "id",
                 hg.project_id AS "projectId",
                 hg.ship_id AS "shipId",
-                hg.name AS "name"
+                COALESCE(hg.name_engl, hg.name_rus) AS "title"
             FROM
                 hold_group AS hg
             WHERE
@@ -82,12 +83,13 @@ class PgHoldGroups implements HoldGroups {
       authToken: _authToken ?? '',
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
+        // TODO: remove COALESCE
         sql: """
             SELECT
                 hg.id AS "id",
                 hg.project_id AS "projectId",
                 hg.ship_id AS "shipId",
-                hg.name AS "name"
+                COALESCE(hg.name_engl, hg.name_rus) AS "name",
             FROM
                 hold_group AS hg
             WHERE

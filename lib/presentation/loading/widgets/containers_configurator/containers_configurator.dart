@@ -133,6 +133,20 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              FilledButton.icon(
+                onPressed: _handleUnloadAllContainers,
+                icon: const Icon(Icons.clear_rounded),
+                label: Text(const Localized('Clear bay plan').v),
+              ),
+              SizedBox(width: blockPadding),
+              FilledButton.icon(
+                onPressed:
+                    _containers.isNotEmpty ? _handleDeleteAllContainers : null,
+                icon: const Icon(Icons.delete_rounded),
+                label: Text(const Localized('Delete all containers').v),
+              ),
+              SizedBox(width: blockPadding),
+              const Spacer(),
               IconButton.filled(
                 tooltip: const Localized('Add container').v,
                 icon: const Icon(Icons.add_rounded),
@@ -166,19 +180,6 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
                         ))
                     ? _removeSelectedContainer
                     : null,
-              ),
-              SizedBox(width: blockPadding),
-              FilledButton.icon(
-                onPressed: _handleUnloadAllContainers,
-                icon: const Icon(Icons.clear_rounded),
-                label: Text(const Localized('Clear bay plan').v),
-              ),
-              SizedBox(width: blockPadding),
-              FilledButton.icon(
-                onPressed:
-                    _containers.isNotEmpty ? _handleDeleteAllContainers : null,
-                icon: const Icon(Icons.delete_rounded),
-                label: Text(const Localized('Delete all containers').v),
               ),
             ],
           ),
@@ -370,7 +371,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     _bayPairsScrollController.scrollTo(
       index: bayPairIndex,
       duration: Duration(
-        milliseconds: const Setting('animationDuration').toInt,
+        milliseconds: const Setting('animationDuration_ms').toInt,
       ),
       alignment: 0.5,
     );
@@ -494,7 +495,7 @@ class _ContainersConfiguratorState extends State<ContainersConfigurator> {
     BottomMessage.error(
       message: message.truncate(),
       displayDuration: Duration(
-        milliseconds: const Setting('errorMessageDisplayDuration').toInt,
+        milliseconds: const Setting('errorMessageDisplayDuration_ms').toInt,
       ),
     ).show(context);
   }

@@ -61,10 +61,11 @@ class PgDisplacementWeights implements DisplacementWeights {
     required int? projectId,
     required int valueParameterId,
   }) =>
+      // TODO: remove `COALESCE`
       '''
 SELECT
   vpd.result AS "value",
-  vph.title_rus AS "name",
+  COALESCE(vph.title_eng, vph.title_rus) AS "name",
   NULL::REAL AS "lcg",
   NULL::REAL AS "tcg",
   NULL::REAL AS "vcg",

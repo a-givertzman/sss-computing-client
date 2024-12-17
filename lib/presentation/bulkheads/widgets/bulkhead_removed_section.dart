@@ -95,11 +95,11 @@ class _BulkheadRemovedSectionState extends State<BulkheadRemovedSection> {
                               data: widget._bulkheadIds[index],
                               height: widget._bulkheadHeight,
                               label: widget._bulkheads
-                                      .firstWhereOrNull(
-                                        (b) =>
-                                            b.id == widget._bulkheadIds[index],
+                                      .where(
+                                        (b) => b.id == widget._bulkheadIds[index],
                                       )
-                                      ?.name ??
+                                      .map((b) => Localized(b.name).v)
+                                      .firstOrNull ??
                                   const Localized('Grain bulkhead').v,
                             )
                           : BulkheadEmptyWidget(

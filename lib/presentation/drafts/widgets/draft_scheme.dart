@@ -218,7 +218,7 @@ class _DraftSchemeState extends State<DraftScheme> {
       [
         SchemeText(
           text:
-              '${const Localized('AP').v} ${heelTrim.draftAP.value.toStringAsFixed(2)} ${const Localized('m').v}',
+              '${const Localized('Afterwards Perpendicular').v} ${heelTrim.draftAP.value.toStringAsFixed(2)} ${const Localized('m').v}',
           offset: Offset(heelTrim.draftAP.offset, 0.0),
           style: style,
           layoutTransform: layoutTransform,
@@ -232,7 +232,7 @@ class _DraftSchemeState extends State<DraftScheme> {
         ),
         SchemeText(
           text:
-              '${const Localized('FP').v} ${heelTrim.draftFP.value.toStringAsFixed(2)} ${const Localized('m').v}',
+              '${const Localized('Forward Perpendicular').v} ${heelTrim.draftFP.value.toStringAsFixed(2)} ${const Localized('m').v}',
           offset: Offset(heelTrim.draftFP.offset, 0.0),
           style: style,
           layoutTransform: layoutTransform,

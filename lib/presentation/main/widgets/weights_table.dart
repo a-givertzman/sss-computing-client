@@ -25,7 +25,7 @@ class WeightsTable extends StatelessWidget {
         columns: [
           DaviColumn(
             width: 400.0,
-            stringValue: (data) => data.name,
+            stringValue: (data) => Localized(data.name).v,
           ),
           DaviColumn(
             grow: 1,

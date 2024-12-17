@@ -34,12 +34,13 @@ class PgBulkheads implements Bulkheads {
       authToken: _authToken ?? '',
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
+        // TODO: remove COALESCE
         sql: """
             SELECT
                 b.id AS "id",
                 b.project_id AS "projectId",
                 b.ship_id AS "shipId",
-                b.name_rus AS "name",
+                COALESCE(b.name_engl, b.name_rus) AS "name",
                 b.mass AS "mass",
                 bp.mass_shift_x AS "lcg",
                 bp.mass_shift_y AS "tcg",
@@ -71,12 +72,13 @@ class PgBulkheads implements Bulkheads {
       authToken: _authToken ?? '',
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
+        // TODO: remove COALESCE
         sql: """
             SELECT
                 b.id AS "id",
                 b.project_id AS "projectId",
                 b.ship_id AS "shipId",
-                b.name_rus AS "name",
+                COALESCE(b.name_engl, b.name_rus) AS "name",
                 b.mass AS "mass",
                 bp.mass_shift_x AS "lcg",
                 bp.mass_shift_y AS "tcg",
@@ -118,12 +120,13 @@ class PgBulkheads implements Bulkheads {
       authToken: _authToken ?? '',
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
+        // TODO: remove COALESCE
         sql: """
             SELECT
                 b.id AS "id",
                 b.project_id AS "projectId",
                 b.ship_id AS "shipId",
-                b.name_rus AS "name",
+                COALESCE(b.name_engl, b.name_rus) AS "name",
                 b.mass AS "mass",
                 bp.mass_shift_x AS "lcg",
                 bp.mass_shift_y AS "tcg",

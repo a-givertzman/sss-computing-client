@@ -65,7 +65,7 @@ class CheckboxCellWidget extends StatelessWidget {
     BottomMessage.error(
       message: message.truncate(),
       displayDuration: Duration(
-        milliseconds: const Setting('errorMessageDisplayDuration').toInt,
+        milliseconds: const Setting('errorMessageDisplayDuration_ms').toInt,
       ),
     ).show(context);
   }

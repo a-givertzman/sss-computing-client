@@ -103,6 +103,8 @@ class _CriterionIndicatorView extends StatelessWidget {
     final passedColor = _passedColor ?? Theme.of(context).stateColors.on;
     final errorColor = _errorColor ?? theme.alarmColors.class3;
     final padding = const Setting('padding').toDouble;
+    final label = Localized(_label);
+    final unit = _unit != null ? ' [${Localized(_unit)}]' : '';
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,7 +117,7 @@ class _CriterionIndicatorView extends StatelessWidget {
               child: Tooltip(
                 message: _labelMessage ?? '',
                 child: Text(
-                  '$_label${_unit != null ? ' [$_unit]' : ''}',
+                  '$label$unit',
                   style: textStyle?.copyWith(color: color),
                 ),
               ),

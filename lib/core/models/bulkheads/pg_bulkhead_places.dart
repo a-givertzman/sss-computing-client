@@ -34,12 +34,13 @@ class PgBulkheadPlaces implements BulkheadPlaces {
       authToken: _authToken ?? '',
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
+        // TODO: remove COALESCE
         sql: """
             SELECT
                 bp.id AS "id",
                 bp.project_id AS "projectId",
                 bp.ship_id AS "shipId",
-                bp.name_rus AS "name",
+                COALESCE(bp.name_engl, bp.name_rus) AS "name",
                 bp.bulkhead_id AS "bulkheadId",
                 bp.hold_group_id AS "holdGroupId"
             FROM
@@ -71,12 +72,13 @@ class PgBulkheadPlaces implements BulkheadPlaces {
       authToken: _authToken ?? '',
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
+        // TODO: remove COALESCE
         sql: """
             SELECT
                 bp.id AS "id",
                 bp.project_id AS "projectId",
                 bp.ship_id AS "shipId",
-                bp.name_rus AS "name",
+                COALESCE(bp.name_engl, bp.name_rus) AS "name",
                 bp.bulkhead_id AS "bulkheadId",
                 bp.hold_group_id AS "holdGroupId"
             FROM

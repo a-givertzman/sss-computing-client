@@ -31,8 +31,11 @@ class _StabilityParametersTableState extends State<StabilityParametersTable> {
         DaviColumn<StabilityParameter>(
           grow: 1,
           name: const Localized('Parameter').v,
-          stringValue: (data) =>
-              '${data.name}${data.unit != null ? ' [${data.unit}]' : ''}',
+          stringValue: (data) {
+            final name = Localized(data.name).v;
+            final unit = data.unit != null ? ' [${Localized(data.unit!)}]' : '';
+            return '$name$unit';
+          },
         ),
         DaviColumn<StabilityParameter>(
           headerAlignment: Alignment.centerRight,

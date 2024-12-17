@@ -34,11 +34,12 @@ class PgStabilityParameters implements StabilityParameters {
       authToken: _authToken ?? '',
       database: _dbName,
       sqlBuilder: (_, __) => Sql(
+        // TODO: remove COALESCE
         sql: """
             SELECT
               DISTINCT
-              ph.title_rus AS "title",
-              u.symbol_rus::TEXT AS "unit",
+              COALESCE(ph.title_eng, ph.title_rus) AS "title",
+              u.symbol_eng::TEXT AS "unit",
               pd.ship_id AS "shipId",
               pd.project_id AS "projectId",
               pd.result AS "value"
