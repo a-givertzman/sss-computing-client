@@ -42,10 +42,10 @@ class ContainerPOLColumn implements TableColumn<FreightContainer, int?> {
   Alignment get cellAlignment => Alignment.centerLeft;
   //
   @override
-  double? get grow => null;
+  double? get grow => 1.0;
   //
   @override
-  double? get width => 150.0;
+  double? get width => null;
   //
   @override
   bool get useDefaultEditing => false;

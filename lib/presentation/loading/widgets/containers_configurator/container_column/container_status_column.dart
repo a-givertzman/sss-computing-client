@@ -46,10 +46,10 @@ class ContainerStatusColumn implements TableColumn<FreightContainer, Status> {
   Alignment get cellAlignment => Alignment.centerRight;
   //
   @override
-  double? get grow => null;
+  double? get grow => 1.0;
   //
   @override
-  double? get width => 75.0;
+  double? get width => null;
   //
   @override
   bool get useDefaultEditing => false;
