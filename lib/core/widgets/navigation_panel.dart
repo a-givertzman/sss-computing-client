@@ -72,6 +72,11 @@ class NavigationPanel extends StatelessWidget {
             label: Text(const Localized('Main').v),
           ),
           NavigationRailDestination(
+            icon: const Icon(Icons.info_outline),
+            selectedIcon: const Icon(Icons.info),
+            label: Text(const Localized('Info').v),
+          ),
+          NavigationRailDestination(
             icon: const Icon(Icons.pallet),
             selectedIcon: const Icon(Icons.pallet),
             label: Text(const Localized('Loading').v),
@@ -98,11 +103,6 @@ class NavigationPanel extends StatelessWidget {
             label: Text(const Localized('Stability').v),
           ),
           NavigationRailDestination(
-            icon: const Icon(Icons.info_outline),
-            selectedIcon: const Icon(Icons.info),
-            label: Text(const Localized('Info').v),
-          ),
-          NavigationRailDestination(
             icon: const Icon(Icons.settings_outlined),
             selectedIcon: const Icon(Icons.settings),
             label: Text(const Localized('Settings').v),
@@ -123,40 +123,40 @@ class NavigationPanel extends StatelessWidget {
             case 1:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const LoadingPage(pageIndex: 1),
-                  settings: const RouteSettings(name: '/LoadingPage'),
+                  builder: (context) => const InfoPage(pageIndex: 1),
+                  settings: const RouteSettings(name: '/InfoPage'),
                 ),
               );
               return;
             case 2:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const DraftsPage(pageIndex: 2),
-                  settings: const RouteSettings(name: '/DraftsPage'),
+                  builder: (context) => const LoadingPage(pageIndex: 2),
+                  settings: const RouteSettings(name: '/LoadingPage'),
                 ),
               );
               return;
             case 3:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const StrengthPage(pageIndex: 3),
-                  settings: const RouteSettings(name: '/StrengthPage'),
+                  builder: (context) => const DraftsPage(pageIndex: 3),
+                  settings: const RouteSettings(name: '/DraftsPage'),
                 ),
               );
               return;
             case 4:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const StabilityPage(pageIndex: 4),
-                  settings: const RouteSettings(name: '/StabilityPage'),
+                  builder: (context) => const StrengthPage(pageIndex: 4),
+                  settings: const RouteSettings(name: '/StrengthPage'),
                 ),
               );
               return;
             case 5:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const InfoPage(pageIndex: 5),
-                  settings: const RouteSettings(name: '/InfoPage'),
+                  builder: (context) => const StabilityPage(pageIndex: 5),
+                  settings: const RouteSettings(name: '/StabilityPage'),
                 ),
               );
               return;
