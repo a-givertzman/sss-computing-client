@@ -105,11 +105,14 @@ class _MainPageBodyState extends State<MainPageBody> {
           ),
           SizedBox(height: blockPadding),
           Expanded(
-            child: WeightIndicators(
-              appRefreshStream: _appRefreshStream,
-              apiAddress: _apiAddress,
-              dbName: _dbName,
-              authToken: _authToken,
+            child: Card(
+              margin: const EdgeInsets.all(0.0),
+              child: WeightIndicators(
+                appRefreshStream: _appRefreshStream,
+                apiAddress: _apiAddress,
+                dbName: _dbName,
+                authToken: _authToken,
+              ),
             ),
           ),
         ],

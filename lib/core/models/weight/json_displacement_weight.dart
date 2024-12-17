@@ -19,6 +19,8 @@ class JsonDisplacementWeight implements DisplacementWeight {
   ///   "vcg": 0.0, // double?
   ///   "tcg": 0.0, // double?
   ///   "vcgCorrection": 0.0, // double?
+  ///   "asHeader": false, // bool
+  ///   "asSubitem": false, // bool
   /// }
   /// ```
   factory JsonDisplacementWeight.fromRow(Map<String, dynamic> row) =>
@@ -29,10 +31,18 @@ class JsonDisplacementWeight implements DisplacementWeight {
         'vcg': row['vcg'] as double?,
         'tcg': row['tcg'] as double?,
         'vcgCorrection': row['vcgCorrection'] as double?,
+        'asHeader': row['asHeader'] as bool,
+        'asSubitem': row['asSubitem'] as bool,
       });
   //
   @override
   String get name => _json['name'];
+  //
+  @override
+  bool get asHeader => _json['asHeader'];
+  //
+  @override
+  bool get asSubitem => _json['asSubitem'];
   //
   @override
   double? get value => _json['value'];
