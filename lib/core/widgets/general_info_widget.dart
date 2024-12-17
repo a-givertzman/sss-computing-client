@@ -64,7 +64,7 @@ class _GeneralInfoWidgetState extends State<GeneralInfoWidget> {
           ),
           SizedBox(height: blockPadding),
           _InfoWidget(
-            parameterId: 3,
+            parameterId: 94,
             appRefreshStream: widget._appRefreshStream,
             apiAddress: _apiAddress,
             dbName: _dbName,
