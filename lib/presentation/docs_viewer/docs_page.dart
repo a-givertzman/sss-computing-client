@@ -1,45 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
+import 'package:provider/provider.dart';
 import 'package:sss_computing_client/core/models/accordion/accordion_items_builder.dart';
 import 'package:sss_computing_client/core/models/accordion/accordion_model.dart';
+import 'package:sss_computing_client/core/models/calculation/calculation_status.dart';
 import 'package:sss_computing_client/core/models/directory/directory_file.dart';
 import 'package:sss_computing_client/core/models/directory/directory_info.dart';
 import 'package:sss_computing_client/core/models/docs_manifest/doc_manifest.dart';
 import 'package:sss_computing_client/core/widgets/accordion/accordion.dart';
 import 'package:sss_computing_client/core/widgets/future_builder_widget.dart';
+import 'package:sss_computing_client/core/widgets/navigation_panel.dart';
 import 'package:sss_computing_client/presentation/docs_viewer/widgets/viewer.dart';
 ///
 /// The page to render local [Mockdown] docs using [mardown_widget] library.
 class MarkdownViewerPage extends StatelessWidget {
+  final int pageIndex;
   /// Relative asset path to load
   final String relativePath;
   /// Current asset path
   final String? currentPath;
   const MarkdownViewerPage({
     super.key,
+    required this.pageIndex,
     this.relativePath = 'assets/docs/user-guide/ru',
     this.currentPath,
   });
+  //
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      body: FutureBuilderWidget(
-        onFuture: LoadMarkdownInfo(
-          MarkdownManifest(relativePath).loadAssets(),
-        ).load,
-        caseData: (_, assets, __) {
-          return _BodyWidget(
-            assets,
-            currentAsset: currentPath,
-          );
-        },
-      ),
+      // ignore: deprecated_member_use
+      backgroundColor: theme.colorScheme.background,
+      body: Consumer<CalculationStatus>(builder: (_, status, __) {
+        return Row(
+          children: [
+            NavigationPanel(
+              selectedPageIndex: pageIndex,
+              calculationStatusNotifier: status,
+            ),
+            Expanded(
+              child: FutureBuilderWidget(
+                onFuture: LoadMarkdownInfo(
+                  MarkdownManifest(relativePath).loadAssets(),
+                ).load,
+                caseData: (_, assets, __) {
+                  return _BodyWidget(
+                    assets,
+                    pageIndex: pageIndex,
+                    currentAsset: currentPath,
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }
 ///
 class _BodyWidget extends StatefulWidget {
-  const _BodyWidget(this.assets, {this.currentAsset});
+  final int pageIndex;
+  const _BodyWidget(this.assets, {required this.pageIndex, this.currentAsset});
   /// List of assets paths
   final List<AssetsDirectoryInfo> assets;
   /// Current asset
@@ -90,6 +113,7 @@ class _BodyWidgetState extends State<_BodyWidget> {
           Expanded(
             flex: 3,
             child: ViewerWidget(
+              pageIndex: widget.pageIndex,
               paths: _markdownAccordion.currentAssets,
             ),
           ),

@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
@@ -14,7 +13,6 @@ import 'package:sss_computing_client/presentation/loading/loading_page.dart';
 import 'package:sss_computing_client/presentation/main/main_page.dart';
 import 'package:sss_computing_client/presentation/stability/stability_page.dart';
 import 'package:sss_computing_client/presentation/strength/strength_page.dart';
-
 ///
 /// App main navigation widget.
 class NavigationPanel extends StatelessWidget {
@@ -166,16 +164,8 @@ class NavigationPanel extends StatelessWidget {
             case 6:
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => Row(
-                    children: [
-                      NavigationPanel(
-                        selectedPageIndex: 6,
-                        calculationStatusNotifier: _calculationStatusNotifier,
-                      ),
-                      const Expanded(child: MarkdownViewerPage()),
-                    ],
-                  ),
-                  settings: const RouteSettings(name: '/'),
+                  builder: (context) => const MarkdownViewerPage(pageIndex: 6),
+                  settings: const RouteSettings(name: '/DocsViewerPage'),
                 ),
               );
               return;
