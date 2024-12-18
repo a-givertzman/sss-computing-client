@@ -7,20 +7,20 @@ import 'package:sss_computing_client/presentation/docs_viewer/docs_page.dart';
 ///
 /// Resource interface for handling different types of resources
 sealed class Resource {
-  /// Launches the resource. 
+  /// Launches the resource.
   Future launch();
   ///
   /// Creates a [Resource] from the [url].
-  factory Resource.fromUrl(String url, BuildContext context) {
+  factory Resource.fromUrl(String url, int pageIndex, BuildContext context) {
     return switch (url.startsWith('http')) {
       true => _HttpResource(url),
       _ => url.endsWith('.md')
-          ? _MarkdownResource(url, context)
+          ? _MarkdownResource(url, pageIndex, context)
           : _DocumentResource(url)
     };
   }
 }
-/// 
+///
 /// Resource for handling http resources
 class _HttpResource implements Resource {
   /// The url of the resource.
@@ -33,15 +33,17 @@ class _HttpResource implements Resource {
     return PlatformProcess().start(url);
   }
 }
-/// 
+///
 /// Resource for handling markdown resources.
 class _MarkdownResource implements Resource {
   /// The markdown file.
   final String url;
+  /// Index of pushed page in navigation panel
+  final int pageIndex;
   /// The context.
   final BuildContext context;
   //
-  _MarkdownResource(this.url, this.context);
+  _MarkdownResource(this.url, this.pageIndex, this.context);
   //
   @override
   Future launch() async {
@@ -52,6 +54,7 @@ class _MarkdownResource implements Resource {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => MarkdownViewerPage(
+          pageIndex: pageIndex,
           currentPath: currentPath,
         ),
         settings: const RouteSettings(name: '/MarkdownViewerPage'),
@@ -59,7 +62,7 @@ class _MarkdownResource implements Resource {
     );
   }
 }
-/// 
+///
 /// Resource for handling document resources.
 class _DocumentResource implements Resource {
   /// The url of the resource.
@@ -72,12 +75,12 @@ class _DocumentResource implements Resource {
     return await copyAssetToTempDirectory(url, Uri.file(url).pathSegments.last)
         .then(PlatformProcess().start);
   }
-  /// 
+  ///
   /// Normalizes the `path` by removing leading and trailing slashes.
   String normalizePath(String path) {
     return path.replaceAll(RegExp(r'^/|/$'), '');
   }
-  /// 
+  ///
   /// Loads the asset and copy it the a temporary directory.
   Future<String> copyAssetToTempDirectory(String url, String fileName) async {
     final assetPath = switch (url.startsWith('assets/')) {

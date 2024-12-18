@@ -14,7 +14,8 @@ import 'package:sss_computing_client/presentation/docs_viewer/customisation/late
 ///
 /// Viewer widget for markdown docs
 class ViewerWidget extends StatefulWidget {
-  const ViewerWidget({super.key, required this.paths});
+  final int pageIndex;
+  const ViewerWidget({super.key, required this.paths, required this.pageIndex});
   ///
   /// Paths to markdown files.
   final List<String> paths;
@@ -24,33 +25,24 @@ class ViewerWidget extends StatefulWidget {
 }
 ///
 class _ViewerWidgetState extends State<ViewerWidget> {
-  late final TextFileStream _fileStreamController;
-  //
-  @override
-  void initState() {
-    _fileStreamController = TextFileStream.assets(widget.paths);
-    super.initState();
-  }
-  //
-  @override
-  void dispose() {
-    _fileStreamController.dispose();
-    super.dispose();
-  }
   ///
   @override
   Widget build(BuildContext context) {
     return StreamBuilderWidget<String>(
-      stream: _fileStreamController.create(),
+      stream: TextFileStream.assets().create(widget.paths),
       caseData: (context, data, __) {
-        return _BuildBody(data: data);
+        return _BuildBody(
+          data: data,
+          pageIndex: widget.pageIndex,
+        );
       },
     );
   }
 }
 ///
 class _BuildBody extends StatefulWidget {
-  const _BuildBody({required this.data});
+  final int pageIndex;
+  const _BuildBody({required this.data, required this.pageIndex});
   ///
   /// Markdown data.
   final String data;
@@ -101,7 +93,7 @@ class __BuildBodyState extends State<_BuildBody> {
                   ),
                   LinkConfig(
                     onTap: (url) async {
-                      Resource.fromUrl(url, context).launch();
+                      Resource.fromUrl(url, widget.pageIndex, context).launch();
                     },
                   ),
                 ],
