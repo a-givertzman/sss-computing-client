@@ -9,6 +9,12 @@ class CalculationStatus extends ChangeNotifier {
   bool _isInProcess = false;
   String? _message;
   String? _errorMessage;
+  //
+  @override
+  void dispose() {
+    _refreshController.close();
+    super.dispose();
+  }
   ///
   /// Indicates calculation status.
   /// Returns `true` if calculation is in progress.
