@@ -24,16 +24,24 @@ class ViewerWidget extends StatefulWidget {
 }
 ///
 class _ViewerWidgetState extends State<ViewerWidget> {
+  late final TextFileStream _fileStreamController;
   //
   @override
   void initState() {
+    _fileStreamController = TextFileStream.assets(widget.paths);
     super.initState();
+  }
+  //
+  @override
+  void dispose() {
+    _fileStreamController.dispose();
+    super.dispose();
   }
   ///
   @override
   Widget build(BuildContext context) {
     return StreamBuilderWidget<String>(
-      stream: TextFileStream.assets(widget.paths).create(),
+      stream: _fileStreamController.create(),
       caseData: (context, data, __) {
         return _BuildBody(data: data);
       },
